@@ -1,0 +1,239 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>libcypher-parser by cleishm</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <style>
+.wrapper {
+    width: 960px;
+}
+header {
+    width: 220px;
+}
+header ul {
+    width: 220px;
+}
+header li {
+    width: 220px;
+    border-right: none;
+}
+footer {
+    width: 220px;
+}
+section {
+    width: 660px;
+}
+    </style>
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>libcypher-parser</h1>
+        <p>Cypher Parser Library</p>
+
+        <p class="view"><a href="https://github.com/cleishm/libcypher-parser">View the Project on GitHub <small>cleishm/libcypher-parser</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/cleishm/libcypher-parser/releases">Release <strong>Download</strong></a></li>
+        </ul>
+      </header>
+      <section>
+<h2>
+<a id="about" class="anchor" href="#about" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>About</h2>
+
+<p>libcypher-parser is a parser library and validation (lint) tool for Cypher, the
+graph query language. The parser is written in C, and is intended for building
+tools and libraries in various languages.</p>
+
+<p>For more details, see the <a href="https://github.com/cleishm/libcypher-parser/wiki/FAQ">FAQ</a>.</p>
+
+<h2>
+<a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Requirements</h2>
+
+<p>libcypher-parser is known to work on GNU/Linux, Mac OS X and FreeBSD.</p>
+
+<p>Note that libcypher-parser is still an alpha release, and may change in
+incompatible ways before a stable release is made.</p>
+
+<h2>
+<a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting Started</h2>
+
+<p>If you're using Mac OS X, libneo4j-client can be installed using homebrew:</p>
+
+<div class="highlight highlight-text-shell-session"><pre>$ <span class="pl-s1">brew install cleishm/neo4j/libcypher-parser</span></pre></div>
+
+<p>or</p>
+
+<div class="highlight highlight-text-shell-session"><pre>$ <span class="pl-s1">brew install cleishm/neo4j/cypher-lint</span></pre></div>
+
+<p>For other platforms, please see <a href="#building">Building</a> below.</p>
+
+<h2>
+<a id="cypher-lint-usage" class="anchor" href="#cypher-lint-usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>cypher-lint Usage</h2>
+
+<p>cypher-lint is a parser and linter for Cypher. It will parse a sequence of
+cypher statements from stdin and report any parse errors encountered.
+Optionally, it can also output an abstract syntax tree (AST) representation of
+the input.</p>
+
+<p>Basic usage:</p>
+
+<div class="highlight highlight-text-shell-session"><pre>$ <span class="pl-s1">cypher-lint -a <span class="pl-k">&lt;</span> sample.cyp</span>
+<span class="pl-k">Invalid input </span><span class="pl-mb">'S': expected AS (line 3, column 17, offset 124):</span>
+<span class="pl-mo">RETURN s.name ASS name;</span>
+<span class="pl-mo">                ^</span>
+<span class="pl-mo"> @0</span><span class="pl-mdr">    2..45</span><span class="pl-mb">  line_comment</span><span class="pl-mo">             // Return all the software that cleishm wrote</span>
+<span class="pl-mo"> @1</span><span class="pl-mdr">  46..132</span><span class="pl-mb">  statement</span><span class="pl-mo">                body=@2</span>
+<span class="pl-mo"> @2</span><span class="pl-mdr">  46..132</span><span class="pl-mq">  &gt;</span><span class="pl-mb"> query</span><span class="pl-mo">                  clauses=[@3, @17]</span>
+<span class="pl-mo"> @3</span><span class="pl-mdr">  46..108</span><span class="pl-mq">  &gt; &gt;</span><span class="pl-mb"> MATCH</span><span class="pl-mo">                pattern=@4</span>
+<span class="pl-mo"> @4</span><span class="pl-mdr">  52..107</span><span class="pl-mq">  &gt; &gt; &gt;</span><span class="pl-mb"> pattern</span><span class="pl-mo">            paths=[@5]</span>
+<span class="pl-mo"> @5</span><span class="pl-mdr">  52..107</span><span class="pl-mq">  &gt; &gt; &gt; &gt;</span><span class="pl-mb"> pattern path</span><span class="pl-mo">     (@6)-[@12]-(@14)</span>
+<span class="pl-mo"> @6</span><span class="pl-mdr">  52..84</span><span class="pl-mq">   &gt; &gt; &gt; &gt; &gt;</span><span class="pl-mb"> node pattern</span><span class="pl-mo">   (@7:@8 {@9})</span>
+<span class="pl-mo"> @7</span><span class="pl-mdr">  53..54</span><span class="pl-mq">   &gt; &gt; &gt; &gt; &gt; &gt;</span><span class="pl-mb"> identifier</span><span class="pl-mo">   `n`</span>
+<span class="pl-mo"> @8</span><span class="pl-mdr">  54..61</span><span class="pl-mq">   &gt; &gt; &gt; &gt; &gt; &gt;</span><span class="pl-mb"> label</span><span class="pl-mo">        :`Person`</span>
+<span class="pl-mo"> @9</span><span class="pl-mdr">  62..83</span><span class="pl-mq">   &gt; &gt; &gt; &gt; &gt; &gt;</span><span class="pl-mb"> map</span><span class="pl-mo">          {@10:@11}</span>
+<span class="pl-mo">@10</span><span class="pl-mdr">  63..71</span><span class="pl-mq">   &gt; &gt; &gt; &gt; &gt; &gt; &gt;</span><span class="pl-mb"> prop name</span><span class="pl-mo">  `username`</span>
+<span class="pl-mo">@11</span><span class="pl-mdr">  73..82</span><span class="pl-mq">   &gt; &gt; &gt; &gt; &gt; &gt; &gt;</span><span class="pl-mb"> string</span><span class="pl-mo">     "cleishm"</span>
+<span class="pl-mo">@12</span><span class="pl-mdr">  84..95</span><span class="pl-mq">   &gt; &gt; &gt; &gt; &gt;</span><span class="pl-mb"> rel pattern</span><span class="pl-mo">    -[:@13]-&gt;</span>
+<span class="pl-mo">@13</span><span class="pl-mdr">  86..92</span><span class="pl-mq">   &gt; &gt; &gt; &gt; &gt; &gt;</span><span class="pl-mb"> rel type</span><span class="pl-mo">     :`WROTE`</span>
+<span class="pl-mo">@14</span><span class="pl-mdr">  95..107</span><span class="pl-mq">  &gt; &gt; &gt; &gt; &gt;</span><span class="pl-mb"> node pattern</span><span class="pl-mo">   (@15:@16)</span>
+<span class="pl-mo">@15</span><span class="pl-mdr">  96..97</span><span class="pl-mq">   &gt; &gt; &gt; &gt; &gt; &gt;</span><span class="pl-mb"> identifier</span><span class="pl-mo">   `s`</span>
+<span class="pl-mo">@16</span><span class="pl-mdr">  97..106</span><span class="pl-mq">  &gt; &gt; &gt; &gt; &gt; &gt;</span><span class="pl-mb"> label</span><span class="pl-mo">        :`Software`</span>
+<span class="pl-mo">@17</span><span class="pl-mdr"> 108..122</span><span class="pl-mq">  &gt; &gt;</span><span class="pl-mb"> RETURN</span><span class="pl-mo">               items=[@18]</span>
+<span class="pl-mo">@18</span><span class="pl-mdr"> 115..122</span><span class="pl-mq">  &gt; &gt; &gt;</span><span class="pl-mb"> projection</span><span class="pl-mo">         expression=@19, alias=@22</span>
+<span class="pl-mo">@19</span><span class="pl-mdr"> 115..122</span><span class="pl-mq">  &gt; &gt; &gt; &gt;</span><span class="pl-mb"> property</span><span class="pl-mo">         @20.@21</span>
+<span class="pl-mo">@20</span><span class="pl-mdr"> 115..116</span><span class="pl-mq">  &gt; &gt; &gt; &gt; &gt;</span><span class="pl-mb"> identifier</span><span class="pl-mo">     `s`</span>
+<span class="pl-mo">@21</span><span class="pl-mdr"> 117..121</span><span class="pl-mq">  &gt; &gt; &gt; &gt; &gt;</span><span class="pl-mb"> prop name</span><span class="pl-mo">      `name`</span>
+<span class="pl-mo">@22</span><span class="pl-mdr"> 115..122</span><span class="pl-mq">  &gt; &gt; &gt; &gt;</span><span class="pl-mb"> identifier</span><span class="pl-mo">       `s.name`</span>
+<span class="pl-mo">@23</span><span class="pl-mdr"> 122..132</span><span class="pl-mq">  &gt; &gt;</span><span class="pl-mb"> error</span><span class="pl-mo">                &gt;&gt;ASS name;\n&lt;&lt;</span></pre></div>
+
+<h2>
+<a id="libcypher-parser-usage" class="anchor" href="#libcypher-parser-usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>libcypher-parser Usage</h2>
+
+<p>libcypher-parser provides a single C header file, <code>cypher-parser.h</code>, for
+inclusion in source code using the libcypher-parser API. The API is described in
+the <a href="#api_documentation">API Documentation</a>.</p>
+
+<p>libcypher-parser can be included in your project by linking the library at
+compile time, typically using the linking flag <code>-lcypher-parser</code>.
+Alternatively, libcypher-parser ships with a <a href="https://wiki.freedesktop.org/www/Software/pkg-config/">pkg-config</a>
+description file, enabling you to obtain the required flags using
+<code>pkg-config --libs libcypher-parser</code>.</p>
+
+<h2>
+<a id="api-documentation" class="anchor" href="#api-documentation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>API Documentation</h2>
+
+<p>API documentation for the latest release is available at
+<a href="https://cleishm.github.io/libcypher-parser/doc/latest/cypher-parser_8h.html">https://cleishm.github.io/libcypher-parser/doc/latest/cypher-parser_8h.html</a>.</p>
+
+<h2>
+<a id="example" class="anchor" href="#example" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example</h2>
+
+<div class="highlight highlight-source-c"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>cypher-parser.h<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>errno.h<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>stdio.h<span class="pl-pds">&gt;</span></span>
+
+<span class="pl-k">int</span> <span class="pl-en">main</span>(<span class="pl-k">int</span> argc, <span class="pl-k">char</span> *argv[])
+{
+    <span class="pl-c1">cypher_parse_result_t</span> *result = <span class="pl-c1">cypher_parse</span>(
+            <span class="pl-s"><span class="pl-pds">"</span>MATCH (n) RETURN n<span class="pl-pds">"</span></span>, <span class="pl-c1">NULL</span>, <span class="pl-c1">NULL</span>, CYPHER_PARSE_ONLY_STATEMENTS);
+    <span class="pl-k">if</span> (result == <span class="pl-c1">NULL</span>)
+    {
+        <span class="pl-c1">perror</span>(<span class="pl-s"><span class="pl-pds">"</span>cypher_parse<span class="pl-pds">"</span></span>);
+        <span class="pl-k">return</span> EXIT_FAILURE;
+    }
+
+    <span class="pl-c1">printf</span>(<span class="pl-s"><span class="pl-pds">"</span>Parsed <span class="pl-c1">%d</span> AST nodes<span class="pl-cce">\n</span><span class="pl-pds">"</span></span>, <span class="pl-c1">cypher_parse_result_node_count</span>(result));
+    <span class="pl-c1">printf</span>(<span class="pl-s"><span class="pl-pds">"</span>Read <span class="pl-c1">%d</span> statements<span class="pl-cce">\n</span><span class="pl-pds">"</span></span>, <span class="pl-c1">cypher_parse_result_ndirectives</span>(result));
+    <span class="pl-c1">printf</span>(<span class="pl-s"><span class="pl-pds">"</span>Encountered <span class="pl-c1">%d</span> errors<span class="pl-cce">\n</span><span class="pl-pds">"</span></span>, <span class="pl-c1">cypher_parse_result_nerrors</span>(result));
+
+    <span class="pl-c1">cypher_parse_result_free</span>(result);
+    <span class="pl-k">return</span> EXIT_SUCCESS;
+}</pre></div>
+
+<h2>
+<a id="building" class="anchor" href="#building" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Building</h2>
+
+<p>To build software using libcypher-parser, consider installing libcypher-parser
+using the package management system for your operating system (currently only
+Mac OS X).</p>
+
+<p>If libcypher-parser is not available via your package management system,
+please <a href="https://github.com/cleishm/libcypher-parser/releases">download the latest release</a>, unpack and then:</p>
+
+<div class="highlight highlight-text-shell-session"><pre>$ <span class="pl-s1">./configure</span>
+$ <span class="pl-s1">make clean check</span>
+$ <span class="pl-s1">sudo make install</span></pre></div>
+
+<p>Building from the GitHub repository requires a few extra steps. Firstly, some
+additional tooling is required, including autoconf, automake, libtool and
+<a href="http://piumarta.com/software/peg/">peg/leg</a>. Assuming these are available,
+to checkout from GitHub and build:</p>
+
+<div class="highlight highlight-text-shell-session"><pre>$ <span class="pl-s1">git clone https://github.com/cleishm/libcypher-parser.git</span>
+$ <span class="pl-s1"><span class="pl-c1">cd</span> libneo4j-client</span>
+$ <span class="pl-s1">./autogen.sh</span>
+$ <span class="pl-s1">./configure</span>
+$ <span class="pl-s1">make clean check</span>
+$ <span class="pl-s1">sudo make install</span></pre></div>
+
+<h2>
+<a id="support" class="anchor" href="#support" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support</h2>
+
+<p>Having trouble with libcypher-parser? Please raise any issues with usage on
+<a href="http://stackoverflow.com/questions/tagged/libcypher-parser">StackOverflow</a>. If
+you've found a bug in the code for libcypher-parser, please raise an issue on
+<a href="https://github.com/cleishm/libcypher-parser">GitHub</a> and include details of how
+to reproduce the bug.</p>
+
+<h2>
+<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contributing</h2>
+
+<p>Contributions to libcypher-parser and cypher-lint are needed! Contributions
+should be made via pull requests made to the
+<a href="https://github.com/cleishm/libcypher-parser">GitHub repository</a>. Please
+include test cases where possible, and use a style and approach consistent with the rest of the library.</p>
+
+<p>For a list of contributions that would be greatly appreciated, check out the
+<a href="https://github.com/cleishm/libcypher-parser/wiki/TODO">TODO list</a>.</p>
+
+<p>For other contributions, it may be worthwhile raising an issue on github for
+what you intend to do before developing the code, in order to allow for
+discussion and feedback on the requirements.</p>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
+
+<p>libneo4j-client is licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a>.</p>
+
+<p>Unless required by applicable law or agreed to in writing, software distributed
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations under the License.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/cleishm">cleishm</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-4129248-5', 'auto');
+  ga('send', 'pageview');
+</script>
+  </body>
+</html>
