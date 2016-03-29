@@ -1,0 +1,71 @@
+/* vi:set ts=4 sw=4 expandtab:
+ *
+ * Copyright 2016, Chris Leishman (http://github.com/cleishm)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+#include "../../config.h"
+#include "astnode.h"
+#include "util.h"
+#include <assert.h>
+
+
+struct shortest_path
+{
+    cypher_astnode_t _astnode;
+    bool single;
+    const cypher_astnode_t *path;
+};
+
+
+static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
+
+
+const struct cypher_astnode_vt cypher_shortest_path_astnode_vt =
+    { .name = "shortestPath",
+      .detailstr = detailstr,
+      .free = cypher_astnode_free };
+
+
+cypher_astnode_t *cypher_ast_shortest_path(bool single,
+        const cypher_astnode_t *path, cypher_astnode_t **children,
+        unsigned int nchildren, struct cypher_input_range range)
+{
+    REQUIRE(cypher_astnode_instanceof(path, CYPHER_AST_PATTERN_PATH), NULL);
+
+    struct shortest_path *node = calloc(1, sizeof(struct shortest_path));
+    if (node == NULL)
+    {
+        return NULL;
+    }
+    if (cypher_astnode_init(&(node->_astnode), CYPHER_AST_SHORTEST_PATH,
+            children, nchildren, range))
+    {
+        free(node);
+        return NULL;
+    }
+    node->single = single;
+    node->path = path;
+    return &(node->_astnode);
+}
+
+
+ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
+{
+    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_SHORTEST_PATH), -1);
+    struct shortest_path *node =
+        container_of(self, struct shortest_path, _astnode);
+    return snprintf(str, size, "single=%s, path=@%d",
+            node->single? "true" : "false",
+            node->path->ordinal);
+}
