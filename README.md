@@ -26,7 +26,7 @@ incompatible ways before a stable release is made.
 Getting Started
 ---------------
 
-If you're using Mac OS X, libneo4j-client can be installed using homebrew:
+If you're using Mac OS X, libcypher-parser can be installed using homebrew:
 
 ```console
 $ brew install cleishm/neo4j/libcypher-parser
@@ -162,7 +162,7 @@ to checkout from GitHub and build:
 
 ```console
 $ git clone https://github.com/cleishm/libcypher-parser.git
-$ cd libneo4j-client
+$ cd libcypher-parser
 $ ./autogen.sh
 $ ./configure
 $ make clean check
@@ -199,7 +199,7 @@ discussion and feedback on the requirements.
 License
 -------
 
-libneo4j-client is licensed under the [Apache License, Version 2.0](
+libcypher-parser is licensed under the [Apache License, Version 2.0](
 http://www.apache.org/licenses/LICENSE-2.0).
 
 Unless required by applicable law or agreed to in writing, software distributed
