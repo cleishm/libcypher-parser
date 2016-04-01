@@ -34,8 +34,13 @@ struct list_comprehension
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_expression_astnode_vt };
+
 const struct cypher_astnode_vt cypher_list_comprehension_astnode_vt =
-    { .name = "list comprehension",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "list comprehension",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -46,8 +51,10 @@ cypher_astnode_t *cypher_ast_list_comprehension(
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(identifier, CYPHER_AST_IDENTIFIER), NULL);
-    REQUIRE(expression != NULL, NULL);
+    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_TYPE_OPTIONAL(predicate, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_TYPE_OPTIONAL(eval, CYPHER_AST_EXPRESSION, NULL);
 
     struct list_comprehension *node =
             calloc(1, sizeof(struct list_comprehension));
@@ -71,7 +78,7 @@ cypher_astnode_t *cypher_ast_list_comprehension(
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_LIST_COMPREHENSION), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_LIST_COMPREHENSION, -1);
     struct list_comprehension *node =
         container_of(self, struct list_comprehension, _astnode);
 

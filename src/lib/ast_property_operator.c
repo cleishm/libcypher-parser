@@ -32,8 +32,13 @@ struct property_operator
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_expression_astnode_vt };
+
 const struct cypher_astnode_vt cypher_property_operator_astnode_vt =
-    { .name = "property",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "property",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -42,8 +47,8 @@ cypher_astnode_t *cypher_ast_property_operator(const cypher_astnode_t *map,
         const cypher_astnode_t *prop_name, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE(map != NULL, NULL);
-    REQUIRE(cypher_astnode_instanceof(prop_name, CYPHER_AST_PROP_NAME), NULL);
+    REQUIRE_TYPE(map, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_TYPE(prop_name, CYPHER_AST_PROP_NAME, NULL);
 
     struct property_operator *node =
             calloc(1, sizeof(struct property_operator));
@@ -65,7 +70,7 @@ cypher_astnode_t *cypher_ast_property_operator(const cypher_astnode_t *map,
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_PROPERTY_OPERATOR), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_PROPERTY_OPERATOR, -1);
     struct property_operator *node =
         container_of(self, struct property_operator, _astnode);
     return snprintf(str, size, "@%u.@%u", node->map->ordinal,

@@ -30,8 +30,13 @@ struct profile_option
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_statement_option_astnode_vt };
+
 const struct cypher_astnode_vt cypher_profile_option_astnode_vt =
-    { .name = "PROFILE",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "PROFILE",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -56,6 +61,6 @@ cypher_astnode_t *cypher_ast_profile_option(cypher_astnode_t **children,
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_PROFILE_OPTION), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_PROFILE_OPTION, -1);
     return 0;
 }

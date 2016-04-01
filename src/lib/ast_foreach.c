@@ -25,19 +25,23 @@ struct foreach_clause
     cypher_astnode_t _astnode;
     const cypher_astnode_t *identifier;
     const cypher_astnode_t *expression;
-    const cypher_astnode_t **clauses;
     unsigned int nclauses;
+    const cypher_astnode_t *clauses[];
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void foreach_free(cypher_astnode_t *self);
 
+
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_query_clause_astnode_vt };
 
 const struct cypher_astnode_vt cypher_foreach_astnode_vt =
-    { .name = "FOREACH",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "FOREACH",
       .detailstr = detailstr,
-      .free = foreach_free };
+      .free = cypher_astnode_free };
 
 
 cypher_astnode_t *cypher_ast_foreach(const cypher_astnode_t *identifier,
@@ -45,12 +49,13 @@ cypher_astnode_t *cypher_ast_foreach(const cypher_astnode_t *identifier,
         unsigned int nclauses, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(identifier, CYPHER_AST_IDENTIFIER), NULL);
-    REQUIRE(expression != NULL, NULL);
+    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
     REQUIRE(nclauses > 0, NULL);
-    REQUIRE(clauses != NULL, NULL);
+    REQUIRE_TYPE_ALL(clauses, nclauses, CYPHER_AST_QUERY_CLAUSE, NULL);
 
-    struct foreach_clause *node = calloc(1, sizeof(struct foreach_clause));
+    struct foreach_clause *node = calloc(1, sizeof(struct foreach_clause) +
+            nclauses * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -62,11 +67,7 @@ cypher_astnode_t *cypher_ast_foreach(const cypher_astnode_t *identifier,
     }
     node->identifier = identifier;
     node->expression = expression;
-    node->clauses = mdup(clauses, nclauses * sizeof(cypher_astnode_t *));
-    if (node->clauses == NULL)
-    {
-        goto cleanup;
-    }
+    memcpy(node->clauses, clauses, nclauses * sizeof(cypher_astnode_t *));
     node->nclauses = nclauses;
     return &(node->_astnode);
 
@@ -79,18 +80,9 @@ cleanup:
 }
 
 
-void foreach_free(cypher_astnode_t *self)
-{
-    struct foreach_clause *node =
-            container_of(self, struct foreach_clause, _astnode);
-    free(node->clauses);
-    cypher_astnode_free(self);
-}
-
-
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_FOREACH), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_FOREACH, -1);
     struct foreach_clause *node =
             container_of(self, struct foreach_clause, _astnode);
 

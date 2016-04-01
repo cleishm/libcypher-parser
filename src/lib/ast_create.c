@@ -31,8 +31,13 @@ struct create
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_query_clause_astnode_vt };
+
 const struct cypher_astnode_vt cypher_create_astnode_vt =
-    { .name = "CREATE",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "CREATE",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -41,7 +46,7 @@ cypher_astnode_t *cypher_ast_create(bool unique,
         const cypher_astnode_t *pattern, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(pattern, CYPHER_AST_PATTERN), NULL);
+    REQUIRE_TYPE(pattern, CYPHER_AST_PATTERN, NULL);
 
     struct create *node = calloc(1, sizeof(struct create));
     if (node == NULL)
@@ -62,7 +67,7 @@ cypher_astnode_t *cypher_ast_create(bool unique,
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_CREATE), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_CREATE, -1);
     struct create *node = container_of(self, struct create, _astnode);
     return snprintf(str, size, "%spattern=@%d", node->unique? "UNIQUE, " : "",
             node->pattern->ordinal);

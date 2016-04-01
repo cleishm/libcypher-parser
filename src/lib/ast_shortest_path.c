@@ -31,8 +31,13 @@ struct shortest_path
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_expression_astnode_vt };
+
 const struct cypher_astnode_vt cypher_shortest_path_astnode_vt =
-    { .name = "shortestPath",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "shortestPath",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -41,7 +46,7 @@ cypher_astnode_t *cypher_ast_shortest_path(bool single,
         const cypher_astnode_t *path, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(path, CYPHER_AST_PATTERN_PATH), NULL);
+    REQUIRE_TYPE(path, CYPHER_AST_PATTERN_PATH, NULL);
 
     struct shortest_path *node = calloc(1, sizeof(struct shortest_path));
     if (node == NULL)
@@ -62,7 +67,7 @@ cypher_astnode_t *cypher_ast_shortest_path(bool single,
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_SHORTEST_PATH), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_SHORTEST_PATH, -1);
     struct shortest_path *node =
         container_of(self, struct shortest_path, _astnode);
     return snprintf(str, size, "single=%s, path=@%d",

@@ -10,6 +10,7 @@ check_libcypher_parser_SOURCES = \
 check_libcypher_parser_CHECKS = \
 	check_command.c \
 	check_error_tracking.c \
+	check_statement.c \
 	check_util.c
 
 check_libcypher-parser_suite.c: ${check_libcypher_parser_CHECKS}

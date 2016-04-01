@@ -35,8 +35,13 @@ static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 static void call_free(cypher_astnode_t *self);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_query_clause_astnode_vt };
+
 const struct cypher_astnode_vt cypher_call_astnode_vt =
-    { .name = "CALL",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "CALL",
       .detailstr = detailstr,
       .free = call_free };
 
@@ -47,9 +52,9 @@ cypher_astnode_t *cypher_ast_call(const cypher_astnode_t *proc_name,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(proc_name, CYPHER_AST_PROC_NAME), NULL);
-    REQUIRE(nargs == 0 || args != NULL, NULL);
-    REQUIRE(nprojections == 0 || projections != NULL, NULL);
+    REQUIRE_TYPE(proc_name, CYPHER_AST_PROC_NAME, NULL);
+    REQUIRE_TYPE_ALL(args, nargs, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_TYPE_ALL(projections, nprojections, CYPHER_AST_PROJECTION, NULL);
 
     struct call_clause *node = calloc(1, sizeof(struct call_clause));
     if (node == NULL)
@@ -103,7 +108,7 @@ void call_free(cypher_astnode_t *self)
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_CALL), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_CALL, -1);
     struct call_clause *node = container_of(self, struct call_clause, _astnode);
 
     size_t n = 0;

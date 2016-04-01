@@ -32,8 +32,13 @@ struct node_index_query
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_start_point_astnode_vt };
+
 const struct cypher_astnode_vt cypher_node_index_query_astnode_vt =
-    { .name = "node index query",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "node index query",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -43,9 +48,10 @@ cypher_astnode_t *cypher_ast_node_index_query(
         const cypher_astnode_t *query, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(identifier, CYPHER_AST_IDENTIFIER), NULL);
-    REQUIRE(cypher_astnode_instanceof(index, CYPHER_AST_INDEX_NAME), NULL);
-    REQUIRE(query != NULL, NULL);
+    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_TYPE(index, CYPHER_AST_INDEX_NAME, NULL);
+    REQUIRE(cypher_astnode_instanceof(query, CYPHER_AST_STRING) ||
+            cypher_astnode_instanceof(query, CYPHER_AST_PARAMETER), NULL);
 
     struct node_index_query *node = calloc(1, sizeof(struct node_index_query));
     if (node == NULL)
@@ -67,7 +73,7 @@ cypher_astnode_t *cypher_ast_node_index_query(
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_NODE_INDEX_QUERY), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_NODE_INDEX_QUERY, -1);
     struct node_index_query *node =
             container_of(self, struct node_index_query, _astnode);
     return snprintf(str, size, "@%u = node:@%u(@%u)",

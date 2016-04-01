@@ -30,8 +30,13 @@ struct all_nodes_scan
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_start_point_astnode_vt };
+
 const struct cypher_astnode_vt cypher_all_nodes_scan_astnode_vt =
-    { .name = "all nodes scan",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "all nodes scan",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -40,7 +45,7 @@ cypher_astnode_t *cypher_ast_all_nodes_scan(const cypher_astnode_t *identifier,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(identifier, CYPHER_AST_IDENTIFIER), NULL);
+    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
 
     struct all_nodes_scan *node = calloc(1, sizeof(struct all_nodes_scan));
     if (node == NULL)
@@ -60,7 +65,7 @@ cypher_astnode_t *cypher_ast_all_nodes_scan(const cypher_astnode_t *identifier,
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_ALL_NODES_SCAN), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_ALL_NODES_SCAN, -1);
     struct all_nodes_scan *node =
             container_of(self, struct all_nodes_scan, _astnode);
     return snprintf(str, size, "identifier=@%u", node->identifier->ordinal);

@@ -30,8 +30,13 @@ struct false_literal
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_expression_astnode_vt };
+
 const struct cypher_astnode_vt cypher_false_astnode_vt =
-    { .name = "FALSE",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "FALSE",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -55,7 +60,7 @@ cypher_astnode_t *cypher_ast_false(struct cypher_input_range range)
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_FALSE), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_FALSE, -1);
     if (size > 0)
     {
         str[0] = '\0';

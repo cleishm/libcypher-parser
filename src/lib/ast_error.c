@@ -58,7 +58,7 @@ cypher_astnode_t *cypher_ast_error(const char *s, size_t n,
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_ERROR), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_ERROR, -1);
     struct error *node = container_of(self, struct error, _astnode);
     return snprintf(str, size, ">>%s<<", node->p);
 }

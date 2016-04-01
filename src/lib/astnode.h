@@ -19,11 +19,13 @@
 
 #include "cypher-parser.h"
 #include "ast.h"
+#include "util.h"
 
 
 struct cypher_astnode_vt
 {
-    const struct cypher_astnode_vt *parent;
+    const struct cypher_astnode_vt **parents;
+    unsigned int nparents;
     const char *name;
     ssize_t (*detailstr)(const cypher_astnode_t *self, char *str, size_t size);
     void (*free)(cypher_astnode_t *self);
@@ -48,6 +50,22 @@ void cypher_astnode_free(cypher_astnode_t *node);
 
 ssize_t cypher_astnode_detailstr(const cypher_astnode_t *node, char *str,
         size_t size);
+
+
+#define REQUIRE_TYPE(ptr, type, res) \
+        REQUIRE(cypher_astnode_instanceof(ptr, type), res)
+
+#define REQUIRE_TYPE_OPTIONAL(ptr, type, res) \
+        REQUIRE(ptr == NULL || cypher_astnode_instanceof(ptr, type), res)
+
+#define REQUIRE_TYPE_ALL(collection, size, type, res) \
+    do { \
+        REQUIRE((size == 0) || (collection != NULL), res); \
+        unsigned int i = size; \
+        while (i-- > 0) { \
+            REQUIRE(cypher_astnode_instanceof(collection[i], type), res); \
+        } \
+    } while(0)
 
 
 #endif/*CYPHER_PARSER_ASTNODE_H*/

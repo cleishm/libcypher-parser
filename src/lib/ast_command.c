@@ -24,19 +24,18 @@ struct command
 {
     cypher_astnode_t _astnode;
     const cypher_astnode_t *name;
-    const cypher_astnode_t **args;
     unsigned int nargs;
+    const cypher_astnode_t *args[];
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void command_free(cypher_astnode_t *self);
 
 
 const struct cypher_astnode_vt cypher_command_astnode_vt =
     { .name = "command",
       .detailstr = detailstr,
-      .free = command_free };
+      .free = cypher_astnode_free };
 
 
 cypher_astnode_t *cypher_ast_command(const cypher_astnode_t *name,
@@ -44,10 +43,11 @@ cypher_astnode_t *cypher_ast_command(const cypher_astnode_t *name,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(name, CYPHER_AST_STRING), NULL);
-    REQUIRE(nargs == 0 || args != NULL, NULL);
+    REQUIRE_TYPE(name, CYPHER_AST_STRING, NULL);
+    REQUIRE_TYPE_ALL(args, nargs, CYPHER_AST_STRING, NULL);
 
-    struct command *node = calloc(1, sizeof(struct command));
+    struct command *node = calloc(1, sizeof(struct command) +
+            nargs * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -58,15 +58,8 @@ cypher_astnode_t *cypher_ast_command(const cypher_astnode_t *name,
         goto cleanup;
     }
     node->name = name;
-    if (nargs > 0)
-    {
-        node->args = mdup(args, nargs * sizeof(cypher_astnode_t *));
-        if (node->args == NULL)
-        {
-            goto cleanup;
-        }
-        node->nargs = nargs;
-    }
+    memcpy(node->args, args, nargs * sizeof(cypher_astnode_t *));
+    node->nargs = nargs;
     return &(node->_astnode);
 
     int errsv;
@@ -78,17 +71,9 @@ cleanup:
 }
 
 
-void command_free(cypher_astnode_t *self)
-{
-    struct command *node = container_of(self, struct command, _astnode);
-    free(node->args);
-    cypher_astnode_free(self);
-}
-
-
 const cypher_astnode_t *cypher_ast_command_name(const cypher_astnode_t *astnode)
 {
-    REQUIRE(cypher_astnode_instanceof(astnode, CYPHER_AST_COMMAND), NULL);
+    REQUIRE_TYPE(astnode, CYPHER_AST_COMMAND, NULL);
     struct command *node = container_of(astnode, struct command, _astnode);
     return node->name;
 }
@@ -96,16 +81,16 @@ const cypher_astnode_t *cypher_ast_command_name(const cypher_astnode_t *astnode)
 
 unsigned int cypher_ast_command_narguments(const cypher_astnode_t *astnode)
 {
-    REQUIRE(cypher_astnode_instanceof(astnode, CYPHER_AST_COMMAND), 0);
+    REQUIRE_TYPE(astnode, CYPHER_AST_COMMAND, 0);
     struct command *node = container_of(astnode, struct command, _astnode);
     return node->nargs;
 }
 
 
-const cypher_astnode_t *cypher_ast_command_argument(
+const cypher_astnode_t *cypher_ast_command_get_argument(
         const cypher_astnode_t *astnode, unsigned int index)
 {
-    REQUIRE(cypher_astnode_instanceof(astnode, CYPHER_AST_COMMAND), NULL);
+    REQUIRE_TYPE(astnode, CYPHER_AST_COMMAND, NULL);
     struct command *node = container_of(astnode, struct command, _astnode);
     if (index >= node->nargs)
     {
@@ -117,7 +102,7 @@ const cypher_astnode_t *cypher_ast_command_argument(
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_COMMAND), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_COMMAND, -1);
     struct command *node = container_of(self, struct command, _astnode);
     size_t n = 0;
     ssize_t r = snprintf(str, size, "name=@%u, args=", node->name->ordinal);

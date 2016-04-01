@@ -58,7 +58,7 @@ cypher_astnode_t *cypher_ast_reltype(const char *s, size_t n,
 
 const char *cypher_ast_reltype_value(const cypher_astnode_t *astnode)
 {
-    REQUIRE(cypher_astnode_instanceof(astnode, CYPHER_AST_RELTYPE), NULL);
+    REQUIRE_TYPE(astnode, CYPHER_AST_RELTYPE, NULL);
     struct reltype *node = container_of(astnode, struct reltype, _astnode);
     return node->p;
 }
@@ -66,7 +66,7 @@ const char *cypher_ast_reltype_value(const cypher_astnode_t *astnode)
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_RELTYPE), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_RELTYPE, -1);
     struct reltype *node = container_of(self, struct reltype, _astnode);
     return snprintf(str, size, ":`%s`", node->p);
 }

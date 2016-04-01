@@ -42,8 +42,8 @@ cypher_astnode_t *cypher_ast_cypher_option_param(const cypher_astnode_t *name,
         const cypher_astnode_t *value, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(name, CYPHER_AST_STRING), NULL);
-    REQUIRE(cypher_astnode_instanceof(value, CYPHER_AST_STRING), NULL);
+    REQUIRE_TYPE(name, CYPHER_AST_STRING, NULL);
+    REQUIRE_TYPE(value, CYPHER_AST_STRING, NULL);
 
     struct cypher_option_param *node =
             calloc(1, sizeof(struct cypher_option_param));
@@ -63,9 +63,29 @@ cypher_astnode_t *cypher_ast_cypher_option_param(const cypher_astnode_t *name,
 }
 
 
+const cypher_astnode_t *cypher_ast_cypher_option_param_get_name(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_CYPHER_OPTION_PARAM, -1);
+    struct cypher_option_param *node = container_of(astnode,
+            struct cypher_option_param, _astnode);
+    return node->name;
+}
+
+
+const cypher_astnode_t *cypher_ast_cypher_option_param_get_value(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_CYPHER_OPTION_PARAM, -1);
+    struct cypher_option_param *node = container_of(astnode,
+            struct cypher_option_param, _astnode);
+    return node->value;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_CYPHER_OPTION_PARAM), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_CYPHER_OPTION_PARAM, -1);
     struct cypher_option_param *node =
         container_of(self, struct cypher_option_param, _astnode);
     return snprintf(str, size, "@%u = @%u", node->name->ordinal,

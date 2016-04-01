@@ -58,7 +58,7 @@ cypher_astnode_t *cypher_ast_index_name(const char *s, size_t n,
 
 const char *cypher_ast_index_name_value(const cypher_astnode_t *astnode)
 {
-    REQUIRE(cypher_astnode_instanceof(astnode, CYPHER_AST_INDEX_NAME), NULL);
+    REQUIRE_TYPE(astnode, CYPHER_AST_INDEX_NAME, NULL);
     struct index_name *node = container_of(astnode, struct index_name, _astnode);
     return node->p;
 }
@@ -66,7 +66,7 @@ const char *cypher_ast_index_name_value(const cypher_astnode_t *astnode)
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_INDEX_NAME), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_INDEX_NAME, -1);
     struct index_name *node = container_of(self, struct index_name, _astnode);
     return snprintf(str, size, "`%s`", node->p);
 }

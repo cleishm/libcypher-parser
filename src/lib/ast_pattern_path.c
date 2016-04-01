@@ -23,19 +23,23 @@
 struct pattern_path
 {
     cypher_astnode_t _astnode;
-    const cypher_astnode_t **elements;
     size_t nelements;
+    const cypher_astnode_t *elements[];
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void pattern_free(cypher_astnode_t *self);
 
+
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_expression_astnode_vt };
 
 const struct cypher_astnode_vt cypher_pattern_path_astnode_vt =
-    { .name = "pattern path",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "pattern path",
       .detailstr = detailstr,
-      .free = pattern_free };
+      .free = cypher_astnode_free };
 
 
 cypher_astnode_t *cypher_ast_pattern_path(cypher_astnode_t * const *elements,
@@ -44,8 +48,14 @@ cypher_astnode_t *cypher_ast_pattern_path(cypher_astnode_t * const *elements,
 {
     REQUIRE(nelements % 2 == 1, NULL);
     REQUIRE(elements != NULL, NULL);
+    for (unsigned int i = 0; i < nelements; ++i)
+    {
+        REQUIRE_TYPE(elements[i], (i%2 == 0)? CYPHER_AST_NODE_PATTERN :
+                CYPHER_AST_REL_PATTERN, NULL);
+    }
 
-    struct pattern_path *node = calloc(1, sizeof(struct pattern_path));
+    struct pattern_path *node = calloc(1, sizeof(struct pattern_path) +
+            nelements * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -55,11 +65,7 @@ cypher_astnode_t *cypher_ast_pattern_path(cypher_astnode_t * const *elements,
     {
         goto cleanup;
     }
-    node->elements = mdup(elements, nelements * sizeof(cypher_astnode_t *));
-    if (node->elements == NULL)
-    {
-        goto cleanup;
-    }
+    memcpy(node->elements, elements, nelements * sizeof(cypher_astnode_t *));
     node->nelements = nelements;
     return &(node->_astnode);
 
@@ -72,18 +78,9 @@ cleanup:
 }
 
 
-void pattern_free(cypher_astnode_t *self)
-{
-    struct pattern_path *node =
-            container_of(self, struct pattern_path, _astnode);
-    free(node->elements);
-    cypher_astnode_free(self);
-}
-
-
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_PATTERN_PATH), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_PATTERN_PATH, -1);
     struct pattern_path *node =
             container_of(self, struct pattern_path, _astnode);
     assert(node->nelements % 2 == 1);

@@ -44,9 +44,9 @@ cypher_astnode_t *cypher_ast_using_index(const cypher_astnode_t *identifier,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(identifier, CYPHER_AST_IDENTIFIER), NULL);
-    REQUIRE(cypher_astnode_instanceof(label, CYPHER_AST_LABEL), NULL);
-    REQUIRE(cypher_astnode_instanceof(prop_name, CYPHER_AST_PROP_NAME), NULL);
+    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_TYPE(label, CYPHER_AST_LABEL, NULL);
+    REQUIRE_TYPE(prop_name, CYPHER_AST_PROP_NAME, NULL);
 
     struct using_index *node = calloc(1, sizeof(struct using_index));
     if (node == NULL)
@@ -68,7 +68,7 @@ cypher_astnode_t *cypher_ast_using_index(const cypher_astnode_t *identifier,
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_USING_INDEX_HINT), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_USING_INDEX_HINT, -1);
     struct using_index *node = container_of(self, struct using_index, _astnode);
     return snprintf(str, size, "@%u:@%u(@%u)", node->identifier->ordinal,
             node->label->ordinal, node->prop_name->ordinal);

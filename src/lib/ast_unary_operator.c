@@ -32,8 +32,13 @@ struct unary_operator
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_expression_astnode_vt };
+
 const struct cypher_astnode_vt cypher_unary_operator_astnode_vt =
-    { .name = "unary operator",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "unary operator",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -43,7 +48,7 @@ cypher_astnode_t *cypher_ast_unary_operator(const cypher_operator_t *op,
         unsigned int nchildren, struct cypher_input_range range)
 {
     REQUIRE(op != NULL, NULL);
-    REQUIRE(arg != NULL, NULL);
+    REQUIRE_TYPE(arg, CYPHER_AST_EXPRESSION, NULL);
 
     struct unary_operator *node = calloc(1, sizeof(struct unary_operator));
     if (node == NULL)
@@ -64,7 +69,7 @@ cypher_astnode_t *cypher_ast_unary_operator(const cypher_operator_t *op,
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_UNARY_OPERATOR), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_UNARY_OPERATOR, -1);
     struct unary_operator *node =
         container_of(self, struct unary_operator, _astnode);
     return snprintf(str, size, "%s @%u", node->op->str, node->arg->ordinal);

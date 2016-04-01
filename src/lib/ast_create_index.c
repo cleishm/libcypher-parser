@@ -31,8 +31,13 @@ struct create_index
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_schema_command_astnode_vt };
+
 const struct cypher_astnode_vt cypher_create_index_astnode_vt =
-    { .name = "CREATE INDEX",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "CREATE INDEX",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -41,8 +46,8 @@ cypher_astnode_t *cypher_ast_create_index(const cypher_astnode_t *label,
         const cypher_astnode_t *prop_name, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(label, CYPHER_AST_LABEL), NULL);
-    REQUIRE(cypher_astnode_instanceof(prop_name, CYPHER_AST_PROP_NAME), NULL);
+    REQUIRE_TYPE(label, CYPHER_AST_LABEL, NULL);
+    REQUIRE_TYPE(prop_name, CYPHER_AST_PROP_NAME, NULL);
 
     struct create_index *node = calloc(1, sizeof(struct create_index));
     if (node == NULL)
@@ -61,9 +66,29 @@ cypher_astnode_t *cypher_ast_create_index(const cypher_astnode_t *label,
 }
 
 
+const cypher_astnode_t *cypher_ast_create_index_get_label(
+                const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_CREATE_INDEX, -1);
+    struct create_index *node =
+            container_of(astnode, struct create_index, _astnode);
+    return node->label;
+}
+
+
+const cypher_astnode_t *cypher_ast_create_index_get_prop_name(
+                const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_CREATE_INDEX, -1);
+    struct create_index *node =
+            container_of(astnode, struct create_index, _astnode);
+    return node->prop_name;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_CREATE_INDEX), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_CREATE_INDEX, -1);
     struct create_index *node =
             container_of(self, struct create_index, _astnode);
 

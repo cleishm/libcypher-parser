@@ -23,19 +23,18 @@
 struct order_by
 {
     cypher_astnode_t _astnode;
-    const cypher_astnode_t **items;
     unsigned int nitems;
+    const cypher_astnode_t *items[];
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void order_by_free(cypher_astnode_t *self);
 
 
 const struct cypher_astnode_vt cypher_order_by_astnode_vt =
     { .name = "ORDER BY",
       .detailstr = detailstr,
-      .free = order_by_free };
+      .free = cypher_astnode_free };
 
 
 cypher_astnode_t *cypher_ast_order_by(cypher_astnode_t * const *items,
@@ -43,9 +42,10 @@ cypher_astnode_t *cypher_ast_order_by(cypher_astnode_t * const *items,
         unsigned int nchildren, struct cypher_input_range range)
 {
     REQUIRE(nitems > 0, NULL);
-    REQUIRE(items != NULL, NULL);
+    REQUIRE_TYPE_ALL(items, nitems, CYPHER_AST_SORT_ITEM, NULL);
 
-    struct order_by *node = calloc(1, sizeof(struct order_by));
+    struct order_by *node = calloc(1, sizeof(struct order_by) +
+            nitems * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -55,11 +55,7 @@ cypher_astnode_t *cypher_ast_order_by(cypher_astnode_t * const *items,
     {
         goto cleanup;
     }
-    node->items = mdup(items, nitems * sizeof(cypher_astnode_t *));
-    if (node->items == NULL)
-    {
-        goto cleanup;
-    }
+    memcpy(node->items, items, nitems * sizeof(cypher_astnode_t *));
     node->nitems = nitems;
     return &(node->_astnode);
 
@@ -72,17 +68,9 @@ cleanup:
 }
 
 
-void order_by_free(cypher_astnode_t *self)
-{
-    struct order_by *node = container_of(self, struct order_by, _astnode);
-    free(node->items);
-    cypher_astnode_free(self);
-}
-
-
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_ORDER_BY), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_ORDER_BY, -1);
     struct order_by *node = container_of(self, struct order_by, _astnode);
 
     strncpy(str, "items=", size);

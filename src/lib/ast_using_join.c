@@ -24,19 +24,18 @@
 struct using_join
 {
     cypher_astnode_t _astnode;
-    const cypher_astnode_t **identifiers;
     unsigned int nidentifiers;
+    const cypher_astnode_t *identifiers[];
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void using_join_free(cypher_astnode_t *self);
 
 
 const struct cypher_astnode_vt cypher_using_join_astnode_vt =
     { .name = "USING JOIN",
       .detailstr = detailstr,
-      .free = using_join_free };
+      .free = cypher_astnode_free };
 
 
 cypher_astnode_t *cypher_ast_using_join(
@@ -45,9 +44,10 @@ cypher_astnode_t *cypher_ast_using_join(
         struct cypher_input_range range)
 {
     REQUIRE(nidentifiers > 0, NULL);
-    REQUIRE(identifiers != NULL, NULL);
+    REQUIRE_TYPE_ALL(identifiers, nidentifiers, CYPHER_AST_IDENTIFIER, NULL);
 
-    struct using_join *node = calloc(1, sizeof(struct using_join));
+    struct using_join *node = calloc(1, sizeof(struct using_join) +
+            nidentifiers * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -57,12 +57,8 @@ cypher_astnode_t *cypher_ast_using_join(
     {
         goto cleanup;
     }
-    node->identifiers = mdup(identifiers,
-            nidentifiers * sizeof(cypher_astnode_t *));;
-    if (node->identifiers == NULL)
-    {
-        goto cleanup;
-    }
+    memcpy(node->identifiers, identifiers,
+            nidentifiers * sizeof(cypher_astnode_t *));
     node->nidentifiers = nidentifiers;
     return &(node->_astnode);
 
@@ -75,17 +71,9 @@ cleanup:
 }
 
 
-void using_join_free(cypher_astnode_t *self)
-{
-    struct using_join *node = container_of(self, struct using_join, _astnode);
-    free(node->identifiers);
-    cypher_astnode_free(self);
-}
-
-
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_USING_JOIN_HINT), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_USING_JOIN_HINT, -1);
     struct using_join *node = container_of(self, struct using_join, _astnode);
 
     strncpy(str, "on=", size);

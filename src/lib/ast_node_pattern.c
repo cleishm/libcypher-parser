@@ -24,20 +24,19 @@ struct node_pattern
 {
     cypher_astnode_t _astnode;
     const cypher_astnode_t *identifier;
-    const cypher_astnode_t **labels;
-    size_t nlabels;
     const cypher_astnode_t *properties;
+    size_t nlabels;
+    const cypher_astnode_t *labels[];
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void pattern_free(cypher_astnode_t *self);
 
 
 const struct cypher_astnode_vt cypher_node_pattern_astnode_vt =
     { .name = "node pattern",
       .detailstr = detailstr,
-      .free = pattern_free };
+      .free = cypher_astnode_free };
 
 
 cypher_astnode_t *cypher_ast_node_pattern(const cypher_astnode_t *identifier,
@@ -45,9 +44,14 @@ cypher_astnode_t *cypher_ast_node_pattern(const cypher_astnode_t *identifier,
         const cypher_astnode_t *properties, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE(nlabels == 0 || labels != NULL, NULL);
+    REQUIRE_TYPE_OPTIONAL(identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_TYPE_ALL(labels, nlabels, CYPHER_AST_LABEL, NULL);
+    REQUIRE(properties == NULL ||
+            cypher_astnode_instanceof(properties, CYPHER_AST_MAP) ||
+            cypher_astnode_instanceof(properties, CYPHER_AST_PARAMETER), NULL);
 
-    struct node_pattern *node = calloc(1, sizeof(struct node_pattern));
+    struct node_pattern *node = calloc(1, sizeof(struct node_pattern) +
+            nlabels * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -58,15 +62,8 @@ cypher_astnode_t *cypher_ast_node_pattern(const cypher_astnode_t *identifier,
         goto cleanup;
     }
     node->identifier = identifier;
-    if (nlabels > 0)
-    {
-        node->labels = mdup(labels, nlabels * sizeof(cypher_astnode_t *));
-        if (node->labels == NULL)
-        {
-            goto cleanup;
-        }
-        node->nlabels = nlabels;
-    }
+    memcpy(node->labels, labels, nlabels * sizeof(cypher_astnode_t *));
+    node->nlabels = nlabels;
     node->properties = properties;
     return &(node->_astnode);
 
@@ -79,18 +76,9 @@ cleanup:
 }
 
 
-void pattern_free(cypher_astnode_t *self)
-{
-    struct node_pattern *node =
-            container_of(self, struct node_pattern, _astnode);
-    free(node->labels);
-    cypher_astnode_free(self);
-}
-
-
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_NODE_PATTERN), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_NODE_PATTERN, -1);
     struct node_pattern *node =
             container_of(self, struct node_pattern, _astnode);
 

@@ -24,19 +24,23 @@ struct merge
 {
     cypher_astnode_t _astnode;
     const cypher_astnode_t *path;
-    const cypher_astnode_t **actions;
     unsigned int nactions;
+    const cypher_astnode_t *actions[];
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void merge_free(cypher_astnode_t *self);
 
+
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_query_clause_astnode_vt };
 
 const struct cypher_astnode_vt cypher_merge_astnode_vt =
-    { .name = "MERGE",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "MERGE",
       .detailstr = detailstr,
-      .free = merge_free };
+      .free = cypher_astnode_free };
 
 
 cypher_astnode_t *cypher_ast_merge(const cypher_astnode_t *path,
@@ -44,10 +48,11 @@ cypher_astnode_t *cypher_ast_merge(const cypher_astnode_t *path,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE(path != NULL, NULL);
-    REQUIRE(nactions == 0 || actions != NULL, NULL);
+    REQUIRE_TYPE(path, CYPHER_AST_PATTERN_PATH, NULL);
+    REQUIRE_TYPE_ALL(actions, nactions, CYPHER_AST_MERGE_ACTION, NULL);
 
-    struct merge *node = calloc(1, sizeof(struct merge));
+    struct merge *node = calloc(1, sizeof(struct merge) +
+            nactions * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -58,15 +63,8 @@ cypher_astnode_t *cypher_ast_merge(const cypher_astnode_t *path,
         goto cleanup;
     }
     node->path = path;
-    if (nactions > 0)
-    {
-        node->actions = mdup(actions, nactions * sizeof(cypher_astnode_t *));
-        if (node->actions == NULL)
-        {
-            goto cleanup;
-        }
-        node->nactions = nactions;
-    }
+    memcpy(node->actions, actions, nactions * sizeof(cypher_astnode_t *));
+    node->nactions = nactions;
     return &(node->_astnode);
 
     int errsv;
@@ -78,17 +76,9 @@ cleanup:
 }
 
 
-void merge_free(cypher_astnode_t *self)
-{
-    struct merge *node = container_of(self, struct merge, _astnode);
-    free(node->actions);
-    cypher_astnode_free(self);
-}
-
-
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_MERGE), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_MERGE, -1);
     struct merge *node = container_of(self, struct merge, _astnode);
 
     size_t n = 0;

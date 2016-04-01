@@ -23,19 +23,18 @@
 struct pattern
 {
     cypher_astnode_t _astnode;
-    const cypher_astnode_t **paths;
     size_t npaths;
+    const cypher_astnode_t *paths[];
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void pattern_free(cypher_astnode_t *self);
 
 
 const struct cypher_astnode_vt cypher_pattern_astnode_vt =
     { .name = "pattern",
       .detailstr = detailstr,
-      .free = pattern_free };
+      .free = cypher_astnode_free };
 
 
 cypher_astnode_t *cypher_ast_pattern(cypher_astnode_t * const *paths,
@@ -43,9 +42,10 @@ cypher_astnode_t *cypher_ast_pattern(cypher_astnode_t * const *paths,
         unsigned int nchildren, struct cypher_input_range range)
 {
     REQUIRE(npaths > 0, NULL);
-    REQUIRE(paths != NULL, NULL);
+    REQUIRE_TYPE_ALL(paths, npaths, CYPHER_AST_PATTERN_PATH, NULL);
 
-    struct pattern *node = calloc(1, sizeof(struct pattern));
+    struct pattern *node = calloc(1, sizeof(struct pattern) +
+            npaths * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -55,11 +55,7 @@ cypher_astnode_t *cypher_ast_pattern(cypher_astnode_t * const *paths,
     {
         goto cleanup;
     }
-    node->paths = mdup(paths, npaths * sizeof(cypher_astnode_t *));
-    if (node->paths == NULL)
-    {
-        goto cleanup;
-    }
+    memcpy(node->paths, paths, npaths * sizeof(cypher_astnode_t *));
     node->npaths = npaths;
     return &(node->_astnode);
 
@@ -72,17 +68,9 @@ cleanup:
 }
 
 
-void pattern_free(cypher_astnode_t *self)
-{
-    struct pattern *node = container_of(self, struct pattern, _astnode);
-    free(node->paths);
-    cypher_astnode_free(self);
-}
-
-
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_PATTERN), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_PATTERN, -1);
     struct pattern *node = container_of(self, struct pattern, _astnode);
 
     strncpy(str, "paths=", size);

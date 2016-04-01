@@ -33,8 +33,13 @@ struct filter
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_expression_astnode_vt };
+
 const struct cypher_astnode_vt cypher_filter_astnode_vt =
-    { .name = "filter",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "filter",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -44,8 +49,9 @@ cypher_astnode_t *cypher_ast_filter(const cypher_astnode_t *identifier,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(identifier, CYPHER_AST_IDENTIFIER), NULL);
-    REQUIRE(expression != NULL, NULL);
+    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_TYPE_OPTIONAL(predicate, CYPHER_AST_EXPRESSION, NULL);
 
     struct filter *node = calloc(1, sizeof(struct filter));
     if (node == NULL)
@@ -67,7 +73,7 @@ cypher_astnode_t *cypher_ast_filter(const cypher_astnode_t *identifier,
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_FILTER), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_FILTER, -1);
     struct filter *node = container_of(self, struct filter, _astnode);
 
     size_t n = 0;

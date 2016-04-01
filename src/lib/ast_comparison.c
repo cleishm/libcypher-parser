@@ -35,8 +35,13 @@ static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 static void comparison_free(cypher_astnode_t *self);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_expression_astnode_vt };
+
 const struct cypher_astnode_vt cypher_comparison_astnode_vt =
-    { .name = "comparison",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "comparison",
       .detailstr = detailstr,
       .free = comparison_free };
 
@@ -46,10 +51,9 @@ cypher_astnode_t *cypher_ast_comparison(const cypher_astnode_t *left,
         unsigned int length, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE(left != NULL, NULL);
-    REQUIRE(length > 0, NULL);
-    REQUIRE(ops != NULL, NULL);
-    REQUIRE(args != NULL, NULL);
+    REQUIRE_TYPE(left, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE(length > 0 && ops != NULL, NULL);
+    REQUIRE_TYPE_ALL(args, length, CYPHER_AST_EXPRESSION, NULL);
 
     struct comparison *node = calloc(1, sizeof(struct comparison));
     if (node == NULL)
@@ -97,7 +101,7 @@ void comparison_free(cypher_astnode_t *self)
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_COMPARISON), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_COMPARISON, -1);
     struct comparison *node = container_of(self, struct comparison, _astnode);
 
     size_t n = 0;

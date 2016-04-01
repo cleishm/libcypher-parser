@@ -24,19 +24,23 @@ struct set_labels
 {
     cypher_astnode_t _astnode;
     const cypher_astnode_t *identifier;
-    const cypher_astnode_t **labels;
     unsigned int nlabels;
+    const cypher_astnode_t *labels[];
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void set_labels_free(cypher_astnode_t *self);
 
+
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_set_item_astnode_vt };
 
 const struct cypher_astnode_vt cypher_set_labels_astnode_vt =
-    { .name = "set labels",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "set labels",
       .detailstr = detailstr,
-      .free = set_labels_free };
+      .free = cypher_astnode_free };
 
 
 cypher_astnode_t *cypher_ast_set_labels(const cypher_astnode_t *identifier,
@@ -44,11 +48,12 @@ cypher_astnode_t *cypher_ast_set_labels(const cypher_astnode_t *identifier,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(identifier, CYPHER_AST_IDENTIFIER), NULL);
+    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
     REQUIRE(nlabels > 0, NULL);
-    REQUIRE(labels != NULL, NULL);
+    REQUIRE_TYPE_ALL(labels, nlabels, CYPHER_AST_LABEL, NULL);
 
-    struct set_labels *node = calloc(1, sizeof(struct set_labels));
+    struct set_labels *node = calloc(1, sizeof(struct set_labels) +
+            nlabels * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -59,11 +64,7 @@ cypher_astnode_t *cypher_ast_set_labels(const cypher_astnode_t *identifier,
         goto cleanup;
     }
     node->identifier = identifier;
-    node->labels = mdup(labels, nlabels * sizeof(cypher_astnode_t *));
-    if (node->labels == NULL)
-    {
-        goto cleanup;
-    }
+    memcpy(node->labels, labels, nlabels * sizeof(cypher_astnode_t *));
     node->nlabels = nlabels;
     return &(node->_astnode);
 
@@ -76,17 +77,9 @@ cleanup:
 }
 
 
-void set_labels_free(cypher_astnode_t *self)
-{
-    struct set_labels *node = container_of(self, struct set_labels, _astnode);
-    free(node->labels);
-    cypher_astnode_free(self);
-}
-
-
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_SET_LABELS), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_SET_LABELS, -1);
     struct set_labels *node = container_of(self, struct set_labels, _astnode);
 
     size_t n = 0;
