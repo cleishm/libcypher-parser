@@ -30,8 +30,13 @@ struct string
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_expression_astnode_vt };
+
 const struct cypher_astnode_vt cypher_string_astnode_vt =
-    { .name = "string",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "string",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -56,9 +61,9 @@ cypher_astnode_t *cypher_ast_string(const char *s, size_t n,
 }
 
 
-const char *cypher_ast_string_value(const cypher_astnode_t *astnode)
+const char *cypher_ast_string_get_value(const cypher_astnode_t *astnode)
 {
-    REQUIRE(cypher_astnode_instanceof(astnode, CYPHER_AST_STRING), NULL);
+    REQUIRE_TYPE(astnode, CYPHER_AST_STRING, NULL);
     struct string *node = container_of(astnode, struct string, _astnode);
     return node->p;
 }
@@ -66,7 +71,7 @@ const char *cypher_ast_string_value(const cypher_astnode_t *astnode)
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_STRING), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_STRING, -1);
     struct string *node = container_of(self, struct string, _astnode);
     return snprintf(str, size, "\"%s\"", node->p);
 }

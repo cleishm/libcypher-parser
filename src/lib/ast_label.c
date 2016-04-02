@@ -58,7 +58,7 @@ cypher_astnode_t *cypher_ast_label(const char *s, size_t n,
 
 const char *cypher_ast_label_value(const cypher_astnode_t *astnode)
 {
-    REQUIRE(cypher_astnode_instanceof(astnode, CYPHER_AST_LABEL), NULL);
+    REQUIRE_TYPE(astnode, CYPHER_AST_LABEL, NULL);
     struct label *node = container_of(astnode, struct label, _astnode);
     return node->p;
 }
@@ -66,7 +66,7 @@ const char *cypher_ast_label_value(const cypher_astnode_t *astnode)
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_LABEL), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_LABEL, -1);
     struct label *node = container_of(self, struct label, _astnode);
     return snprintf(str, size, ":`%s`", node->p);
 }

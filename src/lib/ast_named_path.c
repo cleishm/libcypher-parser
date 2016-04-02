@@ -41,8 +41,8 @@ cypher_astnode_t *cypher_ast_named_path(const cypher_astnode_t *identifier,
         const cypher_astnode_t *path, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(identifier, CYPHER_AST_IDENTIFIER), NULL);
-    REQUIRE(path != NULL, NULL);
+    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_TYPE(path, CYPHER_AST_PATTERN_PATH, NULL);
 
     struct named_path *node = calloc(1, sizeof(struct named_path));
     if (node == NULL)
@@ -63,7 +63,7 @@ cypher_astnode_t *cypher_ast_named_path(const cypher_astnode_t *identifier,
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_NAMED_PATH), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_NAMED_PATH, -1);
     struct named_path *node =
             container_of(self, struct named_path, _astnode);
     return snprintf(str, size, "@%d = @%d",

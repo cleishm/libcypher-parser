@@ -26,19 +26,23 @@ struct apply_operator
     cypher_astnode_t _astnode;
     bool distinct;
     const cypher_astnode_t *func;
-    const cypher_astnode_t **args;
     unsigned int nargs;
+    const cypher_astnode_t *args[];
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void apply_free(cypher_astnode_t *self);
 
+
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_expression_astnode_vt };
 
 const struct cypher_astnode_vt cypher_apply_operator_astnode_vt =
-    { .name = "apply",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "apply",
       .detailstr = detailstr,
-      .free = apply_free };
+      .free = cypher_astnode_free };
 
 
 cypher_astnode_t *cypher_ast_apply_operator(const cypher_astnode_t *func,
@@ -46,10 +50,11 @@ cypher_astnode_t *cypher_ast_apply_operator(const cypher_astnode_t *func,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(func, CYPHER_AST_FUNCTION_NAME), NULL);
-    REQUIRE(nargs == 0 || args != NULL, NULL);
+    REQUIRE_TYPE(func, CYPHER_AST_FUNCTION_NAME, NULL);
+    REQUIRE_TYPE_ALL(args, nargs, CYPHER_AST_EXPRESSION, NULL);
 
-    struct apply_operator *node = calloc(1, sizeof(struct apply_operator));
+    struct apply_operator *node = calloc(1, sizeof(struct apply_operator) +
+            nargs * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -62,15 +67,8 @@ cypher_astnode_t *cypher_ast_apply_operator(const cypher_astnode_t *func,
     node->distinct = distinct;
     node->func = func;
 
-    if (nargs > 0)
-    {
-        node->args = mdup(args, nargs * sizeof(cypher_astnode_t *));
-        if (node->args == NULL)
-        {
-            goto cleanup;
-        }
-        node->nargs = nargs;
-    }
+    memcpy(node->args, args, nargs * sizeof(cypher_astnode_t *));
+    node->nargs = nargs;
     return &(node->_astnode);
 
     int errsv;
@@ -82,18 +80,9 @@ cleanup:
 }
 
 
-void apply_free(cypher_astnode_t *self)
-{
-    struct apply_operator *node =
-        container_of(self, struct apply_operator, _astnode);
-    free(node->args);
-    cypher_astnode_free(self);
-}
-
-
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_APPLY_OPERATOR), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_APPLY_OPERATOR, -1);
     struct apply_operator *node =
         container_of(self, struct apply_operator, _astnode);
 

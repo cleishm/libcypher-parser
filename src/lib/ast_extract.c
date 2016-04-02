@@ -33,8 +33,13 @@ struct extract
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_expression_astnode_vt };
+
 const struct cypher_astnode_vt cypher_extract_astnode_vt =
-    { .name = "extract",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "extract",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -44,8 +49,9 @@ cypher_astnode_t *cypher_ast_extract(const cypher_astnode_t *identifier,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(identifier, CYPHER_AST_IDENTIFIER), NULL);
-    REQUIRE(expression != NULL, NULL);
+    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_TYPE_OPTIONAL(eval, CYPHER_AST_EXPRESSION, NULL);
 
     struct extract *node = calloc(1, sizeof(struct extract));
     if (node == NULL)
@@ -67,7 +73,7 @@ cypher_astnode_t *cypher_ast_extract(const cypher_astnode_t *identifier,
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_EXTRACT), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_EXTRACT, -1);
     struct extract *node = container_of(self, struct extract, _astnode);
 
     size_t n = 0;

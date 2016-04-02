@@ -32,8 +32,13 @@ struct constraint
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_schema_command_astnode_vt };
+
 const struct cypher_astnode_vt cypher_create_unique_constraint_astnode_vt =
-    { .name = "create unique constraint",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "create unique constraint",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -43,9 +48,9 @@ cypher_astnode_t *cypher_ast_create_unique_constraint(
         const cypher_astnode_t *expression, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(identifier, CYPHER_AST_IDENTIFIER), NULL);
-    REQUIRE(cypher_astnode_instanceof(label, CYPHER_AST_LABEL), NULL);
-    REQUIRE(expression != NULL, NULL);
+    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_TYPE(label, CYPHER_AST_LABEL, NULL);
+    REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
 
     struct constraint *node = calloc(1, sizeof(struct constraint));
     if (node == NULL)
@@ -67,8 +72,7 @@ cypher_astnode_t *cypher_ast_create_unique_constraint(
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self,
-            CYPHER_AST_CREATE_UNIQUE_NODE_PROP_CONSTRAINT), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_CREATE_UNIQUE_NODE_PROP_CONSTRAINT, -1);
     struct constraint *node = container_of(self, struct constraint, _astnode);
 
     return snprintf(str, size, "ON=(@%u:@%u), IS UNIQUE=(@%u)",

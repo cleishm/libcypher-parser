@@ -44,8 +44,10 @@ statement = - (SEMICOLON -)*
 
 cypher-statement = < statement-option* - (b:query | b:schema-command) >
                                        { $$ = statement(b); }
-statement-option = ( o:cypher-option | o:profile-option | o:explain-option ) -
-                                       { sequence_add(o); }
+statement-option =
+    ( o:cypher-option | o:profile-option | o:explain-option )
+    ~{ERR("a statement option")}
+    -                                  { sequence_add(o); }
 
 cypher-option =
     < CYPHER - (v:cypher-version | v:_null_)
@@ -111,15 +113,29 @@ drop-constraint =
       ) -
 
 
-query =
-    < ( c:periodic-commit              { sequence_add(c); }
-      | c:clause                       { sequence_add(c); }
-      ) clauses >                      { $$ = query(); }
+#query =
+#    <   (c:periodic-commit              { sequence_add(c); })*
+#      | c:clause                       { sequence_add(c); }
+#        clauses >                      { $$ = query(); }
+#clauses =
+#    ( SEMICOLON
+#    | EOF
+#    | c:clause _cut_ clauses           { sequence_add(c); }
+#    | _error_ (EOF | skip-to-clause) - clauses
+#    )
+
+query = < query-hints* clauses >       { $$ = query(); }
+query-hints =
+    ( c:periodic-commit                { sequence_add(c); }
+    ) ~{ERR("a query hint")}
 clauses =
+    c:clause                           { sequence_add(c); }
+    _clauses
+_clauses =
     ( SEMICOLON
     | EOF
-    | c:clause _cut_ clauses           { sequence_add(c); }
-    | _error_ (EOF | skip-to-clause) - clauses
+    | c:clause _cut_ _clauses          { sequence_add(c); }
+    | _error_ (EOF | skip-to-clause) - _clauses
     )
 
 periodic-commit = < USING-PERIODIC-COMMIT (l:integer-literal | l:_null_) >
@@ -420,8 +436,6 @@ atom =
     | string-literal
     | float-literal
     | integer-literal
-    | LEFT-PAREN - e:expression RIGHT-PAREN -
-                                       { $$ = e; }
     | list-comprehension
     | collection-literal
     | parameter
@@ -432,8 +446,11 @@ atom =
     | reduce-expression
     | all-predicate
     | any-predicate
-    | single-predicate
     | none-predicate
+    | single-predicate
+    | pattern-expression
+    | LEFT-PAREN - e:expression RIGHT-PAREN -
+                                       { $$ = e; }
     | function-application
     | identifier
 
@@ -654,17 +671,27 @@ pattern-part =
     | p:anon-pattern-part              { $$ = p; }
 
 anon-pattern-part =
+      p:shortest-path-pattern          { $$ = p; }
+    | p:pattern-path                   { $$ = p; }
+
+shortest-path-pattern =
       < SHORTESTPATH LEFT-PAREN - p:pattern-path - RIGHT-PAREN >
                                        { $$ = shortest_path(true, p); }
     | < ALLSHORTESTPATHS LEFT-PAREN - p:pattern-path - RIGHT-PAREN >
                                        { $$ = shortest_path(false, p); }
-    | p:pattern-path                   { $$ = p; }
 
 pattern-path =
     < n:node-pattern                   { sequence_add(n); }
     ( - r:relationship-pattern - n:node-pattern
                                        { sequence_add(r); sequence_add(n); }
     )* >                               { $$ = pattern_path(); }
+
+pattern-expression =
+      p:shortest-path-pattern          { $$ = p; }
+    | < n:node-pattern                 { sequence_add(n); }
+      ( - r:relationship-pattern - n:node-pattern
+                                       { sequence_add(r); sequence_add(n); }
+      )+ >                             { $$ = pattern_path(); }
 
 node-pattern = < LEFT-PAREN -
     (i:identifier | i:_null_)

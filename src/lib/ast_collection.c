@@ -23,19 +23,23 @@
 struct collection
 {
     cypher_astnode_t _astnode;
-    const cypher_astnode_t **elements;
     size_t nelements;
+    const cypher_astnode_t *elements[];
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void collection_free(cypher_astnode_t *self);
 
+
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_expression_astnode_vt };
 
 const struct cypher_astnode_vt cypher_collection_astnode_vt =
-    { .name = "collection",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "collection",
       .detailstr = detailstr,
-      .free = collection_free };
+      .free = cypher_astnode_free };
 
 
 cypher_astnode_t *cypher_ast_collection(
@@ -43,9 +47,10 @@ cypher_astnode_t *cypher_ast_collection(
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE(nelements == 0 || elements != NULL, NULL);
+    REQUIRE_TYPE_ALL(elements, nelements, CYPHER_AST_EXPRESSION, NULL);
 
-    struct collection *node = calloc(1, sizeof(struct collection));
+    struct collection *node = calloc(1, sizeof(struct collection) +
+            nelements * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -56,31 +61,15 @@ cypher_astnode_t *cypher_ast_collection(
         free(node);
         return NULL;
     }
-    if (nelements > 0)
-    {
-        node->elements = mdup(elements, nelements * sizeof(cypher_astnode_t *));
-        if (node->elements == NULL)
-        {
-            free(node);
-            return NULL;
-        }
-        node->nelements = nelements;
-    }
+    memcpy(node->elements, elements, nelements * sizeof(cypher_astnode_t *));
+    node->nelements = nelements;
     return &(node->_astnode);
-}
-
-
-void collection_free(cypher_astnode_t *self)
-{
-    struct collection *node = container_of(self, struct collection, _astnode);
-    free(node->elements);
-    cypher_astnode_free(self);
 }
 
 
 unsigned int cypher_ast_collection_length(const cypher_astnode_t *astnode)
 {
-    REQUIRE(cypher_astnode_instanceof(astnode, CYPHER_AST_COLLECTION), 0);
+    REQUIRE_TYPE(astnode, CYPHER_AST_COLLECTION, 0);
     struct collection *node =
             container_of(astnode, struct collection, _astnode);
     return node->nelements;
@@ -90,7 +79,7 @@ unsigned int cypher_ast_collection_length(const cypher_astnode_t *astnode)
 const cypher_astnode_t *cypher_ast_collection_get(
         const cypher_astnode_t *astnode, unsigned int index)
 {
-    REQUIRE(cypher_astnode_instanceof(astnode, CYPHER_AST_COLLECTION), NULL);
+    REQUIRE_TYPE(astnode, CYPHER_AST_COLLECTION, NULL);
     struct collection *node =
             container_of(astnode, struct collection, _astnode);
 
@@ -104,7 +93,7 @@ const cypher_astnode_t *cypher_ast_collection_get(
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_COLLECTION), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_COLLECTION, -1);
     struct collection *node = container_of(self, struct collection, _astnode);
 
     return snprint_sequence(str, size, node->elements, node->nelements);

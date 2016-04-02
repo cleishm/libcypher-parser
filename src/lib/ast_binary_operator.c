@@ -33,8 +33,13 @@ struct binary_operator
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_expression_astnode_vt };
+
 const struct cypher_astnode_vt cypher_binary_operator_astnode_vt =
-    { .name = "binary operator",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "binary operator",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -45,8 +50,8 @@ cypher_astnode_t *cypher_ast_binary_operator(const cypher_operator_t *op,
         struct cypher_input_range range)
 {
     REQUIRE(op != NULL, NULL);
-    REQUIRE(arg1 != NULL, NULL);
-    REQUIRE(arg2 != NULL, NULL);
+    REQUIRE_TYPE(arg1, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_TYPE(arg2, CYPHER_AST_EXPRESSION, NULL);
 
     struct binary_operator *node = calloc(1, sizeof(struct binary_operator));
     if (node == NULL)
@@ -68,7 +73,7 @@ cypher_astnode_t *cypher_ast_binary_operator(const cypher_operator_t *op,
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_BINARY_OPERATOR), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_BINARY_OPERATOR, -1);
     struct binary_operator *node =
         container_of(self, struct binary_operator, _astnode);
     return snprintf(str, size, "@%u %s @%u", node->arg1->ordinal,

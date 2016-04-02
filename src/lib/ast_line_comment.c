@@ -58,7 +58,7 @@ cypher_astnode_t *cypher_ast_line_comment(const char *s, size_t n,
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_LINE_COMMENT), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_LINE_COMMENT, -1);
     struct comment *node = container_of(self, struct comment, _astnode);
     return snprintf(str, size, "//%s", node->p);
 }

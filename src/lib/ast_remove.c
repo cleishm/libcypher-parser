@@ -23,19 +23,23 @@
 struct remove
 {
     cypher_astnode_t _astnode;
-    const cypher_astnode_t **items;
     unsigned int nitems;
+    const cypher_astnode_t *items[];
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void remove_free(cypher_astnode_t *self);
 
+
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_query_clause_astnode_vt };
 
 const struct cypher_astnode_vt cypher_remove_astnode_vt =
-    { .name = "REMOVE",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "REMOVE",
       .detailstr = detailstr,
-      .free = remove_free };
+      .free = cypher_astnode_free };
 
 
 cypher_astnode_t *cypher_ast_remove(cypher_astnode_t * const *items,
@@ -43,9 +47,10 @@ cypher_astnode_t *cypher_ast_remove(cypher_astnode_t * const *items,
         unsigned int nchildren, struct cypher_input_range range)
 {
     REQUIRE(nitems > 0, NULL);
-    REQUIRE(items != NULL, NULL);
+    REQUIRE_TYPE_ALL(items, nitems, CYPHER_AST_REMOVE_ITEM, NULL);
 
-    struct remove *node = calloc(1, sizeof(struct remove));
+    struct remove *node = calloc(1, sizeof(struct remove) +
+            nitems * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -55,11 +60,7 @@ cypher_astnode_t *cypher_ast_remove(cypher_astnode_t * const *items,
     {
         goto cleanup;
     }
-    node->items = mdup(items, nitems * sizeof(cypher_astnode_t *));
-    if (node->items == NULL)
-    {
-        goto cleanup;
-    }
+    memcpy(node->items, items, nitems * sizeof(cypher_astnode_t *));
     node->nitems = nitems;
     return &(node->_astnode);
 
@@ -72,17 +73,9 @@ cleanup:
 }
 
 
-void remove_free(cypher_astnode_t *self)
-{
-    struct remove *node = container_of(self, struct remove, _astnode);
-    free(node->items);
-    cypher_astnode_free(self);
-}
-
-
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_REMOVE), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_REMOVE, -1);
     struct remove *node = container_of(self, struct remove, _astnode);
 
     strncpy(str, "items=", size);

@@ -23,29 +23,33 @@
 struct query
 {
     cypher_astnode_t _astnode;
-    const cypher_astnode_t **clauses;
+    unsigned int noptions;
+    const cypher_astnode_t **options;
     unsigned int nclauses;
+    const cypher_astnode_t *clauses[];
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void query_free(cypher_astnode_t *self);
 
 
 const struct cypher_astnode_vt cypher_query_astnode_vt =
     { .name = "query",
       .detailstr = detailstr,
-      .free = query_free };
+      .free = cypher_astnode_free };
 
 
-cypher_astnode_t *cypher_ast_query(cypher_astnode_t * const *clauses,
+cypher_astnode_t *cypher_ast_query(cypher_astnode_t * const *options,
+        unsigned int noptions, cypher_astnode_t * const *clauses,
         unsigned int nclauses, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
+    REQUIRE_TYPE_ALL(options, noptions, CYPHER_AST_QUERY_OPTION, NULL);
     REQUIRE(nclauses > 0, NULL);
-    REQUIRE(clauses != NULL, NULL);
+    REQUIRE_TYPE_ALL(clauses, nclauses, CYPHER_AST_QUERY_CLAUSE, NULL);
 
-    struct query *node = calloc(1, sizeof(struct query));
+    struct query *node = calloc(1, sizeof(struct query) +
+            nclauses * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -55,11 +59,16 @@ cypher_astnode_t *cypher_ast_query(cypher_astnode_t * const *clauses,
     {
         goto cleanup;
     }
-    node->clauses = mdup(clauses, nclauses * sizeof(cypher_astnode_t *));
-    if (node->clauses == NULL)
+    if (noptions > 0)
     {
-        goto cleanup;
+        node->options = mdup(options, noptions * sizeof(cypher_astnode_t *));
+        if (node->options == NULL)
+        {
+            goto cleanup;
+        }
+        node->noptions = noptions;
     }
+    memcpy(node->clauses, clauses, nclauses * sizeof(cypher_astnode_t *));
     node->nclauses = nclauses;
     return &(node->_astnode);
 
@@ -72,17 +81,9 @@ cleanup:
 }
 
 
-void query_free(cypher_astnode_t *self)
-{
-    struct query *node = container_of(self, struct query, _astnode);
-    free(node->clauses);
-    cypher_astnode_free(self);
-}
-
-
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_QUERY), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_QUERY, -1);
     struct query *node = container_of(self, struct query, _astnode);
 
     strncpy(str, "clauses=", size);

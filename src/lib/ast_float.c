@@ -30,8 +30,13 @@ struct flt
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_expression_astnode_vt };
+
 const struct cypher_astnode_vt cypher_float_astnode_vt =
-    { .name = "float",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "float",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -58,7 +63,7 @@ cypher_astnode_t *cypher_ast_float(const char *s, size_t n,
 
 const char *cypher_ast_float_value(const cypher_astnode_t *astnode)
 {
-    REQUIRE(cypher_astnode_instanceof(astnode, CYPHER_AST_FLOAT), NULL);
+    REQUIRE_TYPE(astnode, CYPHER_AST_FLOAT, NULL);
     struct flt *node = container_of(astnode, struct flt, _astnode);
     return node->p;
 }
@@ -66,7 +71,7 @@ const char *cypher_ast_float_value(const cypher_astnode_t *astnode)
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_FLOAT), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_FLOAT, -1);
     struct flt *node = container_of(self, struct flt, _astnode);
     return snprintf(str, size, "%s", node->p);
 }

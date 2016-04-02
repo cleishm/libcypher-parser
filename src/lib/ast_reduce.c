@@ -35,8 +35,13 @@ struct reduce
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_expression_astnode_vt };
+
 const struct cypher_astnode_vt cypher_reduce_astnode_vt =
-    { .name = "reduce",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "reduce",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -47,10 +52,10 @@ cypher_astnode_t *cypher_ast_reduce(const cypher_astnode_t *accumulator,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(accumulator, CYPHER_AST_IDENTIFIER), NULL);
-    REQUIRE(init != NULL, NULL);
-    REQUIRE(cypher_astnode_instanceof(identifier, CYPHER_AST_IDENTIFIER), NULL);
-    REQUIRE(expression != NULL, NULL);
+    REQUIRE_TYPE(accumulator, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_TYPE(init, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
 
     struct reduce *node = calloc(1, sizeof(struct reduce));
     if (node == NULL)
@@ -74,7 +79,7 @@ cypher_astnode_t *cypher_ast_reduce(const cypher_astnode_t *accumulator,
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_REDUCE), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_REDUCE, -1);
     struct reduce *node = container_of(self, struct reduce, _astnode);
 
     size_t n = 0;

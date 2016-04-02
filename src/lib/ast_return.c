@@ -25,33 +25,42 @@ struct return_clause
     cypher_astnode_t _astnode;
     bool distinct;
     bool include_existing;
-    const cypher_astnode_t **items;
-    unsigned int nitems;
     const cypher_astnode_t *order_by;
     const cypher_astnode_t *skip;
     const cypher_astnode_t *limit;
+    unsigned int nprojections;
+    const cypher_astnode_t *projections[];
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void return_free(cypher_astnode_t *self);
 
+
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_query_clause_astnode_vt };
 
 const struct cypher_astnode_vt cypher_return_astnode_vt =
-    { .name = "RETURN",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "RETURN",
       .detailstr = detailstr,
-      .free = return_free };
+      .free = cypher_astnode_free };
 
 
 cypher_astnode_t *cypher_ast_return(bool distinct, bool include_existing,
-        cypher_astnode_t * const *items, unsigned int nitems,
+        cypher_astnode_t * const *projections, unsigned int nprojections,
         const cypher_astnode_t *order_by, const cypher_astnode_t *skip,
         const cypher_astnode_t *limit, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE(nitems == 0 || items != NULL, NULL);
+    REQUIRE(include_existing || nprojections > 0, NULL);
+    REQUIRE_TYPE_ALL(projections, nprojections, CYPHER_AST_PROJECTION, NULL);
+    REQUIRE_TYPE_OPTIONAL(order_by, CYPHER_AST_ORDER_BY, NULL);
+    REQUIRE_TYPE_OPTIONAL(skip, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_TYPE_OPTIONAL(limit, CYPHER_AST_EXPRESSION, NULL);
 
-    struct return_clause *node = calloc(1, sizeof(struct return_clause));
+    struct return_clause *node = calloc(1, sizeof(struct return_clause) +
+            nprojections * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -63,15 +72,9 @@ cypher_astnode_t *cypher_ast_return(bool distinct, bool include_existing,
     }
     node->distinct = distinct;
     node->include_existing = include_existing;
-    if (nitems > 0)
-    {
-        node->items = mdup(items, nitems * sizeof(cypher_astnode_t *));
-        if (node->items == NULL)
-        {
-            goto cleanup;
-        }
-        node->nitems = nitems;
-    }
+    memcpy(node->projections, projections,
+            nprojections * sizeof(cypher_astnode_t *));
+    node->nprojections = nprojections;
     node->order_by = order_by;
     node->skip = skip;
     node->limit = limit;
@@ -86,22 +89,13 @@ cleanup:
 }
 
 
-void return_free(cypher_astnode_t *self)
-{
-    struct return_clause *node =
-            container_of(self, struct return_clause, _astnode);
-    free(node->items);
-    cypher_astnode_free(self);
-}
-
-
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_RETURN), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_RETURN, -1);
     struct return_clause *node =
             container_of(self, struct return_clause, _astnode);
 
-    ssize_t r = snprintf(str, size, "%s%s%s%sitems=",
+    ssize_t r = snprintf(str, size, "%s%s%s%sprojections=",
             node->distinct? "DISTINCT":"",
             (node->distinct && node->include_existing)? ", ":"",
             node->include_existing? "*":"",
@@ -112,7 +106,7 @@ ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
     }
     size_t n = r;
     r = snprint_sequence(str + n, (n < size)? size-n : 0,
-            node->items, node->nitems);
+            node->projections, node->nprojections);
     if (r < 0)
     {
         return -1;

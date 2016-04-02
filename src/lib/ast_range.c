@@ -42,6 +42,9 @@ cypher_astnode_t *cypher_ast_range(const cypher_astnode_t *start,
         const cypher_astnode_t *end, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
+    REQUIRE_TYPE_OPTIONAL(start, CYPHER_AST_INTEGER, NULL);
+    REQUIRE_TYPE_OPTIONAL(end, CYPHER_AST_INTEGER, NULL);
+
     struct range *node = calloc(1, sizeof(struct range));
     if (node == NULL)
     {
@@ -61,7 +64,7 @@ cypher_astnode_t *cypher_ast_range(const cypher_astnode_t *start,
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_RANGE), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_RANGE, -1);
     struct range *node = container_of(self, struct range, _astnode);
 
     size_t n = 0;

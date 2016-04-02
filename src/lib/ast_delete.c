@@ -24,19 +24,23 @@ struct delete_clause
 {
     cypher_astnode_t _astnode;
     bool detach;
-    const cypher_astnode_t **expressions;
     unsigned int nexpressions;
+    const cypher_astnode_t *expressions[];
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void delete_free(cypher_astnode_t *self);
 
+
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_query_clause_astnode_vt };
 
 const struct cypher_astnode_vt cypher_delete_astnode_vt =
-    { .name = "DELETE",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "DELETE",
       .detailstr = detailstr,
-      .free = delete_free };
+      .free = cypher_astnode_free };
 
 
 cypher_astnode_t *cypher_ast_delete(bool detach,
@@ -45,9 +49,10 @@ cypher_astnode_t *cypher_ast_delete(bool detach,
         struct cypher_input_range range)
 {
     REQUIRE(nexpressions > 0, NULL);
-    REQUIRE(expressions != NULL, NULL);
+    REQUIRE_TYPE_ALL(expressions, nexpressions, CYPHER_AST_EXPRESSION, NULL);
 
-    struct delete_clause *node = calloc(1, sizeof(struct delete_clause));
+    struct delete_clause *node = calloc(1, sizeof(struct delete_clause) +
+            nexpressions * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -58,11 +63,8 @@ cypher_astnode_t *cypher_ast_delete(bool detach,
         goto cleanup;
     }
     node->detach = detach;
-    node->expressions = mdup(expressions, nexpressions * sizeof(cypher_astnode_t *));
-    if (node->expressions == NULL)
-    {
-        goto cleanup;
-    }
+    memcpy(node->expressions, expressions,
+            nexpressions * sizeof(cypher_astnode_t *));
     node->nexpressions = nexpressions;
     return &(node->_astnode);
 
@@ -75,18 +77,9 @@ cleanup:
 }
 
 
-void delete_free(cypher_astnode_t *self)
-{
-    struct delete_clause *node =
-            container_of(self, struct delete_clause, _astnode);
-    free(node->expressions);
-    cypher_astnode_free(self);
-}
-
-
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_DELETE), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_DELETE, -1);
     struct delete_clause *node =
             container_of(self, struct delete_clause, _astnode);
 

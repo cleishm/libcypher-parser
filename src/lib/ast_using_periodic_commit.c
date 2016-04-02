@@ -31,8 +31,13 @@ struct using_periodic_commit
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_query_option_astnode_vt };
+
 const struct cypher_astnode_vt cypher_using_periodic_commit_astnode_vt =
-    { .name = "USING PERIODIC_COMMIT",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "USING PERIODIC_COMMIT",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -41,8 +46,7 @@ cypher_astnode_t *cypher_ast_using_periodic_commit(
         const cypher_astnode_t *limit, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE(limit == NULL || cypher_astnode_instanceof(limit,
-                CYPHER_AST_INTEGER), NULL);
+    REQUIRE_TYPE_OPTIONAL(limit, CYPHER_AST_INTEGER, NULL);
 
     struct using_periodic_commit *node =
             calloc(1, sizeof(struct using_periodic_commit));
@@ -63,8 +67,7 @@ cypher_astnode_t *cypher_ast_using_periodic_commit(
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self,
-                CYPHER_AST_USING_PERIODIC_COMMIT), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_USING_PERIODIC_COMMIT, -1);
     struct using_periodic_commit *node =
             container_of(self, struct using_periodic_commit, _astnode);
     if (node->limit == NULL)

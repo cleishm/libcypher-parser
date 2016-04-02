@@ -23,20 +23,24 @@
 struct start
 {
     cypher_astnode_t _astnode;
-    const cypher_astnode_t **points;
-    unsigned int npoints;
     const cypher_astnode_t *predicate;
+    unsigned int npoints;
+    const cypher_astnode_t *points[];
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void start_free(cypher_astnode_t *self);
 
+
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_query_clause_astnode_vt };
 
 const struct cypher_astnode_vt cypher_start_astnode_vt =
-    { .name = "START",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "START",
       .detailstr = detailstr,
-      .free = start_free };
+      .free = cypher_astnode_free };
 
 
 cypher_astnode_t *cypher_ast_start(cypher_astnode_t * const *points,
@@ -45,9 +49,11 @@ cypher_astnode_t *cypher_ast_start(cypher_astnode_t * const *points,
         struct cypher_input_range range)
 {
     REQUIRE(npoints > 0, NULL);
-    REQUIRE(points != NULL, NULL);
+    REQUIRE_TYPE_ALL(points, npoints, CYPHER_AST_START_POINT, NULL);
+    REQUIRE_TYPE_OPTIONAL(predicate, CYPHER_AST_EXPRESSION, NULL);
 
-    struct start *node = calloc(1, sizeof(struct start));
+    struct start *node = calloc(1, sizeof(struct start) +
+            npoints * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -57,11 +63,7 @@ cypher_astnode_t *cypher_ast_start(cypher_astnode_t * const *points,
     {
         goto cleanup;
     }
-    node->points = mdup(points, npoints * sizeof(cypher_astnode_t *));
-    if (node->points == NULL)
-    {
-        goto cleanup;
-    }
+    memcpy(node->points, points, npoints * sizeof(cypher_astnode_t *));
     node->npoints = npoints;
     node->predicate = predicate;
     return &(node->_astnode);
@@ -75,17 +77,9 @@ cleanup:
 }
 
 
-void start_free(cypher_astnode_t *self)
-{
-    struct start *node = container_of(self, struct start, _astnode);
-    free(node->points);
-    cypher_astnode_free(self);
-}
-
-
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_START), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_START, -1);
     struct start *node = container_of(self, struct start, _astnode);
 
     size_t n = 0;

@@ -32,6 +32,7 @@ libcypher_parser_la_SOURCES = \
 	ast_drop_rel_prop_exists_constraint.c \
 	ast_error.c \
 	ast_explain_option.c \
+	ast_expression.c \
 	ast_extract.c \
 	ast_false.c \
 	ast_filter.c \
@@ -47,8 +48,10 @@ libcypher_parser_la_SOURCES = \
 	ast_list_comprehension.c \
 	ast_load_csv.c \
 	ast_match.c \
+	ast_match_hint.c \
 	ast_map.c \
 	ast_merge.c \
+	ast_merge_action.c \
 	ast_merge_properties.c \
 	ast_named_path.c \
 	ast_node_id_lookup.c \
@@ -69,19 +72,24 @@ libcypher_parser_la_SOURCES = \
 	ast_prop_name.c \
 	ast_property_operator.c \
 	ast_query.c \
+	ast_query_clause.c \
+	ast_query_option.c \
 	ast_range.c \
 	ast_reduce.c \
 	ast_rel_id_lookup.c \
 	ast_rel_index_lookup.c \
 	ast_rel_index_query.c \
 	ast_remove.c \
-	ast_remove_property.c \
+	ast_remove_item.c \
 	ast_remove_labels.c \
+	ast_remove_property.c \
 	ast_rel_pattern.c \
 	ast_reltype.c \
 	ast_return.c \
+	ast_schema_command.c \
 	ast_set.c \
 	ast_set_all_properties.c \
+	ast_set_item.c \
 	ast_set_labels.c \
 	ast_set_property.c \
 	ast_shortest_path.c \
@@ -89,7 +97,9 @@ libcypher_parser_la_SOURCES = \
 	ast_slice_operator.c \
 	ast_sort_item.c \
 	ast_start.c \
+	ast_start_point.c \
 	ast_statement.c \
+	ast_statement_option.c \
 	ast_string.c \
 	ast_subscript_operator.c \
 	ast_true.c \

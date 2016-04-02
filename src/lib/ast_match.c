@@ -25,20 +25,24 @@ struct match
     cypher_astnode_t _astnode;
     bool optional;
     const cypher_astnode_t *pattern;
-    const cypher_astnode_t **hints;
-    unsigned int nhints;
     const cypher_astnode_t *predicate;
+    unsigned int nhints;
+    const cypher_astnode_t *hints[];
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void match_free(cypher_astnode_t *self);
 
+
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_query_clause_astnode_vt };
 
 const struct cypher_astnode_vt cypher_match_astnode_vt =
-    { .name = "MATCH",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "MATCH",
       .detailstr = detailstr,
-      .free = match_free };
+      .free = cypher_astnode_free };
 
 
 cypher_astnode_t *cypher_ast_match(bool optional,
@@ -47,10 +51,12 @@ cypher_astnode_t *cypher_ast_match(bool optional,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(pattern, CYPHER_AST_PATTERN), NULL);
-    REQUIRE(nhints == 0 || hints != NULL, NULL);
+    REQUIRE_TYPE(pattern, CYPHER_AST_PATTERN, NULL);
+    REQUIRE_TYPE_ALL(hints, nhints, CYPHER_AST_MATCH_HINT, NULL);
+    REQUIRE_TYPE_OPTIONAL(predicate, CYPHER_AST_EXPRESSION, NULL);
 
-    struct match *node = calloc(1, sizeof(struct match));
+    struct match *node = calloc(1, sizeof(struct match) +
+            nhints * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -62,15 +68,8 @@ cypher_astnode_t *cypher_ast_match(bool optional,
     }
     node->optional = optional;
     node->pattern = pattern;
-    if (nhints > 0)
-    {
-        node->hints = mdup(hints, nhints * sizeof(cypher_astnode_t *));
-        if (node->hints == NULL)
-        {
-            goto cleanup;
-        }
-        node->nhints = nhints;
-    }
+    memcpy(node->hints, hints, nhints * sizeof(cypher_astnode_t *));
+    node->nhints = nhints;
     node->predicate = predicate;
     return &(node->_astnode);
 
@@ -83,17 +82,9 @@ cleanup:
 }
 
 
-void match_free(cypher_astnode_t *self)
-{
-    struct match *node = container_of(self, struct match, _astnode);
-    free(node->hints);
-    cypher_astnode_free(self);
-}
-
-
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_MATCH), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_MATCH, -1);
     struct match *node = container_of(self, struct match, _astnode);
 
     size_t n = 0;

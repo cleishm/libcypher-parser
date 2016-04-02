@@ -30,8 +30,13 @@ struct true_literal
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_expression_astnode_vt };
+
 const struct cypher_astnode_vt cypher_true_astnode_vt =
-    { .name = "TRUE",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "TRUE",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -55,7 +60,7 @@ cypher_astnode_t *cypher_ast_true(struct cypher_input_range range)
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_TRUE), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_TRUE, -1);
     if (size > 0)
     {
         str[0] = '\0';

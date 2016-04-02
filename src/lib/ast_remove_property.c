@@ -30,8 +30,13 @@ struct remove_property
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_remove_item_astnode_vt };
+
 const struct cypher_astnode_vt cypher_remove_property_astnode_vt =
-    { .name = "remove property",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "remove property",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -40,8 +45,7 @@ cypher_astnode_t *cypher_ast_remove_property(const cypher_astnode_t *property,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(property,
-                CYPHER_AST_PROPERTY_OPERATOR), NULL);
+    REQUIRE_TYPE(property, CYPHER_AST_PROPERTY_OPERATOR, NULL);
 
     struct remove_property *node = calloc(1, sizeof(struct remove_property));
     if (node == NULL)
@@ -61,7 +65,7 @@ cypher_astnode_t *cypher_ast_remove_property(const cypher_astnode_t *property,
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_REMOVE_PROPERTY), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_REMOVE_PROPERTY, -1);
     struct remove_property *node =
             container_of(self, struct remove_property, _astnode);
     return snprintf(str, size, "prop=@%u", node->property->ordinal);

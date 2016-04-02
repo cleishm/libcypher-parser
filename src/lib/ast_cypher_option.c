@@ -25,19 +25,23 @@ struct cypher_option
 {
     cypher_astnode_t _astnode;
     const cypher_astnode_t *version;
-    const cypher_astnode_t **params;
     unsigned int nparams;
+    const cypher_astnode_t *params[];
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void cypher_option_free(cypher_astnode_t *self);
 
+
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_statement_option_astnode_vt };
 
 const struct cypher_astnode_vt cypher_cypher_option_astnode_vt =
-    { .name = "CYPHER",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "CYPHER",
       .detailstr = detailstr,
-      .free = cypher_option_free };
+      .free = cypher_astnode_free };
 
 
 cypher_astnode_t *cypher_ast_cypher_option(const cypher_astnode_t *version,
@@ -45,11 +49,11 @@ cypher_astnode_t *cypher_ast_cypher_option(const cypher_astnode_t *version,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE(version == NULL ||
-            cypher_astnode_instanceof(version, CYPHER_AST_STRING), NULL);
-    REQUIRE(nparams == 0 || params != NULL, NULL);
+    REQUIRE_TYPE_OPTIONAL(version, CYPHER_AST_STRING, NULL);
+    REQUIRE_TYPE_ALL(params, nparams, CYPHER_AST_CYPHER_OPTION_PARAM, NULL);
 
-    struct cypher_option *node = calloc(1, sizeof(struct cypher_option));
+    struct cypher_option *node = calloc(1, sizeof(struct cypher_option) +
+            nparams * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -61,15 +65,8 @@ cypher_astnode_t *cypher_ast_cypher_option(const cypher_astnode_t *version,
     }
     node->version = version;
 
-    if (nparams > 0)
-    {
-        node->params = mdup(params, nparams * sizeof(cypher_astnode_t *));
-        if (node->params == NULL)
-        {
-            goto cleanup;
-        }
-        node->nparams = nparams;
-    }
+    memcpy(node->params, params, nparams * sizeof(cypher_astnode_t *));
+    node->nparams = nparams;
     return &(node->_astnode);
 
     int errsv;
@@ -81,18 +78,42 @@ cleanup:
 }
 
 
-void cypher_option_free(cypher_astnode_t *self)
+const cypher_astnode_t *cypher_ast_cypher_option_get_version(
+        const cypher_astnode_t *astnode)
 {
-    struct cypher_option *node =
-        container_of(self, struct cypher_option, _astnode);
-    free(node->params);
-    cypher_astnode_free(self);
+    REQUIRE_TYPE(astnode, CYPHER_AST_CYPHER_OPTION, -1);
+    struct cypher_option *node = container_of(astnode,
+            struct cypher_option, _astnode);
+    return node->version;
+}
+
+
+unsigned int cypher_ast_cypher_option_nparams(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_CYPHER_OPTION, -1);
+    struct cypher_option *node = container_of(astnode,
+            struct cypher_option, _astnode);
+    return node->nparams;
+}
+
+
+const cypher_astnode_t *cypher_ast_cypher_option_get_param(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_CYPHER_OPTION, -1);
+    struct cypher_option *node = container_of(astnode,
+            struct cypher_option, _astnode);
+    if (index >= node->nparams)
+    {
+        return NULL;
+    }
+    return node->params[index];
 }
 
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_CYPHER_OPTION), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_CYPHER_OPTION, -1);
     struct cypher_option *node =
         container_of(self, struct cypher_option, _astnode);
 

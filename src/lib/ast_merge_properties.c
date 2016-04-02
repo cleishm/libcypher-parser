@@ -42,8 +42,8 @@ cypher_astnode_t *cypher_ast_merge_properties(
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(identifier, CYPHER_AST_IDENTIFIER), NULL);
-    REQUIRE(expression != NULL, NULL);
+    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
 
     struct merge_properties *node = calloc(1, sizeof(struct merge_properties));
     if (node == NULL)
@@ -64,7 +64,7 @@ cypher_astnode_t *cypher_ast_merge_properties(
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_MERGE_PROPERTIES), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_MERGE_PROPERTIES, -1);
     struct merge_properties *node =
             container_of(self, struct merge_properties, _astnode);
 

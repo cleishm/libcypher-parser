@@ -23,19 +23,23 @@
 struct map
 {
     cypher_astnode_t _astnode;
-    const cypher_astnode_t **pairs;
     size_t npairs;
+    const cypher_astnode_t *pairs[];
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void map_free(cypher_astnode_t *self);
 
+
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_expression_astnode_vt };
 
 const struct cypher_astnode_vt cypher_map_astnode_vt =
-    { .name = "map",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "map",
       .detailstr = detailstr,
-      .free = map_free };
+      .free = cypher_astnode_free };
 
 
 cypher_astnode_t *cypher_ast_map(cypher_astnode_t * const *pairs,
@@ -43,8 +47,14 @@ cypher_astnode_t *cypher_ast_map(cypher_astnode_t * const *pairs,
         unsigned int nchildren, struct cypher_input_range range)
 {
     REQUIRE(npairs % 2 == 0, NULL);
+    for (unsigned int i = 0; i < npairs; i+=2)
+    {
+        REQUIRE_TYPE(pairs[i], CYPHER_AST_PROP_NAME, NULL);
+        REQUIRE_TYPE(pairs[i+1], CYPHER_AST_EXPRESSION, NULL);
+    }
 
-    struct map *node = calloc(1, sizeof(struct map));
+    struct map *node = calloc(1, sizeof(struct map) +
+            npairs * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -54,15 +64,8 @@ cypher_astnode_t *cypher_ast_map(cypher_astnode_t * const *pairs,
     {
         goto cleanup;
     }
-    if (npairs > 0)
-    {
-        node->pairs = mdup(pairs, npairs * sizeof(cypher_astnode_t *));
-        if (node->pairs == NULL)
-        {
-            goto cleanup;
-        }
-        node->npairs = npairs;
-    }
+    memcpy(node->pairs, pairs, npairs * sizeof(cypher_astnode_t *));
+    node->npairs = npairs;
     return &(node->_astnode);
 
     int errsv;
@@ -74,17 +77,9 @@ cleanup:
 }
 
 
-void map_free(cypher_astnode_t *self)
-{
-    struct map *node = container_of(self, struct map, _astnode);
-    free(node->pairs);
-    cypher_astnode_free(self);
-}
-
-
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_MAP), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_MAP, -1);
     struct map *node = container_of(self, struct map, _astnode);
 
     size_t n = 0;

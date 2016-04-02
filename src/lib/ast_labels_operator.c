@@ -25,19 +25,23 @@ struct labels_operator
 {
     cypher_astnode_t _astnode;
     const cypher_astnode_t *expression;
-    const cypher_astnode_t **labels;
     unsigned int nlabels;
+    const cypher_astnode_t *labels[];
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void labels_operator_free(cypher_astnode_t *self);
 
+
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_expression_astnode_vt };
 
 const struct cypher_astnode_vt cypher_labels_operator_astnode_vt =
-    { .name = "has labels",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "has labels",
       .detailstr = detailstr,
-      .free = labels_operator_free };
+      .free = cypher_astnode_free };
 
 
 cypher_astnode_t *cypher_ast_labels_operator(const cypher_astnode_t *expression,
@@ -45,11 +49,12 @@ cypher_astnode_t *cypher_ast_labels_operator(const cypher_astnode_t *expression,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE(expression != NULL, NULL);
+    REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
     REQUIRE(nlabels > 0, NULL);
-    REQUIRE(labels != NULL, NULL);
+    REQUIRE_TYPE_ALL(labels, nlabels, CYPHER_AST_LABEL, NULL);
 
-    struct labels_operator *node = calloc(1, sizeof(struct labels_operator));
+    struct labels_operator *node = calloc(1, sizeof(struct labels_operator) +
+            nlabels * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -60,11 +65,7 @@ cypher_astnode_t *cypher_ast_labels_operator(const cypher_astnode_t *expression,
         goto cleanup;
     }
     node->expression = expression;
-    node->labels = mdup(labels, nlabels * sizeof(cypher_astnode_t *));
-    if (node->labels == NULL)
-    {
-        goto cleanup;
-    }
+    memcpy(node->labels, labels, nlabels * sizeof(cypher_astnode_t *));
     node->nlabels = nlabels;
     return &(node->_astnode);
 
@@ -77,18 +78,9 @@ cleanup:
 }
 
 
-void labels_operator_free(cypher_astnode_t *self)
-{
-    struct labels_operator *node =
-        container_of(self, struct labels_operator, _astnode);
-    free(node->labels);
-    cypher_astnode_free(self);
-}
-
-
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_LABELS_OPERATOR), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_LABELS_OPERATOR, -1);
     struct labels_operator *node =
         container_of(self, struct labels_operator, _astnode);
 

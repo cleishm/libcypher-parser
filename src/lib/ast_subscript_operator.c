@@ -32,8 +32,13 @@ struct subscript_operator
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_expression_astnode_vt };
+
 const struct cypher_astnode_vt cypher_subscript_operator_astnode_vt =
-    { .name = "subscript",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "subscript",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -43,8 +48,8 @@ cypher_astnode_t *cypher_ast_subscript_operator(
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE(expression != NULL, NULL);
-    REQUIRE(index != NULL, NULL);
+    REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_TYPE(index, CYPHER_AST_EXPRESSION, NULL);
 
     struct subscript_operator *node =
             calloc(1, sizeof(struct subscript_operator));
@@ -66,7 +71,7 @@ cypher_astnode_t *cypher_ast_subscript_operator(
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_SUBSCRIPT_OPERATOR), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_SUBSCRIPT_OPERATOR, -1);
     struct subscript_operator *node =
         container_of(self, struct subscript_operator, _astnode);
     return snprintf(str, size, "@%u[@%u]", node->expression->ordinal,

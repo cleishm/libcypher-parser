@@ -33,8 +33,13 @@ struct slice_operator
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_expression_astnode_vt };
+
 const struct cypher_astnode_vt cypher_slice_operator_astnode_vt =
-    { .name = "slice",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "slice",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -44,7 +49,9 @@ cypher_astnode_t *cypher_ast_slice_operator(const cypher_astnode_t *expression,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE(expression != NULL, NULL);
+    REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_TYPE_OPTIONAL(start, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_TYPE_OPTIONAL(end, CYPHER_AST_EXPRESSION, NULL);
 
     struct slice_operator *node = calloc(1, sizeof(struct slice_operator));
     if (node == NULL)
@@ -66,7 +73,7 @@ cypher_astnode_t *cypher_ast_slice_operator(const cypher_astnode_t *expression,
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_SLICE_OPERATOR), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_SLICE_OPERATOR, -1);
     struct slice_operator *node =
             container_of(self, struct slice_operator, _astnode);
 

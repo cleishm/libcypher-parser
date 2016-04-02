@@ -105,6 +105,8 @@ typedef uint8_t cypher_astnode_type_t;
 
 /** Type for an AST statement node. */
 extern const cypher_astnode_type_t CYPHER_AST_STATEMENT;
+/** Type for an AST statement option node. */
+extern const cypher_astnode_type_t CYPHER_AST_STATEMENT_OPTION;
 /** Type for an AST `CYPHER` option node. */
 extern const cypher_astnode_type_t CYPHER_AST_CYPHER_OPTION;
 /** Type for an AST `CYPHER` option parameter node. */
@@ -113,6 +115,8 @@ extern const cypher_astnode_type_t CYPHER_AST_CYPHER_OPTION_PARAM;
 extern const cypher_astnode_type_t CYPHER_AST_EXPLAIN_OPTION;
 /** Type for an AST `PROFILE` option node. */
 extern const cypher_astnode_type_t CYPHER_AST_PROFILE_OPTION;
+/** Type for an AST schema command node. */
+extern const cypher_astnode_type_t CYPHER_AST_SCHEMA_COMMAND;
 /** Type for an AST `CREATE INDEX` node. */
 extern const cypher_astnode_type_t CYPHER_AST_CREATE_INDEX;
 /** Type for an AST `DROP INDEX` node. */
@@ -131,12 +135,18 @@ extern const cypher_astnode_type_t CYPHER_AST_CREATE_REL_PROP_EXISTS_CONSTRAINT;
 extern const cypher_astnode_type_t CYPHER_AST_DROP_REL_PROP_EXISTS_CONSTRAINT;
 /** Type for an AST query node. */
 extern const cypher_astnode_type_t CYPHER_AST_QUERY;
+/** Type for an AST query option node. */
+extern const cypher_astnode_type_t CYPHER_AST_QUERY_OPTION;
 /** Type for an AST `USING PERIODIC COMMIT` clause node. */
 extern const cypher_astnode_type_t CYPHER_AST_USING_PERIODIC_COMMIT;
+/** Type for an AST query clause node. */
+extern const cypher_astnode_type_t CYPHER_AST_QUERY_CLAUSE;
 /** Type for an AST `LOAD CSV` clause node. */
 extern const cypher_astnode_type_t CYPHER_AST_LOAD_CSV;
 /** Type for an AST `START` clause node. */
 extern const cypher_astnode_type_t CYPHER_AST_START;
+/** Type for an AST start point node. */
+extern const cypher_astnode_type_t CYPHER_AST_START_POINT;
 /** Type for an AST node-index lookup node. */
 extern const cypher_astnode_type_t CYPHER_AST_NODE_INDEX_LOOKUP;
 /** Type for an AST node-index query node. */
@@ -155,6 +165,8 @@ extern const cypher_astnode_type_t CYPHER_AST_REL_ID_LOOKUP;
 extern const cypher_astnode_type_t CYPHER_AST_ALL_RELS_SCAN;
 /** Type for an AST `MATCH` clause node. */
 extern const cypher_astnode_type_t CYPHER_AST_MATCH;
+/** Type for an AST match hint node. */
+extern const cypher_astnode_type_t CYPHER_AST_MATCH_HINT;
 /** Type for an AST `USING INDEX` hint node. */
 extern const cypher_astnode_type_t CYPHER_AST_USING_INDEX_HINT;
 /** Type for an AST `USING JOIN ON` hint node. */
@@ -163,6 +175,8 @@ extern const cypher_astnode_type_t CYPHER_AST_USING_JOIN_HINT;
 extern const cypher_astnode_type_t CYPHER_AST_USING_SCAN_HINT;
 /** Type for an AST `MERGE` clause node. */
 extern const cypher_astnode_type_t CYPHER_AST_MERGE;
+/** Type for an AST merge action node. */
+extern const cypher_astnode_type_t CYPHER_AST_MERGE_ACTION;
 /** Type for an AST `ON MATCH` action node. */
 extern const cypher_astnode_type_t CYPHER_AST_ON_MATCH;
 /** Type for an AST `ON CREATE` action node. */
@@ -171,6 +185,8 @@ extern const cypher_astnode_type_t CYPHER_AST_ON_CREATE;
 extern const cypher_astnode_type_t CYPHER_AST_CREATE;
 /** Type for an AST `SET` clause node. */
 extern const cypher_astnode_type_t CYPHER_AST_SET;
+/** Type for an AST set item node. */
+extern const cypher_astnode_type_t CYPHER_AST_SET_ITEM;
 /** Type for an AST set property node. */
 extern const cypher_astnode_type_t CYPHER_AST_SET_PROPERTY;
 /** Type for an AST set all properties node. */
@@ -183,10 +199,12 @@ extern const cypher_astnode_type_t CYPHER_AST_SET_LABELS;
 extern const cypher_astnode_type_t CYPHER_AST_DELETE;
 /** Type for an AST `REMOVE` clause node. */
 extern const cypher_astnode_type_t CYPHER_AST_REMOVE;
-/** Type for an AST remove property node. */
-extern const cypher_astnode_type_t CYPHER_AST_REMOVE_PROPERTY;
+/** Type for an AST remove item node. */
+extern const cypher_astnode_type_t CYPHER_AST_REMOVE_ITEM;
 /** Type for an AST remove labels node. */
 extern const cypher_astnode_type_t CYPHER_AST_REMOVE_LABELS;
+/** Type for an AST remove property node. */
+extern const cypher_astnode_type_t CYPHER_AST_REMOVE_PROPERTY;
 /** Type for an AST `FOREACH` clause node. */
 extern const cypher_astnode_type_t CYPHER_AST_FOREACH;
 /** Type for an AST `WITH` clause node. */
@@ -205,6 +223,8 @@ extern const cypher_astnode_type_t CYPHER_AST_ORDER_BY;
 extern const cypher_astnode_type_t CYPHER_AST_SORT_ITEM;
 /** Type for an AST `UNION` clause node. */
 extern const cypher_astnode_type_t CYPHER_AST_UNION;
+/** Type for an AST expression node. */
+extern const cypher_astnode_type_t CYPHER_AST_EXPRESSION;
 /** Type for an AST unary operator node. */
 extern const cypher_astnode_type_t CYPHER_AST_UNARY_OPERATOR;
 /** Type for an AST binary operator node. */
@@ -403,7 +423,7 @@ unsigned int cypher_astnode_nchildren(const cypher_astnode_t *node);
  *         argument at the specified index.
  */
 __cypherlang_pure
-const cypher_astnode_t *cypher_astnode_child(const cypher_astnode_t *node,
+const cypher_astnode_t *cypher_astnode_get_child(const cypher_astnode_t *node,
         unsigned int index);
 
 /**
@@ -448,12 +468,13 @@ enum cypher_rel_direction
 
 
 /**
- * Construct a CYPHER_AST_STATEMENT node.
+ * Construct a `CYPHER_AST_STATEMENT` node.
  *
- * @param [options] Options for the statement.
+ * @param [options] Options for the statement, all of type
+ *         `CYPHER_AST_STATEMENT_OPTION`.
  * @param [noptions] The number of options (maybe zero).
  * @param [body] The body of the statement, which must be either an
- *         CYPHER_AST_QUERY or CYPHER_AST_SCHEMA_COMMAND.
+ *         `CYPHER_AST_QUERY` or `CYPHER_AST_SCHEMA_COMMAND`.
  * @param [children] The children of the node.
  * @param [nchildren] The number of children.
  * @param [range] The input range.
@@ -466,11 +487,52 @@ cypher_astnode_t *cypher_ast_statement(cypher_astnode_t * const *options,
         struct cypher_input_range range);
 
 /**
- * Construct a CYPHER_AST_CYPHER_OPTION node.
+ * Get the body of a `CYPHER_AST_STATEMENT` node.
  *
- * @param [version] The version string, which must be a CYPHER_AST_STRING or
+ * If the node is not an instance of `CYPHER_AST_STATEMENT` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_QUERY` or `CYPHER_AST_SCHEMA_COMMAND` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_statement_get_body(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the number of options in a `CYPHER_AST_STATEMENT` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_STATEMENT` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return The number of options.
+ */
+__cypherlang_pure
+unsigned int cypher_ast_statement_noptions(const cypher_astnode_t *node);
+
+/**
+ * Get an option of a `CYPHER_AST_STATEMENT` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_STATEMENT` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @param [index] The index of the option.
+ * @return A `CYPHER_AST_STATEMENT_OPTION` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_statement_get_option(
+        const cypher_astnode_t *node, unsigned int index);
+
+
+/**
+ * Construct a `CYPHER_AST_CYPHER_OPTION` node.
+ *
+ * @param [version] A version node of type `CYPHER_AST_STRING`, or
  *         null.
- * @param [params] Parameters for the option.
+ * @param [params] Parameters for the option, all of type
+ *         `CYPHER_AST_CYPHER_OPTION_PARAM`.
  * @param [nparams] The number of parameters (maybe zero).
  * @param [children] The children of the node.
  * @param [nchildren] The number of children.
@@ -484,10 +546,51 @@ cypher_astnode_t *cypher_ast_cypher_option(const cypher_astnode_t *version,
         struct cypher_input_range range);
 
 /**
- * Construct a CYPHER_AST_CYPHER_OPTION_PARAM node.
+ * Get the version of a `CYPHER_AST_CYPHER_OPTION` node.
  *
- * @param [name] The parameter name, which must be a CYPHER_AST_STRING.
- * @param [value] The parameter value, which must be a CYPHER_AST_STRING.
+ * If the node is not an instance of `CYPHER_AST_CYPHER_OPTION` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_STRING` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_cypher_option_get_version(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the number of parameters in a `CYPHER_AST_CYPHER_OPTION` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CYPHER_OPTION` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return The number of parameters.
+ */
+__cypherlang_pure
+unsigned int cypher_ast_cypher_option_nparams(const cypher_astnode_t *node);
+
+/**
+ * Get an option of a `CYPHER_AST_CYPHER_OPTION` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CYPHER_OPTION` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @param [index] The index of the parameter.
+ * @return A `CYPHER_AST_CYPHER_OPTION_PARAM` node, or null if no parameter
+ *         is at the specified index.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_cypher_option_get_param(
+        const cypher_astnode_t *node, unsigned int index);
+
+
+/**
+ * Construct a `CYPHER_AST_CYPHER_OPTION_PARAM` node.
+ *
+ * @param [name] A parameter name node, of type `CYPHER_AST_STRING`.
+ * @param [value] A parameter value node, of type `CYPHER_AST_STRING`.
  * @param [children] The children of the node.
  * @param [nchildren] The number of children.
  * @param [range] The input range.
@@ -499,7 +602,34 @@ cypher_astnode_t *cypher_ast_cypher_option_param(const cypher_astnode_t *name,
         unsigned int nchildren, struct cypher_input_range range);
 
 /**
- * Construct a CYPHER_AST_EXPLAIN_OPTION node.
+ * Get an name of a `CYPHER_AST_CYPHER_OPTION_PARAM` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CYPHER_OPTION_PARAM` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_STRING` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_cypher_option_param_get_name(
+        const cypher_astnode_t *node);
+
+/**
+ * Get an value of a `CYPHER_AST_CYPHER_OPTION_PARAM` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CYPHER_OPTION_PARAM` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_STRING` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_cypher_option_param_get_value(
+        const cypher_astnode_t *node);
+
+
+/**
+ * Construct a `CYPHER_AST_EXPLAIN_OPTION` node.
  *
  * @param [children] The children of the node.
  * @param [nchildren] The number of children.
@@ -510,8 +640,9 @@ __cypherlang_must_check
 cypher_astnode_t *cypher_ast_explain_option(cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range);
 
+
 /**
- * Construct a CYPHER_AST_PROFILE_OPTION node.
+ * Construct a `CYPHER_AST_PROFILE_OPTION` node.
  *
  * @param [children] The children of the node.
  * @param [nchildren] The number of children.
@@ -522,15 +653,86 @@ __cypherlang_must_check
 cypher_astnode_t *cypher_ast_profile_option(cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range);
 
+
+/**
+ * Construct a `CYPHER_AST_CREATE_INDEX` node.
+ *
+ * @param [label] A label node, of type `CYPHER_AST_LABEL`.
+ * @param [prop_name] A property name node, of type `CYPHER_AST_PROP_NAME`.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_create_index(const cypher_astnode_t *label,
         const cypher_astnode_t *prop_name, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range);
 
+/**
+ * Get the label of a `CYPHER_AST_CREATE_INDEX` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CREATE_INDEX` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_LABEL` node.
+ */
+const cypher_astnode_t *cypher_ast_create_index_get_label(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the property name of a `CYPHER_AST_CREATE_INDEX` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CREATE_INDEX` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_PROP_NAME` node.
+ */
+const cypher_astnode_t *cypher_ast_create_index_get_prop_name(
+        const cypher_astnode_t *node);
+
+
+/**
+ * Construct a `CYPHER_AST_DROP_INDEX` node.
+ *
+ * @param [label] A label node, of type `CYPHER_AST_LABEL`.
+ * @param [prop_name] A property name node, of type `CYPHER_AST_PROP_NAME`.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_drop_index(const cypher_astnode_t *label,
         const cypher_astnode_t *prop_name, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range);
+
+/**
+ * Get the label of a `CYPHER_AST_DROP_INDEX` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_DROP_INDEX` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_LABEL` node.
+ */
+const cypher_astnode_t *cypher_ast_create_index_get_label(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the property name of a `CYPHER_AST_DROP_INDEX` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_DROP_INDEX` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_PROP_NAME` node.
+ */
+const cypher_astnode_t *cypher_ast_create_index_get_prop_name(
+        const cypher_astnode_t *node);
+
 
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_create_unique_constraint(
@@ -569,7 +771,8 @@ cypher_astnode_t *cypher_ast_drop_rel_prop_exists_constraint(
         unsigned int nchildren, struct cypher_input_range range);
 
 __cypherlang_must_check
-cypher_astnode_t *cypher_ast_query(cypher_astnode_t * const *clauses,
+cypher_astnode_t *cypher_ast_query(cypher_astnode_t * const *options,
+        unsigned int noptions, cypher_astnode_t * const *clauses,
         unsigned int nclauses, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range);
 
@@ -723,13 +926,13 @@ cypher_astnode_t *cypher_ast_remove(cypher_astnode_t * const *items,
         unsigned int nchildren, struct cypher_input_range range);
 
 __cypherlang_must_check
-cypher_astnode_t *cypher_ast_remove_property(const cypher_astnode_t *property,
+cypher_astnode_t *cypher_ast_remove_labels(const cypher_astnode_t *identifier,
+        cypher_astnode_t * const *labels, unsigned int nlabels,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
 
 __cypherlang_must_check
-cypher_astnode_t *cypher_ast_remove_labels(const cypher_astnode_t *identifier,
-        cypher_astnode_t * const *labels, unsigned int nlabels,
+cypher_astnode_t *cypher_ast_remove_property(const cypher_astnode_t *property,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
 
@@ -892,6 +1095,17 @@ cypher_astnode_t *cypher_ast_none(const cypher_astnode_t *identifier,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
 
+
+/**
+ * Construct a CYPHER_AST_COLLECTION node.
+ *
+ * @param [elements] The elements for the collection.
+ * @param [nelements] The number of elements.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_collection(
         cypher_astnode_t * const *elements, unsigned int nelements,
@@ -925,6 +1139,7 @@ __cypherlang_pure
 const cypher_astnode_t *cypher_ast_collection_get(const cypher_astnode_t *node,
         unsigned int index);
 
+
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_map(cypher_astnode_t * const *pairs,
         unsigned int npairs, cypher_astnode_t **children,
@@ -938,6 +1153,15 @@ __cypherlang_must_check
 cypher_astnode_t *cypher_ast_parameter(const char *s, size_t n,
         struct cypher_input_range range);
 
+
+/**
+ * Construct a CYPHER_AST_STRING node.
+ *
+ * @param [s] A pointer to a character string.
+ * @param [n] The length of the character string.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_string(const char *s, size_t n,
         struct cypher_input_range range);
@@ -952,7 +1176,8 @@ cypher_astnode_t *cypher_ast_string(const char *s, size_t n,
  * @return A pointer to the null terminated string.
  */
 __cypherlang_pure
-const char *cypher_ast_string_value(const cypher_astnode_t *node);
+const char *cypher_ast_string_get_value(const cypher_astnode_t *node);
+
 
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_integer(const char *s, size_t n,
@@ -1025,7 +1250,7 @@ __cypherlang_must_check
 cypher_astnode_t *cypher_ast_rel_pattern(enum cypher_rel_direction direction,
         const cypher_astnode_t *identifier, cypher_astnode_t * const *reltypes,
         unsigned int nreltypes, const cypher_astnode_t *properties,
-        cypher_astnode_t *varlength, cypher_astnode_t **children,
+        const cypher_astnode_t *varlength, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range);
 
 __cypherlang_must_check
@@ -1077,7 +1302,7 @@ unsigned int cypher_ast_command_narguments(const cypher_astnode_t *node);
  *         specified index.
  */
 __cypherlang_pure
-const cypher_astnode_t *cypher_ast_command_argument(
+const cypher_astnode_t *cypher_ast_command_get_argument(
         const cypher_astnode_t *node, unsigned int index);
 
 __cypherlang_must_check

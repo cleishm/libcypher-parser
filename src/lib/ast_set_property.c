@@ -31,8 +31,13 @@ struct set_property
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_set_item_astnode_vt };
+
 const struct cypher_astnode_vt cypher_set_property_astnode_vt =
-    { .name = "set property",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "set property",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -41,9 +46,8 @@ cypher_astnode_t *cypher_ast_set_property(const cypher_astnode_t *property,
         const cypher_astnode_t *expression, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(property,
-                CYPHER_AST_PROPERTY_OPERATOR), NULL);
-    REQUIRE(expression != NULL, NULL);
+    REQUIRE_TYPE(property, CYPHER_AST_PROPERTY_OPERATOR, NULL);
+    REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
 
     struct set_property *node = calloc(1, sizeof(struct set_property));
     if (node == NULL)
@@ -64,7 +68,7 @@ cypher_astnode_t *cypher_ast_set_property(const cypher_astnode_t *property,
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_SET_PROPERTY), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_SET_PROPERTY, -1);
     struct set_property *node =
             container_of(self, struct set_property, _astnode);
 

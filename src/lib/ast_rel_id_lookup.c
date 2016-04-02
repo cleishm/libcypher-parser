@@ -24,19 +24,18 @@ struct rel_id_lookup
 {
     cypher_astnode_t _astnode;
     const cypher_astnode_t *identifier;
-    const cypher_astnode_t **ids;
     unsigned int nids;
+    const cypher_astnode_t *ids[];
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void rel_id_lookup(cypher_astnode_t *self);
 
 
 const struct cypher_astnode_vt cypher_rel_id_lookup_astnode_vt =
     { .name = "rel id lookup",
       .detailstr = detailstr,
-      .free = rel_id_lookup };
+      .free = cypher_astnode_free };
 
 
 cypher_astnode_t *cypher_ast_rel_id_lookup(const cypher_astnode_t *identifier,
@@ -44,11 +43,12 @@ cypher_astnode_t *cypher_ast_rel_id_lookup(const cypher_astnode_t *identifier,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(identifier, CYPHER_AST_IDENTIFIER), NULL);
+    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
     REQUIRE(nids > 0, NULL);
-    REQUIRE(ids != NULL, NULL);
+    REQUIRE_TYPE_ALL(ids, nids, CYPHER_AST_INTEGER, NULL);
 
-    struct rel_id_lookup *node = calloc(1, sizeof(struct rel_id_lookup));
+    struct rel_id_lookup *node = calloc(1, sizeof(struct rel_id_lookup) +
+            nids * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -59,11 +59,7 @@ cypher_astnode_t *cypher_ast_rel_id_lookup(const cypher_astnode_t *identifier,
         goto cleanup;
     }
     node->identifier = identifier;
-    node->ids = mdup(ids, nids * sizeof(cypher_astnode_t *));
-    if (node->ids == NULL)
-    {
-        goto cleanup;
-    }
+    memcpy(node->ids, ids, nids * sizeof(cypher_astnode_t *));
     node->nids = nids;
     return &(node->_astnode);
 
@@ -76,18 +72,9 @@ cleanup:
 }
 
 
-void rel_id_lookup(cypher_astnode_t *self)
-{
-    struct rel_id_lookup *node =
-            container_of(self, struct rel_id_lookup, _astnode);
-    free(node->ids);
-    cypher_astnode_free(self);
-}
-
-
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_REL_ID_LOOKUP), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_REL_ID_LOOKUP, -1);
     struct rel_id_lookup *node =
             container_of(self, struct rel_id_lookup, _astnode);
 

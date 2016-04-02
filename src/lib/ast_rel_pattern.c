@@ -25,31 +25,37 @@ struct rel_pattern
     cypher_astnode_t _astnode;
     enum cypher_rel_direction direction;
     const cypher_astnode_t *identifier;
-    const cypher_astnode_t **reltypes;
-    size_t nreltypes;
     const cypher_astnode_t *varlength;
     const cypher_astnode_t *properties;
+    size_t nreltypes;
+    const cypher_astnode_t *reltypes[];
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void pattern_free(cypher_astnode_t *self);
 
 
 const struct cypher_astnode_vt cypher_rel_pattern_astnode_vt =
     { .name = "rel pattern",
       .detailstr = detailstr,
-      .free = pattern_free };
+      .free = cypher_astnode_free };
 
 
 cypher_astnode_t *cypher_ast_rel_pattern(enum cypher_rel_direction direction,
         const cypher_astnode_t *identifier, cypher_astnode_t * const *reltypes,
         unsigned int nreltypes, const cypher_astnode_t *properties,
-        cypher_astnode_t *varlength, cypher_astnode_t **children,
+        const cypher_astnode_t *varlength, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE(nreltypes == 0 || reltypes != NULL, NULL);
-    struct rel_pattern *node = calloc(1, sizeof(struct rel_pattern));
+    REQUIRE_TYPE_OPTIONAL(identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_TYPE_ALL(reltypes, nreltypes, CYPHER_AST_RELTYPE, NULL);
+    REQUIRE(properties == NULL ||
+            cypher_astnode_instanceof(properties, CYPHER_AST_MAP) ||
+            cypher_astnode_instanceof(properties, CYPHER_AST_PARAMETER), NULL);
+    REQUIRE_TYPE_OPTIONAL(varlength, CYPHER_AST_RANGE, NULL);
+
+    struct rel_pattern *node = calloc(1, sizeof(struct rel_pattern) +
+            nreltypes * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -61,15 +67,8 @@ cypher_astnode_t *cypher_ast_rel_pattern(enum cypher_rel_direction direction,
     }
     node->direction = direction;
     node->identifier = identifier;
-    if (nreltypes > 0)
-    {
-        node->reltypes = mdup(reltypes, nreltypes * sizeof(cypher_astnode_t *));
-        if (node->reltypes == NULL)
-        {
-            goto cleanup;
-        }
-        node->nreltypes = nreltypes;
-    }
+    memcpy(node->reltypes, reltypes, nreltypes * sizeof(cypher_astnode_t *));
+    node->nreltypes = nreltypes;
     node->varlength = varlength;
     node->properties = properties;
     return &(node->_astnode);
@@ -83,17 +82,9 @@ cleanup:
 }
 
 
-void pattern_free(cypher_astnode_t *self)
-{
-    struct rel_pattern *node = container_of(self, struct rel_pattern, _astnode);
-    free(node->reltypes);
-    cypher_astnode_free(self);
-}
-
-
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_REL_PATTERN), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_REL_PATTERN, -1);
     struct rel_pattern *node = container_of(self, struct rel_pattern, _astnode);
 
     size_t n = 0;

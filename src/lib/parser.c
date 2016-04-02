@@ -1279,9 +1279,19 @@ cypher_astnode_t *_query(yycontext *yy)
 {
     assert(yy->prev_block != NULL &&
             "An AST node can only be created immediately after a `>` in the grammar");
+
+    cypher_astnode_t **seq = astnodes_elements(&(yy->prev_block->sequence));
+    unsigned int nseq = astnodes_size(&(yy->prev_block->sequence));
+
+    unsigned int nopts = 0;
+    while (nopts < nseq &&
+            cypher_astnode_instanceof(seq[nopts], CYPHER_AST_QUERY_OPTION))
+    {
+        nopts++;
+    }
+
     cypher_astnode_t *node = cypher_ast_query(
-            astnodes_elements(&(yy->prev_block->sequence)),
-            astnodes_size(&(yy->prev_block->sequence)),
+            seq, nopts, seq + nopts, nseq - nopts,
             astnodes_elements(&(yy->prev_block->children)),
             astnodes_size(&(yy->prev_block->children)),
             yy->prev_block->range);

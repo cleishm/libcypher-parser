@@ -45,10 +45,11 @@ cypher_astnode_t *cypher_ast_rel_index_lookup(
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE(cypher_astnode_instanceof(identifier, CYPHER_AST_IDENTIFIER), NULL);
-    REQUIRE(cypher_astnode_instanceof(index, CYPHER_AST_INDEX_NAME), NULL);
-    REQUIRE(cypher_astnode_instanceof(prop_name, CYPHER_AST_PROP_NAME), NULL);
-    REQUIRE(lookup != NULL, NULL);
+    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_TYPE(index, CYPHER_AST_INDEX_NAME, NULL);
+    REQUIRE_TYPE(prop_name, CYPHER_AST_PROP_NAME, NULL);
+    REQUIRE(cypher_astnode_instanceof(lookup, CYPHER_AST_STRING) ||
+            cypher_astnode_instanceof(lookup, CYPHER_AST_PARAMETER), NULL);
 
     struct rel_index_lookup *node = calloc(1, sizeof(struct rel_index_lookup));
     if (node == NULL)
@@ -71,7 +72,7 @@ cypher_astnode_t *cypher_ast_rel_index_lookup(
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE(cypher_astnode_instanceof(self, CYPHER_AST_REL_INDEX_LOOKUP), -1);
+    REQUIRE_TYPE(self, CYPHER_AST_REL_INDEX_LOOKUP, -1);
     struct rel_index_lookup *node =
             container_of(self, struct rel_index_lookup, _astnode);
     return snprintf(str, size, "@%u = rel:@%u(@%u = @%u)",
