@@ -36,7 +36,6 @@ static void setup(void)
 }
 
 
-
 static void teardown(void)
 {
     cypher_parse_result_free(result);
@@ -52,6 +51,17 @@ START_TEST (parse_statement_with_no_options)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 9);
 
+    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    fflush(memstream);
+    const char *expected = "\n"
+"@0  0..9  statement           body=@1\n"
+"@1  0..9  > query             clauses=[@2]\n"
+"@2  0..8  > > RETURN          projections=[@3]\n"
+"@3  7..8  > > > projection    expression=@4, alias=@5\n"
+"@4  7..8  > > > > integer     1\n"
+"@5  7..8  > > > > identifier  `1`\n";
+    ck_assert_str_eq(memstream_buffer, expected);
+
     ck_assert_int_eq(cypher_parse_result_ndirectives(result), 1);
     const cypher_astnode_t *ast = cypher_parse_result_directive(result, 0);
     ck_assert_int_eq(cypher_astnode_type(ast), CYPHER_AST_STATEMENT);
@@ -65,17 +75,6 @@ START_TEST (parse_statement_with_no_options)
 
     ck_assert_int_eq(cypher_ast_statement_noptions(ast), 0);
     ck_assert_ptr_eq(cypher_ast_statement_get_option(ast, 0), NULL);
-
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
-    fflush(memstream);
-    const char *expected = "\n"
-"@0  0..9  statement           body=@1\n"
-"@1  0..9  > query             clauses=[@2]\n"
-"@2  0..8  > > RETURN          projections=[@3]\n"
-"@3  7..8  > > > projection    expression=@4, alias=@5\n"
-"@4  7..8  > > > > integer     1\n"
-"@5  7..8  > > > > identifier  `1`\n";
-    ck_assert_str_eq(memstream_buffer, expected);
 }
 END_TEST
 
@@ -83,6 +82,18 @@ END_TEST
 START_TEST (parse_statement_with_cypher_option)
 {
     result = cypher_parse("CYPHER RETURN 1;", NULL, NULL, 0);
+
+    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    fflush(memstream);
+    const char *expected = "\n"
+"@0   0..16  statement           options=[@1], body=@2\n"
+"@1   0..7   > CYPHER\n"
+"@2   7..16  > query             clauses=[@3]\n"
+"@3   7..15  > > RETURN          projections=[@4]\n"
+"@4  14..15  > > > projection    expression=@5, alias=@6\n"
+"@5  14..15  > > > > integer     1\n"
+"@6  14..15  > > > > identifier  `1`\n";
+    ck_assert_str_eq(memstream_buffer, expected);
 
     ck_assert_int_eq(cypher_parse_result_ndirectives(result), 1);
     const cypher_astnode_t *ast = cypher_parse_result_directive(result, 0);
@@ -96,18 +107,6 @@ START_TEST (parse_statement_with_cypher_option)
     ck_assert_ptr_eq(cypher_ast_cypher_option_get_version(option), NULL);
     ck_assert_int_eq(cypher_ast_cypher_option_nparams(option), 0);
     ck_assert_ptr_eq(cypher_ast_cypher_option_get_param(option, 0), NULL);
-
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
-    fflush(memstream);
-    const char *expected = "\n"
-"@0   0..16  statement           options=[@1], body=@2\n"
-"@1   0..7   > CYPHER\n"
-"@2   7..16  > query             clauses=[@3]\n"
-"@3   7..15  > > RETURN          projections=[@4]\n"
-"@4  14..15  > > > projection    expression=@5, alias=@6\n"
-"@5  14..15  > > > > integer     1\n"
-"@6  14..15  > > > > identifier  `1`\n";
-    ck_assert_str_eq(memstream_buffer, expected);
 }
 END_TEST
 
@@ -115,6 +114,19 @@ END_TEST
 START_TEST (parse_statement_with_cypher_option_containing_version)
 {
     result = cypher_parse("CYPHER 3.0 RETURN 1;", NULL, NULL, 0);
+
+    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    fflush(memstream);
+    const char *expected = "\n"
+"@0   0..20  statement           options=[@1], body=@3\n"
+"@1   0..10  > CYPHER            version=@2\n"
+"@2   7..10  > > string          \"3.0\"\n"
+"@3  11..20  > query             clauses=[@4]\n"
+"@4  11..19  > > RETURN          projections=[@5]\n"
+"@5  18..19  > > > projection    expression=@6, alias=@7\n"
+"@6  18..19  > > > > integer     1\n"
+"@7  18..19  > > > > identifier  `1`\n";
+    ck_assert_str_eq(memstream_buffer, expected);
 
     ck_assert_int_eq(cypher_parse_result_ndirectives(result), 1);
     const cypher_astnode_t *ast = cypher_parse_result_directive(result, 0);
@@ -132,19 +144,6 @@ START_TEST (parse_statement_with_cypher_option_containing_version)
 
     ck_assert_int_eq(cypher_ast_cypher_option_nparams(option), 0);
     ck_assert_ptr_eq(cypher_ast_cypher_option_get_param(option, 0), NULL);
-
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
-    fflush(memstream);
-    const char *expected = "\n"
-"@0   0..20  statement           options=[@1], body=@3\n"
-"@1   0..10  > CYPHER            version=@2\n"
-"@2   7..10  > > string          \"3.0\"\n"
-"@3  11..20  > query             clauses=[@4]\n"
-"@4  11..19  > > RETURN          projections=[@5]\n"
-"@5  18..19  > > > projection    expression=@6, alias=@7\n"
-"@6  18..19  > > > > integer     1\n"
-"@7  18..19  > > > > identifier  `1`\n";
-    ck_assert_str_eq(memstream_buffer, expected);
 }
 END_TEST
 
@@ -153,6 +152,21 @@ START_TEST (parse_statement_with_cypher_option_containing_params)
 {
     result = cypher_parse("CYPHER runtime=fast RETURN 1;",
             NULL, NULL, 0);
+
+    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    fflush(memstream);
+    const char *expected = "\n"
+"@0   0..29  statement             options=[@1], body=@5\n"
+"@1   0..19  > CYPHER              params=[@2]\n"
+"@2   7..19  > > cypher parameter  @3 = @4\n"
+"@3   7..14  > > > string          \"runtime\"\n"
+"@4  15..19  > > > string          \"fast\"\n"
+"@5  20..29  > query               clauses=[@6]\n"
+"@6  20..28  > > RETURN            projections=[@7]\n"
+"@7  27..28  > > > projection      expression=@8, alias=@9\n"
+"@8  27..28  > > > > integer       1\n"
+"@9  27..28  > > > > identifier    `1`\n";
+    ck_assert_str_eq(memstream_buffer, expected);
 
     ck_assert_int_eq(cypher_parse_result_ndirectives(result), 1);
     const cypher_astnode_t *ast = cypher_parse_result_directive(result, 0);
@@ -180,21 +194,6 @@ START_TEST (parse_statement_with_cypher_option_containing_params)
 
     ck_assert_str_eq(cypher_ast_string_get_value(name), "runtime");
     ck_assert_str_eq(cypher_ast_string_get_value(value), "fast");
-
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
-    fflush(memstream);
-    const char *expected = "\n"
-"@0   0..29  statement             options=[@1], body=@5\n"
-"@1   0..19  > CYPHER              params=[@2]\n"
-"@2   7..19  > > cypher parameter  @3 = @4\n"
-"@3   7..14  > > > string          \"runtime\"\n"
-"@4  15..19  > > > string          \"fast\"\n"
-"@5  20..29  > query               clauses=[@6]\n"
-"@6  20..28  > > RETURN            projections=[@7]\n"
-"@7  27..28  > > > projection      expression=@8, alias=@9\n"
-"@8  27..28  > > > > integer       1\n"
-"@9  27..28  > > > > identifier    `1`\n";
-    ck_assert_str_eq(memstream_buffer, expected);
 }
 END_TEST
 
@@ -203,6 +202,25 @@ START_TEST (parse_statement_with_cypher_option_containing_version_and_params)
 {
     result = cypher_parse("CYPHER 2.3 runtime=fast planner=slow RETURN 1;",
             NULL, NULL, 0);
+
+    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    fflush(memstream);
+    const char *expected = "\n"
+" @0   0..46  statement             options=[@1], body=@9\n"
+" @1   0..36  > CYPHER              version=@2, params=[@3, @6]\n"
+" @2   7..10  > > string            \"2.3\"\n"
+" @3  11..23  > > cypher parameter  @4 = @5\n"
+" @4  11..18  > > > string          \"runtime\"\n"
+" @5  19..23  > > > string          \"fast\"\n"
+" @6  24..36  > > cypher parameter  @7 = @8\n"
+" @7  24..31  > > > string          \"planner\"\n"
+" @8  32..36  > > > string          \"slow\"\n"
+" @9  37..46  > query               clauses=[@10]\n"
+"@10  37..45  > > RETURN            projections=[@11]\n"
+"@11  44..45  > > > projection      expression=@12, alias=@13\n"
+"@12  44..45  > > > > integer       1\n"
+"@13  44..45  > > > > identifier    `1`\n";
+    ck_assert_str_eq(memstream_buffer, expected);
 
     ck_assert_int_eq(cypher_parse_result_ndirectives(result), 1);
     const cypher_astnode_t *ast = cypher_parse_result_directive(result, 0);
@@ -246,25 +264,6 @@ START_TEST (parse_statement_with_cypher_option_containing_version_and_params)
 
     ck_assert_str_eq(cypher_ast_string_get_value(name), "planner");
     ck_assert_str_eq(cypher_ast_string_get_value(value), "slow");
-
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
-    fflush(memstream);
-    const char *expected = "\n"
-" @0   0..46  statement             options=[@1], body=@9\n"
-" @1   0..36  > CYPHER              version=@2, params=[@3, @6]\n"
-" @2   7..10  > > string            \"2.3\"\n"
-" @3  11..23  > > cypher parameter  @4 = @5\n"
-" @4  11..18  > > > string          \"runtime\"\n"
-" @5  19..23  > > > string          \"fast\"\n"
-" @6  24..36  > > cypher parameter  @7 = @8\n"
-" @7  24..31  > > > string          \"planner\"\n"
-" @8  32..36  > > > string          \"slow\"\n"
-" @9  37..46  > query               clauses=[@10]\n"
-"@10  37..45  > > RETURN            projections=[@11]\n"
-"@11  44..45  > > > projection      expression=@12, alias=@13\n"
-"@12  44..45  > > > > integer       1\n"
-"@13  44..45  > > > > identifier    `1`\n";
-    ck_assert_str_eq(memstream_buffer, expected);
 }
 END_TEST
 
@@ -272,15 +271,6 @@ END_TEST
 START_TEST (parse_statement_with_explain_option)
 {
     result = cypher_parse("EXPLAIN RETURN 1;", NULL, NULL, 0);
-
-    ck_assert_int_eq(cypher_parse_result_ndirectives(result), 1);
-    const cypher_astnode_t *ast = cypher_parse_result_directive(result, 0);
-    ck_assert_int_eq(cypher_astnode_type(ast), CYPHER_AST_STATEMENT);
-
-    ck_assert_int_eq(cypher_ast_statement_noptions(ast), 1);
-    const cypher_astnode_t *option = cypher_ast_statement_get_option(ast, 0);
-    ck_assert(cypher_astnode_instanceof(option, CYPHER_AST_STATEMENT_OPTION));
-    ck_assert_int_eq(cypher_astnode_type(option), CYPHER_AST_EXPLAIN_OPTION);
 
     ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
@@ -293,13 +283,6 @@ START_TEST (parse_statement_with_explain_option)
 "@5  15..16  > > > > integer     1\n"
 "@6  15..16  > > > > identifier  `1`\n";
     ck_assert_str_eq(memstream_buffer, expected);
-}
-END_TEST
-
-
-START_TEST (parse_statement_with_profile_option)
-{
-    result = cypher_parse("PROFILE RETURN 1;", NULL, NULL, 0);
 
     ck_assert_int_eq(cypher_parse_result_ndirectives(result), 1);
     const cypher_astnode_t *ast = cypher_parse_result_directive(result, 0);
@@ -308,7 +291,14 @@ START_TEST (parse_statement_with_profile_option)
     ck_assert_int_eq(cypher_ast_statement_noptions(ast), 1);
     const cypher_astnode_t *option = cypher_ast_statement_get_option(ast, 0);
     ck_assert(cypher_astnode_instanceof(option, CYPHER_AST_STATEMENT_OPTION));
-    ck_assert_int_eq(cypher_astnode_type(option), CYPHER_AST_PROFILE_OPTION);
+    ck_assert_int_eq(cypher_astnode_type(option), CYPHER_AST_EXPLAIN_OPTION);
+}
+END_TEST
+
+
+START_TEST (parse_statement_with_profile_option)
+{
+    result = cypher_parse("PROFILE RETURN 1;", NULL, NULL, 0);
 
     ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
@@ -321,6 +311,15 @@ START_TEST (parse_statement_with_profile_option)
 "@5  15..16  > > > > integer     1\n"
 "@6  15..16  > > > > identifier  `1`\n";
     ck_assert_str_eq(memstream_buffer, expected);
+
+    ck_assert_int_eq(cypher_parse_result_ndirectives(result), 1);
+    const cypher_astnode_t *ast = cypher_parse_result_directive(result, 0);
+    ck_assert_int_eq(cypher_astnode_type(ast), CYPHER_AST_STATEMENT);
+
+    ck_assert_int_eq(cypher_ast_statement_noptions(ast), 1);
+    const cypher_astnode_t *option = cypher_ast_statement_get_option(ast, 0);
+    ck_assert(cypher_astnode_instanceof(option, CYPHER_AST_STATEMENT_OPTION));
+    ck_assert_int_eq(cypher_astnode_type(option), CYPHER_AST_PROFILE_OPTION);
 }
 END_TEST
 
@@ -328,19 +327,6 @@ END_TEST
 START_TEST (parse_statement_with_multiple_options)
 {
     result = cypher_parse("CYPHER 3.0 PROFILE RETURN 1;", NULL, NULL, 0);
-
-    ck_assert_int_eq(cypher_parse_result_ndirectives(result), 1);
-    const cypher_astnode_t *ast = cypher_parse_result_directive(result, 0);
-    ck_assert_int_eq(cypher_astnode_type(ast), CYPHER_AST_STATEMENT);
-
-    ck_assert_int_eq(cypher_ast_statement_noptions(ast), 2);
-    const cypher_astnode_t *option = cypher_ast_statement_get_option(ast, 0);
-    ck_assert(cypher_astnode_instanceof(option, CYPHER_AST_STATEMENT_OPTION));
-    ck_assert_int_eq(cypher_astnode_type(option), CYPHER_AST_CYPHER_OPTION);
-
-    option = cypher_ast_statement_get_option(ast, 1);
-    ck_assert(cypher_astnode_instanceof(option, CYPHER_AST_STATEMENT_OPTION));
-    ck_assert_int_eq(cypher_astnode_type(option), CYPHER_AST_PROFILE_OPTION);
 
     ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
@@ -355,6 +341,19 @@ START_TEST (parse_statement_with_multiple_options)
 "@7  26..27  > > > > integer     1\n"
 "@8  26..27  > > > > identifier  `1`\n";
     ck_assert_str_eq(memstream_buffer, expected);
+
+    ck_assert_int_eq(cypher_parse_result_ndirectives(result), 1);
+    const cypher_astnode_t *ast = cypher_parse_result_directive(result, 0);
+    ck_assert_int_eq(cypher_astnode_type(ast), CYPHER_AST_STATEMENT);
+
+    ck_assert_int_eq(cypher_ast_statement_noptions(ast), 2);
+    const cypher_astnode_t *option = cypher_ast_statement_get_option(ast, 0);
+    ck_assert(cypher_astnode_instanceof(option, CYPHER_AST_STATEMENT_OPTION));
+    ck_assert_int_eq(cypher_astnode_type(option), CYPHER_AST_CYPHER_OPTION);
+
+    option = cypher_ast_statement_get_option(ast, 1);
+    ck_assert(cypher_astnode_instanceof(option, CYPHER_AST_STATEMENT_OPTION));
+    ck_assert_int_eq(cypher_astnode_type(option), CYPHER_AST_PROFILE_OPTION);
 }
 END_TEST
 

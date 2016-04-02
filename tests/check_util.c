@@ -21,7 +21,7 @@
 #include <unistd.h>
 
 
-const char *sample_text =
+static const char *sample_text =
 //   0        10        20        30        40        50
     "The California climate is perfect for motorcycles,\r\n"
     "as well as surfboards, swimming pools and convertibles.\n"
@@ -30,7 +30,7 @@ const char *sample_text =
     "and no\n"
     "more dangerous than skiers or skin divers.\n";
 
-char *ctx;
+static char *ctx;
 
 
 static void setup(void)

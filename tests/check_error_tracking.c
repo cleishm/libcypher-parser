@@ -24,8 +24,8 @@
 static const struct cypher_input_position pos = { 1,1,0 };
 
 static cp_error_tracking_t et;
-cypher_parse_error_t *errors;
-unsigned int nerrors;
+static cypher_parse_error_t *errors;
+static unsigned int nerrors;
 
 
 static void setup(void)
