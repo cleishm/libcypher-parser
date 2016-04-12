@@ -66,7 +66,7 @@ cypher_astnode_t *cypher_ast_cypher_option_param(const cypher_astnode_t *name,
 const cypher_astnode_t *cypher_ast_cypher_option_param_get_name(
         const cypher_astnode_t *astnode)
 {
-    REQUIRE_TYPE(astnode, CYPHER_AST_CYPHER_OPTION_PARAM, -1);
+    REQUIRE_TYPE(astnode, CYPHER_AST_CYPHER_OPTION_PARAM, NULL);
     struct cypher_option_param *node = container_of(astnode,
             struct cypher_option_param, _astnode);
     return node->name;
@@ -76,7 +76,7 @@ const cypher_astnode_t *cypher_ast_cypher_option_param_get_name(
 const cypher_astnode_t *cypher_ast_cypher_option_param_get_value(
         const cypher_astnode_t *astnode)
 {
-    REQUIRE_TYPE(astnode, CYPHER_AST_CYPHER_OPTION_PARAM, -1);
+    REQUIRE_TYPE(astnode, CYPHER_AST_CYPHER_OPTION_PARAM, NULL);
     struct cypher_option_param *node = container_of(astnode,
             struct cypher_option_param, _astnode);
     return node->value;

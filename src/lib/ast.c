@@ -31,14 +31,12 @@ struct cypher_astnode_vts
     const struct cypher_astnode_vt *explain_option;
     const struct cypher_astnode_vt *profile_option;
     const struct cypher_astnode_vt *schema_command;
-    const struct cypher_astnode_vt *create_index;
-    const struct cypher_astnode_vt *drop_index;
-    const struct cypher_astnode_vt *create_unique_constraint;
-    const struct cypher_astnode_vt *drop_unique_constraint;
-    const struct cypher_astnode_vt *create_node_prop_exists_constraint;
-    const struct cypher_astnode_vt *drop_node_prop_exists_constraint;
-    const struct cypher_astnode_vt *create_rel_prop_exists_constraint;
-    const struct cypher_astnode_vt *drop_rel_prop_exists_constraint;
+    const struct cypher_astnode_vt *create_node_prop_index;
+    const struct cypher_astnode_vt *drop_node_prop_index;
+    const struct cypher_astnode_vt *create_node_prop_constraint;
+    const struct cypher_astnode_vt *drop_node_prop_constraint;
+    const struct cypher_astnode_vt *create_rel_prop_constraint;
+    const struct cypher_astnode_vt *drop_rel_prop_constraint;
     const struct cypher_astnode_vt *query;
     const struct cypher_astnode_vt *query_option;
     const struct cypher_astnode_vt *using_periodic_commit;
@@ -127,6 +125,7 @@ struct cypher_astnode_vts
     const struct cypher_astnode_vt *rel_pattern;
     const struct cypher_astnode_vt *range;
     const struct cypher_astnode_vt *command;
+    const struct cypher_astnode_vt *comment;
     const struct cypher_astnode_vt *line_comment;
     const struct cypher_astnode_vt *block_comment;
     const struct cypher_astnode_vt *error;
@@ -140,18 +139,13 @@ static const struct cypher_astnode_vts cypher_astnode_vts =
     .explain_option = &cypher_explain_option_astnode_vt,
     .profile_option = &cypher_profile_option_astnode_vt,
     .schema_command = &cypher_schema_command_astnode_vt,
-    .create_index = &cypher_create_index_astnode_vt,
-    .drop_index = &cypher_drop_index_astnode_vt,
-    .create_unique_constraint = &cypher_create_unique_constraint_astnode_vt,
-    .drop_unique_constraint = &cypher_drop_unique_constraint_astnode_vt,
-    .create_node_prop_exists_constraint =
-           &cypher_create_node_prop_exists_constraint_astnode_vt,
-    .drop_node_prop_exists_constraint =
-           &cypher_drop_node_prop_exists_constraint_astnode_vt,
-    .create_rel_prop_exists_constraint =
-            &cypher_create_rel_prop_exists_constraint_astnode_vt,
-    .drop_rel_prop_exists_constraint =
-            &cypher_drop_rel_prop_exists_constraint_astnode_vt,
+    .create_node_prop_index = &cypher_create_node_prop_index_astnode_vt,
+    .drop_node_prop_index = &cypher_drop_node_prop_index_astnode_vt,
+    .create_node_prop_constraint =
+           &cypher_create_node_prop_constraint_astnode_vt,
+    .drop_node_prop_constraint = &cypher_drop_node_prop_constraint_astnode_vt,
+    .create_rel_prop_constraint = &cypher_create_rel_prop_constraint_astnode_vt,
+    .drop_rel_prop_constraint = &cypher_drop_rel_prop_constraint_astnode_vt,
     .query = &cypher_query_astnode_vt,
     .query_option = &cypher_query_option_astnode_vt,
     .using_periodic_commit = &cypher_using_periodic_commit_astnode_vt,
@@ -258,20 +252,18 @@ const uint8_t CYPHER_AST_CYPHER_OPTION_PARAM = VT_OFFSET(cypher_option_param);
 const uint8_t CYPHER_AST_EXPLAIN_OPTION = VT_OFFSET(explain_option);
 const uint8_t CYPHER_AST_PROFILE_OPTION = VT_OFFSET(profile_option);
 const uint8_t CYPHER_AST_SCHEMA_COMMAND = VT_OFFSET(schema_command);
-const uint8_t CYPHER_AST_CREATE_INDEX = VT_OFFSET(create_index);
-const uint8_t CYPHER_AST_DROP_INDEX = VT_OFFSET(drop_index);
-const uint8_t CYPHER_AST_CREATE_UNIQUE_NODE_PROP_CONSTRAINT =
-        VT_OFFSET(create_unique_constraint);
-const uint8_t CYPHER_AST_DROP_UNIQUE_NODE_PROP_CONSTRAINT =
-        VT_OFFSET(drop_unique_constraint);
-const uint8_t CYPHER_AST_CREATE_NODE_PROP_EXISTS_CONSTRAINT =
-        VT_OFFSET(create_node_prop_exists_constraint);
-const uint8_t CYPHER_AST_DROP_NODE_PROP_EXISTS_CONSTRAINT =
-        VT_OFFSET(drop_node_prop_exists_constraint);
-const uint8_t CYPHER_AST_CREATE_REL_PROP_EXISTS_CONSTRAINT =
-        VT_OFFSET(create_rel_prop_exists_constraint);
-const uint8_t CYPHER_AST_DROP_REL_PROP_EXISTS_CONSTRAINT =
-        VT_OFFSET(drop_rel_prop_exists_constraint);
+const uint8_t CYPHER_AST_CREATE_NODE_PROP_INDEX =
+        VT_OFFSET(create_node_prop_index);
+const uint8_t CYPHER_AST_DROP_NODE_PROP_INDEX =
+        VT_OFFSET(drop_node_prop_index);
+const uint8_t CYPHER_AST_CREATE_NODE_PROP_CONSTRAINT =
+        VT_OFFSET(create_node_prop_constraint);
+const uint8_t CYPHER_AST_DROP_NODE_PROP_CONSTRAINT =
+        VT_OFFSET(drop_node_prop_constraint);
+const uint8_t CYPHER_AST_CREATE_REL_PROP_CONSTRAINT =
+        VT_OFFSET(create_rel_prop_constraint);
+const uint8_t CYPHER_AST_DROP_REL_PROP_CONSTRAINT =
+        VT_OFFSET(drop_rel_prop_constraint);
 const uint8_t CYPHER_AST_QUERY = VT_OFFSET(query);
 const uint8_t CYPHER_AST_QUERY_OPTION = VT_OFFSET(query_option);
 const uint8_t CYPHER_AST_USING_PERIODIC_COMMIT = VT_OFFSET(using_periodic_commit);
@@ -360,6 +352,7 @@ const uint8_t CYPHER_AST_NODE_PATTERN = VT_OFFSET(node_pattern);
 const uint8_t CYPHER_AST_REL_PATTERN = VT_OFFSET(rel_pattern);
 const uint8_t CYPHER_AST_RANGE = VT_OFFSET(range);
 const uint8_t CYPHER_AST_COMMAND = VT_OFFSET(command);
+const uint8_t CYPHER_AST_COMMENT = VT_OFFSET(comment);
 const uint8_t CYPHER_AST_LINE_COMMENT = VT_OFFSET(line_comment);
 const uint8_t CYPHER_AST_BLOCK_COMMENT = VT_OFFSET(block_comment);
 const uint8_t CYPHER_AST_ERROR = VT_OFFSET(error);

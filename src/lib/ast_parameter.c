@@ -61,6 +61,14 @@ cypher_astnode_t *cypher_ast_parameter(const char *s, size_t n,
 }
 
 
+const char *cypher_ast_parameter_get_value(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_PARAMETER, NULL);
+    struct parameter *node = container_of(astnode, struct parameter, _astnode);
+    return node->p;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_PARAMETER, -1);

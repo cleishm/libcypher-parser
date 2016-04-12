@@ -81,7 +81,7 @@ cleanup:
 const cypher_astnode_t *cypher_ast_cypher_option_get_version(
         const cypher_astnode_t *astnode)
 {
-    REQUIRE_TYPE(astnode, CYPHER_AST_CYPHER_OPTION, -1);
+    REQUIRE_TYPE(astnode, CYPHER_AST_CYPHER_OPTION, NULL);
     struct cypher_option *node = container_of(astnode,
             struct cypher_option, _astnode);
     return node->version;
@@ -100,7 +100,7 @@ unsigned int cypher_ast_cypher_option_nparams(const cypher_astnode_t *astnode)
 const cypher_astnode_t *cypher_ast_cypher_option_get_param(
         const cypher_astnode_t *astnode, unsigned int index)
 {
-    REQUIRE_TYPE(astnode, CYPHER_AST_CYPHER_OPTION, -1);
+    REQUIRE_TYPE(astnode, CYPHER_AST_CYPHER_OPTION, NULL);
     struct cypher_option *node = container_of(astnode,
             struct cypher_option, _astnode);
     if (index >= node->nparams)

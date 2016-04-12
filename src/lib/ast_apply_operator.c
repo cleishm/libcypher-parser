@@ -25,7 +25,7 @@ struct apply_operator
 {
     cypher_astnode_t _astnode;
     bool distinct;
-    const cypher_astnode_t *func;
+    const cypher_astnode_t *func_name;
     unsigned int nargs;
     const cypher_astnode_t *args[];
 };
@@ -45,12 +45,12 @@ const struct cypher_astnode_vt cypher_apply_operator_astnode_vt =
       .free = cypher_astnode_free };
 
 
-cypher_astnode_t *cypher_ast_apply_operator(const cypher_astnode_t *func,
+cypher_astnode_t *cypher_ast_apply_operator(const cypher_astnode_t *func_name,
         bool distinct, cypher_astnode_t * const *args, unsigned int nargs,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE_TYPE(func, CYPHER_AST_FUNCTION_NAME, NULL);
+    REQUIRE_TYPE(func_name, CYPHER_AST_FUNCTION_NAME, NULL);
     REQUIRE_TYPE_ALL(args, nargs, CYPHER_AST_EXPRESSION, NULL);
 
     struct apply_operator *node = calloc(1, sizeof(struct apply_operator) +
@@ -65,7 +65,7 @@ cypher_astnode_t *cypher_ast_apply_operator(const cypher_astnode_t *func,
         goto cleanup;
     }
     node->distinct = distinct;
-    node->func = func;
+    node->func_name = func_name;
 
     memcpy(node->args, args, nargs * sizeof(cypher_astnode_t *));
     node->nargs = nargs;
@@ -80,13 +80,38 @@ cleanup:
 }
 
 
+const cypher_astnode_t *cypher_ast_apply_operator_get_func_name(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_APPLY_OPERATOR, NULL);
+    struct apply_operator *node =
+            container_of(astnode, struct apply_operator, _astnode);
+    return node->func_name;
+}
+
+
+const cypher_astnode_t *cypher_ast_apply_operator_get_argument(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_APPLY_OPERATOR, NULL);
+    struct apply_operator *node =
+            container_of(astnode, struct apply_operator, _astnode);
+
+    if (index >= node->nargs)
+    {
+        return NULL;
+    }
+    return node->args[index];
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_APPLY_OPERATOR, -1);
     struct apply_operator *node =
         container_of(self, struct apply_operator, _astnode);
 
-    ssize_t r = snprintf(str, size, "@%u(%s", node->func->ordinal,
+    ssize_t r = snprintf(str, size, "@%u(%s", node->func_name->ordinal,
             node->distinct? "DISTINCT " : "");
     if (r < 0)
     {

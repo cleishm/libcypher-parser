@@ -35,20 +35,16 @@ extern const struct cypher_astnode_vt cypher_cypher_option_param_astnode_vt;
 extern const struct cypher_astnode_vt cypher_explain_option_astnode_vt;
 extern const struct cypher_astnode_vt cypher_profile_option_astnode_vt;
 extern const struct cypher_astnode_vt cypher_schema_command_astnode_vt;
-extern const struct cypher_astnode_vt cypher_create_index_astnode_vt;
-extern const struct cypher_astnode_vt cypher_drop_index_astnode_vt;
+extern const struct cypher_astnode_vt cypher_create_node_prop_index_astnode_vt;
+extern const struct cypher_astnode_vt cypher_drop_node_prop_index_astnode_vt;
 extern const struct cypher_astnode_vt
-        cypher_create_unique_constraint_astnode_vt;
+        cypher_create_node_prop_constraint_astnode_vt;
 extern const struct cypher_astnode_vt
-        cypher_drop_unique_constraint_astnode_vt;
+        cypher_drop_node_prop_constraint_astnode_vt;
 extern const struct cypher_astnode_vt
-        cypher_create_node_prop_exists_constraint_astnode_vt;
+        cypher_create_rel_prop_constraint_astnode_vt;
 extern const struct cypher_astnode_vt
-        cypher_drop_node_prop_exists_constraint_astnode_vt;
-extern const struct cypher_astnode_vt
-        cypher_create_rel_prop_exists_constraint_astnode_vt;
-extern const struct cypher_astnode_vt
-        cypher_drop_rel_prop_exists_constraint_astnode_vt;
+        cypher_drop_rel_prop_constraint_astnode_vt;
 extern const struct cypher_astnode_vt cypher_query_astnode_vt;
 extern const struct cypher_astnode_vt cypher_query_option_astnode_vt;
 extern const struct cypher_astnode_vt cypher_using_periodic_commit_astnode_vt;
@@ -137,6 +133,7 @@ extern const struct cypher_astnode_vt cypher_node_pattern_astnode_vt;
 extern const struct cypher_astnode_vt cypher_rel_pattern_astnode_vt;
 extern const struct cypher_astnode_vt cypher_range_astnode_vt;
 extern const struct cypher_astnode_vt cypher_command_astnode_vt;
+extern const struct cypher_astnode_vt cypher_comment_astnode_vt;
 extern const struct cypher_astnode_vt cypher_line_comment_astnode_vt;
 extern const struct cypher_astnode_vt cypher_block_comment_astnode_vt;
 extern const struct cypher_astnode_vt cypher_error_astnode_vt;

@@ -9,7 +9,10 @@ check_libcypher_parser_SOURCES = \
 
 check_libcypher_parser_CHECKS = \
 	check_command.c \
+	check_constraints.c \
 	check_error_tracking.c \
+	check_indexes.c \
+	check_query.c \
 	check_statement.c \
 	check_util.c
 

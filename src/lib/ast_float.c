@@ -61,7 +61,7 @@ cypher_astnode_t *cypher_ast_float(const char *s, size_t n,
 }
 
 
-const char *cypher_ast_float_value(const cypher_astnode_t *astnode)
+const char *cypher_ast_float_get_valuestr(const cypher_astnode_t *astnode)
 {
     REQUIRE_TYPE(astnode, CYPHER_AST_FLOAT, NULL);
     struct flt *node = container_of(astnode, struct flt, _astnode);

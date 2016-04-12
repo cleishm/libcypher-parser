@@ -24,7 +24,7 @@
 struct property_operator
 {
     cypher_astnode_t _astnode;
-    const cypher_astnode_t *map;
+    const cypher_astnode_t *expression;
     const cypher_astnode_t *prop_name;
 };
 
@@ -43,11 +43,12 @@ const struct cypher_astnode_vt cypher_property_operator_astnode_vt =
       .free = cypher_astnode_free };
 
 
-cypher_astnode_t *cypher_ast_property_operator(const cypher_astnode_t *map,
-        const cypher_astnode_t *prop_name, cypher_astnode_t **children,
-        unsigned int nchildren, struct cypher_input_range range)
+cypher_astnode_t *cypher_ast_property_operator(
+        const cypher_astnode_t *expression, const cypher_astnode_t *prop_name,
+        cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range)
 {
-    REQUIRE_TYPE(map, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
     REQUIRE_TYPE(prop_name, CYPHER_AST_PROP_NAME, NULL);
 
     struct property_operator *node =
@@ -62,9 +63,29 @@ cypher_astnode_t *cypher_ast_property_operator(const cypher_astnode_t *map,
         free(node);
         return NULL;
     }
-    node->map = map;
+    node->expression = expression;
     node->prop_name = prop_name;
     return &(node->_astnode);
+}
+
+
+const cypher_astnode_t *cypher_ast_property_operator_get_expression(
+                const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_PROPERTY_OPERATOR, NULL);
+    struct property_operator *node =
+            container_of(astnode, struct property_operator, _astnode);
+    return node->expression;
+}
+
+
+const cypher_astnode_t *cypher_ast_property_operator_get_prop_name(
+                const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_PROPERTY_OPERATOR, NULL);
+    struct property_operator *node =
+            container_of(astnode, struct property_operator, _astnode);
+    return node->prop_name;
 }
 
 
@@ -73,6 +94,6 @@ ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
     REQUIRE_TYPE(self, CYPHER_AST_PROPERTY_OPERATOR, -1);
     struct property_operator *node =
         container_of(self, struct property_operator, _astnode);
-    return snprintf(str, size, "@%u.@%u", node->map->ordinal,
+    return snprintf(str, size, "@%u.@%u", node->expression->ordinal,
                 node->prop_name->ordinal);
 }

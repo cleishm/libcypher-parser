@@ -56,7 +56,7 @@ cypher_astnode_t *cypher_ast_index_name(const char *s, size_t n,
 }
 
 
-const char *cypher_ast_index_name_value(const cypher_astnode_t *astnode)
+const char *cypher_ast_index_name_get_value(const cypher_astnode_t *astnode)
 {
     REQUIRE_TYPE(astnode, CYPHER_AST_INDEX_NAME, NULL);
     struct index_name *node = container_of(astnode, struct index_name, _astnode);

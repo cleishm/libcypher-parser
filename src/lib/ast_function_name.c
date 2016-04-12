@@ -56,7 +56,7 @@ cypher_astnode_t *cypher_ast_function_name(const char *s, size_t n,
 }
 
 
-const char *cypher_ast_function_name_value(const cypher_astnode_t *astnode)
+const char *cypher_ast_function_name_get_value(const cypher_astnode_t *astnode)
 {
     REQUIRE_TYPE(astnode, CYPHER_AST_FUNCTION_NAME, NULL);
     struct function_name *node =

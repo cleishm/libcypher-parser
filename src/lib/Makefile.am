@@ -9,27 +9,26 @@ libcypher_parser_la_SOURCES = \
 	ast_all_nodes_scan.c \
 	ast_all_rels_scan.c \
 	ast_any.c \
-	ast_apply.c \
-	ast_apply_all.c \
+	ast_apply_operator.c \
+	ast_apply_all_operator.c \
 	ast_binary_operator.c \
 	ast_block_comment.c \
 	ast_call.c \
 	ast_case.c \
 	ast_collection.c \
 	ast_command.c \
+	ast_comment.c \
 	ast_comparison.c \
 	ast_create.c \
-	ast_create_index.c \
-	ast_create_unique_constraint.c \
-	ast_create_node_prop_exists_constraint.c \
-	ast_create_rel_prop_exists_constraint.c \
+	ast_create_node_prop_index.c \
+	ast_create_node_prop_constraint.c \
+	ast_create_rel_prop_constraint.c \
 	ast_cypher_option.c \
 	ast_cypher_option_param.c \
 	ast_delete.c \
-	ast_drop_index.c \
-	ast_drop_unique_constraint.c \
-	ast_drop_node_prop_exists_constraint.c \
-	ast_drop_rel_prop_exists_constraint.c \
+	ast_drop_node_prop_index.c \
+	ast_drop_node_prop_constraint.c \
+	ast_drop_rel_prop_constraint.c \
 	ast_error.c \
 	ast_explain_option.c \
 	ast_expression.c \

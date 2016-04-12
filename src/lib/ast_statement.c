@@ -71,15 +71,6 @@ cleanup:
 }
 
 
-const cypher_astnode_t *cypher_ast_statement_get_body(
-        const cypher_astnode_t *astnode)
-{
-    REQUIRE_TYPE(astnode, CYPHER_AST_STATEMENT, -1);
-    struct statement *node = container_of(astnode, struct statement, _astnode);
-    return node->body;
-}
-
-
 unsigned int cypher_ast_statement_noptions(const cypher_astnode_t *astnode)
 {
     REQUIRE_TYPE(astnode, CYPHER_AST_STATEMENT, -1);
@@ -91,13 +82,22 @@ unsigned int cypher_ast_statement_noptions(const cypher_astnode_t *astnode)
 const cypher_astnode_t *cypher_ast_statement_get_option(
         const cypher_astnode_t *astnode, unsigned int index)
 {
-    REQUIRE_TYPE(astnode, CYPHER_AST_STATEMENT, -1);
+    REQUIRE_TYPE(astnode, CYPHER_AST_STATEMENT, NULL);
     struct statement *node = container_of(astnode, struct statement, _astnode);
     if (index >= node->noptions)
     {
         return NULL;
     }
     return node->options[index];
+}
+
+
+const cypher_astnode_t *cypher_ast_statement_get_body(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_STATEMENT, NULL);
+    struct statement *node = container_of(astnode, struct statement, _astnode);
+    return node->body;
 }
 
 

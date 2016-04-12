@@ -56,7 +56,7 @@ cypher_astnode_t *cypher_ast_prop_name(const char *s, size_t n,
 }
 
 
-const char *cypher_ast_prop_name_value(const cypher_astnode_t *astnode)
+const char *cypher_ast_prop_name_get_value(const cypher_astnode_t *astnode)
 {
     REQUIRE_TYPE(astnode, CYPHER_AST_PROP_NAME, NULL);
     struct prop_name *node = container_of(astnode, struct prop_name, _astnode);

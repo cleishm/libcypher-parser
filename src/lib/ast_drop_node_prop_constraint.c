@@ -26,6 +26,7 @@ struct constraint
     const cypher_astnode_t *identifier;
     const cypher_astnode_t *label;
     const cypher_astnode_t *expression;
+    bool unique;
 };
 
 
@@ -35,18 +36,19 @@ static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 static const struct cypher_astnode_vt *parents[] =
     { &cypher_schema_command_astnode_vt };
 
-const struct cypher_astnode_vt cypher_drop_rel_prop_exists_constraint_astnode_vt =
+const struct cypher_astnode_vt cypher_drop_node_prop_constraint_astnode_vt =
     { .parents = parents,
       .nparents = 1,
-      .name = "drop rel prop existence constraint",
+      .name = "drop node prop constraint",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
 
-cypher_astnode_t *cypher_ast_drop_rel_prop_exists_constraint(
+cypher_astnode_t *cypher_ast_drop_node_prop_constraint(
         const cypher_astnode_t *identifier, const cypher_astnode_t *label,
-        const cypher_astnode_t *expression, cypher_astnode_t **children,
-        unsigned int nchildren, struct cypher_input_range range)
+        const cypher_astnode_t *expression, bool unique,
+        cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range)
 {
     REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
     REQUIRE_TYPE(label, CYPHER_AST_LABEL, NULL);
@@ -58,8 +60,7 @@ cypher_astnode_t *cypher_ast_drop_rel_prop_exists_constraint(
         return NULL;
     }
     if (cypher_astnode_init(&(node->_astnode),
-            CYPHER_AST_DROP_REL_PROP_EXISTS_CONSTRAINT,
-            children, nchildren, range))
+            CYPHER_AST_DROP_NODE_PROP_CONSTRAINT, children, nchildren, range))
     {
         free(node);
         return NULL;
@@ -67,16 +68,53 @@ cypher_astnode_t *cypher_ast_drop_rel_prop_exists_constraint(
     node->identifier = identifier;
     node->label = label;
     node->expression = expression;
+    node->unique = unique;
     return &(node->_astnode);
+}
+
+
+const cypher_astnode_t *cypher_ast_drop_node_prop_constraint_get_identifier(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_DROP_NODE_PROP_CONSTRAINT, NULL);
+    struct constraint *node = container_of(astnode, struct constraint, _astnode);
+    return node->identifier;
+}
+
+
+const cypher_astnode_t *cypher_ast_drop_node_prop_constraint_get_label(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_DROP_NODE_PROP_CONSTRAINT, NULL);
+    struct constraint *node = container_of(astnode, struct constraint, _astnode);
+    return node->label;
+}
+
+
+const cypher_astnode_t *cypher_ast_drop_node_prop_constraint_get_expression(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_DROP_NODE_PROP_CONSTRAINT, NULL);
+    struct constraint *node = container_of(astnode, struct constraint, _astnode);
+    return node->expression;
+}
+
+
+bool cypher_ast_drop_node_prop_constraint_is_unique(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_DROP_NODE_PROP_CONSTRAINT, NULL);
+    struct constraint *node = container_of(astnode, struct constraint, _astnode);
+    return node->unique;
 }
 
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE_TYPE(self, CYPHER_AST_DROP_REL_PROP_EXISTS_CONSTRAINT, -1);
+    REQUIRE_TYPE(self, CYPHER_AST_DROP_NODE_PROP_CONSTRAINT, -1);
     struct constraint *node = container_of(self, struct constraint, _astnode);
 
-    return snprintf(str, size, "ON=(@%u:@%u), exists(@%u)",
+    return snprintf(str, size, "ON=(@%u:@%u), expression=@%u%s",
             node->identifier->ordinal, node->label->ordinal,
-            node->expression->ordinal);
+            node->expression->ordinal, node->unique? ", IS UNIQUE" : "");
 }

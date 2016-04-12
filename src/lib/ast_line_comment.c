@@ -30,8 +30,13 @@ struct comment
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_comment_astnode_vt };
+
 const struct cypher_astnode_vt cypher_line_comment_astnode_vt =
-    { .name = "line_comment",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "line_comment",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -53,6 +58,14 @@ cypher_astnode_t *cypher_ast_line_comment(const char *s, size_t n,
     memcpy(node->p, s, n);
     node->p[n] = '\0';
     return &(node->_astnode);
+}
+
+
+const char *cypher_ast_line_comment_get_value(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_LINE_COMMENT, NULL);
+    struct comment *node = container_of(astnode, struct comment, _astnode);
+    return node->p;
 }
 
 

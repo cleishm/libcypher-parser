@@ -167,34 +167,26 @@ static cypher_astnode_t *_create_index(yycontext *yy, cypher_astnode_t *label,
 #define drop_index(l, p) _drop_index(yy, l, p)
 static cypher_astnode_t *_drop_index(yycontext *yy, cypher_astnode_t *label,
         cypher_astnode_t *prop_name);
-#define create_unique_constraint(i, l, p) _create_unique_constraint(yy, i, l, p)
-static cypher_astnode_t *_create_unique_constraint(yycontext *yy,
+#define create_node_prop_constraint(i, l, e, u) \
+        _create_node_prop_constraint(yy, i, l, e, u)
+static cypher_astnode_t *_create_node_prop_constraint(yycontext *yy,
         cypher_astnode_t *identifier, cypher_astnode_t *label,
-        cypher_astnode_t *property);
-#define drop_unique_constraint(i, l, p) _drop_unique_constraint(yy, i, l, p)
-static cypher_astnode_t *_drop_unique_constraint(yycontext *yy,
+        cypher_astnode_t *expression, bool unique);
+#define drop_node_prop_constraint(i, l, e, u) \
+        _drop_node_prop_constraint(yy, i, l, e, u)
+static cypher_astnode_t *_drop_node_prop_constraint(yycontext *yy,
         cypher_astnode_t *identifier, cypher_astnode_t *label,
-        cypher_astnode_t *property);
-#define create_node_prop_exists_constraint(i, l, p) \
-        _create_node_prop_exists_constraint(yy, i, l, p)
-static cypher_astnode_t *_create_node_prop_exists_constraint(yycontext *yy,
+        cypher_astnode_t *expression, bool unique);
+#define create_rel_prop_constraint(i, l, e, u) \
+        _create_rel_prop_constraint(yy, i, l, e, u)
+static cypher_astnode_t *_create_rel_prop_constraint(yycontext *yy,
         cypher_astnode_t *identifier, cypher_astnode_t *label,
-        cypher_astnode_t *property);
-#define drop_node_prop_exists_constraint(i, l, p) \
-        _drop_node_prop_exists_constraint(yy, i, l, p)
-static cypher_astnode_t *_drop_node_prop_exists_constraint(yycontext *yy,
+        cypher_astnode_t *expression, bool unique);
+#define drop_rel_prop_constraint(i, l, e, u) \
+        _drop_rel_prop_constraint(yy, i, l, e, u)
+static cypher_astnode_t *_drop_rel_prop_constraint(yycontext *yy,
         cypher_astnode_t *identifier, cypher_astnode_t *label,
-        cypher_astnode_t *property);
-#define create_rel_prop_exists_constraint(i, l, p) \
-        _create_rel_prop_exists_constraint(yy, i, l, p)
-static cypher_astnode_t *_create_rel_prop_exists_constraint(yycontext *yy,
-        cypher_astnode_t *identifier, cypher_astnode_t *label,
-        cypher_astnode_t *property);
-#define drop_rel_prop_exists_constraint(i, l, p) \
-        _drop_rel_prop_exists_constraint(yy, i, l, p)
-static cypher_astnode_t *_drop_rel_prop_exists_constraint(yycontext *yy,
-        cypher_astnode_t *identifier, cypher_astnode_t *label,
-        cypher_astnode_t *property);
+        cypher_astnode_t *expression, bool unique);
 #define query() _query(yy)
 static cypher_astnode_t *_query(yycontext *yy);
 #define using_periodic_commit(l) _using_periodic_commit(yy, l)
@@ -1110,7 +1102,7 @@ cypher_astnode_t *_create_index(yycontext *yy, cypher_astnode_t *label,
 {
     assert(yy->prev_block != NULL &&
             "An AST node can only be created immediately after a `>` in the grammar");
-    cypher_astnode_t *node = cypher_ast_create_index(label, prop_name,
+    cypher_astnode_t *node = cypher_ast_create_node_prop_index(label, prop_name,
             astnodes_elements(&(yy->prev_block->children)),
             astnodes_size(&(yy->prev_block->children)),
             yy->prev_block->range);
@@ -1130,7 +1122,7 @@ cypher_astnode_t *_drop_index(yycontext *yy, cypher_astnode_t *label,
 {
     assert(yy->prev_block != NULL &&
             "An AST node can only be created immediately after a `>` in the grammar");
-    cypher_astnode_t *node = cypher_ast_drop_index(label, prop_name,
+    cypher_astnode_t *node = cypher_ast_drop_node_prop_index(label, prop_name,
             astnodes_elements(&(yy->prev_block->children)),
             astnodes_size(&(yy->prev_block->children)),
             yy->prev_block->range);
@@ -1145,56 +1137,14 @@ cypher_astnode_t *_drop_index(yycontext *yy, cypher_astnode_t *label,
 }
 
 
-cypher_astnode_t *_create_unique_constraint(yycontext *yy,
+cypher_astnode_t *_create_node_prop_constraint(yycontext *yy,
         cypher_astnode_t *identifier, cypher_astnode_t *label,
-        cypher_astnode_t *property)
+        cypher_astnode_t *expression, bool unique)
 {
     assert(yy->prev_block != NULL &&
             "An AST node can only be created immediately after a `>` in the grammar");
-    cypher_astnode_t *node = cypher_ast_create_unique_constraint(identifier,
-            label, property, astnodes_elements(&(yy->prev_block->children)),
-            astnodes_size(&(yy->prev_block->children)),
-            yy->prev_block->range);
-    if (node == NULL)
-    {
-        abort_parse(yy);
-    }
-    astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
-    yy->prev_block = NULL;
-    return add_child(yy, node);
-}
-
-
-cypher_astnode_t *_drop_unique_constraint(yycontext *yy,
-        cypher_astnode_t *identifier, cypher_astnode_t *label,
-        cypher_astnode_t *property)
-{
-    assert(yy->prev_block != NULL &&
-            "An AST node can only be created immediately after a `>` in the grammar");
-    cypher_astnode_t *node = cypher_ast_drop_unique_constraint(identifier,
-            label, property, astnodes_elements(&(yy->prev_block->children)),
-            astnodes_size(&(yy->prev_block->children)),
-            yy->prev_block->range);
-    if (node == NULL)
-    {
-        abort_parse(yy);
-    }
-    astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
-    yy->prev_block = NULL;
-    return add_child(yy, node);
-}
-
-
-cypher_astnode_t *_create_node_prop_exists_constraint(yycontext *yy,
-        cypher_astnode_t *identifier, cypher_astnode_t *label,
-        cypher_astnode_t *property)
-{
-    assert(yy->prev_block != NULL &&
-            "An AST node can only be created immediately after a `>` in the grammar");
-    cypher_astnode_t *node = cypher_ast_create_node_prop_exists_constraint(
-            identifier, label, property,
+    cypher_astnode_t *node = cypher_ast_create_node_prop_constraint(
+            identifier, label, expression, unique,
             astnodes_elements(&(yy->prev_block->children)),
             astnodes_size(&(yy->prev_block->children)),
             yy->prev_block->range);
@@ -1209,14 +1159,14 @@ cypher_astnode_t *_create_node_prop_exists_constraint(yycontext *yy,
 }
 
 
-cypher_astnode_t *_drop_node_prop_exists_constraint(yycontext *yy,
+cypher_astnode_t *_drop_node_prop_constraint(yycontext *yy,
         cypher_astnode_t *identifier, cypher_astnode_t *label,
-        cypher_astnode_t *property)
+        cypher_astnode_t *expression, bool unique)
 {
     assert(yy->prev_block != NULL &&
             "An AST node can only be created immediately after a `>` in the grammar");
-    cypher_astnode_t *node = cypher_ast_drop_node_prop_exists_constraint(
-            identifier, label, property,
+    cypher_astnode_t *node = cypher_ast_drop_node_prop_constraint(
+            identifier, label, expression, unique,
             astnodes_elements(&(yy->prev_block->children)),
             astnodes_size(&(yy->prev_block->children)),
             yy->prev_block->range);
@@ -1231,14 +1181,14 @@ cypher_astnode_t *_drop_node_prop_exists_constraint(yycontext *yy,
 }
 
 
-cypher_astnode_t *_create_rel_prop_exists_constraint(yycontext *yy,
+cypher_astnode_t *_create_rel_prop_constraint(yycontext *yy,
         cypher_astnode_t *identifier, cypher_astnode_t *label,
-        cypher_astnode_t *property)
+        cypher_astnode_t *expression, bool unique)
 {
     assert(yy->prev_block != NULL &&
             "An AST node can only be created immediately after a `>` in the grammar");
-    cypher_astnode_t *node = cypher_ast_create_rel_prop_exists_constraint(
-            identifier, label, property,
+    cypher_astnode_t *node = cypher_ast_create_rel_prop_constraint(
+            identifier, label, expression, unique,
             astnodes_elements(&(yy->prev_block->children)),
             astnodes_size(&(yy->prev_block->children)),
             yy->prev_block->range);
@@ -1253,14 +1203,14 @@ cypher_astnode_t *_create_rel_prop_exists_constraint(yycontext *yy,
 }
 
 
-cypher_astnode_t *_drop_rel_prop_exists_constraint(yycontext *yy,
+cypher_astnode_t *_drop_rel_prop_constraint(yycontext *yy,
         cypher_astnode_t *identifier, cypher_astnode_t *label,
-        cypher_astnode_t *property)
+        cypher_astnode_t *expression, bool unique)
 {
     assert(yy->prev_block != NULL &&
             "An AST node can only be created immediately after a `>` in the grammar");
-    cypher_astnode_t *node = cypher_ast_drop_rel_prop_exists_constraint(
-            identifier, label, property,
+    cypher_astnode_t *node = cypher_ast_drop_rel_prop_constraint(
+            identifier, label, expression, unique,
             astnodes_elements(&(yy->prev_block->children)),
             astnodes_size(&(yy->prev_block->children)),
             yy->prev_block->range);

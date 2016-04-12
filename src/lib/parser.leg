@@ -80,16 +80,16 @@ create-index =
 create-constraint =
     < CREATE-CONSTRAINT-ON
       ( LEFT-PAREN - i:identifier l:label RIGHT-PAREN - ASSERT
-        ( p:property-expression IS-UNIQUE >
-                                       { $$ = create_unique_constraint(i, l, p); }
-        | exists LEFT-PAREN - p:property-expression RIGHT-PAREN >
-                                       { $$ = create_node_prop_exists_constraint(i, l, p); }
+        ( e:expression IS-UNIQUE >
+                                       { $$ = create_node_prop_constraint(i,l,e,true); }
+        | e:expression >
+                                       { $$ = create_node_prop_constraint(i,l,e,false); }
         )
       | LEFT-PAREN - RIGHT-PAREN - (LEFT-ARROW-HEAD -)? DASH -
         LEFT-SQ-PAREN - i:identifier t:rel-type RIGHT-SQ-PAREN -
         DASH - (RIGHT-ARROW-HEAD -)? LEFT-PAREN - RIGHT-PAREN -
-        ASSERT exists LEFT-PAREN - p:property-expression RIGHT-PAREN >
-                                       { $$ = create_rel_prop_exists_constraint(i, t, p); }
+        ASSERT e:expression >
+                                       { $$ = create_rel_prop_constraint(i,t,e,false); }
       ) -
 
 drop-index =
@@ -100,16 +100,16 @@ drop-index =
 drop-constraint =
     < DROP-CONSTRAINT-ON
       ( LEFT-PAREN - i:identifier l:label RIGHT-PAREN - ASSERT
-        ( p:property-expression IS-UNIQUE >
-                                       { $$ = drop_unique_constraint(i, l, p); }
-        | exists LEFT-PAREN - p:property-expression RIGHT-PAREN >
-                                       { $$ = drop_node_prop_exists_constraint(i, l, p); }
+        ( e:expression IS-UNIQUE >
+                                       { $$ = drop_node_prop_constraint(i,l,e,true); }
+        | e:expression >
+                                       { $$ = drop_node_prop_constraint(i,l,e,false); }
         )
       | LEFT-PAREN - RIGHT-PAREN - (LEFT-ARROW-HEAD -)? DASH -
         LEFT-SQ-PAREN - i:identifier t:rel-type RIGHT-SQ-PAREN -
         DASH - (RIGHT-ARROW-HEAD -)? LEFT-PAREN - RIGHT-PAREN -
-        ASSERT exists LEFT-PAREN - p:property-expression RIGHT-PAREN >
-                                       { $$ = drop_rel_prop_exists_constraint(i, t, p); }
+        ASSERT e:expression >
+                                       { $$ = drop_rel_prop_constraint(i,t,e,false); }
       ) -
 
 
@@ -905,7 +905,6 @@ DROP-INDEX-ON = [Dd]([Rr][Oo][Pp] WB - [Ii][Nn][Dd][Ee][Xx] WB - [Oo][Nn] WB -)
     ~{ERR("DROP INDEX ON")}
 
 ASSERT = ([Aa][Ss][Ss][Ee][Rr][Tt] WB -) ~{ERR("ASSERT")}
-exists = ([Ee][Xx][Ii][Ss][Tt][Ss] WB -) ~{ERR("exists")}
 IS-UNIQUE = ([Ii][Ss] WB - [Uu][Nn][Ii][Qq][Uu][Ee] WB -) ~{ERR("IS UNIQUE")}
 DROP = [Dd][Rr][Oo][Pp] WB -
 

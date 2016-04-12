@@ -65,6 +65,16 @@ cypher_astnode_t *cypher_ast_using_periodic_commit(
 }
 
 
+const cypher_astnode_t *cypher_ast_using_periodic_commit_get_limit(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_USING_PERIODIC_COMMIT, NULL);
+    struct using_periodic_commit *node =
+            container_of(astnode, struct using_periodic_commit, _astnode);
+    return node->limit;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_USING_PERIODIC_COMMIT, -1);
