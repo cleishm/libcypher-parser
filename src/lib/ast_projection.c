@@ -61,6 +61,24 @@ cypher_astnode_t *cypher_ast_projection(const cypher_astnode_t *expression,
 }
 
 
+const cypher_astnode_t *cypher_ast_projection_get_expression(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_PROJECTION, NULL);
+    struct projection *node = container_of(astnode, struct projection, _astnode);
+    return node->expression;
+}
+
+
+const cypher_astnode_t *cypher_ast_projection_get_alias(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_PROJECTION, NULL);
+    struct projection *node = container_of(astnode, struct projection, _astnode);
+    return node->alias;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_PROJECTION, -1);

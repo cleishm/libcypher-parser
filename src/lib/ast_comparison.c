@@ -24,10 +24,9 @@
 struct comparison
 {
     cypher_astnode_t _astnode;
-    const cypher_astnode_t *left;
-    const cypher_operator_t **ops;
-    const cypher_astnode_t **args;
     unsigned int length;
+    const cypher_operator_t **ops;
+    const cypher_astnode_t *args[];
 };
 
 
@@ -46,16 +45,17 @@ const struct cypher_astnode_vt cypher_comparison_astnode_vt =
       .free = comparison_free };
 
 
-cypher_astnode_t *cypher_ast_comparison(const cypher_astnode_t *left,
+cypher_astnode_t *cypher_ast_comparison(unsigned int length,
         const cypher_operator_t * const *ops, cypher_astnode_t * const *args,
-        unsigned int length, cypher_astnode_t **children,
-        unsigned int nchildren, struct cypher_input_range range)
+        cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range)
 {
-    REQUIRE_TYPE(left, CYPHER_AST_EXPRESSION, NULL);
-    REQUIRE(length > 0 && ops != NULL, NULL);
-    REQUIRE_TYPE_ALL(args, length, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE(length > 0, NULL);
+    REQUIRE(ops != NULL, NULL);
+    REQUIRE_TYPE_ALL(args, length+1, CYPHER_AST_EXPRESSION, NULL);
 
-    struct comparison *node = calloc(1, sizeof(struct comparison));
+    struct comparison *node = calloc(1, sizeof(struct comparison) +
+            (length + 1) * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -66,18 +66,13 @@ cypher_astnode_t *cypher_ast_comparison(const cypher_astnode_t *left,
         free(node);
         return NULL;
     }
-    node->left = left;
+    node->length = length;
     node->ops = mdup(ops, length * sizeof(cypher_astnode_t *));
     if (node->ops == NULL)
     {
         goto cleanup;
     }
-    node->args = mdup(args, length * sizeof(cypher_astnode_t *));
-    if (node->args == NULL)
-    {
-        goto cleanup;
-    }
-    node->length = length;
+    memcpy(node->args, args, (length+1) * sizeof(cypher_astnode_t *));
     return &(node->_astnode);
 
     int errsv;
@@ -94,8 +89,41 @@ void comparison_free(cypher_astnode_t *self)
 {
     struct comparison *node = container_of(self, struct comparison, _astnode);
     free(node->ops);
-    free(node->args);
     cypher_astnode_free(self);
+}
+
+
+unsigned int cypher_ast_comparison_get_length(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_COMPARISON, 0);
+    struct comparison *node = container_of(astnode, struct comparison, _astnode);
+    return node->length;
+}
+
+
+const cypher_operator_t *cypher_ast_comparison_get_operator(
+        const cypher_astnode_t *astnode, unsigned int pos)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_COMPARISON, NULL);
+    struct comparison *node = container_of(astnode, struct comparison, _astnode);
+    if (pos >= node->length)
+    {
+        return NULL;
+    }
+    return node->ops[pos];
+}
+
+
+const cypher_astnode_t *cypher_ast_comparison_get_argument(
+        const cypher_astnode_t *astnode, unsigned int pos)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_COMPARISON, NULL);
+    struct comparison *node = container_of(astnode, struct comparison, _astnode);
+    if (pos > node->length)
+    {
+        return NULL;
+    }
+    return node->args[pos];
 }
 
 
@@ -105,22 +133,24 @@ ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
     struct comparison *node = container_of(self, struct comparison, _astnode);
 
     size_t n = 0;
-    ssize_t r = snprintf(str, size, "@%u", node->left->ordinal);
-    if (r < 0)
+    for (unsigned int i = 0; i < node->length; ++i)
     {
-        return -1;
-    }
-    n += r;
-
-    for (unsigned int l = 0; l < node->length; ++l)
-    {
-        r = snprintf(str + n, (n < size)? size-n : 0, " %s @%u",
-                node->ops[l]->str, node->args[l]->ordinal);
+        ssize_t r = snprintf(str + n, (n < size)? size-n : 0, "@%u %s ",
+                node->args[i]->ordinal, node->ops[i]->str);
         if (r < 0)
         {
             return -1;
         }
         n += r;
     }
+
+    ssize_t r = snprintf(str + n, (n < size)? size-n : 0, "@%u",
+            node->args[node->length]->ordinal);
+    if (r < 0)
+    {
+        return -1;
+    }
+    n += r;
+
     return n;
 }

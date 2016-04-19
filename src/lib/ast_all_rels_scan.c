@@ -30,8 +30,13 @@ struct all_rels_scan
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_start_point_astnode_vt };
+
 const struct cypher_astnode_vt cypher_all_rels_scan_astnode_vt =
-    { .name = "all rels scan",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "all rels scan",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -55,6 +60,16 @@ cypher_astnode_t *cypher_ast_all_rels_scan(const cypher_astnode_t *identifier,
     }
     node->identifier = identifier;
     return &(node->_astnode);
+}
+
+
+const cypher_astnode_t *cypher_ast_all_rels_scan_get_identifier(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_ALL_RELS_SCAN, NULL);
+    struct all_rels_scan *node =
+            container_of(astnode, struct all_rels_scan, _astnode);
+    return node->identifier;
 }
 
 

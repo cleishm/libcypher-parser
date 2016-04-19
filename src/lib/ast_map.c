@@ -23,7 +23,7 @@
 struct map
 {
     cypher_astnode_t _astnode;
-    size_t npairs;
+    size_t nentries;
     const cypher_astnode_t *pairs[];
 };
 
@@ -42,19 +42,12 @@ const struct cypher_astnode_vt cypher_map_astnode_vt =
       .free = cypher_astnode_free };
 
 
-cypher_astnode_t *cypher_ast_map(cypher_astnode_t * const *pairs,
-        unsigned int npairs, cypher_astnode_t **children,
-        unsigned int nchildren, struct cypher_input_range range)
+static struct map *map_init(unsigned int nentries,
+        cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range)
 {
-    REQUIRE(npairs % 2 == 0, NULL);
-    for (unsigned int i = 0; i < npairs; i+=2)
-    {
-        REQUIRE_TYPE(pairs[i], CYPHER_AST_PROP_NAME, NULL);
-        REQUIRE_TYPE(pairs[i+1], CYPHER_AST_EXPRESSION, NULL);
-    }
-
     struct map *node = calloc(1, sizeof(struct map) +
-            npairs * sizeof(cypher_astnode_t *));
+            nentries * 2 * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -64,9 +57,8 @@ cypher_astnode_t *cypher_ast_map(cypher_astnode_t * const *pairs,
     {
         goto cleanup;
     }
-    memcpy(node->pairs, pairs, npairs * sizeof(cypher_astnode_t *));
-    node->npairs = npairs;
-    return &(node->_astnode);
+    node->nentries = nentries;
+    return node;
 
     int errsv;
 cleanup:
@@ -74,6 +66,83 @@ cleanup:
     free(node);
     errno = errsv;
     return NULL;
+}
+
+
+cypher_astnode_t *cypher_ast_map(cypher_astnode_t * const *keys,
+        cypher_astnode_t * const *values, unsigned int nentries,
+        cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range)
+{
+    REQUIRE_TYPE_ALL(keys, nentries, CYPHER_AST_PROP_NAME, NULL);
+    REQUIRE_TYPE_ALL(values, nentries, CYPHER_AST_EXPRESSION, NULL);
+
+    struct map *node = map_init(nentries, children, nchildren, range);
+    if (node == NULL)
+    {
+        return NULL;
+    }
+
+    for (unsigned int i = 0; i < nentries; ++i)
+    {
+        node->pairs[i*2] = keys[i];
+        node->pairs[i*2 + 1] = values[i];
+    }
+    return &(node->_astnode);
+}
+
+
+cypher_astnode_t *cypher_ast_pair_map(cypher_astnode_t * const *pairs,
+        unsigned int nentries, cypher_astnode_t **children,
+        unsigned int nchildren, struct cypher_input_range range)
+{
+    for (unsigned int i = 0; i < nentries; ++i)
+    {
+        REQUIRE_TYPE(pairs[i*2], CYPHER_AST_PROP_NAME, NULL);
+        REQUIRE_TYPE(pairs[i*2 + 1], CYPHER_AST_EXPRESSION, NULL);
+    }
+
+    struct map *node = map_init(nentries, children, nchildren, range);
+    if (node == NULL)
+    {
+        return NULL;
+    }
+    memcpy(node->pairs, pairs, nentries * 2 * sizeof(cypher_astnode_t *));
+    return &(node->_astnode);
+}
+
+
+unsigned int cypher_ast_map_nentries(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_MAP, 0);
+    struct map *node = container_of(astnode, struct map, _astnode);
+    return node->nentries;
+}
+
+
+const cypher_astnode_t *cypher_ast_map_get_key(const cypher_astnode_t *astnode,
+        unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_MAP, NULL);
+    struct map *node = container_of(astnode, struct map, _astnode);
+    if (index >= node->nentries)
+    {
+        return NULL;
+    }
+    return node->pairs[index*2];
+}
+
+
+const cypher_astnode_t *cypher_ast_map_get_value(const cypher_astnode_t *astnode,
+        unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_MAP, NULL);
+    struct map *node = container_of(astnode, struct map, _astnode);
+    if (index >= node->nentries)
+    {
+        return NULL;
+    }
+    return node->pairs[index*2 + 1];
 }
 
 
@@ -88,17 +157,16 @@ ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
         str[n] = '{';
     }
     n++;
-    for (unsigned int i = 0; i < node->npairs; )
+    for (unsigned int i = 0; i < node->nentries; ++i)
     {
         ssize_t r = snprintf(str+n, (n < size)? size-n : 0,
                 "%s@%u:@%u", (i > 0)? ", ":"",
-                node->pairs[i]->ordinal, node->pairs[i+1]->ordinal);
+                node->pairs[i*2]->ordinal, node->pairs[i*2 + 1]->ordinal);
         if (r < 0)
         {
             return -1;
         }
         n += r;
-        i += 2;
     }
     if (n < size)
     {

@@ -76,6 +76,49 @@ cleanup:
 }
 
 
+const cypher_astnode_t *cypher_ast_node_pattern_get_identifier(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_NODE_PATTERN, NULL);
+    struct node_pattern *node =
+            container_of(astnode, struct node_pattern, _astnode);
+    return node->identifier;
+}
+
+
+unsigned int cypher_ast_node_pattern_nlabels(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_NODE_PATTERN, 0);
+    struct node_pattern *node =
+            container_of(astnode, struct node_pattern, _astnode);
+    return node->nlabels;
+}
+
+
+const cypher_astnode_t *cypher_ast_node_pattern_get_label(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_NODE_PATTERN, NULL);
+    struct node_pattern *node =
+            container_of(astnode, struct node_pattern, _astnode);
+    if (index >= node->nlabels)
+    {
+        return NULL;
+    }
+    return node->labels[index];
+}
+
+
+const cypher_astnode_t *cypher_ast_node_pattern_get_properties(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_NODE_PATTERN, NULL);
+    struct node_pattern *node =
+            container_of(astnode, struct node_pattern, _astnode);
+    return node->properties;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_NODE_PATTERN, -1);

@@ -31,12 +31,13 @@ struct query
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
+static void query_free(cypher_astnode_t *self);
 
 
 const struct cypher_astnode_vt cypher_query_astnode_vt =
     { .name = "query",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = query_free };
 
 
 cypher_astnode_t *cypher_ast_query(cypher_astnode_t * const *options,
@@ -81,9 +82,17 @@ cleanup:
 }
 
 
+void query_free(cypher_astnode_t *self)
+{
+    struct query *node = container_of(self, struct query, _astnode);
+    free(node->options);
+    cypher_astnode_free(self);
+}
+
+
 unsigned int cypher_ast_query_noptions(const cypher_astnode_t *astnode)
 {
-    REQUIRE_TYPE(astnode, CYPHER_AST_QUERY, -1);
+    REQUIRE_TYPE(astnode, CYPHER_AST_QUERY, 0);
     struct query *node = container_of(astnode, struct query, _astnode);
     return node->noptions;
 }
@@ -104,7 +113,7 @@ const cypher_astnode_t *cypher_ast_query_get_option(
 
 unsigned int cypher_ast_query_nclauses(const cypher_astnode_t *astnode)
 {
-    REQUIRE_TYPE(astnode, CYPHER_AST_QUERY, -1);
+    REQUIRE_TYPE(astnode, CYPHER_AST_QUERY, 0);
     struct query *node = container_of(astnode, struct query, _astnode);
     return node->nclauses;
 }

@@ -56,7 +56,7 @@ cypher_astnode_t *cypher_ast_reltype(const char *s, size_t n,
 }
 
 
-const char *cypher_ast_reltype_get_value(const cypher_astnode_t *astnode)
+const char *cypher_ast_reltype_get_name(const cypher_astnode_t *astnode)
 {
     REQUIRE_TYPE(astnode, CYPHER_AST_RELTYPE, NULL);
     struct reltype *node = container_of(astnode, struct reltype, _astnode);

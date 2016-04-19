@@ -167,14 +167,13 @@ loadcsv-clause =
                                        { $$ = load_csv(false, u, i, t); }
 
 start-clause =
-    < START s:start-point              { sequence_add(s); }
-      ( COMMA - s:start-point          { sequence_add(s); }
+    < START s:start-point -            { sequence_add(s); }
+      ( COMMA - s:start-point -        { sequence_add(s); }
       )* ( WHERE c:expression | c:_null_ ) >
                                        { $$ = start_clause(c); }
-
 start-point =
     < i:identifier EQUAL -
-      ( node 
+      ( node
         ( COLON - x:index-name LEFT-PAREN -
           ( p:prop-name EQUAL - (l:string-literal | l:parameter) RIGHT-PAREN >
                                        { $$ = node_index_lookup(i, x, p, l); }
@@ -198,7 +197,7 @@ start-point =
           | STAR - RIGHT-PAREN >       { $$ = all_rels_scan(i); }
           )
         )
-      ) -
+      )
 
 node-ids =
     i:integer-literal                  { sequence_add(i); }
@@ -411,9 +410,10 @@ _expression =
                                        { l = property_operator(l, n); }
         | INFIX-OP &{PREC_CHK()} - r:_prec_expression _block_replace_
                                        { l = binary_operator(op_pop(), l, r); }
-        | ( COMPARISON-OP &{PREC_CHK()} - r:_prec_expression
+        |                              { sequence_add(l); }
+          ( COMPARISON-OP &{PREC_CHK()} - r:_prec_expression
                                        { sequence_add(r); }
-          )+ _block_replace_           { l = comparison_operator(l); }
+          )+ _block_replace_           { l = comparison_operator(); }
         | POSTFIX-OP &{PREC_CHK()} _block_replace_
                                        { l = unary_operator(op_pop(), l); }
         | LEFT-SQ-PAREN &{OP(SUBSCRIPT)} &{PREC_CHK()} -
@@ -687,11 +687,12 @@ pattern-path =
     )* >                               { $$ = pattern_path(); }
 
 pattern-expression =
-      p:shortest-path-pattern          { $$ = p; }
+      p:shortest-path-pattern -        { $$ = p; }
     | < n:node-pattern                 { sequence_add(n); }
       ( - r:relationship-pattern - n:node-pattern
                                        { sequence_add(r); sequence_add(n); }
       )+ >                             { $$ = pattern_path(); }
+      -
 
 node-pattern = < LEFT-PAREN -
     (i:identifier | i:_null_)
@@ -702,26 +703,26 @@ node-pattern = < LEFT-PAREN -
 relationship-pattern =
       < ( LEFT-ARROW-HEAD - DASH -
           ( DASH
-            ( - RIGHT-ARROW-HEAD >     { $$ = simple_rel_pattern(BOTH); }
+            ( - RIGHT-ARROW-HEAD >     { $$ = simple_rel_pattern(BIDIRECTIONAL); }
             | _empty_ >                { $$ = simple_rel_pattern(INBOUND); }
             )
           | LEFT-SQ-PAREN - (i:identifier | i:_null_)
             rel-types? (l:rel-varlength | l:_null_)
             (p:pattern-properties | p:_null_) RIGHT-SQ-PAREN - DASH 
-            ( - RIGHT-ARROW-HEAD >     { $$ = rel_pattern(BOTH, i, l, p); }
+            ( - RIGHT-ARROW-HEAD >     { $$ = rel_pattern(BIDIRECTIONAL, i, l, p); }
             | _empty_ >                { $$ = rel_pattern(INBOUND, i, l, p); }
             )
           )
         | DASH -
           ( DASH
             ( - RIGHT-ARROW-HEAD >     { $$ = simple_rel_pattern(OUTBOUND); }
-            | _empty_ >                { $$ = simple_rel_pattern(BOTH); }
+            | _empty_ >                { $$ = simple_rel_pattern(BIDIRECTIONAL); }
             )
           | LEFT-SQ-PAREN - (i:identifier | i:_null_)
             rel-types? (l:rel-varlength | l:_null_)
             (p:pattern-properties | p:_null_) RIGHT-SQ-PAREN - DASH 
             ( - RIGHT-ARROW-HEAD >     { $$ = rel_pattern(OUTBOUND, i, l, p); }
-            | _empty_ >                { $$ = rel_pattern(BOTH, i, l, p); }
+            | _empty_ >                { $$ = rel_pattern(BIDIRECTIONAL, i, l, p); }
             )
           )
         )
@@ -827,13 +828,11 @@ sym-part = [a-zA-Z0-9_$]
 -- = (HWS | block-comment)*
 line-end = (line-comment | EOL | EOF)
 
-comment =
-      c:line-comment                   { $$ = c; }
-    | c:block-comment                  { $$ = c; }
-line-comment = '//' < (!EOL .)* >      { $$ = line_comment(); }
+comment = line-comment | block-comment
+line-comment = '//' < (!EOL .)* >      { line_comment(); }
                (EOL | EOF)
 block-comment = '/*' < (EOL | !'*/' .)* >
-                                       { $$ = block_comment(); }
+                                       { block_comment(); }
                 ('*/' | EOF)
 
 WS = HWS | EOL

@@ -77,7 +77,7 @@ START_TEST (parse_create_node_prop_index)
     const cypher_astnode_t *label =
             cypher_ast_create_node_prop_index_get_label(body);
     ck_assert_int_eq(cypher_astnode_type(label), CYPHER_AST_LABEL);
-    ck_assert_str_eq(cypher_ast_label_get_value(label), "Foo");
+    ck_assert_str_eq(cypher_ast_label_get_name(label), "Foo");
 
     const cypher_astnode_t *prop_name =
             cypher_ast_create_node_prop_index_get_prop_name(body);
@@ -122,7 +122,7 @@ START_TEST (parse_drop_node_prop_index)
     const cypher_astnode_t *label =
             cypher_ast_drop_node_prop_index_get_label(body);
     ck_assert_int_eq(cypher_astnode_type(label), CYPHER_AST_LABEL);
-    ck_assert_str_eq(cypher_ast_label_get_value(label), "Foo");
+    ck_assert_str_eq(cypher_ast_label_get_name(label), "Foo");
 
     const cypher_astnode_t *prop_name =
             cypher_ast_drop_node_prop_index_get_prop_name(body);

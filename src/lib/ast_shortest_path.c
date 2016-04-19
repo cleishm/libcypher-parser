@@ -22,24 +22,31 @@
 
 struct shortest_path
 {
-    cypher_astnode_t _astnode;
+    cypher_pattern_path_astnode_t _pattern_path_astnode;
     bool single;
     const cypher_astnode_t *path;
 };
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
+static unsigned int nelements(const cypher_pattern_path_astnode_t *self);
+static const cypher_astnode_t *get_element(
+        const cypher_pattern_path_astnode_t *self, unsigned int index);
 
 
 static const struct cypher_astnode_vt *parents[] =
-    { &cypher_expression_astnode_vt };
+    { &cypher_expression_astnode_vt, &cypher_pattern_path_astnode_vt };
 
 const struct cypher_astnode_vt cypher_shortest_path_astnode_vt =
     { .parents = parents,
-      .nparents = 1,
+      .nparents = 2,
       .name = "shortestPath",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
+
+static const struct cypher_pattern_path_astnode_vt pp_vt =
+    { .nelements = nelements,
+      .get_element = get_element };
 
 
 cypher_astnode_t *cypher_ast_shortest_path(bool single,
@@ -53,23 +60,65 @@ cypher_astnode_t *cypher_ast_shortest_path(bool single,
     {
         return NULL;
     }
-    if (cypher_astnode_init(&(node->_astnode), CYPHER_AST_SHORTEST_PATH,
-            children, nchildren, range))
+    if (cypher_pattern_path_astnode_init(&(node->_pattern_path_astnode),
+                CYPHER_AST_SHORTEST_PATH, &pp_vt, children, nchildren, range))
     {
         free(node);
         return NULL;
     }
     node->single = single;
     node->path = path;
-    return &(node->_astnode);
+    return &(node->_pattern_path_astnode._astnode);
+}
+
+
+bool cypher_ast_shortest_path_is_single(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_SHORTEST_PATH, NULL);
+    const cypher_pattern_path_astnode_t *ppnode =
+            container_of(astnode, cypher_pattern_path_astnode_t, _astnode);
+    struct shortest_path *node =
+            container_of(ppnode, struct shortest_path, _pattern_path_astnode);
+    return node->single;
+}
+
+
+const cypher_astnode_t *cypher_ast_shortest_path_get_path(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_SHORTEST_PATH, NULL);
+    const cypher_pattern_path_astnode_t *ppnode =
+            container_of(astnode, cypher_pattern_path_astnode_t, _astnode);
+    struct shortest_path *node =
+            container_of(ppnode, struct shortest_path, _pattern_path_astnode);
+    return node->path;
+}
+
+
+unsigned int nelements(const cypher_pattern_path_astnode_t *self)
+{
+    const struct shortest_path *node =
+            container_of(self, struct shortest_path, _pattern_path_astnode);
+    return cypher_ast_pattern_path_nelements(node->path);
+}
+
+
+const cypher_astnode_t *get_element(const cypher_pattern_path_astnode_t *self,
+        unsigned int index)
+{
+    const struct shortest_path *node =
+            container_of(self, struct shortest_path, _pattern_path_astnode);
+    return cypher_ast_pattern_path_get_element(node->path, index);
 }
 
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_SHORTEST_PATH, -1);
+    const cypher_pattern_path_astnode_t *ppnode =
+            container_of(self, cypher_pattern_path_astnode_t, _astnode);
     struct shortest_path *node =
-        container_of(self, struct shortest_path, _astnode);
+            container_of(ppnode, struct shortest_path, _pattern_path_astnode);
     return snprintf(str, size, "single=%s, path=@%d",
             node->single? "true" : "false",
             node->path->ordinal);

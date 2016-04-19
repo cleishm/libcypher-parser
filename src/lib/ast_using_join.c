@@ -32,8 +32,13 @@ struct using_join
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_match_hint_astnode_vt };
+
 const struct cypher_astnode_vt cypher_using_join_astnode_vt =
-    { .name = "USING JOIN",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "USING JOIN",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -52,7 +57,7 @@ cypher_astnode_t *cypher_ast_using_join(
     {
         return NULL;
     }
-    if (cypher_astnode_init(&(node->_astnode), CYPHER_AST_USING_JOIN_HINT,
+    if (cypher_astnode_init(&(node->_astnode), CYPHER_AST_USING_JOIN,
             children, nchildren, range))
     {
         goto cleanup;
@@ -71,9 +76,32 @@ cleanup:
 }
 
 
+unsigned int cypher_ast_using_join_nidentifiers(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_USING_JOIN, NULL);
+    struct using_join *node = container_of(astnode,
+            struct using_join, _astnode);
+    return node->nidentifiers;
+}
+
+
+const cypher_astnode_t *cypher_ast_using_join_get_identifier(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_USING_JOIN, NULL);
+    struct using_join *node = container_of(astnode,
+            struct using_join, _astnode);
+    if (index >= node->nidentifiers)
+    {
+        return NULL;
+    }
+    return node->identifiers[index];
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE_TYPE(self, CYPHER_AST_USING_JOIN_HINT, -1);
+    REQUIRE_TYPE(self, CYPHER_AST_USING_JOIN, -1);
     struct using_join *node = container_of(self, struct using_join, _astnode);
 
     strncpy(str, "on=", size);

@@ -78,6 +78,39 @@ cleanup:
 }
 
 
+const cypher_astnode_t *cypher_ast_labels_operator_get_expression(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_LABELS_OPERATOR, NULL);
+    struct labels_operator *node =
+        container_of(astnode, struct labels_operator, _astnode);
+    return node->expression;
+}
+
+
+unsigned int cypher_ast_labels_operator_nlabels(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_LABELS_OPERATOR, NULL);
+    struct labels_operator *node =
+        container_of(astnode, struct labels_operator, _astnode);
+    return node->nlabels;
+}
+
+
+const cypher_astnode_t *cypher_ast_labels_operator_get_label(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_LABELS_OPERATOR, NULL);
+    struct labels_operator *node =
+        container_of(astnode, struct labels_operator, _astnode);
+    if (index >= node->nlabels)
+    {
+        return NULL;
+    }
+    return node->labels[index];
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_LABELS_OPERATOR, -1);

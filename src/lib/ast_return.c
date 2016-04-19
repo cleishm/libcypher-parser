@@ -89,6 +89,77 @@ cleanup:
 }
 
 
+bool cypher_ast_return_is_distinct(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_RETURN, false);
+    struct return_clause *node =
+            container_of(astnode, struct return_clause, _astnode);
+    return node->distinct;
+}
+
+
+bool cypher_ast_return_has_include_existing(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_RETURN, false);
+    struct return_clause *node =
+            container_of(astnode, struct return_clause, _astnode);
+    return node->include_existing;
+}
+
+
+unsigned int cypher_ast_return_nprojections(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_RETURN, 0);
+    struct return_clause *node =
+            container_of(astnode, struct return_clause, _astnode);
+    return node->nprojections;
+}
+
+
+const cypher_astnode_t *cypher_ast_return_get_projection(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_RETURN, NULL);
+    struct return_clause *node =
+            container_of(astnode, struct return_clause, _astnode);
+    if (index >= node->nprojections)
+    {
+        return NULL;
+    }
+    return node->projections[index];
+}
+
+
+const cypher_astnode_t *cypher_ast_return_get_order_by(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_RETURN, NULL);
+    struct return_clause *node =
+            container_of(astnode, struct return_clause, _astnode);
+    return node->order_by;
+}
+
+
+const cypher_astnode_t *cypher_ast_return_get_skip(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_RETURN, NULL);
+    struct return_clause *node =
+            container_of(astnode, struct return_clause, _astnode);
+    return node->skip;
+}
+
+
+const cypher_astnode_t *cypher_ast_return_get_limit(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_RETURN, NULL);
+    struct return_clause *node =
+            container_of(astnode, struct return_clause, _astnode);
+    return node->limit;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_RETURN, -1);

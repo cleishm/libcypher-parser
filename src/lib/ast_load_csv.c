@@ -72,6 +72,41 @@ cypher_astnode_t *cypher_ast_load_csv(bool with_headers,
 }
 
 
+bool cypher_ast_load_csv_has_with_headers(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_LOAD_CSV, false);
+    struct loadcsv *node = container_of(astnode, struct loadcsv, _astnode);
+    return node->with_headers;
+}
+
+
+const cypher_astnode_t *cypher_ast_load_csv_get_url(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_LOAD_CSV, NULL);
+    struct loadcsv *node = container_of(astnode, struct loadcsv, _astnode);
+    return node->url;
+}
+
+
+const cypher_astnode_t *cypher_ast_load_csv_get_identifier(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_LOAD_CSV, NULL);
+    struct loadcsv *node = container_of(astnode, struct loadcsv, _astnode);
+    return node->identifier;
+}
+
+
+const cypher_astnode_t *cypher_ast_load_csv_get_field_terminator(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_LOAD_CSV, NULL);
+    struct loadcsv *node = container_of(astnode, struct loadcsv, _astnode);
+    return node->field_terminator;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_LOAD_CSV, -1);

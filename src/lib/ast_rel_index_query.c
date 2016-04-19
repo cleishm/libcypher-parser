@@ -24,7 +24,7 @@ struct rel_index_query
 {
     cypher_astnode_t _astnode;
     const cypher_astnode_t *identifier;
-    const cypher_astnode_t *index;
+    const cypher_astnode_t *index_name;
     const cypher_astnode_t *query;
 };
 
@@ -32,19 +32,24 @@ struct rel_index_query
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_start_point_astnode_vt };
+
 const struct cypher_astnode_vt cypher_rel_index_query_astnode_vt =
-    { .name = "rel index query",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "rel index query",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
 
 cypher_astnode_t *cypher_ast_rel_index_query(
-        const cypher_astnode_t *identifier, const cypher_astnode_t *index,
+        const cypher_astnode_t *identifier, const cypher_astnode_t *index_name,
         const cypher_astnode_t *query, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
     REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
-    REQUIRE_TYPE(index, CYPHER_AST_INDEX_NAME, NULL);
+    REQUIRE_TYPE(index_name, CYPHER_AST_INDEX_NAME, NULL);
     REQUIRE(cypher_astnode_instanceof(query, CYPHER_AST_STRING) ||
             cypher_astnode_instanceof(query, CYPHER_AST_PARAMETER), NULL);
 
@@ -60,9 +65,39 @@ cypher_astnode_t *cypher_ast_rel_index_query(
         return NULL;
     }
     node->identifier = identifier;
-    node->index = index;
+    node->index_name = index_name;
     node->query = query;
     return &(node->_astnode);
+}
+
+
+const cypher_astnode_t *cypher_ast_rel_index_query_get_identifier(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REL_INDEX_QUERY, NULL);
+    struct rel_index_query *node =
+            container_of(astnode, struct rel_index_query, _astnode);
+    return node->identifier;
+}
+
+
+const cypher_astnode_t *cypher_ast_rel_index_query_get_index_name(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REL_INDEX_QUERY, NULL);
+    struct rel_index_query *node =
+            container_of(astnode, struct rel_index_query, _astnode);
+    return node->index_name;
+}
+
+
+const cypher_astnode_t *cypher_ast_rel_index_query_get_query(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REL_INDEX_QUERY, NULL);
+    struct rel_index_query *node =
+            container_of(astnode, struct rel_index_query, _astnode);
+    return node->query;
 }
 
 
@@ -72,6 +107,6 @@ ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
     struct rel_index_query *node =
             container_of(self, struct rel_index_query, _astnode);
     return snprintf(str, size, "@%u = rel:@%u(@%u)",
-                node->identifier->ordinal, node->index->ordinal,
+                node->identifier->ordinal, node->index_name->ordinal,
                 node->query->ordinal);
 }

@@ -73,7 +73,7 @@ cleanup:
 
 unsigned int cypher_ast_statement_noptions(const cypher_astnode_t *astnode)
 {
-    REQUIRE_TYPE(astnode, CYPHER_AST_STATEMENT, -1);
+    REQUIRE_TYPE(astnode, CYPHER_AST_STATEMENT, 0);
     struct statement *node = container_of(astnode, struct statement, _astnode);
     return node->noptions;
 }

@@ -12,7 +12,11 @@ check_libcypher_parser_CHECKS = \
 	check_constraints.c \
 	check_error_tracking.c \
 	check_indexes.c \
+	check_load_csv.c \
+	check_match.c \
+	check_pattern.c \
 	check_query.c \
+	check_start.c \
 	check_statement.c \
 	check_util.c
 

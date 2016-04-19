@@ -90,7 +90,7 @@ const cypher_astnode_t *cypher_ast_cypher_option_get_version(
 
 unsigned int cypher_ast_cypher_option_nparams(const cypher_astnode_t *astnode)
 {
-    REQUIRE_TYPE(astnode, CYPHER_AST_CYPHER_OPTION, -1);
+    REQUIRE_TYPE(astnode, CYPHER_AST_CYPHER_OPTION, 0);
     struct cypher_option *node = container_of(astnode,
             struct cypher_option, _astnode);
     return node->nparams;

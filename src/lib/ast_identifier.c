@@ -61,7 +61,7 @@ cypher_astnode_t *cypher_ast_identifier(const char *s, size_t n,
 }
 
 
-const char *cypher_ast_identifier_get_value(const cypher_astnode_t *astnode)
+const char *cypher_ast_identifier_get_name(const cypher_astnode_t *astnode)
 {
     REQUIRE_TYPE(astnode, CYPHER_AST_IDENTIFIER, NULL);
     struct identifier *node = container_of(astnode, struct identifier, _astnode);

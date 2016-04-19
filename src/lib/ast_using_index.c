@@ -33,8 +33,13 @@ struct using_index
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_match_hint_astnode_vt };
+
 const struct cypher_astnode_vt cypher_using_index_astnode_vt =
-    { .name = "USING INDEX",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "USING INDEX",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -53,7 +58,7 @@ cypher_astnode_t *cypher_ast_using_index(const cypher_astnode_t *identifier,
     {
         return NULL;
     }
-    if (cypher_astnode_init(&(node->_astnode), CYPHER_AST_USING_INDEX_HINT,
+    if (cypher_astnode_init(&(node->_astnode), CYPHER_AST_USING_INDEX,
             children, nchildren, range))
     {
         free(node);
@@ -66,9 +71,39 @@ cypher_astnode_t *cypher_ast_using_index(const cypher_astnode_t *identifier,
 }
 
 
+const cypher_astnode_t *cypher_ast_using_index_get_identifier(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_USING_INDEX, NULL);
+    struct using_index *node = container_of(astnode,
+            struct using_index, _astnode);
+    return node->identifier;
+}
+
+
+const cypher_astnode_t *cypher_ast_using_index_get_label(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_USING_INDEX, NULL);
+    struct using_index *node = container_of(astnode,
+            struct using_index, _astnode);
+    return node->label;
+}
+
+
+const cypher_astnode_t *cypher_ast_using_index_get_prop_name(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_USING_INDEX, NULL);
+    struct using_index *node = container_of(astnode,
+            struct using_index, _astnode);
+    return node->prop_name;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE_TYPE(self, CYPHER_AST_USING_INDEX_HINT, -1);
+    REQUIRE_TYPE(self, CYPHER_AST_USING_INDEX, -1);
     struct using_index *node = container_of(self, struct using_index, _astnode);
     return snprintf(str, size, "@%u:@%u(@%u)", node->identifier->ordinal,
             node->label->ordinal, node->prop_name->ordinal);

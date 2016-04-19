@@ -83,12 +83,12 @@ START_TEST (parse_create_unique_node_prop_constraint)
     const cypher_astnode_t *id =
             cypher_ast_create_node_prop_constraint_get_identifier(body);
     ck_assert_int_eq(cypher_astnode_type(id), CYPHER_AST_IDENTIFIER);
-    ck_assert_str_eq(cypher_ast_identifier_get_value(id), "f");
+    ck_assert_str_eq(cypher_ast_identifier_get_name(id), "f");
 
     const cypher_astnode_t *label =
             cypher_ast_create_node_prop_constraint_get_label(body);
     ck_assert_int_eq(cypher_astnode_type(label), CYPHER_AST_LABEL);
-    ck_assert_str_eq(cypher_ast_label_get_value(label), "Foo");
+    ck_assert_str_eq(cypher_ast_label_get_name(label), "Foo");
 
     const cypher_astnode_t *expr =
             cypher_ast_create_node_prop_constraint_get_expression(body);
@@ -98,7 +98,7 @@ START_TEST (parse_create_unique_node_prop_constraint)
     const cypher_astnode_t *eid =
             cypher_ast_property_operator_get_expression(expr);
     ck_assert_int_eq(cypher_astnode_type(eid), CYPHER_AST_IDENTIFIER);
-    ck_assert_str_eq(cypher_ast_identifier_get_value(eid), "f");
+    ck_assert_str_eq(cypher_ast_identifier_get_name(eid), "f");
 
     const cypher_astnode_t *prop_name =
             cypher_ast_property_operator_get_prop_name(expr);
@@ -149,12 +149,12 @@ START_TEST (parse_drop_unique_node_prop_constraint)
     const cypher_astnode_t *id =
             cypher_ast_drop_node_prop_constraint_get_identifier(body);
     ck_assert_int_eq(cypher_astnode_type(id), CYPHER_AST_IDENTIFIER);
-    ck_assert_str_eq(cypher_ast_identifier_get_value(id), "f");
+    ck_assert_str_eq(cypher_ast_identifier_get_name(id), "f");
 
     const cypher_astnode_t *label =
             cypher_ast_drop_node_prop_constraint_get_label(body);
     ck_assert_int_eq(cypher_astnode_type(label), CYPHER_AST_LABEL);
-    ck_assert_str_eq(cypher_ast_label_get_value(label), "Foo");
+    ck_assert_str_eq(cypher_ast_label_get_name(label), "Foo");
 
     const cypher_astnode_t *expr =
             cypher_ast_drop_node_prop_constraint_get_expression(body);
@@ -164,7 +164,7 @@ START_TEST (parse_drop_unique_node_prop_constraint)
     const cypher_astnode_t *eid =
             cypher_ast_property_operator_get_expression(expr);
     ck_assert_int_eq(cypher_astnode_type(eid), CYPHER_AST_IDENTIFIER);
-    ck_assert_str_eq(cypher_ast_identifier_get_value(eid), "f");
+    ck_assert_str_eq(cypher_ast_identifier_get_name(eid), "f");
 
     const cypher_astnode_t *prop_name =
             cypher_ast_property_operator_get_prop_name(expr);
@@ -217,12 +217,12 @@ START_TEST (parse_create_node_prop_constraint)
     const cypher_astnode_t *id =
             cypher_ast_create_node_prop_constraint_get_identifier(body);
     ck_assert_int_eq(cypher_astnode_type(id), CYPHER_AST_IDENTIFIER);
-    ck_assert_str_eq(cypher_ast_identifier_get_value(id), "f");
+    ck_assert_str_eq(cypher_ast_identifier_get_name(id), "f");
 
     const cypher_astnode_t *label =
             cypher_ast_create_node_prop_constraint_get_label(body);
     ck_assert_int_eq(cypher_astnode_type(label), CYPHER_AST_LABEL);
-    ck_assert_str_eq(cypher_ast_label_get_value(label), "Foo");
+    ck_assert_str_eq(cypher_ast_label_get_name(label), "Foo");
 
     const cypher_astnode_t *apply =
             cypher_ast_create_node_prop_constraint_get_expression(body);
@@ -241,7 +241,7 @@ START_TEST (parse_create_node_prop_constraint)
     const cypher_astnode_t *expr =
             cypher_ast_property_operator_get_expression(property);
     ck_assert_int_eq(cypher_astnode_type(expr), CYPHER_AST_IDENTIFIER);
-    ck_assert_str_eq(cypher_ast_identifier_get_value(expr), "f");
+    ck_assert_str_eq(cypher_ast_identifier_get_name(expr), "f");
 
     const cypher_astnode_t *prop_name =
             cypher_ast_property_operator_get_prop_name(property);
@@ -294,12 +294,12 @@ START_TEST (parse_drop_node_prop_constraint)
     const cypher_astnode_t *id =
             cypher_ast_drop_node_prop_constraint_get_identifier(body);
     ck_assert_int_eq(cypher_astnode_type(id), CYPHER_AST_IDENTIFIER);
-    ck_assert_str_eq(cypher_ast_identifier_get_value(id), "f");
+    ck_assert_str_eq(cypher_ast_identifier_get_name(id), "f");
 
     const cypher_astnode_t *label =
             cypher_ast_drop_node_prop_constraint_get_label(body);
     ck_assert_int_eq(cypher_astnode_type(label), CYPHER_AST_LABEL);
-    ck_assert_str_eq(cypher_ast_label_get_value(label), "Foo");
+    ck_assert_str_eq(cypher_ast_label_get_name(label), "Foo");
 
     const cypher_astnode_t *apply =
             cypher_ast_drop_node_prop_constraint_get_expression(body);
@@ -318,7 +318,7 @@ START_TEST (parse_drop_node_prop_constraint)
     const cypher_astnode_t *expr =
             cypher_ast_property_operator_get_expression(property);
     ck_assert_int_eq(cypher_astnode_type(expr), CYPHER_AST_IDENTIFIER);
-    ck_assert_str_eq(cypher_ast_identifier_get_value(expr), "f");
+    ck_assert_str_eq(cypher_ast_identifier_get_name(expr), "f");
 
     const cypher_astnode_t *prop_name =
             cypher_ast_property_operator_get_prop_name(property);
@@ -371,12 +371,12 @@ START_TEST (parse_create_rel_prop_constraint)
     const cypher_astnode_t *id =
             cypher_ast_create_rel_prop_constraint_get_identifier(body);
     ck_assert_int_eq(cypher_astnode_type(id), CYPHER_AST_IDENTIFIER);
-    ck_assert_str_eq(cypher_ast_identifier_get_value(id), "f");
+    ck_assert_str_eq(cypher_ast_identifier_get_name(id), "f");
 
     const cypher_astnode_t *reltype =
             cypher_ast_create_rel_prop_constraint_get_reltype(body);
     ck_assert_int_eq(cypher_astnode_type(reltype), CYPHER_AST_RELTYPE);
-    ck_assert_str_eq(cypher_ast_reltype_get_value(reltype), "Foo");
+    ck_assert_str_eq(cypher_ast_reltype_get_name(reltype), "Foo");
 
     const cypher_astnode_t *apply =
             cypher_ast_create_rel_prop_constraint_get_expression(body);
@@ -395,7 +395,7 @@ START_TEST (parse_create_rel_prop_constraint)
     const cypher_astnode_t *expr =
             cypher_ast_property_operator_get_expression(property);
     ck_assert_int_eq(cypher_astnode_type(expr), CYPHER_AST_IDENTIFIER);
-    ck_assert_str_eq(cypher_ast_identifier_get_value(expr), "f");
+    ck_assert_str_eq(cypher_ast_identifier_get_name(expr), "f");
 
     const cypher_astnode_t *prop_name =
             cypher_ast_property_operator_get_prop_name(property);
@@ -448,12 +448,12 @@ START_TEST (parse_drop_rel_prop_constraint)
     const cypher_astnode_t *id =
             cypher_ast_drop_rel_prop_constraint_get_identifier(body);
     ck_assert_int_eq(cypher_astnode_type(id), CYPHER_AST_IDENTIFIER);
-    ck_assert_str_eq(cypher_ast_identifier_get_value(id), "f");
+    ck_assert_str_eq(cypher_ast_identifier_get_name(id), "f");
 
     const cypher_astnode_t *reltype =
             cypher_ast_drop_rel_prop_constraint_get_reltype(body);
     ck_assert_int_eq(cypher_astnode_type(reltype), CYPHER_AST_RELTYPE);
-    ck_assert_str_eq(cypher_ast_reltype_get_value(reltype), "Foo");
+    ck_assert_str_eq(cypher_ast_reltype_get_name(reltype), "Foo");
 
     const cypher_astnode_t *apply =
             cypher_ast_drop_rel_prop_constraint_get_expression(body);
@@ -472,7 +472,7 @@ START_TEST (parse_drop_rel_prop_constraint)
     const cypher_astnode_t *expr =
             cypher_ast_property_operator_get_expression(property);
     ck_assert_int_eq(cypher_astnode_type(expr), CYPHER_AST_IDENTIFIER);
-    ck_assert_str_eq(cypher_ast_identifier_get_value(expr), "f");
+    ck_assert_str_eq(cypher_ast_identifier_get_name(expr), "f");
 
     const cypher_astnode_t *prop_name =
             cypher_ast_property_operator_get_prop_name(property);

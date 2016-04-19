@@ -32,8 +32,13 @@ struct using_scan
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_match_hint_astnode_vt };
+
 const struct cypher_astnode_vt cypher_using_scan_astnode_vt =
-    { .name = "USING SCAN",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "USING SCAN",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -50,7 +55,7 @@ cypher_astnode_t *cypher_ast_using_scan(const cypher_astnode_t *identifier,
     {
         return NULL;
     }
-    if (cypher_astnode_init(&(node->_astnode), CYPHER_AST_USING_SCAN_HINT,
+    if (cypher_astnode_init(&(node->_astnode), CYPHER_AST_USING_SCAN,
             children, nchildren, range))
     {
         free(node);
@@ -62,9 +67,29 @@ cypher_astnode_t *cypher_ast_using_scan(const cypher_astnode_t *identifier,
 }
 
 
+const cypher_astnode_t *cypher_ast_using_scan_get_identifier(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_USING_SCAN, NULL);
+    struct using_scan *node = container_of(astnode,
+            struct using_scan, _astnode);
+    return node->identifier;
+}
+
+
+const cypher_astnode_t *cypher_ast_using_scan_get_label(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_USING_SCAN, NULL);
+    struct using_scan *node = container_of(astnode,
+            struct using_scan, _astnode);
+    return node->label;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE_TYPE(self, CYPHER_AST_USING_SCAN_HINT, -1);
+    REQUIRE_TYPE(self, CYPHER_AST_USING_SCAN, -1);
     struct using_scan *node = container_of(self, struct using_scan, _astnode);
     return snprintf(str, size, "@%u:@%u", node->identifier->ordinal,
             node->label->ordinal);

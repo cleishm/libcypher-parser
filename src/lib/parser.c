@@ -307,9 +307,8 @@ static cypher_astnode_t *_unary_operator(yycontext *yy,
 static cypher_astnode_t *_binary_operator(yycontext *yy,
         const cypher_operator_t *op, cypher_astnode_t *left,
         cypher_astnode_t *right);
-#define comparison_operator(l) _comparison_operator(yy, l)
-static cypher_astnode_t *_comparison_operator(yycontext *yy,
-        cypher_astnode_t *left);
+#define comparison_operator() _comparison_operator(yy)
+static cypher_astnode_t *_comparison_operator(yycontext *yy);
 #define apply_operator(l, d) _apply_operator(yy, l, d)
 static cypher_astnode_t *_apply_operator(yycontext *yy, cypher_astnode_t *left,
         bool distinct);
@@ -2092,21 +2091,22 @@ cypher_astnode_t *_binary_operator(yycontext *yy, const cypher_operator_t *op,
 }
 
 
-cypher_astnode_t *_comparison_operator(yycontext *yy, cypher_astnode_t *left)
+cypher_astnode_t *_comparison_operator(yycontext *yy)
 {
     assert(yy->prev_block != NULL &&
             "An AST node can only be created immediately after a `>` in the grammar");
 
-    unsigned int chain_length = astnodes_size(&(yy->prev_block->sequence));
-    assert(chain_length > 0);
+    unsigned int nargs = astnodes_size(&(yy->prev_block->sequence));
+    assert(nargs > 1);
+    unsigned int chain_length = nargs - 1;
 
     unsigned int ops_depth = operators_size(&(yy->operators));
     assert(ops_depth >= chain_length);
     const cypher_operator_t * const *ops = operators_elements(&(yy->operators))
         + (ops_depth - chain_length);
 
-    cypher_astnode_t *node = cypher_ast_comparison(left,
-            ops, astnodes_elements(&(yy->prev_block->sequence)), chain_length,
+    cypher_astnode_t *node = cypher_ast_comparison(chain_length,
+            ops, astnodes_elements(&(yy->prev_block->sequence)),
             astnodes_elements(&(yy->prev_block->children)),
             astnodes_size(&(yy->prev_block->children)), yy->prev_block->range);
     if (node == NULL)
@@ -2460,9 +2460,9 @@ cypher_astnode_t *_map_literal(yycontext *yy)
     assert(yy->prev_block != NULL &&
             "An AST node can only be created immediately after a `>` in the grammar");
     assert(astnodes_size(&(yy->prev_block->sequence)) % 2 == 0);
-    cypher_astnode_t *node = cypher_ast_map(
+    cypher_astnode_t *node = cypher_ast_pair_map(
             astnodes_elements(&(yy->prev_block->sequence)),
-            astnodes_size(&(yy->prev_block->sequence)),
+            astnodes_size(&(yy->prev_block->sequence)) / 2,
             astnodes_elements(&(yy->prev_block->children)),
             astnodes_size(&(yy->prev_block->children)),
             yy->prev_block->range);

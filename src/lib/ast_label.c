@@ -56,7 +56,7 @@ cypher_astnode_t *cypher_ast_label(const char *s, size_t n,
 }
 
 
-const char *cypher_ast_label_get_value(const cypher_astnode_t *astnode)
+const char *cypher_ast_label_get_name(const cypher_astnode_t *astnode)
 {
     REQUIRE_TYPE(astnode, CYPHER_AST_LABEL, NULL);
     struct label *node = container_of(astnode, struct label, _astnode);

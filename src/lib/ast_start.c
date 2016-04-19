@@ -77,6 +77,36 @@ cleanup:
 }
 
 
+unsigned int cypher_ast_start_npoints(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_START, 0);
+    struct start *node = container_of(astnode, struct start, _astnode);
+    return node->npoints;
+}
+
+
+const cypher_astnode_t *cypher_ast_start_get_point(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_START, NULL);
+    struct start *node = container_of(astnode, struct start, _astnode);
+    if (index >= node->npoints)
+    {
+        return NULL;
+    }
+    return node->points[index];
+}
+
+
+const cypher_astnode_t *cypher_ast_start_get_predicate(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_START, NULL);
+    struct start *node = container_of(astnode, struct start, _astnode);
+    return node->predicate;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_START, -1);
@@ -100,7 +130,7 @@ ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 
     if (node->predicate != NULL)
     {
-        r = snprintf(str+n, (n < size)? size-n : 0, "WHERE=@%u",
+        r = snprintf(str+n, (n < size)? size-n : 0, ", WHERE=@%u",
                 node->predicate->ordinal);
         if (r < 0)
         {

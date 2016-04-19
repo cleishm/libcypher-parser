@@ -32,8 +32,13 @@ struct rel_id_lookup
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_start_point_astnode_vt };
+
 const struct cypher_astnode_vt cypher_rel_id_lookup_astnode_vt =
-    { .name = "rel id lookup",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "rel id lookup",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -69,6 +74,39 @@ cleanup:
     free(node);
     errno = errsv;
     return NULL;
+}
+
+
+const cypher_astnode_t *cypher_ast_rel_id_lookup_get_identifier(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REL_ID_LOOKUP, NULL);
+    struct rel_id_lookup *node =
+            container_of(astnode, struct rel_id_lookup, _astnode);
+    return node->identifier;
+}
+
+
+unsigned int cypher_ast_rel_id_lookup_nids(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REL_ID_LOOKUP, 0);
+    struct rel_id_lookup *node =
+            container_of(astnode, struct rel_id_lookup, _astnode);
+    return node->nids;
+}
+
+
+const cypher_astnode_t *cypher_ast_rel_id_lookup_get_id(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REL_ID_LOOKUP, NULL);
+    struct rel_id_lookup *node =
+            container_of(astnode, struct rel_id_lookup, _astnode);
+    if (index >= node->nids)
+    {
+        return NULL;
+    }
+    return node->ids[index];
 }
 
 

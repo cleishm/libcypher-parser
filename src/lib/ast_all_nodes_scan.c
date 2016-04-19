@@ -63,6 +63,16 @@ cypher_astnode_t *cypher_ast_all_nodes_scan(const cypher_astnode_t *identifier,
 }
 
 
+const cypher_astnode_t *cypher_ast_all_nodes_scan_get_identifier(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_ALL_NODES_SCAN, NULL);
+    struct all_nodes_scan *node =
+            container_of(astnode, struct all_nodes_scan, _astnode);
+    return node->identifier;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_ALL_NODES_SCAN, -1);

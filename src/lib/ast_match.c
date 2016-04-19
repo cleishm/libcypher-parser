@@ -82,6 +82,53 @@ cleanup:
 }
 
 
+bool cypher_ast_match_is_optional(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_MATCH, false);
+    struct match *node = container_of(astnode, struct match, _astnode);
+    return node->optional;
+}
+
+
+const cypher_astnode_t *cypher_ast_match_get_pattern(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_MATCH, NULL);
+    struct match *node = container_of(astnode, struct match, _astnode);
+    return node->pattern;
+}
+
+
+unsigned int cypher_ast_match_nhints(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_MATCH, 0);
+    struct match *node = container_of(astnode, struct match, _astnode);
+    return node->nhints;
+}
+
+
+const cypher_astnode_t *cypher_ast_match_get_hint(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_MATCH, NULL);
+    struct match *node = container_of(astnode, struct match, _astnode);
+    if (index >= node->nhints)
+    {
+        return NULL;
+    }
+    return node->hints[index];
+}
+
+
+const cypher_astnode_t *cypher_ast_match_get_predicate(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_MATCH, NULL);
+    struct match *node = container_of(astnode, struct match, _astnode);
+    return node->predicate;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_MATCH, -1);

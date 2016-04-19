@@ -77,6 +77,39 @@ cleanup:
 }
 
 
+const cypher_astnode_t *cypher_ast_node_id_lookup_get_identifier(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_NODE_ID_LOOKUP, NULL);
+    struct node_id_lookup *node =
+            container_of(astnode, struct node_id_lookup, _astnode);
+    return node->identifier;
+}
+
+
+unsigned int cypher_ast_node_id_lookup_nids(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_NODE_ID_LOOKUP, 0);
+    struct node_id_lookup *node =
+            container_of(astnode, struct node_id_lookup, _astnode);
+    return node->nids;
+}
+
+
+const cypher_astnode_t *cypher_ast_node_id_lookup_get_id(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_NODE_ID_LOOKUP, NULL);
+    struct node_id_lookup *node =
+            container_of(astnode, struct node_id_lookup, _astnode);
+    if (index >= node->nids)
+    {
+        return NULL;
+    }
+    return node->ids[index];
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_NODE_ID_LOOKUP, -1);

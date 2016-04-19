@@ -68,6 +68,27 @@ cleanup:
 }
 
 
+unsigned int cypher_ast_pattern_npaths(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_PATTERN, 0);
+    struct pattern *node = container_of(astnode, struct pattern, _astnode);
+    return node->npaths;
+}
+
+
+const cypher_astnode_t *cypher_ast_pattern_get_path(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_PATTERN, NULL);
+    struct pattern *node = container_of(astnode, struct pattern, _astnode);
+    if (index >= node->npaths)
+    {
+        return NULL;
+    }
+    return node->paths[index];
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_PATTERN, -1);

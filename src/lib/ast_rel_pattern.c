@@ -82,6 +82,69 @@ cleanup:
 }
 
 
+enum cypher_rel_direction cypher_ast_rel_pattern_get_direction(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REL_PATTERN, NULL);
+    struct rel_pattern *node =
+            container_of(astnode, struct rel_pattern, _astnode);
+    return node->direction;
+}
+
+
+const cypher_astnode_t *cypher_ast_rel_pattern_get_identifier(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REL_PATTERN, NULL);
+    struct rel_pattern *node =
+            container_of(astnode, struct rel_pattern, _astnode);
+    return node->identifier;
+}
+
+
+unsigned int cypher_ast_rel_pattern_nreltypes(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REL_PATTERN, NULL);
+    struct rel_pattern *node =
+            container_of(astnode, struct rel_pattern, _astnode);
+    return node->nreltypes;
+}
+
+
+const cypher_astnode_t *cypher_ast_rel_pattern_get_reltype(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REL_PATTERN, NULL);
+    struct rel_pattern *node =
+            container_of(astnode, struct rel_pattern, _astnode);
+    if (index >= node->nreltypes)
+    {
+        return NULL;
+    }
+    return node->reltypes[index];
+}
+
+
+const cypher_astnode_t *cypher_ast_rel_pattern_get_varlength(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REL_PATTERN, NULL);
+    struct rel_pattern *node =
+            container_of(astnode, struct rel_pattern, _astnode);
+    return node->varlength;
+}
+
+
+const cypher_astnode_t *cypher_ast_rel_pattern_get_properties(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REL_PATTERN, NULL);
+    struct rel_pattern *node =
+            container_of(astnode, struct rel_pattern, _astnode);
+    return node->properties;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_REL_PATTERN, -1);
