@@ -116,6 +116,7 @@ libcypher_parser_la_SOURCES = \
 	operators.c \
 	operators.h \
 	parser.c \
+	parser.leg \
 	parser_config.c \
 	parser_config.h \
 	result.c \
@@ -136,6 +137,9 @@ parser.c: parser_leg.c
 if HAVE_LEG
 %_leg.c: %.leg
 	$(LEG) -o $@ $<
+else
+%_leg.c: %.leg
+	$(error Cannot compile .leg source file, as the leg compiler was not found by the configure script: please install http://piumarta.com/software/peg/ and re-run the configure script)
 endif
 
 EXTRA_DIST = parser_leg.c
