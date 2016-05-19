@@ -134,7 +134,8 @@ clauses =
 _clauses =
     ( SEMICOLON
     | EOF
-    | c:clause _cut_ _clauses          { sequence_add(c); }
+    | c:clause                         { sequence_add(c); }
+      _cut_ _clauses
     | _error_ (EOF | skip-to-clause) - _clauses
     )
 
@@ -387,7 +388,7 @@ skip = SKIP e:expression               { $$ = e }
 limit = LIMIT e:expression             { $$ = e }
 
 union-clause =
-    < UNION 
+    < UNION
       ( ALL >                          { $$ = union_clause(true); }
       | _empty_ >                      { $$ = union_clause(false); }
       )
