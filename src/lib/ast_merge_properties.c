@@ -31,8 +31,13 @@ struct merge_properties
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
+static const struct cypher_astnode_vt *parents[] =
+    { &cypher_set_item_astnode_vt };
+
 const struct cypher_astnode_vt cypher_merge_properties_astnode_vt =
-    { .name = "merge properties",
+    { .parents = parents,
+      .nparents = 1,
+      .name = "merge properties",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
@@ -59,6 +64,26 @@ cypher_astnode_t *cypher_ast_merge_properties(
     node->identifier = identifier;
     node->expression = expression;
     return &(node->_astnode);
+}
+
+
+const cypher_astnode_t *cypher_ast_merge_properties_get_identifier(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_MERGE_PROPERTIES, NULL);
+    struct merge_properties *node =
+            container_of(astnode, struct merge_properties, _astnode);
+    return node->identifier;
+}
+
+
+const cypher_astnode_t *cypher_ast_merge_properties_get_expression(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_MERGE_PROPERTIES, NULL);
+    struct merge_properties *node =
+            container_of(astnode, struct merge_properties, _astnode);
+    return node->expression;
 }
 
 

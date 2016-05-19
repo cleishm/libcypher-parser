@@ -77,6 +77,39 @@ cleanup:
 }
 
 
+const cypher_astnode_t *cypher_ast_remove_labels_get_identifier(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REMOVE_LABELS, NULL);
+    struct remove_labels *node =
+            container_of(astnode, struct remove_labels, _astnode);
+    return node->identifier;
+}
+
+
+unsigned int cypher_ast_remove_labels_nlabels(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REMOVE_LABELS, 0);
+    struct remove_labels *node =
+            container_of(astnode, struct remove_labels, _astnode);
+    return node->nlabels;
+}
+
+
+const cypher_astnode_t *cypher_ast_remove_labels_get_label(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REMOVE_LABELS, NULL);
+    struct remove_labels *node =
+            container_of(astnode, struct remove_labels, _astnode);
+    if (index >= node->nlabels)
+    {
+        return NULL;
+    }
+    return node->labels[index];
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_REMOVE_LABELS, -1);

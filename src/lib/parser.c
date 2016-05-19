@@ -2276,7 +2276,7 @@ cypher_astnode_t *_case_expression(yycontext *yy, cypher_astnode_t *expression,
             "An AST node can only be created immediately after a `>` in the grammar");
     cypher_astnode_t *node = cypher_ast_case(expression,
             astnodes_elements(&(yy->prev_block->sequence)),
-            astnodes_size(&(yy->prev_block->sequence)), deflt,
+            astnodes_size(&(yy->prev_block->sequence)) / 2, deflt,
             astnodes_elements(&(yy->prev_block->children)),
             astnodes_size(&(yy->prev_block->children)),
             yy->prev_block->range);

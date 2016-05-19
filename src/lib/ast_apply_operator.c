@@ -90,6 +90,25 @@ const cypher_astnode_t *cypher_ast_apply_operator_get_func_name(
 }
 
 
+bool cypher_ast_apply_operator_get_distinct(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_APPLY_OPERATOR, NULL);
+    struct apply_operator *node =
+            container_of(astnode, struct apply_operator, _astnode);
+    return node->distinct;
+}
+
+
+unsigned int cypher_ast_apply_operator_narguments(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_APPLY_OPERATOR, NULL);
+    struct apply_operator *node =
+            container_of(astnode, struct apply_operator, _astnode);
+    return node->nargs;
+}
+
+
 const cypher_astnode_t *cypher_ast_apply_operator_get_argument(
         const cypher_astnode_t *astnode, unsigned int index)
 {

@@ -160,6 +160,7 @@ extern const struct cypher_astnode_vt cypher_parameter_astnode_vt;
 extern const struct cypher_astnode_vt cypher_string_astnode_vt;
 extern const struct cypher_astnode_vt cypher_integer_astnode_vt;
 extern const struct cypher_astnode_vt cypher_float_astnode_vt;
+extern const struct cypher_astnode_vt cypher_boolean_astnode_vt;
 extern const struct cypher_astnode_vt cypher_true_astnode_vt;
 extern const struct cypher_astnode_vt cypher_false_astnode_vt;
 extern const struct cypher_astnode_vt cypher_null_astnode_vt;
@@ -183,8 +184,37 @@ extern const struct cypher_astnode_vt cypher_block_comment_astnode_vt;
 extern const struct cypher_astnode_vt cypher_error_astnode_vt;
 
 
-typedef struct cypher_pattern_path_astnode cypher_pattern_path_astnode_t;
+typedef struct cypher_list_comprehension_astnode cypher_list_comprehension_astnode_t;
 
+struct cypher_list_comprehension_astnode_vt
+{
+    const struct cypher_list_comprehension_astnode_vt **parents;
+    unsigned int nparents;
+    const cypher_astnode_t *(*get_identifier)(
+            const cypher_list_comprehension_astnode_t *self);
+    const cypher_astnode_t *(*get_expression)(
+            const cypher_list_comprehension_astnode_t *self);
+    const cypher_astnode_t *(*get_predicate)(
+            const cypher_list_comprehension_astnode_t *self);
+    const cypher_astnode_t *(*get_eval)(
+            const cypher_list_comprehension_astnode_t *self);
+};
+
+struct cypher_list_comprehension_astnode
+{
+    struct cypher_astnode _astnode;
+    const struct cypher_list_comprehension_astnode_vt *_vt;
+};
+
+int cypher_list_comprehension_astnode_init(
+        cypher_list_comprehension_astnode_t *node,
+        cypher_astnode_type_t type,
+        const struct cypher_list_comprehension_astnode_vt *vt,
+        cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range);
+
+
+typedef struct cypher_pattern_path_astnode cypher_pattern_path_astnode_t;
 
 struct cypher_pattern_path_astnode_vt
 {
@@ -194,7 +224,6 @@ struct cypher_pattern_path_astnode_vt
     const cypher_astnode_t *(*get_element)(
             const cypher_pattern_path_astnode_t *self, unsigned int index);
 };
-
 
 struct cypher_pattern_path_astnode
 {

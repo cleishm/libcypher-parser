@@ -76,6 +76,36 @@ cleanup:
 }
 
 
+const cypher_astnode_t *cypher_ast_merge_get_pattern_path(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_MERGE, NULL);
+    struct merge *node = container_of(astnode, struct merge, _astnode);
+    return node->path;
+}
+
+
+unsigned int cypher_ast_merge_nactions(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_MERGE, 0);
+    struct merge *node = container_of(astnode, struct merge, _astnode);
+    return node->nactions;
+}
+
+
+const cypher_astnode_t *cypher_ast_merge_get_action(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_MERGE, NULL);
+    struct merge *node = container_of(astnode, struct merge, _astnode);
+    if (index >= node->nactions)
+    {
+        return NULL;
+    }
+    return node->actions[index];
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_MERGE, -1);

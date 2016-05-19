@@ -271,6 +271,8 @@ extern const cypher_astnode_type_t CYPHER_AST_STRING;
 extern const cypher_astnode_type_t CYPHER_AST_INTEGER;
 /** Type for an AST float literal node. */
 extern const cypher_astnode_type_t CYPHER_AST_FLOAT;
+/** Type for an AST boolean literal node. */
+extern const cypher_astnode_type_t CYPHER_AST_BOOLEAN;
 /** Type for an AST TRUE literal node. */
 extern const cypher_astnode_type_t CYPHER_AST_TRUE;
 /** Type for an AST FALSE literal node. */
@@ -685,6 +687,7 @@ cypher_astnode_t *cypher_ast_create_node_prop_index(
  * @param [node] The AST node.
  * @return A `CYPHER_AST_LABEL` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_create_node_prop_index_get_label(
         const cypher_astnode_t *node);
 
@@ -697,6 +700,7 @@ const cypher_astnode_t *cypher_ast_create_node_prop_index_get_label(
  * @param [node] The AST node.
  * @return A `CYPHER_AST_PROP_NAME` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_create_node_prop_index_get_prop_name(
         const cypher_astnode_t *node);
 
@@ -727,6 +731,7 @@ cypher_astnode_t *cypher_ast_drop_node_prop_index(const cypher_astnode_t *label,
  * @param [node] The AST node.
  * @return A `CYPHER_AST_LABEL` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_drop_node_prop_index_get_label(
         const cypher_astnode_t *node);
 
@@ -739,6 +744,7 @@ const cypher_astnode_t *cypher_ast_drop_node_prop_index_get_label(
  * @param [node] The AST node.
  * @return A `CYPHER_AST_PROP_NAME` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_drop_node_prop_index_get_prop_name(
         const cypher_astnode_t *node);
 
@@ -773,6 +779,7 @@ cypher_astnode_t *cypher_ast_create_node_prop_constraint(
  * @param [node] The AST node.
  * @return A `CYPHER_AST_IDENTIFIER` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_create_node_prop_constraint_get_identifier(
         const cypher_astnode_t *node);
 
@@ -785,6 +792,7 @@ const cypher_astnode_t *cypher_ast_create_node_prop_constraint_get_identifier(
  * @param [node] The AST node.
  * @return A `CYPHER_AST_LABEL` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_create_node_prop_constraint_get_label(
         const cypher_astnode_t *node);
 
@@ -797,6 +805,7 @@ const cypher_astnode_t *cypher_ast_create_node_prop_constraint_get_label(
  * @param [node] The AST node.
  * @return A `CYPHER_AST_EXPRESSION` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_create_node_prop_constraint_get_expression(
         const cypher_astnode_t *node);
 
@@ -843,6 +852,7 @@ cypher_astnode_t *cypher_ast_drop_node_prop_constraint(
  * @param [node] The AST node.
  * @return A `CYPHER_AST_IDENTIFIER` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_drop_node_prop_constraint_get_identifier(
         const cypher_astnode_t *node);
 
@@ -855,6 +865,7 @@ const cypher_astnode_t *cypher_ast_drop_node_prop_constraint_get_identifier(
  * @param [node] The AST node.
  * @return A `CYPHER_AST_LABEL` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_drop_node_prop_constraint_get_label(
         const cypher_astnode_t *node);
 
@@ -867,6 +878,7 @@ const cypher_astnode_t *cypher_ast_drop_node_prop_constraint_get_label(
  * @param [node] The AST node.
  * @return A `CYPHER_AST_EXPRESSION` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_drop_node_prop_constraint_get_expression(
         const cypher_astnode_t *node);
 
@@ -913,6 +925,7 @@ cypher_astnode_t *cypher_ast_create_rel_prop_constraint(
  * @param [node] The AST node.
  * @return A `CYPHER_AST_IDENTIFIER` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_create_rel_prop_constraint_get_identifier(
         const cypher_astnode_t *node);
 
@@ -925,6 +938,7 @@ const cypher_astnode_t *cypher_ast_create_rel_prop_constraint_get_identifier(
  * @param [node] The AST node.
  * @return A `CYPHER_AST_RELTYPE` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_create_rel_prop_constraint_get_reltype(
         const cypher_astnode_t *node);
 
@@ -937,6 +951,7 @@ const cypher_astnode_t *cypher_ast_create_rel_prop_constraint_get_reltype(
  * @param [node] The AST node.
  * @return A `CYPHER_AST_EXPRESSION` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_create_rel_prop_constraint_get_expression(
         const cypher_astnode_t *node);
 
@@ -983,6 +998,7 @@ cypher_astnode_t *cypher_ast_drop_rel_prop_constraint(
  * @param [node] The AST node.
  * @return A `CYPHER_AST_IDENTIFIER` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_drop_rel_prop_constraint_get_identifier(
         const cypher_astnode_t *node);
 
@@ -995,6 +1011,7 @@ const cypher_astnode_t *cypher_ast_drop_rel_prop_constraint_get_identifier(
  * @param [node] The AST node.
  * @return A `CYPHER_AST_RELTYPE` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_drop_rel_prop_constraint_get_reltype(
         const cypher_astnode_t *node);
 
@@ -1007,6 +1024,7 @@ const cypher_astnode_t *cypher_ast_drop_rel_prop_constraint_get_reltype(
  * @param [node] The AST node.
  * @return A `CYPHER_AST_EXPRESSION` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_drop_rel_prop_constraint_get_expression(
         const cypher_astnode_t *node);
 
@@ -1458,8 +1476,6 @@ const cypher_astnode_t *cypher_ast_node_id_lookup_get_id(
  * The node will also be an instance of `CYPHER_AST_START_POINT`.
  *
  * @param [identifier] A `CYPHER_AST_IDENTIFIER` node.
- * @param [ids] Node IDs for lookup, all of type `CYPHER_AST_INTEGER`.
- * @param [nids] The number of node IDs.
  * @param [children] The children of the node.
  * @param [nchildren] The number of children.
  * @param [range] The input range.
@@ -1574,7 +1590,7 @@ const cypher_astnode_t *cypher_ast_rel_index_lookup_get_lookup(
  */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_rel_index_query(
-        const cypher_astnode_t *identifier, const cypher_astnode_t *index,
+        const cypher_astnode_t *identifier, const cypher_astnode_t *index_name,
         const cypher_astnode_t *query, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range);
 
@@ -1684,8 +1700,6 @@ const cypher_astnode_t *cypher_ast_rel_id_lookup_get_id(
  * The node will also be an instance of `CYPHER_AST_START_POINT`.
  *
  * @param [identifier] A `CYPHER_AST_IDENTIFIER` node.
- * @param [ids] Node IDs for lookup, all of type `CYPHER_AST_INTEGER`.
- * @param [nids] The number of node IDs.
  * @param [children] The children of the node.
  * @param [nchildren] The number of children.
  * @param [range] The input range.
@@ -1713,7 +1727,7 @@ const cypher_astnode_t *cypher_ast_all_rels_scan_get_identifier(
 /**
  * Construct a `CYPHER_AST_MATCH` node.
  *
- * The node will also be an instance of `CYPHER_AST_MATCH`.
+ * The node will also be an instance of `CYPHER_AST_CLAUSE`.
  *
  * @param [optional] `true` if the node represents an `OPTIONAL MATCH`, and
  *         `false` otherwise.
@@ -1948,96 +1962,890 @@ const cypher_astnode_t *cypher_ast_using_scan_get_label(
         const cypher_astnode_t *node);
 
 
+/**
+ * Construct a `CYPHER_AST_MERGE` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_CLAUSE`.
+ *
+ * @param [path] A `CYPHER_AST_PATTERN_PATH` node.
+ * @param [actions] Actions for merge, all of type `CYPHER_AST_MERGE_ACTION`.
+ * @param [nactions] The number of match actions.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_merge(const cypher_astnode_t *path,
         cypher_astnode_t * const *actions, unsigned int nactions,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
 
-__cypherlang_must_check
-cypher_astnode_t *cypher_ast_create(bool unique,
-        const cypher_astnode_t *pattern, cypher_astnode_t **children,
-        unsigned int nchildren, struct cypher_input_range range);
+/**
+ * Get the pattern path of a `CYPHER_AST_MERGE` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_MERGE` then the result will be
+ * undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_PATTERN_PATH` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_merge_get_pattern_path(
+        const cypher_astnode_t *node);
 
+/**
+ * Get the number of actions in a `CYPHER_AST_MERGE` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_MERGE` then the result will be
+ * undefined.
+ *
+ * @param [node] The AST node.
+ * @return The number of actions.
+ */
+__cypherlang_pure
+unsigned int cypher_ast_merge_nactions(const cypher_astnode_t *node);
+
+/**
+ * Get an action from a `CYPHER_AST_MERGE` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_MERGE` then the result will be
+ * undefined.
+ *
+ * @param [node] The AST node.
+ * @param [index] The index of the action.
+ * @return A `CYPHER_AST_MERGE_HINT` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_merge_get_action(
+        const cypher_astnode_t *node, unsigned int index);
+
+
+/**
+ * Construct a `CYPHER_AST_ON_MATCH` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_MERGE_ACTION`.
+ *
+ * @param [items] Items for `ON MATCH`, all of type `CYPHER_AST_SET_ITEM`.
+ * @param [nitems] The number of `ON MATCH` items.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_on_match(cypher_astnode_t * const *items,
         unsigned int nitems, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range);
 
+/**
+ * Get the number of items in a `CYPHER_AST_ON_MATCH` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_ON_MATCH` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return The number of items.
+ */
+__cypherlang_pure
+unsigned int cypher_ast_on_match_nitems(const cypher_astnode_t *node);
+
+/**
+ * Get an item from a `CYPHER_AST_ON_MATCH` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_ON_MATCH` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @param [index] The index of the action.
+ * @return A `CYPHER_AST_SET_ITEM` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_on_match_get_item(
+        const cypher_astnode_t *node, unsigned int index);
+
+
+/**
+ * Construct a `CYPHER_AST_ON_CREATE` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_MERGE_ACTION`.
+ *
+ * @param [items] Items for `ON CREATE`, all of type `CYPHER_AST_SET_ITEM`.
+ * @param [nitems] The number of `ON CREATE` items.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_on_create(cypher_astnode_t * const *items,
         unsigned int nitems, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range);
 
+/**
+ * Get the number of items in a `CYPHER_AST_ON_CREATE` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_ON_CREATE` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return The number of items.
+ */
+__cypherlang_pure
+unsigned int cypher_ast_on_create_nitems(const cypher_astnode_t *node);
+
+/**
+ * Get an item from a `CYPHER_AST_ON_CREATE` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_ON_CREATE` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @param [index] The index of the action.
+ * @return A `CYPHER_AST_SET_ITEM` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_on_create_get_item(
+        const cypher_astnode_t *node, unsigned int index);
+
+
+/**
+ * Construct a `CYPHER_AST_CREATE` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_CLAUSE`.
+ *
+ * @param [unique] `true` if the create is unique, `false` otherwise.
+ * @param [pattern] A `CYPHER_AST_PATTERN` node.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+__cypherlang_must_check
+cypher_astnode_t *cypher_ast_create(bool unique,
+        const cypher_astnode_t *pattern, cypher_astnode_t **children,
+        unsigned int nchildren, struct cypher_input_range range);
+
+/**
+ * Check if the unique value of a `CYPHER_AST_CREATE` node is set.
+ *
+ * If the node is not an instance of `CYPHER_AST_CREATE` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return `true` if the `UNIQUE` option is enabled, and `false` otherwise.
+ */
+__cypherlang_pure
+bool cypher_ast_create_is_unique(const cypher_astnode_t *node);
+
+/**
+ * Get the pattern of a `CYPHER_AST_CREATE` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CREATE` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_PATTERN` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_create_get_pattern(
+        const cypher_astnode_t *node);
+
+
+/**
+ * Construct a `CYPHER_AST_SET` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_CLAUSE`.
+ *
+ * @param [items] Items for `SET`, all of type `CYPHER_AST_SET_ITEM`.
+ * @param [nitems] The number of `SET` items.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_set(cypher_astnode_t * const *items,
         unsigned int nitems, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range);
 
+/**
+ * Get the number of items in a `CYPHER_AST_SET` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_SET` then the result will be
+ * undefined.
+ *
+ * @param [node] The AST node.
+ * @return The number of items.
+ */
+__cypherlang_pure
+unsigned int cypher_ast_set_nitems(const cypher_astnode_t *node);
+
+/**
+ * Get an item from a `CYPHER_AST_SET` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_SET` then the result will be
+ * undefined.
+ *
+ * @param [node] The AST node.
+ * @param [index] The index of the action.
+ * @return A `CYPHER_AST_SET_ITEM` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_set_get_item(
+        const cypher_astnode_t *node, unsigned int index);
+
+
+/**
+ * Construct a `CYPHER_AST_SET_PROPERTY` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_SET_ITEM`.
+ *
+ * @param [property] A `CYPHER_AST_PROPERTY_OPERATOR` node.
+ * @param [expression] A `CYPHER_AST_EXPRESSION` node.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_set_property(const cypher_astnode_t *property,
         const cypher_astnode_t *expression, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range);
 
+/**
+ * Get the property operator of a `CYPHER_AST_SET_PROPERTY` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_SET_PROPERTY` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_PROPERTY_OPERATOR` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_set_property_get_property(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the expression of a `CYPHER_AST_SET_PROPERTY` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_SET_PROPERTY` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_set_property_get_expression(
+        const cypher_astnode_t *node);
+
+
+/**
+ * Construct a `CYPHER_AST_SET_ALL_PROPERTIES` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_SET_ITEM`.
+ *
+ * @param [identifier] A `CYPHER_AST_IDENTIFIER` node.
+ * @param [expression] A `CYPHER_AST_EXPRESSION` node.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_set_all_properties(
         const cypher_astnode_t *identifier, const cypher_astnode_t *expression,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
 
+/**
+ * Get the identifier of a `CYPHER_AST_SET_ALL_PROPERTIES` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_SET_ALL_PROPERTIES` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_IDENTIFIER` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_set_all_properties_get_identifier(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the expression of a `CYPHER_AST_SET_ALL_PROPERTIES` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_SET_ALL_PROPERTIES` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_set_all_properties_get_expression(
+        const cypher_astnode_t *node);
+
+
+/**
+ * Construct a `CYPHER_AST_MERGE_PROPERTIES` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_SET_ITEM`.
+ *
+ * @param [identifier] A `CYPHER_AST_IDENTIFIER` node.
+ * @param [expression] A `CYPHER_AST_EXPRESSION` node.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_merge_properties(
         const cypher_astnode_t *identifier, const cypher_astnode_t *expression,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
 
+/**
+ * Get the identifier of a `CYPHER_AST_MERGE_PROPERTIES` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_MERGE_PROPERTIES` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_IDENTIFIER` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_merge_properties_get_identifier(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the expression of a `CYPHER_AST_MERGE_PROPERTIES` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_MERGE_PROPERTIES` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_merge_properties_get_expression(
+        const cypher_astnode_t *node);
+
+
+/**
+ * Construct a `CYPHER_AST_SET_LABELS` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_SET_ITEM`.
+ *
+ * @param [identifier] A `CYPHER_AST_IDENTIFIER` node.
+ * @param [labels] The labels to be set, which must all be of type
+ *         `CYPHER_AST_LABEL`.
+ * @param [nlabels] The number of labels to be set.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_set_labels(const cypher_astnode_t *identifier,
         cypher_astnode_t * const *labels, unsigned int nlabels,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
 
+/**
+ * Get the identifier of a `CYPHER_AST_SET_LABELS` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_SET_LABELS` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_IDENTIFIER` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_set_labels_get_identifier(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the number of labels in a `CYPHER_AST_SET_LABELS` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_SET_LABELS` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return The number of labels.
+ */
+__cypherlang_pure
+unsigned int cypher_ast_set_labels_nlabels(const cypher_astnode_t *node);
+
+/**
+ * Get a label from a `CYPHER_AST_SET_LABELS` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_SET_LABELS` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @param [index] The index of the label.
+ * @return A `CYPHER_AST_LABEL` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_set_labels_get_label(
+        const cypher_astnode_t *node, unsigned int index);
+
+
+/**
+ * Construct a `CYPHER_AST_DELETE` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_CLAUSE`.
+ *
+ * @param [detach] `true` if the `DETACH` option is present, `false` otherwise.
+ * @param [expressions] Expressions for `DELETE`, all of type
+ *         `CYPHER_AST_EXPRESSION`.
+ * @param [nexpressions] The number of expressions.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_delete(bool detach,
         cypher_astnode_t * const *expressions, unsigned int nexpressions,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
 
+/**
+ * Check if `DETACH` is present for a `CYPHER_AST_DELETE` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_DELETE` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return `true` if `DETACH` is present, `false` otherwise.
+ */
+__cypherlang_pure
+bool cypher_ast_delete_has_detach(const cypher_astnode_t *node);
+
+/**
+ * Get the number of expression in a `CYPHER_AST_DELETE` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_DELETE` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return The number of expression.
+ */
+__cypherlang_pure
+unsigned int cypher_ast_delete_nexpressions(const cypher_astnode_t *node);
+
+/**
+ * Get an expression from a `CYPHER_AST_DELETE` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_DELETE` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @param [index] The index of the expression.
+ * @return A `CYPHER_AST_EXPRESSION` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_delete_get_expression(
+        const cypher_astnode_t *node, unsigned int index);
+
+
+/**
+ * Construct a `CYPHER_AST_REMOVE` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_CLAUSE`.
+ *
+ * @param [items] Items for `REMOVE`, all of type `CYPHER_AST_REMOVE_ITEM`.
+ * @param [nitems] The number of items.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_remove(cypher_astnode_t * const *items,
         unsigned int nitems, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range);
 
+/**
+ * Get the number of items in a `CYPHER_AST_REMOVE` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_REMOVE` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return The number of items.
+ */
+__cypherlang_pure
+unsigned int cypher_ast_remove_nitems(const cypher_astnode_t *node);
+
+/**
+ * Get an item from a `CYPHER_AST_REMOVE` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_REMOVE` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @param [index] The index of the item.
+ * @return A `CYPHER_AST_EXPRESSION` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_remove_get_item(
+        const cypher_astnode_t *node, unsigned int index);
+
+
+/**
+ * Construct a `CYPHER_AST_REMOVE_LABELS` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_REMOVE_ITEM`.
+ *
+ * @param [identifier] A `CYPHER_AST_IDENTIFIER` node.
+ * @param [labels] Labels to remove, all of type `CYPHER_AST_LABEL`.
+ * @param [nlabels] The number of labels.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_remove_labels(const cypher_astnode_t *identifier,
         cypher_astnode_t * const *labels, unsigned int nlabels,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
 
+/**
+ * Get the identifier of a `CYPHER_AST_REMOVE_LABELS` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_REMOVE_LABELS` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_IDENTIFIER` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_remove_labels_get_identifier(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the number of labels in a `CYPHER_AST_REMOVE_LABELS` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_REMOVE_LABELS` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return The number of labels.
+ */
+__cypherlang_pure
+unsigned int cypher_ast_remove_labels_nlabels(const cypher_astnode_t *node);
+
+/**
+ * Get a label from a `CYPHER_AST_REMOVE_LABELS` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_REMOVE_LABELS` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @param [index] The index of the label.
+ * @return A `CYPHER_AST_LABEL` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_remove_labels_get_label(
+        const cypher_astnode_t *node, unsigned int index);
+
+
+/**
+ * Construct a `CYPHER_AST_REMOVE_PROPERTY` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_REMOVE_ITEM`.
+ *
+ * @param [property] A `CYPHER_AST_PROPERTY_OPERATOR` node.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_remove_property(const cypher_astnode_t *property,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
 
+/**
+ * Get the property operator of a `CYPHER_AST_REMOVE_PROPERTY` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_REMOVE_PROPERTY` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_PROPERTY_OPERATOR` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_remove_property_get_property(
+        const cypher_astnode_t *node);
+
+
+/**
+ * Construct a `CYPHER_AST_FOREACH` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_CLAUSE`.
+ *
+ * @param [identifier] A `CYPHER_AST_IDENTIFIER` node.
+ * @param [expression] A `CYPHER_AST_EXPRESSION` node.
+ * @param [clauses] Clauses for foreach, all of type `CYPHER_AST_CLAUSE`.
+ * @param [nclauses] The number of clauses.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_foreach(const cypher_astnode_t *identifier,
         const cypher_astnode_t *expression, cypher_astnode_t * const *clauses,
         unsigned int nclauses, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range);
 
+/**
+ * Get the identifier of a `CYPHER_AST_FOREACH` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_FOREACH` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_IDENTIFIER` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_foreach_get_identifier(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the expression of a `CYPHER_AST_FOREACH` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_FOREACH` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_foreach_get_expression(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the number of clauses from a `CYPHER_AST_FOREACH` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_FOREACH` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return The number of clauses.
+ */
+__cypherlang_pure
+unsigned int cypher_ast_foreach_nclauses(const cypher_astnode_t *node);
+
+/**
+ * Get a clause from a `CYPHER_AST_FOREACH` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_FOREACH` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @param [index] The index of the alternative.
+ * @return A `CYPHER_AST_CLAUSE` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_foreach_get_clause(
+        const cypher_astnode_t *node, unsigned int index);
+
+
+/**
+ * Construct a `CYPHER_AST_WITH` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_CLAUSE`.
+ *
+ * @param [distinct] `true` if the `DISTINCT` keyword is specified.
+ * @param [include_existing] `true` if including existing identifiers
+ *         (i.e. `WITH *`).
+ * @param [projections] Projections for with, all of type
+ *         `CYPHER_AST_PROJECTION`.
+ * @param [nprojections] The number of projections.
+ * @param [order_by] A `CYPHER_AST_ORDER_BY` node, or null.
+ * @param [skip] A `CYPHER_AST_INTEGER` node, or null.
+ * @param [limit] A `CYPHER_AST_INTEGER` node, or null.
+ * @param [predicate] A `CYPHER_AST_EXPRESSION` node, or null.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_with(bool distinct, bool include_existing,
-        cypher_astnode_t * const *items, unsigned int nitems,
+        cypher_astnode_t * const *projections, unsigned int nprojections,
         const cypher_astnode_t *order_by, const cypher_astnode_t *skip,
         const cypher_astnode_t *limit, const cypher_astnode_t *predicate,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
 
+/**
+ * Check if `DISTINCT` is present for a `CYPHER_AST_WITH` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_WITH` then the result will be
+ * undefined.
+ *
+ * @param [node] The AST node.
+ * @return `true` if `DISTINCT` is set, `false` otherwise.
+ */
+__cypherlang_pure
+bool cypher_ast_with_is_distinct(const cypher_astnode_t *node);
+
+/**
+ * Check if including existing identifiers (`*`) in a `CYPHER_AST_WITH` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_WITH` then the result will be
+ * undefined.
+ *
+ * @param [node] The AST node.
+ * @return `true` if including existing identifiers, `false` otherwise.
+ */
+__cypherlang_pure
+bool cypher_ast_with_has_include_existing(const cypher_astnode_t *node);
+
+/**
+ * Get the number of projections in a `CYPHER_AST_WITH` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_WITH` then the result will be
+ * undefined.
+ *
+ * @param [node] The AST node.
+ * @return The number of projections.
+ */
+__cypherlang_pure
+unsigned int cypher_ast_with_nprojections(const cypher_astnode_t *node);
+
+/**
+ * Get a projection from a `CYPHER_AST_WITH` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_WITH` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @param [index] The index of the identifier.
+ * @return A `CYPHER_AST_PROJECTION` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_with_get_projection(
+        const cypher_astnode_t *node, unsigned int index);
+
+/**
+ * Get the "order by" node of a `CYPHER_AST_WITH` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_WITH` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_ORDER_BY` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_with_get_order_by(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the skip value of a `CYPHER_AST_WITH` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_WITH` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_INTEGER` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_with_get_skip(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the limit value of a `CYPHER_AST_WITH` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_WITH` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_INTEGER` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_with_get_limit(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the predicate of a `CYPHER_AST_WITH` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_WITH` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_with_get_predicate(
+        const cypher_astnode_t *node);
+
+
+/**
+ * Construct a `CYPHER_AST_UNWIND` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_CLAUSE`.
+ *
+ * @param [expression] A `CYPHER_AST_EXPRESSION` node.
+ * @param [alias] A `CYPHER_AST_IDENTIFIER` node.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_unwind(const cypher_astnode_t *expression,
         const cypher_astnode_t *alias, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range);
 
+/**
+ * Get the expression of a `CYPHER_AST_UNWIND` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_UNWIND` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_unwind_get_expression(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the alias of a `CYPHER_AST_UNWIND` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_UNWIND` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_unwind_get_alias(
+        const cypher_astnode_t *node);
+
+
+/**
+ * Construct a `CYPHER_AST_CALL` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_CLAUSE`.
+ *
+ * @param [proc_name] A `CYPHER_AST_PROC_NAME` node.
+ * @param [args] An array of `CYPHER_AST_EXPRESSION` nodes.
+ * @param [nargs] The number of args.
+ * @param [projections] Projections for with, all of type
+ *         `CYPHER_AST_PROJECTION`.
+ * @param [nprojections] The number of projections.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_call(const cypher_astnode_t *proc_name,
         cypher_astnode_t * const *args, unsigned int nargs,
@@ -2045,7 +2853,91 @@ cypher_astnode_t *cypher_ast_call(const cypher_astnode_t *proc_name,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
 
+/**
+ * Get the proc name of a `CYPHER_AST_CALL` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CALL` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_PROC_NAME` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_call_get_proc_name(
+        const cypher_astnode_t *node);
 
+/**
+ * Get the number of arguments of a `CYPHER_AST_CALL` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CALL` then the result will be
+ * undefined.
+ *
+ * @param [node] The AST node.
+ * @return The number of arguments.
+ */
+__cypherlang_pure
+unsigned int cypher_ast_call_narguments(const cypher_astnode_t *node);
+
+/**
+ * Get an argument of a `CYPHER_AST_CALL` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CALL` then the result will be
+ * undefined.
+ *
+ * @param [node] The AST node.
+ * @param [index] The index of the argument.
+ * @return A `CYPHER_AST_EXPRESSION` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_call_get_argument(
+        const cypher_astnode_t *node, unsigned int index);
+
+/**
+ * Get the number of projections of a `CYPHER_AST_CALL` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CALL` then the result will be
+ * undefined.
+ *
+ * @param [node] The AST node.
+ * @return The number of projections.
+ */
+__cypherlang_pure
+unsigned int cypher_ast_call_nprojections(const cypher_astnode_t *node);
+
+/**
+ * Get a projection of a `CYPHER_AST_CALL` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CALL` then the result will be
+ * undefined.
+ *
+ * @param [node] The AST node.
+ * @param [index] The index of the projection.
+ * @return A `CYPHER_AST_PROJECTION` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_call_get_projection(
+        const cypher_astnode_t *node, unsigned int index);
+
+
+/**
+ * Construct a `CYPHER_AST_RETURN` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_CLAUSE`.
+ *
+ * @param [distinct] `true` if the `DISTINCT` keyword is specified.
+ * @param [include_existing] `true` if including existing identifiers
+ *         (i.e. `RETURN *`).
+ * @param [projections] Projections to return, all of type
+ *         `CYPHER_AST_PROJECTION`.
+ * @param [nprojections] The number of projections.
+ * @param [order_by] A `CYPHER_AST_ORDER_BY` node, or null.
+ * @param [skip] A `CYPHER_AST_INTEGER` node, or null.
+ * @param [limit] A `CYPHER_AST_INTEGER` node, or null.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_return(bool distinct, bool include_existing,
         cypher_astnode_t * const *projections, unsigned int nprojections,
@@ -2053,12 +2945,39 @@ cypher_astnode_t *cypher_ast_return(bool distinct, bool include_existing,
         const cypher_astnode_t *limit, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range);
 
+/**
+ * Check if `DISTINCT` is set in a `CYPHER_AST_RETURN` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_RETURN` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return `true` if `DISTINCT` is set, `false` otherwise.
+ */
 __cypherlang_pure
 bool cypher_ast_return_is_distinct(const cypher_astnode_t *node);
 
+/**
+ * Check if including existing identifiers (`*`) in a `CYPHER_AST_RETURN` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_RETURN` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return `true` if including existing identifiers, `false` otherwise.
+ */
 __cypherlang_pure
 bool cypher_ast_return_has_include_existing(const cypher_astnode_t *node);
 
+/**
+ * Get the number of projections in a `CYPHER_AST_RETURN` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_RETURN` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return The number of projections.
+ */
 __cypherlang_pure
 unsigned int cypher_ast_return_nprojections(const cypher_astnode_t *node);
 
@@ -2076,19 +2995,56 @@ __cypherlang_pure
 const cypher_astnode_t *cypher_ast_return_get_projection(
         const cypher_astnode_t *node, unsigned int index);
 
+/**
+ * Get the "order by" node of a `CYPHER_AST_RETURN` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_RETURN` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_ORDER_BY` node, or null.
+ */
 __cypherlang_pure
 const cypher_astnode_t *cypher_ast_return_get_order_by(
         const cypher_astnode_t *node);
 
+/**
+ * Get the skip value of a `CYPHER_AST_RETURN` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_RETURN` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_INTEGER` node, or null.
+ */
 __cypherlang_pure
 const cypher_astnode_t *cypher_ast_return_get_skip(
         const cypher_astnode_t *node);
 
+/**
+ * Get the limit value of a `CYPHER_AST_RETURN` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_RETURN` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_INTEGER` node, or null.
+ */
 __cypherlang_pure
 const cypher_astnode_t *cypher_ast_return_get_limit(
         const cypher_astnode_t *node);
 
 
+/**
+ * Construct a `CYPHER_AST_PROJECTION` node.
+ *
+ * @param [expression] A `CYPHER_AST_EXPRESSION` node.
+ * @param [alias] A `CYPHER_AST_IDENTIFIER` node, or null.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_projection(const cypher_astnode_t *expression,
         const cypher_astnode_t *alias, cypher_astnode_t **children,
@@ -2121,30 +3077,221 @@ const cypher_astnode_t *cypher_ast_projection_get_alias(
         const cypher_astnode_t *node);
 
 
+/**
+ * Construct a `CYPHER_AST_ORDER_BY` node.
+ *
+ * @param [items] Items for `ORDER BY`, all of type `CYPHER_AST_SORT_ITEM`.
+ * @param [nitems] The number of items.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_order_by(cypher_astnode_t * const *items,
         unsigned int nitems, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range);
 
+/**
+ * Get the number of items in a `CYPHER_AST_ORDER_BY` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_ORDER_BY` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @return The number of items.
+ */
+__cypherlang_pure
+unsigned int cypher_ast_order_by_nitems(const cypher_astnode_t *node);
+
+/**
+ * Get an item from a `CYPHER_AST_ORDER_BY` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_ORDER_BY` then the result will
+ * be undefined.
+ *
+ * @param [node] The AST node.
+ * @param [index] The index of the action.
+ * @return A `CYPHER_AST_SET_ITEM` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_order_by_get_item(
+        const cypher_astnode_t *node, unsigned int index);
+
+
+/**
+ * Construct a `CYPHER_AST_SORT_ITEM` node.
+ *
+ * @param [expression] A `CYPHER_AST_EXPRESSION` node.
+ * @param [ascending] `true` if the sort item is ascending.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_sort_item(const cypher_astnode_t *expression,
         bool ascending, cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
 
+/**
+ * Get the expression from a `CYPHER_AST_SORT_ITEM` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_SORT_ITEM` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_sort_item_get_expression(
+        const cypher_astnode_t *node);
+
+/**
+ * Check if a `CYPHER_AST_SORT_ITEM` node is using ascending order.
+ *
+ * If the node is not an instance of `CYPHER_AST_SORT_ITEM` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return `true` if the sort item is ascending, `false` otherwise.
+ */
+__cypherlang_pure
+bool cypher_ast_sort_item_is_ascending(const cypher_astnode_t *node);
+
+
+/**
+ * Construct a `CYPHER_AST_UNION` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_CLAUSE`.
+ *
+ * @param [all] `true` if `ALL` is specified for the union.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_union(bool all, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range);
 
+/**
+ * Check if a `CYPHER_AST_UNION` node has `ALL` specified.
+ *
+ * If the node is not an instance of `CYPHER_AST_UNION` then the result will be
+ * undefined.
+ *
+ * @param [node] The AST node.
+ * @return `true` if `ALL` is specified, `false` otherwise.
+ */
+__cypherlang_pure
+bool cypher_ast_union_has_all(const cypher_astnode_t *node);
+
+
+/**
+ * Construct a `CYPHER_AST_UNARY_OPERATOR` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_EXPRESSION`.
+ *
+ * @param [op] The operator.
+ * @param [arg] The argument to the unary operator, of type
+ *         `CYPHER_AST_EXPRESSION`.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_unary_operator(const cypher_operator_t *op,
         const cypher_astnode_t *arg, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range);
 
+/**
+ * Get the operator of a `CYPHER_AST_UNARY_OPERATOR` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_UNARY_OPERATOR` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return The operator.
+ */
+__cypherlang_pure
+const cypher_operator_t *cypher_ast_unary_operator_get_operator(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the argument of a `CYPHER_AST_UNARY_OPERATOR` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_UNARY_OPERATOR` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return The argument, of type `CYPHER_AST_EXPRESSION`.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_unary_operator_get_argument(
+        const cypher_astnode_t *node);
+
+
+/**
+ * Construct a `CYPHER_AST_BINARY_OPERATOR` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_EXPRESSION`.
+ *
+ * @param [op] The operator.
+ * @param [arg1] The first (left) argument to the binary operator, of type
+ *         `CYPHER_AST_EXPRESSION`.
+ * @param [arg2] The second (right) argument to the binary operator, of type
+ *         `CYPHER_AST_EXPRESSION`.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_binary_operator(const cypher_operator_t *op,
         const cypher_astnode_t *arg1, const cypher_astnode_t *arg2,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
+
+/**
+ * Get the operator of a `CYPHER_AST_BINARY_OPERATOR` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_BINARY_OPERATOR` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return The operator.
+ */
+__cypherlang_pure
+const cypher_operator_t *cypher_ast_binary_operator_get_operator(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the first (left) argument of a `CYPHER_AST_BINARY_OPERATOR` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_BINARY_OPERATOR` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return The argument, of type `CYPHER_AST_EXPRESSION`.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_binary_operator_get_argument1(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the second (right) argument of a `CYPHER_AST_BINARY_OPERATOR` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_BINARY_OPERATOR` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return The argument, of type `CYPHER_AST_EXPRESSION`.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_binary_operator_get_argument2(
+        const cypher_astnode_t *node);
 
 
 /**
@@ -2180,18 +3327,6 @@ cypher_astnode_t *cypher_ast_comparison(unsigned int length,
 unsigned int cypher_ast_comparison_get_length(const cypher_astnode_t *node);
 
 /**
- * Get the left argument of a `CYPHER_AST_COMPARISON` node.
- *
- * If the node is not an instance of `CYPHER_AST_COMPARISON` then the result
- * will be undefined.
- *
- * @param [node] The AST node.
- * @return A `CYPHER_AST_EXPRESSION` node.
- */
-const cypher_astnode_t *cypher_ast_comparison_get_left(
-        const cypher_astnode_t *node);
-
-/**
  * Get an operator in the chain of a `CYPHER_AST_COMPARISON` node.
  *
  * If the node is not an instance of `CYPHER_AST_COMPARISON` then the result
@@ -2202,6 +3337,7 @@ const cypher_astnode_t *cypher_ast_comparison_get_left(
  * @return The operator at the specified position in the chain, or null if
  *         the position is greater than the chain length.
  */
+__cypherlang_pure
 const cypher_operator_t *cypher_ast_comparison_get_operator(
         const cypher_astnode_t *node, unsigned int pos);
 
@@ -2216,6 +3352,7 @@ const cypher_operator_t *cypher_ast_comparison_get_operator(
  * @return A `CYPHER_AST_EXPRESSION` node at the specified position in the
  *         chain, or null if the position is greater than the chain length.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_comparison_get_argument(
         const cypher_astnode_t *node, unsigned int pos);
 
@@ -2226,7 +3363,7 @@ const cypher_astnode_t *cypher_ast_comparison_get_argument(
  * The node will also be an instance of `CYPHER_AST_EXPRESSION`.
  *
  * @param [func_name] A `CYPHER_AST_FUNCTION_NAME` node.
- * @param [distinct] `true` if the function removes duplicate results.
+ * @param [distinct] `true` if the `DISTINCT` keyword is specified.
  * @param [args] An array of `CYPHER_AST_EXPRESSION` nodes.
  * @param [nargs] The number of args.
  * @param [children] The children of the node.
@@ -2249,19 +3386,45 @@ cypher_astnode_t *cypher_ast_apply_operator(const cypher_astnode_t *func_name,
  * @param [node] The AST node.
  * @return A `CYPHER_AST_FUNCTION_NAME` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_apply_operator_get_func_name(
         const cypher_astnode_t *node);
 
 /**
- * Get the expression of a `CYPHER_AST_APPLY_OPERATOR` node.
+ * Check if a `CYPHER_AST_APPLY_OPERATOR` node is `DISTINCT`.
  *
  * If the node is not an instance of `CYPHER_AST_APPLY_OPERATOR` then the
  * result will be undefined.
  *
  * @param [node] The AST node.
- * @param [index] The index of the element.
+ * @return `true` if `DISTINCT` is specified, and `false` otherwise.
+ */
+__cypherlang_pure
+bool cypher_ast_apply_operator_get_distinct(const cypher_astnode_t *node);
+
+/**
+ * Get the number of arguments of a `CYPHER_AST_APPLY_OPERATOR` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_APPLY_OPERATOR` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return The number of arguments.
+ */
+__cypherlang_pure
+unsigned int cypher_ast_apply_operator_narguments(const cypher_astnode_t *node);
+
+/**
+ * Get an argument of a `CYPHER_AST_APPLY_OPERATOR` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_APPLY_OPERATOR` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @param [index] The index of the argument.
  * @return A `CYPHER_AST_EXPRESSION` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_apply_operator_get_argument(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -2293,21 +3456,21 @@ cypher_astnode_t *cypher_ast_apply_all_operator(
  * @param [node] The AST node.
  * @return A `CYPHER_AST_FUNCTION_NAME` node.
  */
-const cypher_astnode_t *cypher_ast_apply_all_get_func_name(
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_apply_all_operator_get_func_name(
         const cypher_astnode_t *node);
 
 /**
- * Get the expression of a `CYPHER_AST_APPLY_ALL_OPERATOR` node.
+ * Check if a `CYPHER_AST_APPLY_ALL_OPERATOR` node is `DISTINCT`.
  *
  * If the node is not an instance of `CYPHER_AST_APPLY_ALL_OPERATOR` then the
  * result will be undefined.
  *
  * @param [node] The AST node.
- * @param [index] The index of the element.
- * @return A `CYPHER_AST_EXPRESSION` node.
+ * @return `true` if `DISTINCT` is specified, and `false` otherwise.
  */
-const cypher_astnode_t *cypher_ast_apply_all_operator_get_argument(
-        const cypher_astnode_t *node, unsigned int index);
+__cypherlang_pure
+bool cypher_ast_apply_all_operator_get_distinct(const cypher_astnode_t *node);
 
 
 /**
@@ -2337,6 +3500,7 @@ cypher_astnode_t *cypher_ast_property_operator(
  * @param [node] The AST node.
  * @return A `CYPHER_AST_EXPRESSION` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_property_operator_get_expression(
         const cypher_astnode_t *node);
 
@@ -2349,21 +3513,113 @@ const cypher_astnode_t *cypher_ast_property_operator_get_expression(
  * @param [node] The AST node.
  * @return A `CYPHER_AST_PROP_NAME` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_property_operator_get_prop_name(
         const cypher_astnode_t *node);
 
 
+/**
+ * Construct a `CYPHER_AST_SUBSCRIPT_OPERATOR` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_EXPRESSION`.
+ *
+ * @param [expression] A `CYPHER_AST_EXPRESSION` node.
+ * @param [subscript] A `CYPHER_AST_EXPRESSION` node.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_subscript_operator(
         const cypher_astnode_t *expression, const cypher_astnode_t *subscript,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
 
+/**
+ * Get the expression of a `CYPHER_AST_SUBSCRIPT_OPERATOR` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_SUBSCRIPT_OPERATOR` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_subscript_operator_get_expression(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the subscript of a `CYPHER_AST_SUBSCRIPT_OPERATOR` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_SUBSCRIPT_OPERATOR` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_subscript_operator_get_subscript(
+        const cypher_astnode_t *node);
+
+
+/**
+ * Construct a `CYPHER_AST_SLICE_OPERATOR` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_EXPRESSION`.
+ *
+ * @param [expression] A `CYPHER_AST_EXPRESSION` node.
+ * @param [start] A `CYPHER_AST_EXPRESSION` node, or null.
+ * @param [end] A `CYPHER_AST_EXPRESSION` node, or null.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_slice_operator(const cypher_astnode_t *expression,
         const cypher_astnode_t *start, const cypher_astnode_t *end,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
+
+/**
+ * Get the expression of a `CYPHER_AST_SLICE_OPERATOR` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_SLICE_OPERATOR` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_slice_operator_get_expression(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the start of a `CYPHER_AST_SLICE_OPERATOR` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_SLICE_OPERATOR` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_slice_operator_get_start(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the end of a `CYPHER_AST_SLICE_OPERATOR` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_SLICE_OPERATOR` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_slice_operator_get_end(
+        const cypher_astnode_t *node);
 
 
 /**
@@ -2394,6 +3650,7 @@ cypher_astnode_t *cypher_ast_labels_operator(const cypher_astnode_t *expression,
  * @param [node] The AST node.
  * @return A `CYPHER_AST_EXPRESSION` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_labels_operator_get_expression(
         const cypher_astnode_t *node);
 
@@ -2424,31 +3681,215 @@ const cypher_astnode_t *cypher_ast_labels_operator_get_label(
         const cypher_astnode_t *node, unsigned int index);
 
 
+/**
+ * Construct a `CYPHER_AST_LIST_COMPREHENSION` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_EXPRESSION`.
+ *
+ * @param [identifier] A `CYPHER_AST_IDENTIFIER` node.
+ * @param [expression] A `CYPHER_AST_EXPRESSION` node.
+ * @param [predicate] A `CYPHER_AST_EXPRESSION` node, or null.
+ * @param [eval] A `CYPHER_AST_EXPRESSION` node, or null.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_list_comprehension(
         const cypher_astnode_t *identifier, const cypher_astnode_t *expression,
-        const cypher_astnode_t *prediate, const cypher_astnode_t *eval,
+        const cypher_astnode_t *predicate, const cypher_astnode_t *eval,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
 
-__cypherlang_must_check
-cypher_astnode_t *cypher_ast_case(const cypher_astnode_t *expression,
-        cypher_astnode_t * const *alternatives, unsigned int nalternatives,
-        const cypher_astnode_t *deflt, cypher_astnode_t **children,
-        unsigned int nchildren, struct cypher_input_range range);
+/**
+ * Get the identifier from a `CYPHER_AST_LIST_COMPREHENSION` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_LIST_COMPREHENSION` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_IDENTIFIER` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_list_comprehension_get_identifier(
+        const cypher_astnode_t *node);
 
+/**
+ * Get the expression from a `CYPHER_AST_LIST_COMPREHENSION` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_LIST_COMPREHENSION` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_IDENTIFIER` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_list_comprehension_get_expression(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the predicate from a `CYPHER_AST_LIST_COMPREHENSION` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_LIST_COMPREHENSION` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_list_comprehension_get_predicate(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the evaluation from a `CYPHER_AST_LIST_COMPREHENSION` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_LIST_COMPREHENSION` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_list_comprehension_get_eval(
+        const cypher_astnode_t *node);
+
+
+/**
+ * Construct a `CYPHER_AST_FILTER` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_LIST_COMPREHENSION`.
+ *
+ * @param [identifier] A `CYPHER_AST_IDENTIFIER` node.
+ * @param [expression] A `CYPHER_AST_EXPRESSION` node.
+ * @param [predicate] A `CYPHER_AST_EXPRESSION` node, or null.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_filter(const cypher_astnode_t *identifier,
         const cypher_astnode_t *expression, const cypher_astnode_t *predicate,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
 
+
+/**
+ * Construct a `CYPHER_AST_EXTRACT` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_LIST_COMPREHENSION`.
+ *
+ * @param [identifier] A `CYPHER_AST_IDENTIFIER` node.
+ * @param [expression] A `CYPHER_AST_EXPRESSION` node.
+ * @param [eval] A `CYPHER_AST_EXPRESSION` node, or null.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_extract(const cypher_astnode_t *identifier,
         const cypher_astnode_t *expression, const cypher_astnode_t *eval,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
 
+
+/**
+ * Construct a `CYPHER_AST_ALL` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_LIST_COMPREHENSION`.
+ *
+ * @param [identifier] A `CYPHER_AST_IDENTIFIER` node.
+ * @param [expression] A `CYPHER_AST_EXPRESSION` node.
+ * @param [predicate] A `CYPHER_AST_EXPRESSION` node, or null.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+__cypherlang_must_check
+cypher_astnode_t *cypher_ast_all(const cypher_astnode_t *identifier,
+        const cypher_astnode_t *expression, const cypher_astnode_t *predicate,
+        cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range);
+
+
+/**
+ * Construct a `CYPHER_AST_ANY` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_LIST_COMPREHENSION`.
+ *
+ * @param [identifier] A `CYPHER_AST_IDENTIFIER` node.
+ * @param [expression] A `CYPHER_AST_EXPRESSION` node.
+ * @param [predicate] A `CYPHER_AST_EXPRESSION` node, or null.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+__cypherlang_must_check
+cypher_astnode_t *cypher_ast_any(const cypher_astnode_t *identifier,
+        const cypher_astnode_t *expression, const cypher_astnode_t *predicate,
+        cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range);
+
+
+/**
+ * Construct a `CYPHER_AST_SINGLE` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_LIST_COMPREHENSION`.
+ *
+ * @param [identifier] A `CYPHER_AST_IDENTIFIER` node.
+ * @param [expression] A `CYPHER_AST_EXPRESSION` node.
+ * @param [predicate] A `CYPHER_AST_EXPRESSION` node, or null.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+__cypherlang_must_check
+cypher_astnode_t *cypher_ast_single(const cypher_astnode_t *identifier,
+        const cypher_astnode_t *expression, const cypher_astnode_t *predicate,
+        cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range);
+
+
+/**
+ * Construct a `CYPHER_AST_NONE` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_LIST_COMPREHENSION`.
+ *
+ * @param [identifier] A `CYPHER_AST_IDENTIFIER` node.
+ * @param [expression] A `CYPHER_AST_EXPRESSION` node.
+ * @param [predicate] A `CYPHER_AST_EXPRESSION` node, or null.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+__cypherlang_must_check
+cypher_astnode_t *cypher_ast_none(const cypher_astnode_t *identifier,
+        const cypher_astnode_t *expression, const cypher_astnode_t *predicate,
+        cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range);
+
+
+/**
+ * Construct a `CYPHER_AST_REDUCE` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_EXPRESSION`.
+ *
+ * @param [accumulator] A `CYPHER_AST_IDENTIFIER` node.
+ * @param [init] A `CYPHER_AST_EXPRESSION` node.
+ * @param [identifier] A `CYPHER_AST_IDENTIFIER` node.
+ * @param [expression] A `CYPHER_AST_EXPRESSION` node.
+ * @param [eval] A `CYPHER_AST_EXPRESSION` node, or null.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_reduce(const cypher_astnode_t *accumulator,
         const cypher_astnode_t *init, const cypher_astnode_t *identifier,
@@ -2456,29 +3897,158 @@ cypher_astnode_t *cypher_ast_reduce(const cypher_astnode_t *accumulator,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
 
-__cypherlang_must_check
-cypher_astnode_t *cypher_ast_all(const cypher_astnode_t *identifier,
-        const cypher_astnode_t *expression, const cypher_astnode_t *predicate,
-        cypher_astnode_t **children, unsigned int nchildren,
-        struct cypher_input_range range);
+/**
+ * Get the accumulator from a `CYPHER_AST_REDUCE` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_REDUCE` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_IDENTIFIER` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_reduce_get_accumulator(
+        const cypher_astnode_t *node);
 
-__cypherlang_must_check
-cypher_astnode_t *cypher_ast_any(const cypher_astnode_t *identifier,
-        const cypher_astnode_t *expression, const cypher_astnode_t *predicate,
-        cypher_astnode_t **children, unsigned int nchildren,
-        struct cypher_input_range range);
+/**
+ * Get the accumulator init expression from a `CYPHER_AST_REDUCE` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_REDUCE` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_reduce_get_init(
+        const cypher_astnode_t *node);
 
-__cypherlang_must_check
-cypher_astnode_t *cypher_ast_single(const cypher_astnode_t *identifier,
-        const cypher_astnode_t *expression, const cypher_astnode_t *predicate,
-        cypher_astnode_t **children, unsigned int nchildren,
-        struct cypher_input_range range);
+/**
+ * Get the identifier from a `CYPHER_AST_REDUCE` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_REDUCE` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_IDENTIFIER` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_reduce_get_identifier(
+        const cypher_astnode_t *node);
 
+/**
+ * Get the expression from a `CYPHER_AST_REDUCE` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_REDUCE` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_reduce_get_expression(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the evaluation from a `CYPHER_AST_REDUCE` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_REDUCE` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_reduce_get_eval(
+        const cypher_astnode_t *node);
+
+
+/**
+ * Construct a `CYPHER_AST_CASE` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_EXPRESSION`.
+ *
+ * @param [expression] A `CYPHER_AST_EXPRESSION` node.
+ * @param [alternatives] An alternating list of predicate expressions and
+ *         values, all of type `CYPHER_AST_EXPRESSION`.
+ * @param [nalternatives] The number of predicate and result pairs.
+ * @param [deflt] A `CYPHER_AST_EXPRESSION` node, or `NULL`.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 __cypherlang_must_check
-cypher_astnode_t *cypher_ast_none(const cypher_astnode_t *identifier,
-        const cypher_astnode_t *expression, const cypher_astnode_t *predicate,
-        cypher_astnode_t **children, unsigned int nchildren,
-        struct cypher_input_range range);
+cypher_astnode_t *cypher_ast_case(const cypher_astnode_t *expression,
+        cypher_astnode_t * const *alternatives, unsigned int nalternatives,
+        const cypher_astnode_t *deflt, cypher_astnode_t **children,
+        unsigned int nchildren, struct cypher_input_range range);
+
+/**
+ * Get the expression from a `CYPHER_AST_CASE` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CASE` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_case_get_expression(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the number of alternatives from a `CYPHER_AST_CASE` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CASE` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return The number of alternatives.
+ */
+__cypherlang_pure
+unsigned int cypher_ast_case_nalternatives(const cypher_astnode_t *node);
+
+/**
+ * Get a predicate from a `CYPHER_AST_CASE` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CASE` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @param [index] The index of the alternative.
+ * @return A `CYPHER_AST_EXPRESSION` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_case_get_predicate(
+        const cypher_astnode_t *node, unsigned int index);
+
+/**
+ * Get a value from a `CYPHER_AST_CASE` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CASE` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @param [index] The index of the alternative.
+ * @return A `CYPHER_AST_EXPRESSION` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_case_get_value(
+        const cypher_astnode_t *node, unsigned int index);
+
+/**
+ * Get the default from a `CYPHER_AST_CASE` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CASE` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_case_get_default(
+        const cypher_astnode_t *node);
 
 
 /**
@@ -2527,6 +4097,19 @@ const cypher_astnode_t *cypher_ast_collection_get(const cypher_astnode_t *node,
         unsigned int index);
 
 
+/**
+ * Construct a `CYPHER_AST_MAP` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_EXPRESSION`.
+ *
+ * @param [keys] The keys for the map, all of type `CYPHER_AST_PROP_NAME`.
+ * @param [values] The values for the map, all of type `CYPEHR_AST_EXPRESSION`.
+ * @param [nentries] The number of keys and values.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 cypher_astnode_t *cypher_ast_map(cypher_astnode_t * const *keys,
         cypher_astnode_t * const *values, unsigned int nentries,
         cypher_astnode_t **children, unsigned int nchildren,
@@ -2574,6 +4157,7 @@ unsigned int cypher_ast_map_nentries(const cypher_astnode_t *node);
  * @param [index] The index of the entry.
  * @return A `CYPHER_AST_PROP_NAME` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_map_get_key(const cypher_astnode_t *node,
         unsigned int index);
 
@@ -2587,6 +4171,7 @@ const cypher_astnode_t *cypher_ast_map_get_key(const cypher_astnode_t *node,
  * @param [index] The index of the entry.
  * @return A `CYPHER_AST_EXPRESSION` node.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_map_get_value(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -3118,6 +4703,7 @@ cypher_astnode_t *cypher_ast_node_pattern(const cypher_astnode_t *identifier,
  * @param [node] The AST node.
  * @return A `CYPHER_AST_IDENTIFIER` node, or null.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_node_pattern_get_identifier(
         const cypher_astnode_t *node);
 
@@ -3207,6 +4793,7 @@ enum cypher_rel_direction cypher_ast_rel_pattern_get_direction(
  * @param [node] The AST node.
  * @return A `CYPHER_AST_IDENTIFIER` node, or null.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_rel_pattern_get_identifier(
         const cypher_astnode_t *node);
 
@@ -3245,6 +4832,7 @@ const cypher_astnode_t *cypher_ast_rel_pattern_get_reltype(
  * @param [node] The AST node.
  * @return A `CYPHER_AST_RANGE` node, or null.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_rel_pattern_get_varlength(
         const cypher_astnode_t *node);
 
@@ -3286,6 +4874,7 @@ cypher_astnode_t *cypher_ast_range(const cypher_astnode_t *start,
  * @param [node] The AST node.
  * @return A `CYPHER_AST_RANGE` node, or null.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_range_get_start(
         const cypher_astnode_t *node);
 
@@ -3298,6 +4887,7 @@ const cypher_astnode_t *cypher_ast_range_get_start(
  * @param [node] The AST node.
  * @return A `CYPHER_AST_RANGE` node, or null.
  */
+__cypherlang_pure
 const cypher_astnode_t *cypher_ast_range_get_end(
         const cypher_astnode_t *node);
 

@@ -106,6 +106,57 @@ void call_free(cypher_astnode_t *self)
 }
 
 
+const cypher_astnode_t *cypher_ast_call_get_proc_name(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_CALL, NULL);
+    struct call_clause *node = container_of(astnode, struct call_clause, _astnode);
+    return node->proc_name;
+}
+
+
+unsigned int cypher_ast_call_narguments(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_CALL, 0);
+    struct call_clause *node = container_of(astnode, struct call_clause, _astnode);
+    return node->nargs;
+}
+
+
+const cypher_astnode_t *cypher_ast_call_get_argument(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_CALL, NULL);
+    struct call_clause *node = container_of(astnode, struct call_clause, _astnode);
+    if (index >= node->nargs)
+    {
+        return NULL;
+    }
+    return node->args[index];
+}
+
+
+unsigned int cypher_ast_call_nprojections(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_CALL, 0);
+    struct call_clause *node = container_of(astnode, struct call_clause, _astnode);
+    return node->nprojections;
+}
+
+
+const cypher_astnode_t *cypher_ast_call_get_projection(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_CALL, NULL);
+    struct call_clause *node = container_of(astnode, struct call_clause, _astnode);
+    if (index >= node->nprojections)
+    {
+        return NULL;
+    }
+    return node->projections[index];
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_CALL, -1);

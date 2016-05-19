@@ -73,6 +73,27 @@ cleanup:
 }
 
 
+unsigned int cypher_ast_on_create_nitems(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_ON_CREATE, 0);
+    struct on_create *node = container_of(astnode, struct on_create, _astnode);
+    return node->nitems;
+}
+
+
+const cypher_astnode_t *cypher_ast_on_create_get_item(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_ON_CREATE, 0);
+    struct on_create *node = container_of(astnode, struct on_create, _astnode);
+    if (index >= node->nitems)
+    {
+        return NULL;
+    }
+    return node->items[index];
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_ON_CREATE, -1);

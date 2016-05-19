@@ -71,6 +71,36 @@ cypher_astnode_t *cypher_ast_binary_operator(const cypher_operator_t *op,
 }
 
 
+const cypher_operator_t *cypher_ast_binary_operator_get_operator(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_BINARY_OPERATOR, NULL);
+    struct binary_operator *node =
+        container_of(astnode, struct binary_operator, _astnode);
+    return node->op;
+}
+
+
+const cypher_astnode_t *cypher_ast_binary_operator_get_argument1(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_BINARY_OPERATOR, NULL);
+    struct binary_operator *node =
+        container_of(astnode, struct binary_operator, _astnode);
+    return node->arg1;
+}
+
+
+const cypher_astnode_t *cypher_ast_binary_operator_get_argument2(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_BINARY_OPERATOR, NULL);
+    struct binary_operator *node =
+        container_of(astnode, struct binary_operator, _astnode);
+    return node->arg2;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_BINARY_OPERATOR, -1);

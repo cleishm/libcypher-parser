@@ -60,6 +60,23 @@ cypher_astnode_t *cypher_ast_sort_item(const cypher_astnode_t *expression,
 }
 
 
+const cypher_astnode_t *cypher_ast_sort_item_get_expression(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_SORT_ITEM, NULL);
+    struct sort_item *node = container_of(astnode, struct sort_item, _astnode);
+    return node->expression;
+}
+
+
+bool cypher_ast_sort_item_is_ascending(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_SORT_ITEM, false);
+    struct sort_item *node = container_of(astnode, struct sort_item, _astnode);
+    return node->ascending;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_SORT_ITEM, -1);

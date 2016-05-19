@@ -60,6 +60,15 @@ cypher_astnode_t *cypher_ast_union(bool all, cypher_astnode_t **children,
 }
 
 
+bool cypher_ast_union_has_all(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_UNION, false);
+    struct union_clause *node =
+            container_of(astnode, struct union_clause, _astnode);
+    return node->all;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_UNION, -1);

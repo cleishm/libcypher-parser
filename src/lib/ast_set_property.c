@@ -66,6 +66,26 @@ cypher_astnode_t *cypher_ast_set_property(const cypher_astnode_t *property,
 }
 
 
+const cypher_astnode_t *cypher_ast_set_property_get_property(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_SET_PROPERTY, NULL);
+    struct set_property *node =
+            container_of(astnode, struct set_property, _astnode);
+    return node->property;
+}
+
+
+const cypher_astnode_t *cypher_ast_set_property_get_expression(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_SET_PROPERTY, NULL);
+    struct set_property *node =
+            container_of(astnode, struct set_property, _astnode);
+    return node->expression;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_SET_PROPERTY, -1);

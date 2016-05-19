@@ -67,6 +67,26 @@ cypher_astnode_t *cypher_ast_unary_operator(const cypher_operator_t *op,
 }
 
 
+const cypher_operator_t *cypher_ast_unary_operator_get_operator(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_UNARY_OPERATOR, NULL);
+    struct unary_operator *node =
+        container_of(astnode, struct unary_operator, _astnode);
+    return node->op;
+}
+
+
+const cypher_astnode_t *cypher_ast_unary_operator_get_argument(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_UNARY_OPERATOR, NULL);
+    struct unary_operator *node =
+        container_of(astnode, struct unary_operator, _astnode);
+    return node->arg;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_UNARY_OPERATOR, -1);

@@ -25,7 +25,7 @@ struct subscript_operator
 {
     cypher_astnode_t _astnode;
     const cypher_astnode_t *expression;
-    const cypher_astnode_t *index;
+    const cypher_astnode_t *subscript;
 };
 
 
@@ -44,12 +44,12 @@ const struct cypher_astnode_vt cypher_subscript_operator_astnode_vt =
 
 
 cypher_astnode_t *cypher_ast_subscript_operator(
-        const cypher_astnode_t *expression, const cypher_astnode_t *index,
+        const cypher_astnode_t *expression, const cypher_astnode_t *subscript,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
     REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
-    REQUIRE_TYPE(index, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_TYPE(subscript, CYPHER_AST_EXPRESSION, NULL);
 
     struct subscript_operator *node =
             calloc(1, sizeof(struct subscript_operator));
@@ -64,8 +64,28 @@ cypher_astnode_t *cypher_ast_subscript_operator(
         return NULL;
     }
     node->expression = expression;
-    node->index = index;
+    node->subscript = subscript;
     return &(node->_astnode);
+}
+
+
+const cypher_astnode_t *cypher_ast_subscript_operator_get_expression(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_SUBSCRIPT_OPERATOR, NULL);
+    struct subscript_operator *node =
+            container_of(astnode, struct subscript_operator, _astnode);
+    return node->expression;
+}
+
+
+const cypher_astnode_t *cypher_ast_subscript_operator_get_subscript(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_SUBSCRIPT_OPERATOR, NULL);
+    struct subscript_operator *node =
+            container_of(astnode, struct subscript_operator, _astnode);
+    return node->subscript;
 }
 
 
@@ -73,7 +93,7 @@ ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_SUBSCRIPT_OPERATOR, -1);
     struct subscript_operator *node =
-        container_of(self, struct subscript_operator, _astnode);
+            container_of(self, struct subscript_operator, _astnode);
     return snprintf(str, size, "@%u[@%u]", node->expression->ordinal,
-                node->index->ordinal);
+                node->subscript->ordinal);
 }

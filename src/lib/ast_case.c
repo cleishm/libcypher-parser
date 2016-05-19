@@ -51,12 +51,11 @@ cypher_astnode_t *cypher_ast_case(const cypher_astnode_t *expression,
         unsigned int nchildren, struct cypher_input_range range)
 {
     REQUIRE_TYPE_OPTIONAL(expression, CYPHER_AST_EXPRESSION, NULL);
-    REQUIRE(nalternatives > 0 && nalternatives % 2 == 0, NULL);
     REQUIRE_TYPE_ALL(alternatives, nalternatives, CYPHER_AST_EXPRESSION, NULL);
-    REQUIRE_TYPE(deflt, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_TYPE_OPTIONAL(deflt, CYPHER_AST_EXPRESSION, NULL);
 
     struct case_expression *node = calloc(1, sizeof(struct case_expression) +
-            nalternatives * sizeof(cypher_astnode_t *));
+            nalternatives * 2 * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -68,7 +67,7 @@ cypher_astnode_t *cypher_ast_case(const cypher_astnode_t *expression,
     }
     node->expression = expression;
     memcpy(node->alternatives, alternatives,
-            nalternatives * sizeof(cypher_astnode_t *));
+            nalternatives * 2 * sizeof(cypher_astnode_t *));
     node->nalternatives = nalternatives;
     node->deflt = deflt;
     return &(node->_astnode);
@@ -79,6 +78,63 @@ cleanup:
     free(node);
     errno = errsv;
     return NULL;
+}
+
+
+const cypher_astnode_t *cypher_ast_case_get_expression(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_CASE, NULL);
+    struct case_expression *node =
+            container_of(astnode, struct case_expression, _astnode);
+    return node->expression;
+}
+
+
+unsigned int cypher_ast_case_nalternatives(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_CASE, 0);
+    struct case_expression *node =
+            container_of(astnode, struct case_expression, _astnode);
+    return node->nalternatives;
+}
+
+
+const cypher_astnode_t *cypher_ast_case_get_predicate(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_CASE, NULL);
+    struct case_expression *node =
+            container_of(astnode, struct case_expression, _astnode);
+    if (index >= node->nalternatives)
+    {
+        return NULL;
+    }
+    return node->alternatives[index*2];
+}
+
+
+const cypher_astnode_t *cypher_ast_case_get_value(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_CASE, NULL);
+    struct case_expression *node =
+            container_of(astnode, struct case_expression, _astnode);
+    if (index >= node->nalternatives)
+    {
+        return NULL;
+    }
+    return node->alternatives[index*2 + 1];
+}
+
+
+const cypher_astnode_t *cypher_ast_case_get_default(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_CASE, NULL);
+    struct case_expression *node =
+            container_of(astnode, struct case_expression, _astnode);
+    return node->deflt;
 }
 
 
@@ -112,30 +168,17 @@ ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
         str[n] = '[';
     }
     n++;
-    for (unsigned int i = 0; i < node->nalternatives; )
+    for (unsigned int i = 0; i < node->nalternatives; ++i)
     {
         ssize_t r = snprintf(str+n, (n < size)? size-n : 0,
-                "(@%u:@%u)", node->alternatives[i]->ordinal,
-                node->alternatives[i+1]->ordinal);
+                "%s(@%u:@%u)", (i > 0)? ", ":"",
+                node->alternatives[i*2]->ordinal,
+                node->alternatives[i*2 + 1]->ordinal);
         if (r < 0)
         {
             return -1;
         }
         n += r;
-        i += 2;
-        if (i < node->nalternatives)
-        {
-            if (n < size)
-            {
-                str[n] = ',';
-            }
-            n++;
-            if (n < size)
-            {
-                str[n] = ' ';
-            }
-            n++;
-        }
     }
     if (n < size)
     {

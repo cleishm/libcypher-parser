@@ -8,17 +8,32 @@ check_libcypher_parser_SOURCES = \
 	memstream.h
 
 check_libcypher_parser_CHECKS = \
+	check_call.c \
+	check_case.c \
 	check_command.c \
 	check_constraints.c \
+	check_create.c \
+	check_delete.c \
 	check_error_tracking.c \
+	check_expression.c \
+	check_foreach.c \
 	check_indexes.c \
+	check_list_comprehensions.c \
 	check_load_csv.c \
 	check_match.c \
+	check_merge.c \
 	check_pattern.c \
 	check_query.c \
+	check_reduce.c \
+	check_remove.c \
+	check_return.c \
+	check_set.c \
 	check_start.c \
 	check_statement.c \
-	check_util.c
+	check_union.c \
+	check_unwind.c \
+	check_util.c \
+	check_with.c
 
 check_libcypher-parser_suite.c: ${check_libcypher_parser_CHECKS}
 	@(names=`for check in $^; do \

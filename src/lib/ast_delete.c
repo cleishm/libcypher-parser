@@ -77,6 +77,38 @@ cleanup:
 }
 
 
+bool cypher_ast_delete_has_detach(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_DELETE, false);
+    struct delete_clause *node =
+            container_of(astnode, struct delete_clause, _astnode);
+    return node->detach;
+}
+
+
+unsigned int cypher_ast_delete_nexpressions(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_DELETE, 0);
+    struct delete_clause *node =
+            container_of(astnode, struct delete_clause, _astnode);
+    return node->nexpressions;
+}
+
+
+const cypher_astnode_t *cypher_ast_delete_get_expression(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_DELETE, NULL);
+    struct delete_clause *node =
+            container_of(astnode, struct delete_clause, _astnode);
+    if (index >= node->nexpressions)
+    {
+        return NULL;
+    }
+    return node->expressions[index];
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_DELETE, -1);

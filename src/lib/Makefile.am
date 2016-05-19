@@ -11,6 +11,7 @@ libcypher_parser_la_SOURCES = \
 	ast_any.c \
 	ast_apply_operator.c \
 	ast_apply_all_operator.c \
+	ast_boolean.c \
 	ast_binary_operator.c \
 	ast_block_comment.c \
 	ast_call.c \

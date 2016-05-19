@@ -77,6 +77,51 @@ cypher_astnode_t *cypher_ast_reduce(const cypher_astnode_t *accumulator,
 }
 
 
+const cypher_astnode_t *cypher_ast_reduce_get_accumulator(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REDUCE, NULL);
+    struct reduce *node = container_of(astnode, struct reduce, _astnode);
+    return node->accumulator;
+}
+
+
+const cypher_astnode_t *cypher_ast_reduce_get_init(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REDUCE, NULL);
+    struct reduce *node = container_of(astnode, struct reduce, _astnode);
+    return node->init;
+}
+
+
+const cypher_astnode_t *cypher_ast_reduce_get_identifier(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REDUCE, NULL);
+    struct reduce *node = container_of(astnode, struct reduce, _astnode);
+    return node->identifier;
+}
+
+
+const cypher_astnode_t *cypher_ast_reduce_get_expression(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REDUCE, NULL);
+    struct reduce *node = container_of(astnode, struct reduce, _astnode);
+    return node->expression;
+}
+
+
+const cypher_astnode_t *cypher_ast_reduce_get_eval(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REDUCE, NULL);
+    struct reduce *node = container_of(astnode, struct reduce, _astnode);
+    return node->eval;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_REDUCE, -1);

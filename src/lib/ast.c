@@ -108,6 +108,7 @@ struct cypher_astnode_vts
     const struct cypher_astnode_vt *string;
     const struct cypher_astnode_vt *integer;
     const struct cypher_astnode_vt *float_literal;
+    const struct cypher_astnode_vt *boolean_literal;
     const struct cypher_astnode_vt *true_literal;
     const struct cypher_astnode_vt *false_literal;
     const struct cypher_astnode_vt *null_literal;
@@ -217,6 +218,7 @@ static const struct cypher_astnode_vts cypher_astnode_vts =
     .string = &cypher_string_astnode_vt,
     .integer = &cypher_integer_astnode_vt,
     .float_literal = &cypher_float_astnode_vt,
+    .boolean_literal = &cypher_boolean_astnode_vt,
     .true_literal = &cypher_true_astnode_vt,
     .false_literal = &cypher_false_astnode_vt,
     .null_literal = &cypher_null_astnode_vt,
@@ -335,6 +337,7 @@ const uint8_t CYPHER_AST_PARAMETER = VT_OFFSET(parameter);
 const uint8_t CYPHER_AST_STRING = VT_OFFSET(string);
 const uint8_t CYPHER_AST_INTEGER = VT_OFFSET(integer);
 const uint8_t CYPHER_AST_FLOAT = VT_OFFSET(float_literal);
+const uint8_t CYPHER_AST_BOOLEAN = VT_OFFSET(boolean_literal);
 const uint8_t CYPHER_AST_TRUE = VT_OFFSET(true_literal);
 const uint8_t CYPHER_AST_FALSE = VT_OFFSET(false_literal);
 const uint8_t CYPHER_AST_NULL = VT_OFFSET(null_literal);
@@ -580,7 +583,6 @@ static int _cypher_ast_fprint(const cypher_astnode_t *ast, FILE *stream,
         unsigned int ordinal_width, unsigned int start_width,
         unsigned int end_width, unsigned int name_width, unsigned int depth)
 {
-
     if ((snprintf_realloc(buf, bufcap, "@%u", ast->ordinal) < 0) ||
         (fprintf(stream, "%s%*s%s  ", colorization->ast_ordinal[0],
                  ordinal_width, *buf, colorization->ast_ordinal[1]) < 0))

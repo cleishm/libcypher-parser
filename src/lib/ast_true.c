@@ -31,7 +31,7 @@ static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
 static const struct cypher_astnode_vt *parents[] =
-    { &cypher_expression_astnode_vt };
+    { &cypher_boolean_astnode_vt };
 
 const struct cypher_astnode_vt cypher_true_astnode_vt =
     { .parents = parents,

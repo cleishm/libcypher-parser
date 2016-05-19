@@ -92,6 +92,87 @@ cleanup:
 }
 
 
+bool cypher_ast_with_is_distinct(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_WITH, false);
+    struct with_clause *node =
+            container_of(astnode, struct with_clause, _astnode);
+    return node->distinct;
+}
+
+
+bool cypher_ast_with_has_include_existing(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_WITH, false);
+    struct with_clause *node =
+            container_of(astnode, struct with_clause, _astnode);
+    return node->include_existing;
+}
+
+
+unsigned int cypher_ast_with_nprojections(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_WITH, 0);
+    struct with_clause *node =
+            container_of(astnode, struct with_clause, _astnode);
+    return node->nprojections;
+}
+
+
+const cypher_astnode_t *cypher_ast_with_get_projection(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_WITH, NULL);
+    struct with_clause *node =
+            container_of(astnode, struct with_clause, _astnode);
+    if (index >= node->nprojections)
+    {
+        return NULL;
+    }
+    return node->projections[index];
+}
+
+
+const cypher_astnode_t *cypher_ast_with_get_order_by(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_WITH, NULL);
+    struct with_clause *node =
+            container_of(astnode, struct with_clause, _astnode);
+    return node->order_by;
+}
+
+
+const cypher_astnode_t *cypher_ast_with_get_skip(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_WITH, NULL);
+    struct with_clause *node =
+            container_of(astnode, struct with_clause, _astnode);
+    return node->skip;
+}
+
+
+const cypher_astnode_t *cypher_ast_with_get_limit(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_WITH, NULL);
+    struct with_clause *node =
+            container_of(astnode, struct with_clause, _astnode);
+    return node->limit;
+}
+
+
+const cypher_astnode_t *cypher_ast_with_get_predicate(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_WITH, NULL);
+    struct with_clause *node =
+            container_of(astnode, struct with_clause, _astnode);
+    return node->predicate;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_WITH, -1);

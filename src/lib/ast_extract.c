@@ -23,7 +23,7 @@
 
 struct extract
 {
-    cypher_astnode_t _astnode;
+    cypher_list_comprehension_astnode_t _list_comprehension_astnode;
     const cypher_astnode_t *identifier;
     const cypher_astnode_t *expression;
     const cypher_astnode_t *eval;
@@ -31,10 +31,18 @@ struct extract
 
 
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
+static const cypher_astnode_t *get_identifier(
+        const cypher_list_comprehension_astnode_t *self);
+static const cypher_astnode_t *get_expression(
+        const cypher_list_comprehension_astnode_t *self);
+static const cypher_astnode_t *get_predicate(
+        const cypher_list_comprehension_astnode_t *self);
+static const cypher_astnode_t *get_eval(
+        const cypher_list_comprehension_astnode_t *self);
 
 
 static const struct cypher_astnode_vt *parents[] =
-    { &cypher_expression_astnode_vt };
+    { &cypher_list_comprehension_astnode_vt };
 
 const struct cypher_astnode_vt cypher_extract_astnode_vt =
     { .parents = parents,
@@ -42,6 +50,12 @@ const struct cypher_astnode_vt cypher_extract_astnode_vt =
       .name = "extract",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
+
+static const struct cypher_list_comprehension_astnode_vt lc_vt =
+    { .get_identifier = get_identifier,
+      .get_expression = get_expression,
+      .get_predicate = get_predicate,
+      .get_eval = get_eval };
 
 
 cypher_astnode_t *cypher_ast_extract(const cypher_astnode_t *identifier,
@@ -58,8 +72,8 @@ cypher_astnode_t *cypher_ast_extract(const cypher_astnode_t *identifier,
     {
         return NULL;
     }
-    if (cypher_astnode_init(&(node->_astnode), CYPHER_AST_EXTRACT,
-            children, nchildren, range))
+    if (cypher_list_comprehension_astnode_init(&(node->_list_comprehension_astnode),
+            CYPHER_AST_EXTRACT, &lc_vt, children, nchildren, range))
     {
         free(node);
         return NULL;
@@ -67,14 +81,47 @@ cypher_astnode_t *cypher_ast_extract(const cypher_astnode_t *identifier,
     node->identifier = identifier;
     node->expression = expression;
     node->eval = eval;
-    return &(node->_astnode);
+    return &(node->_list_comprehension_astnode._astnode);
+}
+
+
+const cypher_astnode_t *get_identifier(const cypher_list_comprehension_astnode_t *self)
+{
+    struct extract *node =
+        container_of(self, struct extract, _list_comprehension_astnode);
+    return node->identifier;
+}
+
+
+const cypher_astnode_t *get_expression(const cypher_list_comprehension_astnode_t *self)
+{
+    struct extract *node =
+        container_of(self, struct extract, _list_comprehension_astnode);
+    return node->expression;
+}
+
+
+const cypher_astnode_t *get_predicate(const cypher_list_comprehension_astnode_t *self)
+{
+    return NULL;
+}
+
+
+const cypher_astnode_t *get_eval(const cypher_list_comprehension_astnode_t *self)
+{
+    struct extract *node =
+        container_of(self, struct extract, _list_comprehension_astnode);
+    return node->eval;
 }
 
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_EXTRACT, -1);
-    struct extract *node = container_of(self, struct extract, _astnode);
+    const cypher_list_comprehension_astnode_t *lcnode =
+            container_of(self, cypher_list_comprehension_astnode_t, _astnode);
+    struct extract *node =
+            container_of(lcnode, struct extract, _list_comprehension_astnode);
 
     size_t n = 0;
     ssize_t r = snprintf(str, size, "[@%u IN @%u",

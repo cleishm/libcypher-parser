@@ -80,6 +80,49 @@ cleanup:
 }
 
 
+const cypher_astnode_t *cypher_ast_foreach_get_identifier(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_FOREACH, NULL);
+    struct foreach_clause *node =
+            container_of(astnode, struct foreach_clause, _astnode);
+    return node->identifier;
+}
+
+
+const cypher_astnode_t *cypher_ast_foreach_get_expression(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_FOREACH, NULL);
+    struct foreach_clause *node =
+            container_of(astnode, struct foreach_clause, _astnode);
+    return node->expression;
+}
+
+
+unsigned int cypher_ast_foreach_nclauses(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_FOREACH, 0);
+    struct foreach_clause *node =
+            container_of(astnode, struct foreach_clause, _astnode);
+    return node->nclauses;
+}
+
+
+const cypher_astnode_t *cypher_ast_foreach_get_clause(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_FOREACH, NULL);
+    struct foreach_clause *node =
+            container_of(astnode, struct foreach_clause, _astnode);
+    if (index >= node->nclauses)
+    {
+        return NULL;
+    }
+    return node->clauses[index];
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_FOREACH, -1);

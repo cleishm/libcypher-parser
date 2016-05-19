@@ -65,6 +65,23 @@ cypher_astnode_t *cypher_ast_create(bool unique,
 }
 
 
+bool cypher_ast_create_is_unique(const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_CREATE, false);
+    struct create *node = container_of(astnode, struct create, _astnode);
+    return node->unique;
+}
+
+
+const cypher_astnode_t *cypher_ast_create_get_pattern(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_CREATE, NULL);
+    struct create *node = container_of(astnode, struct create, _astnode);
+    return node->pattern;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_CREATE, -1);

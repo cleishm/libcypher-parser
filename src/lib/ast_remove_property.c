@@ -63,6 +63,16 @@ cypher_astnode_t *cypher_ast_remove_property(const cypher_astnode_t *property,
 }
 
 
+const cypher_astnode_t *cypher_ast_remove_property_get_property(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REMOVE_PROPERTY, NULL);
+    struct remove_property *node =
+            container_of(astnode, struct remove_property, _astnode);
+    return node->property;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_REMOVE_PROPERTY, -1);
