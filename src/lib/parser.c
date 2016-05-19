@@ -545,20 +545,30 @@ cypher_parse_result_t *parse(yyrule rule, source_func_t source, void *data,
     astnodes_init(&directives);
 
     cypher_astnode_t *directive;
-    do
+    for (;;)
     {
         if (parse_one(&yy, rule, &directive))
         {
             goto cleanup;
         }
 
-        yy.position_offset = input_position(&yy, yy.consumed);
+        if (directive == NULL)
+        {
+            break;
+        }
 
-        if (directive != NULL && astnodes_push(&directives, directive))
+        if (astnodes_push(&directives, directive))
         {
             goto cleanup;
         }
-    } while (directive != NULL && !(flags & CYPHER_PARSE_SINGLE));
+
+        if (flags & CYPHER_PARSE_SINGLE)
+        {
+            break;
+        }
+
+        yy.position_offset = input_position(&yy, yy.consumed);
+    }
 
     result = calloc(1, sizeof(cypher_parse_result_t));
     if (result == NULL)
@@ -778,7 +788,7 @@ struct cypher_input_position input_position(yycontext *yy, unsigned int pos)
     struct cypher_input_position position =
         { .line = (depth-1) + yy->position_offset.line,
           .column = pos - line_start_pos +
-              ((depth == 0)? yy->position_offset.column : 1),
+              ((depth == 1)? yy->position_offset.column : 1),
           .offset = pos + yy->position_offset.offset };
     return position;
 }

@@ -25,17 +25,23 @@
 
 
 directive = - (SEMICOLON -)*
+    ( _directive                       { complete(yy); }
+    | _error_ (EOF | skip-to-directive) directive
+    )
+_directive =
     ( EOF                              { yy->result = NULL; }
     | d:client-command line-end        { yy->result = d; }
     | d:cypher-statement               { yy->result = d; }
-    | _error_ (EOF | skip-to-directive) directive
-    )                                  { complete(yy); }
+    )
 
 statement = - (SEMICOLON -)*
+    ( _statement                       { complete(yy); }
+    | _error_ (EOF | skip-to-statement) statement
+    )
+_statement =
     ( EOF                              { yy->result = NULL; }
     | d:cypher-statement               { yy->result = d; }
-    | _error_ (EOF | skip-to-statement) statement
-    )                                  { complete(yy); }
+    )
 
 
 #----------------------------------------------------
@@ -112,17 +118,6 @@ drop-constraint =
                                        { $$ = drop_rel_prop_constraint(i,t,e,false); }
       ) -
 
-
-#query =
-#    <   (c:periodic-commit              { sequence_add(c); })*
-#      | c:clause                       { sequence_add(c); }
-#        clauses >                      { $$ = query(); }
-#clauses =
-#    ( SEMICOLON
-#    | EOF
-#    | c:clause _cut_ clauses           { sequence_add(c); }
-#    | _error_ (EOF | skip-to-clause) - clauses
-#    )
 
 query = < query-hints* clauses >       { $$ = query(); }
 query-hints =
@@ -777,11 +772,11 @@ quoted = single-quoted | double-quoted
 single-quoted = "'"
     ( ESC |
       < (!("'" | ESC) .)+ >            { strbuf_append_block(); }
-    )* "'"
+    )* "'" ~{ERR("'")}
 double-quoted = '"'
     ( ESC |
       < (!('"' | ESC) .)+ >            { strbuf_append_block(); }
-    )* '"'
+    )* '"' ~{ERR("\"")}
 
 ESC = "\\a"                            { strbuf_append("\a", 1); }
     | "\\b"                            { strbuf_append("\b", 1); }
@@ -800,7 +795,7 @@ symbolic-name =
     | escaped-symbolic-name
 unescaped-symbolic-name = < sym-start sym-part* >
                                        { strbuf_append_block(); }
-escaped-symbolic-name = '`' < (!'`' .)* > '`'
+escaped-symbolic-name = '`' < (!'`' .)* > '`' ~{ERR("`")}
                                        { strbuf_append_block(); }
 
 # NOTE: accepts char sequences that are not valid floats, allowing
@@ -834,7 +829,7 @@ line-comment = '//' < (!EOL .)* >      { line_comment(); }
                (EOL | EOF)
 block-comment = '/*' < (EOL | !'*/' .)* >
                                        { block_comment(); }
-                ('*/' | EOF)
+                '*/' ~{ERR("*/")}
 
 WS = HWS | EOL
 HWS = [ \t]

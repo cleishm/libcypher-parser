@@ -15,6 +15,7 @@ check_libcypher_parser_CHECKS = \
 	check_create.c \
 	check_delete.c \
 	check_error_tracking.c \
+	check_errors.c \
 	check_expression.c \
 	check_foreach.c \
 	check_indexes.c \

@@ -5301,6 +5301,10 @@ const char *cypher_parse_error_message(const cypher_parse_error_t *error);
 /**
  * Get the error context of an error.
  *
+ * This returns a pointer to a null-terminated string, which contains a
+ * section of the input around where the error occurred, that is limited
+ * in length and suitable for presentation to a user.
+ *
  * @param [error] The parse error.
  * @return The context string.
  */
@@ -5308,7 +5312,11 @@ __cypherlang_pure
 const char *cypher_parse_error_context(const cypher_parse_error_t *error);
 
 /**
- * Get the offset into the an errors context.
+ * Get the offset into the context of an error.
+ *
+ * Identifies the point of the error within the context string, allowing
+ * this to be reported to the user, typically with an arrow pointing to the
+ * invalid character.
  *
  * @param [error] The parse error.
  * @return The offset into the errors context string.
