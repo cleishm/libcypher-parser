@@ -503,7 +503,7 @@ list-comprehension = < LEFT-SQ-PAREN -
     -
 
 case-expression =
-    < CASE (case-alternative+ | e:expression case-alternative+)
+    < CASE (e:_null_ case-alternative+ | e:expression case-alternative+)
       (d:case-default | d:_null_) END >
                                        { $$ = case_expression(e, d); }
     -
