@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Chris Leishman <chris@leishman.org>
 Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config
 Build-Depends-Indep: doxygen
-Standards-Version: 3.9.8
+Standards-Version: 3.9.7
 Homepage: https://cleishm.github.io/libcypher-parser/
 Vcs-Git: https://github.com/cleishm/libcypher-parser.git
 Vcs-Browser: https://github.com/cleishm/libcypher-parser
