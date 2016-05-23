@@ -1,0 +1,49 @@
+.\" @configure_input@
+.\"
+.\" cypher-lint - a linting tool for Cypher
+.\" Copyright 2016 Chris Leishman (http://github.com/cleishm)
+.\"
+.\" Licensed under the Apache License, Version 2.0 (the "License");
+.\" you may not use this file except in compliance with the License.
+.\" You may obtain a copy of the License at
+.\"
+.\"     http://www.apache.org/licenses/LICENSE-2.0
+.\"
+.\" Unless required by applicable law or agreed to in writing, software
+.\" distributed under the License is distributed on an "AS IS" BASIS,
+.\" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+.\" See the License for the specific language governing permissions and
+.\" limitations under the License.
+.\"
+.TH CYPHER-LINT 1
+.SH NAME
+cypher\-lint \- a linting tool for Cypher
+.SH SYNOPSIS
+.B cypher\-lint \fI[options...]\fR
+.SH "DESCRIPTION"
+\fBcypher\-lint\fR is a linting tool for Cypher.
+.SH OPTIONS
+.TP
+.I \-a, \-\-ast
+Output an AST representation for the parsed input.
+.TP
+.I \-\-colorize
+Enable colorization of output and errors using ANSI escape sequences.
+.TP
+.I \-h, \-\-help
+Display a brief help listing.
+.TP
+.I \-\-output\-width <n>
+Attempt to limit output to the specified width, and render using wrapped
+columns.
+.TP
+.I \-\-version
+Print the cypher\-lint version and exit.
+.SH USAGE
+.SH ERRORS
+.SH VERSION
+This man page is current for version @VERSION@ of cypher\-lint.
+.SH COPYRIGHT
+http://www.apache.org/licenses/LICENSE\-2.0
+.SH AUTHORS
+Chris Leishman (http://github.com/cleishm)
