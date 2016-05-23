@@ -1,0 +1,68 @@
+Source: libcypher-parser
+Section: devel
+Priority: optional
+Maintainer: Chris Leishman <chris@leishman.org>
+Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config
+Build-Depends-Indep: doxygen
+Standards-Version: 3.9.8
+Homepage: https://cleishm.github.io/libcypher-parser/
+Vcs-Git: https://github.com/cleishm/libcypher-parser.git
+Vcs-Browser: https://github.com/cleishm/libcypher-parser
+
+Package: cypher-lint
+Section: devel
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Lint tool for the Cypher query language
+ Cypher is a graph query language that allows for expressive and efficient
+ querying of graph data.
+ .
+ This tool provides correctness checking of Cypher language input, and can
+ be used to output the Abstract Syntax Tree (AST) of the parsed input.
+
+Package: libcypher-parser2
+Provides: libcypher-parser
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Parsing library for the Cypher query language
+ Cypher is a graph query language that allows for expressive and efficient
+ querying of graph data.
+ .
+ libcypher-parser provides efficient parsing of Cypher into an Abstract
+ Syntax Tree (AST) form, using a parsing expression grammar that is equivalent
+ to that used in the Neo4j graph database.
+ .
+ This version is compatible with Cypher as implemented in Neo4j 3.0.
+
+Package: libcypher-parser2-dev
+Provides: libcypher-parser-dev
+Section: libdevel
+Architecture: any
+Depends: libcypher-parser2 (= ${binary:Version}), ${misc:Depends}
+Suggests: pkg-config
+Description: Development files for libcypher-parser
+ Cypher is a graph query language that allows for expressive and efficient
+ querying of graph data.
+ .
+ libcypher-parser provides efficient parsing of Cypher into an Abstract
+ Syntax Tree (AST) form, using a parsing expression grammar that is equivalent
+ to that used in the Neo4j graph database.
+ .
+ This package contains the development files (headers, static libraries).
+
+Package: libcypher-parser-doc
+Section: doc
+Architecture: all
+Depends: libjs-jquery, ${misc:Depends}
+Recommends: libcypher-parser2-dev
+Description: Documentation for libcypher-parser
+ Cypher is a graph query language that allows for expressive and efficient
+ querying of graph data.
+ .
+ libcypher-parser provides efficient parsing of Cypher into an Abstract
+ Syntax Tree (AST) form, using a parsing expression grammar that is equivalent
+ to that used in the Neo4j graph database.
+ .
+ This package contains the documentation that is also available on the
+ libcypher-parser website (https://github.com/cleishm/libcypher-parser).

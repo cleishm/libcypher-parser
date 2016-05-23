@@ -1,0 +1,4 @@
+usr/lib/*/libcypher-parser.so
+usr/lib/*/libcypher-parser.a
+usr/lib/*/pkgconfig
+usr/include/cypher-parser.h

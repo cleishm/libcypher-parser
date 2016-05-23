@@ -1,0 +1,7 @@
+version=3
+
+#/cleishm/libcypher-parser/archive/v0.7.0.tar.gz
+#/cleishm/libcypher-parser/releases/download/v0.7.0/libcypher-parser-0.7.0.tar.gz
+
+opts=downloadurlmangle=s/archive\/v([\d\.]+)\.tar\.gz/releases\/download\/v$1\/libcypher-parser-$1.tar.gz/,pgpsigurlmangle=s/$/.asc/,filenamemangle=s/.+\/v([\d\.]+)\.tar\.gz/libcypher-parser-$1\.tar\.gz/ \
+  http://github.com/cleishm/libcypher-parser/tags .*/v(\d\S*)\.tar\.gz
