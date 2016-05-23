@@ -90,7 +90,7 @@ const cypher_astnode_t *cypher_ast_labels_operator_get_expression(
 
 unsigned int cypher_ast_labels_operator_nlabels(const cypher_astnode_t *astnode)
 {
-    REQUIRE_TYPE(astnode, CYPHER_AST_LABELS_OPERATOR, NULL);
+    REQUIRE_TYPE(astnode, CYPHER_AST_LABELS_OPERATOR, 0);
     struct labels_operator *node =
         container_of(astnode, struct labels_operator, _astnode);
     return node->nlabels;

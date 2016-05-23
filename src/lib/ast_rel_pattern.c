@@ -85,7 +85,7 @@ cleanup:
 enum cypher_rel_direction cypher_ast_rel_pattern_get_direction(
         const cypher_astnode_t *astnode)
 {
-    REQUIRE_TYPE(astnode, CYPHER_AST_REL_PATTERN, NULL);
+    REQUIRE_TYPE(astnode, CYPHER_AST_REL_PATTERN, CYPHER_REL_OUTBOUND);
     struct rel_pattern *node =
             container_of(astnode, struct rel_pattern, _astnode);
     return node->direction;
@@ -104,7 +104,7 @@ const cypher_astnode_t *cypher_ast_rel_pattern_get_identifier(
 
 unsigned int cypher_ast_rel_pattern_nreltypes(const cypher_astnode_t *astnode)
 {
-    REQUIRE_TYPE(astnode, CYPHER_AST_REL_PATTERN, NULL);
+    REQUIRE_TYPE(astnode, CYPHER_AST_REL_PATTERN, 0);
     struct rel_pattern *node =
             container_of(astnode, struct rel_pattern, _astnode);
     return node->nreltypes;

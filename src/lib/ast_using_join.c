@@ -78,7 +78,7 @@ cleanup:
 
 unsigned int cypher_ast_using_join_nidentifiers(const cypher_astnode_t *astnode)
 {
-    REQUIRE_TYPE(astnode, CYPHER_AST_USING_JOIN, NULL);
+    REQUIRE_TYPE(astnode, CYPHER_AST_USING_JOIN, 0);
     struct using_join *node = container_of(astnode,
             struct using_join, _astnode);
     return node->nidentifiers;
