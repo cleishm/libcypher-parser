@@ -1,7 +1,6 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
 
-# Uncomment this to turn on verbose mode.
 DH_VERBOSE = 1
 
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
@@ -10,7 +9,7 @@ export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 	dh $@  --with autoreconf
 
 override_dh_auto_configure:
-	./configure --disable-debug
+	dh_auto_configure -- --disable-debug
 
 override_dh_auto_build-indep:
 	$(MAKE) doc

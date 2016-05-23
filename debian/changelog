@@ -1,4 +1,4 @@
-libcypher-parser (0.2.0-1) unstable; urgency=low
+libcypher-parser (0.2.1-1) unstable; urgency=low
 
   * Initial packaging. Closes: #825072
 

@@ -14,7 +14,7 @@
 #
 dnl Process this file with autoconf to produce a configure script
 AC_PREREQ([2.69])
-AC_INIT([libcypher-parser],[0.2.0])
+AC_INIT([libcypher-parser],[0.2.1])
 AC_CONFIG_SRCDIR([src/lib/cypher-parser.h])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([foreign])
@@ -77,16 +77,10 @@ dnl Check for check test support
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.4], [has_check=yes], [has_check=no])
 AM_CONDITIONAL([HAVE_CHECK], [test "X$has_check" = "Xyes"])
 
-PKG_CHECK_MODULES([LIBEDIT], [libedit], [has_libedit=yes], [has_libedit=no])
-
-
 dnl Check if command line tools should be built
 AC_ARG_ENABLE([tools],
   AS_HELP_STRING([--disable-tools], [Do not build command line tools]))
 AM_CONDITIONAL([WANT_TOOLS], [test "X$enable_tools" != "Xno"])
-
-AS_IF([test "X$enable_tools" != "Xno" -a "X$has_libedit" != "Xyes"],
-  [AC_MSG_ERROR([libedit is required for building command line tools (specify --disable-tools to ignore)])])
 
 
 dnl Check if assertions should be disabled

@@ -38,6 +38,14 @@ or
 $ brew install cleishm/neo4j/cypher-lint
 ```
 
+If you're using Ubuntu, libcypher-parser can be install using APT:
+
+```console
+$ sudo add-apt-repository ppa:cleishm/libcypher-parser
+$ sudo apt-get update
+$ sudo apt-get install cypher-lint libcypher-parser-dev
+```
+
 For other platforms, please see [Building](#building) below.
 
 
@@ -142,8 +150,10 @@ Building
 --------
 
 To build software using libcypher-parser, consider installing libcypher-parser
-using the package management system for your operating system (currently only
-Mac OS X).
+using the package management system for your operating system (currently
+[Mac OS X](#getting_started),
+[Debian](https://mentors.debian.net/package/libcypher-parser) and
+[Ubuntu](#getting_started)).
 
 If libcypher-parser is not available via your package management system,
 please [download the latest release](
