@@ -36,7 +36,7 @@ docker-check:
 docker-valgrind:
 	$(MAKE) dist
 	id=`docker create -i debian-dev \
-		sh -c 'cd $(PACKAGE_TARNAME)-$(PACKAGE_VERSION) && ./configure --enable-silent-rules && make check && CK_FORK=no valgrind --leak-check=full ./tests/check_libcypher-parser'` && \
+		sh -c 'cd $(PACKAGE_TARNAME)-$(PACKAGE_VERSION) && ./configure --enable-silent-rules --disable-debug && make check && CK_FORK=no valgrind --leak-check=full ./tests/check_libcypher-parser'` && \
 	trap "docker rm $$id" EXIT && \
 	docker cp - $$id:/ < $(PACKAGE_TARNAME)-$(PACKAGE_VERSION).tar.gz && \
 	docker start -i $$id

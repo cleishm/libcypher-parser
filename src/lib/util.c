@@ -111,7 +111,7 @@ char *line_context(const char *buf, size_t bufsize, size_t *offset,
         }
     }
 
-    assert((endp - startp) == n);
+    assert((unsigned int)(endp - startp) == n);
     assert(n <= max_length);
     char *context = malloc(n + 1);
     if (context == NULL)
