@@ -149,6 +149,49 @@ START_TEST (parse_invalid_clause)
 END_TEST
 
 
+START_TEST (parse_invalid_query_and_resync)
+{
+    struct cypher_input_position last = cypher_input_position_zero;
+    result = cypher_parse("MATCH n; ; MATCH (n) RETURN n;", &last, NULL, 0);
+    ck_assert_ptr_ne(result, NULL);
+    ck_assert_int_eq(last.offset, 30);
+
+    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    fflush(memstream);
+    const char *expected = "\n"
+" @0   0..7   error                   >>MATCH n<<\n"
+" @1  11..30  statement               body=@2\n"
+" @2  11..30  > query                 clauses=[@3, @8]\n"
+" @3  11..21  > > MATCH               pattern=@4\n"
+" @4  17..20  > > > pattern           paths=[@5]\n"
+" @5  17..20  > > > > pattern path    (@6)\n"
+" @6  17..20  > > > > > node pattern  (@7)\n"
+" @7  18..19  > > > > > > identifier  `n`\n"
+" @8  21..29  > > RETURN              projections=[@9]\n"
+" @9  28..29  > > > projection        expression=@10\n"
+"@10  28..29  > > > > identifier      `n`\n";
+    ck_assert_str_eq(memstream_buffer, expected);
+}
+END_TEST
+
+
+START_TEST (parse_single_invalid_query)
+{
+    struct cypher_input_position last = cypher_input_position_zero;
+    result = cypher_parse("MATCH n; ; MATCH (n) RETURN n;",
+            &last, NULL, CYPHER_PARSE_SINGLE);
+    ck_assert_ptr_ne(result, NULL);
+    ck_assert_int_eq(last.offset, 8);
+
+    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    fflush(memstream);
+    const char *expected = "\n"
+"@0  0..7  error  >>MATCH n<<\n";
+    ck_assert_str_eq(memstream_buffer, expected);
+}
+END_TEST
+
+
 TCase* errors_tcase(void)
 {
     TCase *tc = tcase_create("errors");
@@ -156,5 +199,7 @@ TCase* errors_tcase(void)
     tcase_add_test(tc, parse_unterminated_string);
     tcase_add_test(tc, parse_invalid_directive);
     tcase_add_test(tc, parse_invalid_clause);
+    tcase_add_test(tc, parse_invalid_query_and_resync);
+    tcase_add_test(tc, parse_single_invalid_query);
     return tc;
 }

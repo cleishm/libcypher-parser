@@ -25,7 +25,7 @@
 #include <unistd.h>
 
 
-const char *shortopts = "ahv";
+const char *shortopts = "1ahv";
 
 #define COLORIZE_OPT 1004
 #define OUTPUT_WIDTH_OPT 1005
@@ -44,6 +44,7 @@ static void usage(FILE *s, const char *prog_name)
     fprintf(s,
 "usage: %s [OPTIONS]\n"
 "options:\n"
+" -1                  Only parse the first command or statement.\n"
 " --ast, -a           Dump the AST to stdout.\n"
 " --colorize          Colorize output using ANSI escape sequences.\n"
 " --help, -h          Output this usage information.\n"
@@ -57,6 +58,7 @@ static void usage(FILE *s, const char *prog_name)
 struct lint_config
 {
     unsigned int width;
+    int flags;
     bool dump_ast;
     bool colorize_output;
     bool colorize_errors;
@@ -94,6 +96,9 @@ int main(int argc, char *argv[])
     {
         switch (c)
         {
+        case '1':
+            config.flags |= CYPHER_PARSE_SINGLE;
+            break;
         case 'a':
             config.dump_ast = true;
             break;
@@ -153,7 +158,8 @@ int process(FILE *stream, struct lint_config *config)
 
     int err = -1;
 
-    cypher_parse_result_t *result = cypher_fparse(stream, NULL, cp_config, 0);
+    cypher_parse_result_t *result = cypher_fparse(stream, NULL, cp_config,
+            config->flags);
     if (result == NULL)
     {
         // TODO: report error

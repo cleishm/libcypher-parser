@@ -443,6 +443,7 @@ static cypher_astnode_t *_skip(yycontext *yy);
     source_func_t source; \
     void *source_data; \
     cypher_astnode_t *result; \
+    bool eof; \
     cp_error_tracking_t error_tracking; \
     unsigned int consumed;
 
@@ -552,12 +553,13 @@ cypher_parse_result_t *parse(yyrule rule, source_func_t source, void *data,
             goto cleanup;
         }
 
-        if (directive == NULL)
+        if (yy.eof)
         {
+            assert(directive == NULL);
             break;
         }
 
-        if (astnodes_push(&directives, directive))
+        if (directive != NULL && astnodes_push(&directives, directive))
         {
             goto cleanup;
         }

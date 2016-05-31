@@ -24,22 +24,26 @@
 # `>`.
 
 
-directive = - (SEMICOLON -)*
-    ( _directive                       { complete(yy); }
-    | _error_ (EOF | skip-to-directive) directive
-    )
+directive = - _directive
 _directive =
-    ( EOF                              { yy->result = NULL; }
+    ( __directive                      { complete(yy); }
+    | _error_ (EOF | skip-to-directive) _directive
+    )
+__directive =
+    ( EOF                              { yy->result = NULL; yy->eof = true; }
+    | SEMICOLON                        { yy->result = NULL; }
     | d:client-command line-end        { yy->result = d; }
     | d:cypher-statement               { yy->result = d; }
     )
 
-statement = - (SEMICOLON -)*
-    ( _statement                       { complete(yy); }
-    | _error_ (EOF | skip-to-statement) statement
-    )
+statement = - (SEMICOLON -)* _statement
 _statement =
-    ( EOF                              { yy->result = NULL; }
+    ( __statement                      { complete(yy); }
+    | _error_ (EOF | skip-to-statement) _statement
+    )
+__statement =
+    ( EOF                              { yy->result = NULL; yy->eof = true; }
+    | SEMICOLON                        { yy->result = NULL; }
     | d:cypher-statement               { yy->result = d; }
     )
 
@@ -997,6 +1001,7 @@ WB = &(EOF | !sym-part .)
 # remove one char of input, then as much as necessary to reach a sync point
 skip-to-directive = < . (!(
       EOF
+    | SEMICOLON
     | (WS | comment) resync-directive
     ) .)* >                            { $$ = skip(); }
 resync-directive =
@@ -1005,6 +1010,7 @@ resync-directive =
 
 skip-to-statement = < . (!(
       EOF
+    | SEMICOLON
     | (WS | comment) resync-statement
     ) .)* >                            { $$ = skip(); }
 resync-statement =
@@ -1015,11 +1021,11 @@ resync-statement =
 
 skip-to-clause = < . (!(
       EOF
+    | SEMICOLON
     | (WS | comment) resync-clause
     ) .)* >                            { $$ = skip(); }
 resync-clause =
-      SEMICOLON
-    | LOADCSV
+      LOADCSV
     | START
     | MATCH
     | UNWIND
