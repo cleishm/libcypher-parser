@@ -5325,6 +5325,19 @@ __cypherlang_pure
 size_t cypher_parse_error_context_offset(const cypher_parse_error_t *error);
 
 /**
+ * Check if the parse encountered the end of the input.
+ *
+ * Indicates if the last parsed command or statement was terminated
+ * (with a newline or `;` respectively), or with EOF.
+ *
+ * @param [result] The parse result.
+ * @return `true` if the end of input was encountered, `false` if the
+ *         command or statement was terminated with the expected character.
+ */
+__cypherlang_pure
+bool cypher_parse_result_eof(const cypher_parse_result_t *result);
+
+/**
  * Print a represetation of a parse result to a stream.
  *
  * Useful for debugging purposes.

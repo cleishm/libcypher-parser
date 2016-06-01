@@ -110,7 +110,7 @@ static cypher_parse_result_t *fparse(yyrule rule, FILE *stream,
 
 static void *abort_malloc(yycontext *yy, size_t size);
 static void *abort_realloc(yycontext *yy, void *ptr, size_t size);
-static void complete(yycontext *yy);
+static void finished(yycontext *yy);
 static void line_start(yycontext *yy);
 static void block_start_action(yycontext *yy, char *text, int count);
 static struct block *block_start(yycontext *yy, size_t offset,
@@ -545,6 +545,7 @@ cypher_parse_result_t *parse(yyrule rule, source_func_t source, void *data,
     astnodes_t directives;
     astnodes_init(&directives);
 
+    unsigned int nerrors = 0;
     cypher_astnode_t *directive;
     for (;;)
     {
@@ -553,16 +554,24 @@ cypher_parse_result_t *parse(yyrule rule, source_func_t source, void *data,
             goto cleanup;
         }
 
-        if (yy.eof)
-        {
-            assert(directive == NULL);
-            break;
-        }
-
         if (directive != NULL && astnodes_push(&directives, directive))
         {
             goto cleanup;
         }
+
+        if (yy.eof)
+        {
+            // if there was no additional directive or errors in the last parse
+            // then consider the entire parse cleanly terminated
+            if (directive == NULL &&
+                    nerrors == cp_et_nerrors(&(yy.error_tracking)))
+            {
+                yy.eof = false;
+            }
+            break;
+        }
+
+        nerrors = cp_et_nerrors(&(yy.error_tracking));
 
         if (flags & CYPHER_PARSE_SINGLE)
         {
@@ -615,6 +624,8 @@ cypher_parse_result_t *parse(yyrule rule, source_func_t source, void *data,
         result->node_count = cypher_ast_set_ordinals(
                 result->elements[i], result->node_count);
     }
+
+    result->eof = yy.eof;
 
     // TODO: last should be set even on parse failure
     if (last != NULL)
@@ -722,11 +733,11 @@ void *abort_realloc(yycontext *yy, void *ptr, size_t size)
 }
 
 
-void complete(yycontext *yy)
+void finished(yycontext *yy)
 {
     yy->consumed = yy->__pos;
 
-    for (unsigned int i = yy->error_tracking.nerrors; i-- > 0; )
+    for (unsigned int i = cp_et_nerrors(&(yy->error_tracking)); i-- > 0; )
     {
         cypher_parse_error_t *err = yy->error_tracking.errors + i;
         if (err->context != NULL)

@@ -101,6 +101,12 @@ const char *cypher_parse_error_context(const cypher_parse_error_t *error)
 }
 
 
+bool cypher_parse_result_eof(const cypher_parse_result_t *result)
+{
+    return result->eof;
+}
+
+
 int cypher_parse_result_fprint(const cypher_parse_result_t *result,
         FILE *stream, unsigned int width,
         const struct cypher_parser_colorization *colorization,

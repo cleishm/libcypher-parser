@@ -171,6 +171,8 @@ START_TEST (parse_invalid_query_and_resync)
 " @9  28..29  > > > projection        expression=@10\n"
 "@10  28..29  > > > > identifier      `n`\n";
     ck_assert_str_eq(memstream_buffer, expected);
+
+    ck_assert_int_eq(cypher_parse_result_ndirectives(result), 1);
 }
 END_TEST
 
@@ -188,6 +190,9 @@ START_TEST (parse_single_invalid_query)
     const char *expected = "\n"
 "@0  0..7  error  >>MATCH n<<\n";
     ck_assert_str_eq(memstream_buffer, expected);
+
+    ck_assert_int_eq(cypher_parse_result_ndirectives(result), 0);
+    ck_assert(!cypher_parse_result_eof(result));
 }
 END_TEST
 

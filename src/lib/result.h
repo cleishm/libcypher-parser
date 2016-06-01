@@ -31,6 +31,8 @@ struct cypher_parse_result
 
     cypher_parse_error_t *errors;
     unsigned int nerrors;
+
+    bool eof;
 };
 
 

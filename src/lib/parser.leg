@@ -26,23 +26,23 @@
 
 directive = - _directive
 _directive =
-    ( __directive                      { complete(yy); }
+    ( __directive                      { finished(yy); }
     | _error_ (EOF | skip-to-directive) _directive
     )
 __directive =
-    ( EOF                              { yy->result = NULL; yy->eof = true; }
+    ( EOF                              { yy->result = NULL; }
     | SEMICOLON                        { yy->result = NULL; }
-    | d:client-command line-end        { yy->result = d; }
+    | d:client-command                 { yy->result = d; }
     | d:cypher-statement               { yy->result = d; }
     )
 
-statement = - (SEMICOLON -)* _statement
+statement = - _statement
 _statement =
-    ( __statement                      { complete(yy); }
+    ( __statement                      { finished(yy); }
     | _error_ (EOF | skip-to-statement) _statement
     )
 __statement =
-    ( EOF                              { yy->result = NULL; yy->eof = true; }
+    ( EOF                              { yy->result = NULL; }
     | SEMICOLON                        { yy->result = NULL; }
     | d:cypher-statement               { yy->result = d; }
     )
@@ -754,6 +754,7 @@ client-command =
       ( a:client-command-arg           { sequence_add(a); }
       )*
     >                                  { $$ = command(n); }
+    line-end
 
 client-command-name = n:client-command-arg ~{ERR("a command name")}
                                        { $$ = n; }
@@ -838,7 +839,7 @@ block-comment = '/*' < (EOL | !'*/' .)* >
 WS = HWS | EOL
 HWS = [ \t]
 EOL = ( '\n' | '\r\n' | '\r' ) _line_start_
-EOF = !.
+EOF = !.                               { yy->eof = true; }
 
 #----------------------------------------------------
 # Keywords and Operators

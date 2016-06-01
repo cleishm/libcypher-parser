@@ -193,7 +193,7 @@ int process(FILE *stream, struct lint_config *config)
         goto cleanup;
     }
 
-    err = (cypher_parse_result_ndirectives(result) > 0)? 0 : 1;
+    err = (cypher_parse_result_nerrors(result) > 0)? 0 : 1;
 
     int errsv;
 cleanup:

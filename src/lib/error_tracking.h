@@ -46,6 +46,11 @@ int cp_et_note_potential_error(cp_error_tracking_t *et,
 
 int cp_et_reify_potentials(cp_error_tracking_t *et);
 
+static inline unsigned int cp_et_nerrors(const cp_error_tracking_t *et)
+{
+    return et->nerrors;
+}
+
 cypher_parse_error_t *cp_et_extract_errors(cp_error_tracking_t *et,
         unsigned int *nerrors);
 
