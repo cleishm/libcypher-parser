@@ -4920,7 +4920,8 @@ cypher_astnode_t *cypher_ast_command(const cypher_astnode_t *name,
  *         `CYPHER_AST_STRING`.
  */
 __cypherlang_pure
-const cypher_astnode_t *cypher_ast_command_name(const cypher_astnode_t *node);
+const cypher_astnode_t *cypher_ast_command_get_name(
+        const cypher_astnode_t *node);
 
 /**
  * Get the number of arguments from a CYPHER_AST_COMMAND node.
