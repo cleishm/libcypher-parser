@@ -64,7 +64,7 @@ START_TEST (parse_single_command_with_no_args)
     ck_assert_int_eq(cypher_astnode_range(ast).start.offset, 0);
     ck_assert_int_eq(cypher_astnode_range(ast).end.offset, 7);
 
-    const cypher_astnode_t *name = cypher_ast_command_name(ast);
+    const cypher_astnode_t *name = cypher_ast_command_get_name(ast);
     ck_assert_int_eq(cypher_astnode_type(name), CYPHER_AST_STRING);
     ck_assert_int_eq(cypher_astnode_range(name).start.offset, 1);
     ck_assert_int_eq(cypher_astnode_range(name).end.offset, 7);
@@ -98,7 +98,7 @@ START_TEST (parse_single_command_with_args)
     ck_assert_int_eq(cypher_astnode_range(ast).start.offset, 0);
     ck_assert_int_eq(cypher_astnode_range(ast).end.offset, 18);
 
-    const cypher_astnode_t *name = cypher_ast_command_name(ast);
+    const cypher_astnode_t *name = cypher_ast_command_get_name(ast);
     ck_assert_int_eq(cypher_astnode_type(name), CYPHER_AST_STRING);
     ck_assert_int_eq(cypher_astnode_range(name).start.offset, 1);
     ck_assert_int_eq(cypher_astnode_range(name).end.offset, 7);
@@ -146,7 +146,7 @@ START_TEST (parse_single_command_with_quoted_args)
 
     ck_assert_int_eq(cypher_ast_command_narguments(ast), 1);
 
-    const cypher_astnode_t *name = cypher_ast_command_name(ast);
+    const cypher_astnode_t *name = cypher_ast_command_get_name(ast);
     ck_assert_str_eq(cypher_ast_string_get_value(name), "thompson");
 
     const cypher_astnode_t *arg = cypher_ast_command_get_argument(ast, 0);
@@ -178,7 +178,7 @@ START_TEST (parse_single_command_with_partial_quoted_args)
 
     ck_assert_int_eq(cypher_ast_command_narguments(ast), 1);
 
-    const cypher_astnode_t *name = cypher_ast_command_name(ast);
+    const cypher_astnode_t *name = cypher_ast_command_get_name(ast);
     ck_assert_str_eq(cypher_ast_string_get_value(name), "thompson");
 
     const cypher_astnode_t *arg = cypher_ast_command_get_argument(ast, 0);
