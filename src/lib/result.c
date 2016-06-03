@@ -21,6 +21,105 @@
 #include <assert.h>
 
 
+cypher_parse_result_t *cypher_parse_result(
+        cypher_astnode_t * const *elements, unsigned int nelements,
+        const cypher_parse_segment_t *segments, unsigned int nsegments,
+        cypher_astnode_t * const *directives, unsigned int ndirectives,
+        const cypher_parse_error_t *errors, unsigned int nerrors,
+        bool eof, unsigned int initial_ordinal)
+{
+    cypher_parse_result_t *result = calloc(1, sizeof(cypher_parse_result_t));
+    if (result == NULL)
+    {
+        return NULL;
+    }
+
+    result->elements = mdup(elements, nelements * sizeof(cypher_astnode_t *));
+    if (nelements > 0 && result->elements == NULL)
+    {
+        goto failure;
+    }
+    result->nelements = nelements;
+
+    result->segments = mdup(segments,
+            nsegments * sizeof(cypher_parse_segment_t));
+    if (nsegments > 0 && result->segments == NULL)
+    {
+        goto failure;
+    }
+    result->nsegments = nsegments;
+
+    result->directives = mdup(directives,
+            ndirectives * sizeof(cypher_astnode_t *));
+    if (ndirectives > 0 && result->directives == NULL)
+    {
+        goto failure;
+    }
+    result->ndirectives = ndirectives;
+
+    result->errors = mdup(errors, nerrors * sizeof(cypher_parse_error_t));
+    if (nerrors > 0 && result->errors == NULL)
+    {
+        goto failure;
+    }
+    result->nerrors = nerrors;
+
+    result->node_count = initial_ordinal;
+    for (unsigned int i = 0; i < result->nelements; ++i)
+    {
+        result->node_count = cypher_ast_set_ordinals(
+                result->elements[i], result->node_count);
+    }
+
+    result->eof = eof;
+
+    return result;
+
+    int errsv;
+failure:
+    errsv = errno;
+    free(result->errors);
+    free(result->directives);
+    free(result->elements);
+    free(result->segments);
+    free(result);
+    errno = errsv;
+    return NULL;
+}
+
+
+
+unsigned int cypher_parse_result_nsegments(const cypher_parse_result_t *result)
+{
+    return result->nsegments;
+}
+
+
+const cypher_parse_segment_t *cypher_parse_result_segment(
+        const cypher_parse_result_t *result, unsigned int index)
+{
+    if (index >= result->nsegments)
+    {
+        return NULL;
+    }
+    return &(result->segments[index]);
+}
+
+
+struct cypher_input_range cypher_parse_segment_range(
+        const cypher_parse_segment_t *segment)
+{
+    return segment->range;
+}
+
+
+const cypher_astnode_t *cypher_parse_segment_directive(
+        const cypher_parse_segment_t *segment)
+{
+    return segment->directive;
+}
+
+
 unsigned int cypher_parse_result_nelements(const cypher_parse_result_t *result)
 {
     return result->nelements;
@@ -136,6 +235,8 @@ void cypher_parse_result_free(cypher_parse_result_t *result)
         cypher_ast_free(result->elements[i]);
     }
     free(result->elements);
+
+    free(result->segments);
 
     free(result->directives);
 

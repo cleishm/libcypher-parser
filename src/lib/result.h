@@ -26,6 +26,9 @@ struct cypher_parse_result
     unsigned int nelements;
     unsigned int node_count;
 
+    cypher_parse_segment_t *segments;
+    unsigned int nsegments;
+
     const cypher_astnode_t **directives;
     unsigned int ndirectives;
 
@@ -33,6 +36,13 @@ struct cypher_parse_result
     unsigned int nerrors;
 
     bool eof;
+};
+
+
+struct cypher_parse_segment
+{
+    struct cypher_input_range range;
+    const cypher_astnode_t *directive;
 };
 
 
@@ -44,6 +54,13 @@ struct cypher_parse_error
     size_t context_offset;
 };
 
+
+cypher_parse_result_t *cypher_parse_result(
+        cypher_astnode_t * const *elements, unsigned int nelements,
+        const cypher_parse_segment_t *segments, unsigned int nsegments,
+        cypher_astnode_t * const *directives, unsigned int ndirectives,
+        const cypher_parse_error_t *errors, unsigned int nerrors,
+        bool eof, unsigned int initial_ordinal);
 
 void cypher_parse_errors_cleanup(cypher_parse_error_t *errors, unsigned int n);
 

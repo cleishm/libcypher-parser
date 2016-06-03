@@ -32,6 +32,8 @@ DECLARE_VECTOR(offsets, unsigned int, 0);
 DECLARE_VECTOR(precedences, unsigned int, 0);
 DECLARE_VECTOR(operators, const cypher_operator_t *, NULL);
 DECLARE_VECTOR(astnodes, cypher_astnode_t *, NULL);
+struct cypher_parse_segment null_segment = { .directive = NULL };
+DECLARE_VECTOR(segments, struct cypher_parse_segment, null_segment);
 
 struct block
 {
@@ -531,6 +533,8 @@ cypher_parse_result_t *parse(yyrule rule, source_func_t source, void *data,
     cp_et_init(&(yy.error_tracking), yy.config->error_colorization);
 
     cypher_parse_result_t *result = NULL;
+    cypher_parse_error_t *errors = NULL;
+    unsigned int nerrors = 0;
 
     if (offsets_push(&(yy.line_start_offsets), 0))
     {
@@ -542,14 +546,35 @@ cypher_parse_result_t *parse(yyrule rule, source_func_t source, void *data,
         goto cleanup;
     }
 
+    segments_t segments;
+    segments_init(&segments);
+
     astnodes_t directives;
     astnodes_init(&directives);
 
-    unsigned int nerrors = 0;
     cypher_astnode_t *directive;
     for (;;)
     {
         if (parse_one(&yy, rule, &directive))
+        {
+            goto cleanup;
+        }
+
+        if (yy.consumed == 0)
+        {
+            assert(directive == NULL);
+            assert(cp_et_nerrors(&(yy.error_tracking)) == nerrors);
+            assert(yy.eof);
+            yy.eof = false;
+            break;
+        }
+
+        struct cypher_input_range segment_range =
+            { .start = yy.position_offset,
+              .end = input_position(&yy, yy.consumed) };
+        struct cypher_parse_segment segment =
+            { .range = segment_range,.directive = directive };
+        if (segments_push(&segments, segment))
         {
             goto cleanup;
         }
@@ -564,7 +589,7 @@ cypher_parse_result_t *parse(yyrule rule, source_func_t source, void *data,
             // if there was no additional directive or errors in the last parse
             // then consider the entire parse cleanly terminated
             if (directive == NULL &&
-                    nerrors == cp_et_nerrors(&(yy.error_tracking)))
+                    cp_et_nerrors(&(yy.error_tracking)) == nerrors)
             {
                 yy.eof = false;
             }
@@ -578,54 +603,27 @@ cypher_parse_result_t *parse(yyrule rule, source_func_t source, void *data,
             break;
         }
 
-        yy.position_offset = input_position(&yy, yy.consumed);
+        yy.position_offset = segment_range.end;
     }
 
-    result = calloc(1, sizeof(cypher_parse_result_t));
+    errors = cp_et_extract_errors(&(yy.error_tracking), &nerrors);
+    result = cypher_parse_result(
+            astnodes_elements(&(top_block->children)),
+            astnodes_size(&(top_block->children)),
+            segments_elements(&segments), segments_size(&segments),
+            astnodes_elements(&directives), astnodes_size(&directives),
+            errors, nerrors, yy.eof, yy.config->initial_ordinal);
     if (result == NULL)
     {
         goto cleanup;
     }
 
-    result->ndirectives = astnodes_size(&directives);
-    if (result->ndirectives > 0)
-    {
-        result->directives = mdup(astnodes_elements(&directives),
-                result->ndirectives * sizeof(cypher_astnode_t *));
-        if (result->directives == NULL)
-        {
-            free(result);
-            result = NULL;
-            goto cleanup;
-        }
-    }
-
-    result->nelements = astnodes_size(&(top_block->children));
-    if (result->nelements > 0)
-    {
-        result->elements = mdup(astnodes_elements(&(top_block->children)),
-                result->nelements * sizeof(cypher_astnode_t *));
-        if (result->elements == NULL)
-        {
-            free(result->directives);
-            free(result);
-            result = NULL;
-            goto cleanup;
-        }
-    }
+    // All AST nodes and errors are now owned by the parse result and shouldn't
+    // be deallocated when the blocks are released.
     astnodes_clear(&(top_block->children));
-
-    result->errors = cp_et_extract_errors(&(yy.error_tracking),
-            &(result->nerrors));
-
-    result->node_count = yy.config->initial_ordinal;
-    for (unsigned int i = 0; i < result->nelements; ++i)
-    {
-        result->node_count = cypher_ast_set_ordinals(
-                result->elements[i], result->node_count);
-    }
-
-    result->eof = yy.eof;
+    nerrors = 0;
+    free(errors);
+    errors = NULL;
 
     // TODO: last should be set even on parse failure
     if (last != NULL)
@@ -637,8 +635,10 @@ cypher_parse_result_t *parse(yyrule rule, source_func_t source, void *data,
 cleanup:
     errsv = errno;
 
-    astnodes_cleanup(&directives);
+    cypher_parse_errors_cleanup(errors, nerrors);
 
+    segments_cleanup(&segments);
+    astnodes_cleanup(&directives);
     offsets_cleanup(&(yy.line_start_offsets));
 
     struct block *block;

@@ -29,6 +29,7 @@ check_libcypher_parser_CHECKS = \
 	check_reduce.c \
 	check_remove.c \
 	check_return.c \
+	check_segments.c \
 	check_set.c \
 	check_start.c \
 	check_statement.c \

@@ -5133,6 +5133,11 @@ void cypher_parser_config_set_error_colorization(cypher_parser_config_t *config,
 typedef struct cypher_parse_result cypher_parse_result_t;
 
 /**
+ * A parse segment.
+ */
+typedef struct cypher_parse_segment cypher_parse_segment_t;
+
+/**
  * A parse error.
  */
 typedef struct cypher_parse_error cypher_parse_error_t;
@@ -5235,6 +5240,51 @@ const cypher_astnode_t *cypher_parse_result_element(
  */
 __cypherlang_pure
 unsigned int cypher_parse_result_node_count(const cypher_parse_result_t *result);
+
+/**
+ * Get the number of segments parsed.
+ *
+ * When parsing with CYPHER_PARSE_SINGLE, this will always be 1.
+ *
+ * @param [result] The parse result.
+ * @return The number of segments parsed.
+ */
+__cypherlang_pure
+unsigned int cypher_parse_result_nsegments(const cypher_parse_result_t *result);
+
+/**
+ * Get the parse segment from a result.
+ *
+ * @param [result] The parse result.
+ * @param [index] The directive index.
+ * @param A parse segment, or `NULL` if there was no segment at the specified
+ *        index.
+ */
+__cypherlang_pure
+const cypher_parse_segment_t *cypher_parse_result_segment(
+        const cypher_parse_result_t *result, unsigned int index);
+
+/**
+ * Get the range of a parse segment.
+ *
+ * @param [segment] The parse segment.
+ * @return The input range.
+ */
+__cypherlang_pure
+struct cypher_input_range cypher_parse_segment_range(
+        const cypher_parse_segment_t *segment);
+
+/**
+ * Get the statement or command parsed in a segment.
+ *
+ * @param [segment] The parse segment.
+ * @return Either a CYPHER_AST_STATEMENT, a CYPHER_AST_COMMAND node,
+ *         or `NULL` if no directive was parsed in that segment.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_parse_segment_directive(
+        const cypher_parse_segment_t *segment);
+
 
 /**
  * Get the number of statements or commands parsed.
