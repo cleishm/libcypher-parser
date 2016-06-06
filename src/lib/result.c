@@ -17,129 +17,31 @@
 #include "../../config.h"
 #include "result.h"
 #include "ast.h"
+#include "segment.h"
 #include "util.h"
 #include <assert.h>
 
 
-cypher_parse_result_t *cypher_parse_result(
-        cypher_astnode_t * const *elements, unsigned int nelements,
-        const cypher_parse_segment_t *segments, unsigned int nsegments,
-        cypher_astnode_t * const *directives, unsigned int ndirectives,
-        const cypher_parse_error_t *errors, unsigned int nerrors,
-        bool eof, unsigned int initial_ordinal)
+unsigned int cypher_parse_result_nroots(const cypher_parse_result_t *result)
 {
-    cypher_parse_result_t *result = calloc(1, sizeof(cypher_parse_result_t));
-    if (result == NULL)
-    {
-        return NULL;
-    }
-
-    result->elements = mdup(elements, nelements * sizeof(cypher_astnode_t *));
-    if (nelements > 0 && result->elements == NULL)
-    {
-        goto failure;
-    }
-    result->nelements = nelements;
-
-    result->segments = mdup(segments,
-            nsegments * sizeof(cypher_parse_segment_t));
-    if (nsegments > 0 && result->segments == NULL)
-    {
-        goto failure;
-    }
-    result->nsegments = nsegments;
-
-    result->directives = mdup(directives,
-            ndirectives * sizeof(cypher_astnode_t *));
-    if (ndirectives > 0 && result->directives == NULL)
-    {
-        goto failure;
-    }
-    result->ndirectives = ndirectives;
-
-    result->errors = mdup(errors, nerrors * sizeof(cypher_parse_error_t));
-    if (nerrors > 0 && result->errors == NULL)
-    {
-        goto failure;
-    }
-    result->nerrors = nerrors;
-
-    result->node_count = initial_ordinal;
-    for (unsigned int i = 0; i < result->nelements; ++i)
-    {
-        result->node_count = cypher_ast_set_ordinals(
-                result->elements[i], result->node_count);
-    }
-
-    result->eof = eof;
-
-    return result;
-
-    int errsv;
-failure:
-    errsv = errno;
-    free(result->errors);
-    free(result->directives);
-    free(result->elements);
-    free(result->segments);
-    free(result);
-    errno = errsv;
-    return NULL;
+    return result->nroots;
 }
 
 
-
-unsigned int cypher_parse_result_nsegments(const cypher_parse_result_t *result)
-{
-    return result->nsegments;
-}
-
-
-const cypher_parse_segment_t *cypher_parse_result_segment(
+const cypher_astnode_t *cypher_parse_result_get_root(
         const cypher_parse_result_t *result, unsigned int index)
 {
-    if (index >= result->nsegments)
+    if (index >= result->nroots)
     {
         return NULL;
     }
-    return &(result->segments[index]);
+    return result->roots[index];
 }
 
 
-struct cypher_input_range cypher_parse_segment_range(
-        const cypher_parse_segment_t *segment)
+unsigned int cypher_parse_result_nnodes(const cypher_parse_result_t *result)
 {
-    return segment->range;
-}
-
-
-const cypher_astnode_t *cypher_parse_segment_directive(
-        const cypher_parse_segment_t *segment)
-{
-    return segment->directive;
-}
-
-
-unsigned int cypher_parse_result_nelements(const cypher_parse_result_t *result)
-{
-    return result->nelements;
-}
-
-
-const cypher_astnode_t *cypher_parse_result_element(
-        const cypher_parse_result_t *result, unsigned int index)
-{
-    if (index >= result->nelements)
-    {
-        return NULL;
-    }
-    return result->elements[index];
-}
-
-
-unsigned int cypher_parse_result_node_count(const cypher_parse_result_t *result)
-{
-    return result->node_count;
+    return result->nnodes;
 }
 
 
@@ -150,7 +52,7 @@ unsigned int cypher_parse_result_ndirectives(
 }
 
 
-const cypher_astnode_t *cypher_parse_result_directive(
+const cypher_astnode_t *cypher_parse_result_get_directive(
                 const cypher_parse_result_t *result, unsigned int index)
 {
     if (index >= result->ndirectives)
@@ -167,7 +69,7 @@ unsigned int cypher_parse_result_nerrors(const cypher_parse_result_t *result)
 }
 
 
-const cypher_parse_error_t *cypher_parse_result_error(
+const cypher_parse_error_t *cypher_parse_result_get_error(
         const cypher_parse_result_t *result, unsigned int index)
 {
     if (index >= result->nerrors)
@@ -178,40 +80,85 @@ const cypher_parse_error_t *cypher_parse_result_error(
 }
 
 
-struct cypher_input_position cypher_parse_error_position(
-        const cypher_parse_error_t *error)
-{
-    REQUIRE(error != NULL, cypher_input_position_zero);
-    return error->position;
-}
-
-
-const char *cypher_parse_error_message(const cypher_parse_error_t *error)
-{
-    REQUIRE(error != NULL, 0);
-    return error->msg;
-}
-
-
-const char *cypher_parse_error_context(const cypher_parse_error_t *error)
-{
-    REQUIRE(error != NULL, 0);
-    return error->context;
-}
-
-
 bool cypher_parse_result_eof(const cypher_parse_result_t *result)
 {
     return result->eof;
 }
 
 
-int cypher_parse_result_fprint(const cypher_parse_result_t *result,
+int cp_result_merge_segment(cypher_parse_result_t *result,
+        cypher_parse_segment_t *segment)
+{
+    if (!result->eof && segment->eof &&
+            (segment->directive != NULL || segment->nerrors > 0))
+    {
+        result->eof = true;
+    }
+
+    if (segment->nerrors > 0)
+    {
+        unsigned int n = result->nerrors + segment->nerrors;
+        cypher_parse_error_t *errors = realloc(result->errors,
+                n * sizeof(cypher_parse_error_t));
+        if (errors == NULL)
+        {
+            return -1;
+        }
+        memcpy(errors + result->nerrors, segment->errors,
+                segment->nerrors * sizeof(cypher_parse_error_t));
+        segment->nerrors = 0;
+        result->errors = errors;
+        result->nerrors = n;
+    }
+
+    if (segment->nroots > 0)
+    {
+        unsigned int n = result->nroots + segment->nroots;
+        cypher_astnode_t **roots = realloc(result->roots,
+                n * sizeof(cypher_astnode_t *));
+        if (roots == NULL)
+        {
+            return -1;
+        }
+        memcpy(roots + result->nroots, segment->roots,
+                segment->nroots * sizeof(cypher_astnode_t *));
+        segment->nroots = 0;
+        result->roots = roots;
+        result->nroots = n;
+    }
+
+    result->nnodes += segment->nnodes;
+
+    if (segment->directive != NULL)
+    {
+        assert(result->directives_cap >= result->ndirectives);
+        if (result->directives_cap <= result->ndirectives)
+        {
+            unsigned int n = (result->directives_cap == 0)?
+                    8 : result->directives_cap * 2;
+            const cypher_astnode_t **directives = realloc(result->directives,
+                    n * sizeof(const cypher_astnode_t *));
+            if (directives == NULL)
+            {
+                return -1;
+            }
+            result->directives = directives;
+            result->directives_cap = n;
+        }
+        result->directives[(result->ndirectives)++] = segment->directive;
+        segment->directive = NULL;
+    }
+
+    return 0;
+}
+
+
+int cypher_parse_result_fprint_ast(const cypher_parse_result_t *result,
         FILE *stream, unsigned int width,
         const struct cypher_parser_colorization *colorization,
         uint_fast32_t flags)
 {
-    return cypher_ast_fprintv(result->elements, result->nelements,
+    return cypher_ast_fprintv(result->roots, result->nroots,
             stream, width, colorization, flags);
 }
 
@@ -230,29 +177,10 @@ void cypher_parse_result_free(cypher_parse_result_t *result)
         return;
     }
 
-    for (unsigned int i = 0; i < result->nelements; ++i)
-    {
-        cypher_ast_free(result->elements[i]);
-    }
-    free(result->elements);
-
-    free(result->segments);
-
-    free(result->directives);
-
-    cypher_parse_errors_cleanup(result->errors, result->nerrors);
+    cp_errors_vcleanup(result->errors, result->nerrors);
     free(result->errors);
+    cypher_ast_vfree(result->roots, result->nroots);
+    free(result->roots);
+    free(result->directives);
     free(result);
-}
-
-
-void cypher_parse_errors_cleanup(cypher_parse_error_t *errors, unsigned int n)
-{
-    for (unsigned int i = n; i-- > 0; errors++)
-    {
-        free(errors->msg);
-        errors->msg = NULL;
-        free(errors->context);
-        errors->context = NULL;
-    }
 }

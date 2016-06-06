@@ -51,7 +51,7 @@ START_TEST (empty_input)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 1);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n";
     ck_assert_str_eq(memstream_buffer, expected);
@@ -70,7 +70,7 @@ START_TEST (empty_input_with_terminator)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 1);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n";
     ck_assert_str_eq(memstream_buffer, expected);
@@ -89,7 +89,7 @@ START_TEST (comment_only)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 7);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 "@0  2..5  block_comment  /*foo*/\n";
@@ -109,7 +109,7 @@ START_TEST (comment_only_with_terminator)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 8);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 "@0  2..5  block_comment  /*foo*/\n";
@@ -129,7 +129,7 @@ START_TEST (error_only)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 3);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 "@0  0..3  error  >>foo<<\n";
@@ -149,7 +149,7 @@ START_TEST (error_only_with_terminator)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 4);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 "@0  0..3  error  >>foo<<\n";
@@ -169,7 +169,7 @@ START_TEST (single_statement)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 8);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 "@0  0..8  statement           body=@1\n"
@@ -194,7 +194,7 @@ START_TEST (single_statement_with_terminator)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 9);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 "@0  0..9  statement           body=@1\n"
@@ -219,7 +219,7 @@ START_TEST (single_command)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 8);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 "@0  0..8  command   name=@1, args=[@2]\n"
@@ -241,7 +241,7 @@ START_TEST (single_command_with_terminator)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 9);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 "@0  0..8  command   name=@1, args=[@2]\n"
@@ -263,7 +263,7 @@ START_TEST (single_command_ending_in_line_comment)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 15);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 "@0   0..9   command       name=@1, args=[@2]\n"
@@ -286,7 +286,7 @@ START_TEST (single_command_ending_in_line_comment_with_terminator)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 16);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 "@0   0..9   command       name=@1, args=[@2]\n"
@@ -309,7 +309,7 @@ START_TEST (mixed_ending_in_empty)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 23);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 " @0   0..9   statement           body=@1\n"
@@ -340,7 +340,7 @@ START_TEST (mixed_ending_in_comment)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 28);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 " @0   0..9   statement           body=@1\n"
@@ -372,7 +372,7 @@ START_TEST (mixed_ending_in_error)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 25);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 " @0   0..9   statement           body=@1\n"
@@ -404,7 +404,7 @@ START_TEST (mixed_ending_in_unterminated)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 28);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 " @0   0..9   statement           body=@1\n"

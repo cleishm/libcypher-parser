@@ -111,8 +111,8 @@ libcypher_parser_la_SOURCES = \
 	ast_using_periodic_commit.c \
 	ast_using_scan.c \
 	ast_with.c \
-	error_tracking.c \
-	error_tracking.h \
+	errors.c \
+	errors.h \
 	operators.c \
 	operators.h \
 	parser.c \
@@ -121,6 +121,8 @@ libcypher_parser_la_SOURCES = \
 	parser_config.h \
 	result.c \
 	result.h \
+	segment.c \
+	segment.h \
 	string_buffer.c \
 	string_buffer.h \
 	util.c \

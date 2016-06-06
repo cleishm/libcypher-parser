@@ -5129,14 +5129,14 @@ void cypher_parser_config_set_error_colorization(cypher_parser_config_t *config,
         const struct cypher_parser_colorization *colorization);
 
 /**
- * A parse result.
- */
-typedef struct cypher_parse_result cypher_parse_result_t;
-
-/**
  * A parse segment.
  */
 typedef struct cypher_parse_segment cypher_parse_segment_t;
+
+/**
+ * A parse result.
+ */
+typedef struct cypher_parse_result cypher_parse_result_t;
 
 /**
  * A parse error.
@@ -5144,17 +5144,52 @@ typedef struct cypher_parse_segment cypher_parse_segment_t;
 typedef struct cypher_parse_error cypher_parse_error_t;
 
 
+/**
+ * A parse callback.
+ */
+typedef int (*cypher_parser_segment_callback_t)(void *userdata,
+        cypher_parse_segment_t *segment);
+
+
 #define CYPHER_PARSE_DEFAULT 0
 #define CYPHER_PARSE_SINGLE (1<<0)
 #define CYPHER_PARSE_ONLY_STATEMENTS (1<<1)
+
+
+/**
+ * @fn int cypher_parse_each(const char *s, cypher_parser_segment_callback_t callback, void *userdata, struct cypher_input_position *last, cypher_parser_config_t *config, uint_fast32_t flags);
+ * @brief Parse segments from a string.
+ *
+ * The provided callback is invoked for every segment of parsed input, where
+ * each segments is separated by either a newline or semicolon (`;`),
+ * respectively depending on whether a client command is being parsed or not.
+ * If the flag CYPHER_PARSE_ONLY_STATEMENTS is set, then only semicolons will
+ * be used for delimiting segments, and client commands will not be parsed.
+ *
+ * The segment will be released after the callback is complete, unless retained
+ * using `cypher_parse_segment_retain(segment)`.
+ *
+ * @param [s] A null terminated string to parse.
+ * @param [callback] The callback to be invoked for each parsed segment.
+ * @param [userdata] A pointer that will be provided to the callback.
+ * @param [last] Either `NULL`, or a pointer to a `struct cypher_input_position`
+ *         that will be set position of the last character consumed from the
+ *         input.
+ * @param [config] Either `NULL`, or a pointer to configuration for the parser.
+ * @param [flags] A bitmask of flags to control parsing.
+ * @return 0 on success, -1 on failure (errno will be set).
+ */
+#define cypher_parse_each(s,b,d,l,c,f) (cypher_uparse_each(s,strlen(s),b,d,l,c,f))
 
 /**
  * @fn cypher_parse_result_t *cypher_parse(const char *s, struct cypher_input_position *last, cypher_parser_config_t *config, uint_fast32_t flags);
  * @brief Parse a command or statement from a string.
  *
- * The first statement or command is parsed from the input string, and a result
- * returned. The result must be passed to `cypher_parse_result_free(...)` to
- * release dynamically allocated memory.
+ * All statements and/or client commands are parsed from the input string, and
+ * a result returned. The result must be passed to
+ * `cypher_parse_result_free(...)` to release dynamically allocated memory.
+ * If the flag CYPHER_PARSE_ONLY_STATEMENTS is set, client commands will not be
+ * parsed.
  *
  * @param [s] A null terminated string to parse.
  * @param [last] Either `NULL`, or a pointer to a `struct cypher_input_position`
@@ -5168,11 +5203,43 @@ typedef struct cypher_parse_error cypher_parse_error_t;
 #define cypher_parse(s,l,c,f) (cypher_uparse(s,strlen(s),l,c,f))
 
 /**
+ * Parse segments from a string.
+ *
+ * The provided callback is invoked for every segment of parsed input, where
+ * each segments is separated by either a newline or semicolon (`;`),
+ * respectively depending on whether a client command is being parsed or not.
+ * If the flag CYPHER_PARSE_ONLY_STATEMENTS is set, then only semicolons will
+ * be used for delimiting segments, and client commands will not be parsed.
+ *
+ * The segment will be released after the callback is complete, unless retained
+ * using `cypher_parse_segment_retain(segment)`.
+ *
+ * @param [s] The string to parse.
+ * @param [n] The size of the string.
+ * @param [callback] The callback to be invoked for each parsed segment.
+ * @param [userdata] A pointer that will be provided to the callback.
+ * @param [last] Either `NULL`, or a pointer to a `struct cypher_input_position`
+ *         that will be set position of the last character consumed from the
+ *         input.
+ * @param [config] Either `NULL`, or a pointer to configuration for the parser.
+ * @param [flags] A bitmask of flags to control parsing.
+ * @return A pointer to a `cypher_parse_result_t`, or `NULL` if an error occurs
+ *         (errno will be set).
+ */
+__cypherlang_must_check
+int cypher_uparse_each(const char *s, size_t n,
+        cypher_parser_segment_callback_t callback, void *userdata,
+        struct cypher_input_position *last, cypher_parser_config_t *config,
+        uint_fast32_t flags);
+
+/**
  * Parse a statement or command from a string.
  *
- * The first statement or command is parsed from the input string, and a result
- * returned. The result must be passed to `cypher_parse_result_free(...)` to
- * release dynamically allocated memory.
+ * All statements and/or client commands are parsed from the input string, and
+ * a result returned. The result must be passed to
+ * `cypher_parse_result_free(...)` to release dynamically allocated memory.
+ * If the flag CYPHER_PARSE_ONLY_STATEMENTS is set, client commands will not be
+ * parsed.
  *
  * @param [s] The string to parse.
  * @param [n] The size of the string.
@@ -5190,11 +5257,41 @@ cypher_parse_result_t *cypher_uparse(const char *s, size_t n,
         uint_fast32_t flags);
 
 /**
+ * Parse segments from a stream.
+ *
+ * The provided callback is invoked for every segment of parsed input, where
+ * each segments is separated by either a newline or semicolon (`;`),
+ * respectively depending on whether a client command is being parsed or not.
+ * If the flag CYPHER_PARSE_ONLY_STATEMENTS is set, then only semicolons will
+ * be used for delimiting segments, and client commands will not be parsed.
+ *
+ * The segment will be released after the callback is complete, unless retained
+ * using `cypher_parse_segment_retain(segment)`.
+ *
+ * @param [stream] The stream to parse.
+ * @param [callback] The callback to be invoked for each parsed segment.
+ * @param [userdata] A pointer that will be provided to the callback.
+ * @param [last] Either `NULL`, or a pointer to a `struct cypher_input_position`
+ *         that will be set position of the last character consumed from the
+ *         input.
+ * @param [config] Either `NULL`, or a pointer to configuration for the parser.
+ * @param [flags] A bitmask of flags to control parsing.
+ * @return A pointer to a `cypher_parse_result_t`, or `NULL` if an error occurs
+ *         (errno will be set).
+ */
+__cypherlang_must_check
+int cypher_fparse_each(FILE *stream, cypher_parser_segment_callback_t callback,
+        void *userdata, struct cypher_input_position *last,
+        cypher_parser_config_t *config, uint_fast32_t flags);
+
+/**
  * Parse a statement or command from a stream.
  *
- * The first statement or command is parsed from the input string, and a result
- * returned. The result must be passed to `cypher_parse_result_free(...)` to
- * release dynamically allocated memory.
+ * All statements and/or client commands are parsed from the input string, and
+ * a result returned. The result must be passed to
+ * `cypher_parse_result_free(...)` to release dynamically allocated memory.
+ * If the flag CYPHER_PARSE_ONLY_STATEMENTS is set, client commands will not be
+ * parsed.
  *
  * @param [stream] The stream to parse.
  * @param [last] Either `NULL`, or a pointer to a `struct cypher_input_position`
@@ -5210,60 +5307,6 @@ cypher_parse_result_t *cypher_fparse(FILE *stream,
         struct cypher_input_position *last, cypher_parser_config_t *config,
         uint_fast32_t flags);
 
-/**
- * Get the number of elements parsed.
- *
- * @param [result] The parse result.
- * @return The number of elements.
- */
-__cypherlang_pure
-unsigned int cypher_parse_result_nelements(const cypher_parse_result_t *result);
-
-/**
- * Get a parsed elements from a parse result.
- *
- * @param [result] The parse result.
- * @param [index] The element index.
- * @return A pointer to the AST node for the element, or `NULL` if there is no
- *         element at the specified index.
- */
-__cypherlang_pure
-const cypher_astnode_t *cypher_parse_result_element(
-        const cypher_parse_result_t *result, unsigned int index);
-
-/**
- * Get the total number of astnodes parsed.
- *
- * Includes all children, at any depth, of all result elements.
- *
- * @param [result] The parse result.
- * @return The number of elements.
- */
-__cypherlang_pure
-unsigned int cypher_parse_result_node_count(const cypher_parse_result_t *result);
-
-/**
- * Get the number of segments parsed.
- *
- * When parsing with CYPHER_PARSE_SINGLE, this will always be 1.
- *
- * @param [result] The parse result.
- * @return The number of segments parsed.
- */
-__cypherlang_pure
-unsigned int cypher_parse_result_nsegments(const cypher_parse_result_t *result);
-
-/**
- * Get the parse segment from a result.
- *
- * @param [result] The parse result.
- * @param [index] The directive index.
- * @param A parse segment, or `NULL` if there was no segment at the specified
- *        index.
- */
-__cypherlang_pure
-const cypher_parse_segment_t *cypher_parse_result_segment(
-        const cypher_parse_result_t *result, unsigned int index);
 
 /**
  * Get the range of a parse segment.
@@ -5272,20 +5315,146 @@ const cypher_parse_segment_t *cypher_parse_result_segment(
  * @return The input range.
  */
 __cypherlang_pure
-struct cypher_input_range cypher_parse_segment_range(
+struct cypher_input_range cypher_parse_segment_get_range(
         const cypher_parse_segment_t *segment);
 
 /**
- * Get the statement or command parsed in a segment.
+ * Get the number of errors encountered in a parse segment.
+ *
+ * @param [segment] The parse segment.
+ * @return The number of errors.
+ */
+__cypherlang_pure
+unsigned int cypher_parse_segment_nerrors(
+        const cypher_parse_segment_t *segment);
+
+/**
+ * Get an error from a parse segment.
+ *
+ * @param [segment] The parse segment.
+ * @param [index] The error index.
+ * @return A pointer to the error description, or `NULL` if there is no error
+ *         at the specified index.
+ */
+__cypherlang_pure
+const cypher_parse_error_t *cypher_parse_segment_get_error(
+        const cypher_parse_segment_t *segment, unsigned int index);
+
+/**
+ * Get the number of root AST nodes parsed in a segment.
+ *
+ * @param [segment] The parse segment.
+ * @return The number of root AST nodes.
+ */
+__cypherlang_pure
+unsigned int cypher_parse_segment_nroots(const cypher_parse_segment_t *segment);
+
+/**
+ * Get a root AST node from a parse segment.
+ *
+ * @param [segment] The parse segment.
+ * @param [index] The node index.
+ * @return A pointer to the AST node, or `NULL` if there is no node at the
+ *         specified index.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_parse_segment_get_root(
+        const cypher_parse_segment_t *segment, unsigned int index);
+
+/**
+ * Get the total number of AST nodes parsed in a segment.
+ *
+ * Includes all root nodes and their children, at any depth.
+ *
+ * @param [segment] The parse segment.
+ * @return The number of elements.
+ */
+__cypherlang_pure
+unsigned int cypher_parse_segment_nnodes(const cypher_parse_segment_t *segment);
+
+/**
+ * Get the statement or client command parsed in a segment.
  *
  * @param [segment] The parse segment.
  * @return Either a CYPHER_AST_STATEMENT, a CYPHER_AST_COMMAND node,
- *         or `NULL` if no directive was parsed in that segment.
+ *         or `NULL` if neither was encountered in the segment.
  */
 __cypherlang_pure
-const cypher_astnode_t *cypher_parse_segment_directive(
+const cypher_astnode_t *cypher_parse_segment_get_directive(
         const cypher_parse_segment_t *segment);
 
+/**
+ * Print a represetation of the AST from a parse segment to a stream.
+ *
+ * Useful for debugging purposes. This is equivalent to calling
+ * `cypher_ast_fprintv` with the an array of root AST nodes from the
+ * segment.
+ *
+ * @param [segment] The parse segment.
+ * @param [stream] The stream to print to.
+ * @param [width] The width to render, which is advisory and may be exceeded.
+ *         A value of 0 implies no restriction on width.
+ * @param [colorization] A colorization scheme to apply, or null.
+ * @param [flags] A bitmask of flags to control rendering.
+ * @return 0 on success, or -1 if an error occurs (errno will be set).
+ */
+int cypher_parse_segment_fprint_ast(const cypher_parse_segment_t *segment,
+        FILE *stream, unsigned int width,
+        const struct cypher_parser_colorization *colorization,
+        uint_fast32_t flags);
+
+/**
+ * Retain a reference to a parse segment.
+ *
+ * The segment must later be passed to `cypher_parse_segment_release(segment)`.
+ *
+ * @param [segment] The parse segment.
+ */
+void cypher_parse_segment_retain(cypher_parse_segment_t *segment);
+
+
+/**
+ * Release a reference to a parse segment.
+ *
+ * The segment must have been previously retained using
+ * `cypher_parse_segment_retain(segment)`.
+ *
+ * @param [segment] The parse segment.
+ */
+void cypher_parse_segment_release(cypher_parse_segment_t *segment);
+
+
+/**
+ * Get the number of root AST nodes parsed.
+ *
+ * @param [result] The parse result.
+ * @return The number of root AST nodes.
+ */
+__cypherlang_pure
+unsigned int cypher_parse_result_nroots(const cypher_parse_result_t *result);
+
+/**
+ * Get a root AST nodes from a parse result.
+ *
+ * @param [result] The parse result.
+ * @param [index] The node index.
+ * @return A pointer to the AST node, or `NULL` if there is no element at the
+ *         specified index.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_parse_result_get_root(
+        const cypher_parse_result_t *result, unsigned int index);
+
+/**
+ * Get the total number of AST nodes parsed.
+ *
+ * Includes all children, at any depth, of all result elements.
+ *
+ * @param [result] The parse result.
+ * @return The number of elements.
+ */
+__cypherlang_pure
+unsigned int cypher_parse_result_nnodes(const cypher_parse_result_t *result);
 
 /**
  * Get the number of statements or commands parsed.
@@ -5306,7 +5475,7 @@ unsigned int cypher_parse_result_ndirectives(
  *         or `NULL` if there is no directive at the specified index.
  */
 __cypherlang_pure
-const cypher_astnode_t *cypher_parse_result_directive(
+const cypher_astnode_t *cypher_parse_result_get_directive(
         const cypher_parse_result_t *result, unsigned int index);
 
 /**
@@ -5327,8 +5496,52 @@ unsigned int cypher_parse_result_nerrors(const cypher_parse_result_t *result);
  *         at the specified index.
  */
 __cypherlang_pure
-const cypher_parse_error_t *cypher_parse_result_error(
+const cypher_parse_error_t *cypher_parse_result_get_error(
         const cypher_parse_result_t *result, unsigned int index);
+
+/**
+ * Check if the parse encountered the end of the input.
+ *
+ * Indicates if the last parsed command or statement was terminated
+ * (with a newline or `;` respectively), or with EOF.
+ *
+ * @param [result] The parse result.
+ * @return `true` if the end of input was encountered, `false` if the
+ *         command or statement was terminated with the expected character.
+ */
+__cypherlang_pure
+bool cypher_parse_result_eof(const cypher_parse_result_t *result);
+
+
+/**
+ * Print a represetation of a parse result to a stream.
+ *
+ * Useful for debugging purposes. This is equivalent to calling
+ * `cypher_ast_fprintv` with the an array of root AST nodes from the
+ * result.
+ *
+ * @param [result] The parse result.
+ * @param [stream] The stream to print to.
+ * @param [width] The width to render, which is advisory and may be exceeded.
+ *         A value of 0 implies no restriction on width.
+ * @param [colorization] A colorization scheme to apply, or null.
+ * @param [flags] A bitmask of flags to control rendering.
+ * @return 0 on success, or -1 if an error occurs (errno will be set).
+ */
+int cypher_parse_result_fprint_ast(const cypher_parse_result_t *result,
+        FILE *stream, unsigned int width,
+        const struct cypher_parser_colorization *colorization,
+        uint_fast32_t flags);
+
+/**
+ * Free memory associated with a parse result.
+ *
+ * The result will no longer be valid after this function is invoked.
+ *
+ * @param [result] The parse result.
+ */
+void cypher_parse_result_free(cypher_parse_result_t *result);
+
 
 /**
  * Get the position of an error.
@@ -5374,46 +5587,6 @@ const char *cypher_parse_error_context(const cypher_parse_error_t *error);
  */
 __cypherlang_pure
 size_t cypher_parse_error_context_offset(const cypher_parse_error_t *error);
-
-/**
- * Check if the parse encountered the end of the input.
- *
- * Indicates if the last parsed command or statement was terminated
- * (with a newline or `;` respectively), or with EOF.
- *
- * @param [result] The parse result.
- * @return `true` if the end of input was encountered, `false` if the
- *         command or statement was terminated with the expected character.
- */
-__cypherlang_pure
-bool cypher_parse_result_eof(const cypher_parse_result_t *result);
-
-/**
- * Print a represetation of a parse result to a stream.
- *
- * Useful for debugging purposes.
- *
- * @param [result] The parse result.
- * @param [stream] The stream to print to.
- * @param [width] The width to render, which is advisory and may be exceeded.
- *         A value of 0 implies no restriction on width.
- * @param [colorization] A colorization scheme to apply, or null.
- * @param [flags] A bitmask of flags to control rendering.
- * @return 0 on success, or -1 if an error occurs (errno will be set).
- */
-int cypher_parse_result_fprint(const cypher_parse_result_t *result,
-        FILE *stream, unsigned int width,
-        const struct cypher_parser_colorization *colorization,
-        uint_fast32_t flags);
-
-/**
- * Free memory associated with a parse result.
- *
- * The result will no longer be valid after this function is invoked.
- *
- * @param [result] The parse result.
- */
-void cypher_parse_result_free(cypher_parse_result_t *result);
 
 
 #pragma GCC visibility pop

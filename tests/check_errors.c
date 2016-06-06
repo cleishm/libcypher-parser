@@ -51,17 +51,17 @@ START_TEST (parse_unterminated_string)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 11);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 "@0  0..11  error  >>RETURN 'foo<<\n";
     ck_assert_str_eq(memstream_buffer, expected);
 
     ck_assert_int_eq(cypher_parse_result_ndirectives(result), 0);
-    ck_assert_ptr_eq(cypher_parse_result_directive(result, 0), NULL);
+    ck_assert_ptr_eq(cypher_parse_result_get_directive(result, 0), NULL);
 
     ck_assert_int_eq(cypher_parse_result_nerrors(result), 1);
-    const cypher_parse_error_t *err = cypher_parse_result_error(result, 0);
+    const cypher_parse_error_t *err = cypher_parse_result_get_error(result, 0);
     struct cypher_input_position pos = cypher_parse_error_position(err);
     ck_assert_int_eq(pos.line, 1);
     ck_assert_int_eq(pos.column, 12);
@@ -80,7 +80,7 @@ START_TEST (parse_invalid_directive)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 17);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 "@0   0..9   statement           body=@1\n"
@@ -95,7 +95,7 @@ START_TEST (parse_invalid_directive)
     ck_assert_int_eq(cypher_parse_result_ndirectives(result), 1);
 
     ck_assert_int_eq(cypher_parse_result_nerrors(result), 1);
-    const cypher_parse_error_t *err = cypher_parse_result_error(result, 0);
+    const cypher_parse_error_t *err = cypher_parse_result_get_error(result, 0);
     struct cypher_input_position pos = cypher_parse_error_position(err);
     ck_assert_int_eq(pos.line, 1);
     ck_assert_int_eq(pos.column, 11);
@@ -118,7 +118,7 @@ START_TEST (parse_invalid_clause)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 26);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 " @0   0..26  statement               body=@1\n"
@@ -137,7 +137,7 @@ START_TEST (parse_invalid_clause)
     ck_assert_int_eq(cypher_parse_result_ndirectives(result), 1);
 
     ck_assert_int_eq(cypher_parse_result_nerrors(result), 1);
-    const cypher_parse_error_t *err = cypher_parse_result_error(result, 0);
+    const cypher_parse_error_t *err = cypher_parse_result_get_error(result, 0);
     struct cypher_input_position pos = cypher_parse_error_position(err);
     ck_assert_int_eq(pos.line, 2);
     ck_assert_int_eq(pos.column, 1);
@@ -156,7 +156,7 @@ START_TEST (parse_invalid_query_and_resync)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 30);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 " @0   0..7   error                   >>MATCH n<<\n"
@@ -185,7 +185,7 @@ START_TEST (parse_single_invalid_query)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 8);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 "@0  0..7  error  >>MATCH n<<\n";

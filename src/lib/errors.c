@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 #include "../../config.h"
-#include "error_tracking.h"
+#include "errors.h"
 #include "util.h"
 #include <assert.h>
 #include <stdlib.h>
@@ -28,6 +28,40 @@
 static char *chardesc(char *buf, size_t size, char c);
 static char *error_report(cp_error_tracking_t *et, char **buffer, size_t *cap,
         const char *prefix_format, ...) __cypherlang_format(4, 5);
+
+
+struct cypher_input_position cypher_parse_error_position(
+        const cypher_parse_error_t *error)
+{
+    REQUIRE(error != NULL, cypher_input_position_zero);
+    return error->position;
+}
+
+
+const char *cypher_parse_error_message(const cypher_parse_error_t *error)
+{
+    REQUIRE(error != NULL, 0);
+    return error->msg;
+}
+
+
+const char *cypher_parse_error_context(const cypher_parse_error_t *error)
+{
+    REQUIRE(error != NULL, 0);
+    return error->context;
+}
+
+
+void cp_errors_vcleanup(cypher_parse_error_t *errors, unsigned int n)
+{
+    for (unsigned int i = n; i-- > 0; errors++)
+    {
+        free(errors->msg);
+        errors->msg = NULL;
+        free(errors->context);
+        errors->context = NULL;
+    }
+}
 
 
 void cp_et_init(cp_error_tracking_t *et,
@@ -274,7 +308,7 @@ void cp_et_cleanup(cp_error_tracking_t *et)
     et->labels_capacity = et->nlabels = 0;
     et->labels = NULL;
 
-    cypher_parse_errors_cleanup(et->errors, et->nerrors);
+    cp_errors_vcleanup(et->errors, et->nerrors);
     free(et->errors);
     et->errors_capacity = et->nerrors = 0;
     et->errors = NULL;
