@@ -28,13 +28,15 @@
 const char *shortopts = "1ahv";
 
 #define COLORIZE_OPT 1004
-#define OUTPUT_WIDTH_OPT 1005
-#define VERSION_OPT 1006
+#define ONLY_STATEMENTS_OPT 1005
+#define OUTPUT_WIDTH_OPT 1006
+#define VERSION_OPT 1007
 
 static struct option longopts[] =
     { { "ast", no_argument, NULL, 'a' },
       { "colorize", no_argument, NULL, COLORIZE_OPT },
       { "help", no_argument, NULL, 'h' },
+      { "only-statements", no_argument, NULL, ONLY_STATEMENTS_OPT },
       { "output-width", required_argument, NULL, OUTPUT_WIDTH_OPT },
       { "version", no_argument, NULL, VERSION_OPT },
       { NULL, 0, NULL, 0 } };
@@ -44,10 +46,11 @@ static void usage(FILE *s, const char *prog_name)
     fprintf(s,
 "usage: %s [OPTIONS]\n"
 "options:\n"
-" -1                  Only parse the first command or statement.\n"
+" -1                  Only parse the first statement or client-command.\n"
 " --ast, -a           Dump the AST to stdout.\n"
 " --colorize          Colorize output using ANSI escape sequences.\n"
 " --help, -h          Output this usage information.\n"
+" --only-statements   Only parse statements (and not client commands).\n"
 " --output-width <n>  Attempt to limit output to the specified width.\n"
 " --version           Output the version of cypher-lint and libcypher-parser\n"
 "\n",
@@ -111,6 +114,9 @@ int main(int argc, char *argv[])
             usage(stdout, prog_name);
             result = EXIT_SUCCESS;
             goto cleanup;
+        case ONLY_STATEMENTS_OPT:
+            config.flags |= CYPHER_PARSE_ONLY_STATEMENTS;
+            break;
         case OUTPUT_WIDTH_OPT:
             config.width = atoi(optarg);
             break;
