@@ -154,6 +154,12 @@ int main(int argc, char *argv[])
     argc -= optind;
     argv += optind;
 
+    // Always stream if ast dumping is disabled
+    if (!config.dump_ast)
+    {
+        config.stream = true;
+    }
+
     if (process(stdin, &config))
     {
         goto cleanup;
