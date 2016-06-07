@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>libcypher-parser-0.2.1: Globals</title>
+<title>libcypher-parser-0.3.0: Globals</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -17,7 +17,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">libcypher-parser-0.2.1
+   <div id="projectname">libcypher-parser-0.3.0
    </div>
   </td>
  </tr>
@@ -142,8 +142,8 @@
 <li>cypher_ast_command_get_argument()
 : <a class="el" href="cypher-parser_8h.html#adcd0ba5bd9923c47885d2c3bff36cc73">cypher-parser.h</a>
 </li>
-<li>cypher_ast_command_name()
-: <a class="el" href="cypher-parser_8h.html#a994aff5d02dc4b15970db062ce29b23f">cypher-parser.h</a>
+<li>cypher_ast_command_get_name()
+: <a class="el" href="cypher-parser_8h.html#a93ecb1992e04386db0faaf734fdb1313">cypher-parser.h</a>
 </li>
 <li>cypher_ast_command_narguments()
 : <a class="el" href="cypher-parser_8h.html#a3837d406849d5a5c2cc37387cedc8f71">cypher-parser.h</a>
@@ -991,8 +991,14 @@
 <li>cypher_fparse()
 : <a class="el" href="cypher-parser_8h.html#aafa44d8793c3714b14a5a1365d920e29">cypher-parser.h</a>
 </li>
+<li>cypher_fparse_each()
+: <a class="el" href="cypher-parser_8h.html#a53dd2ed457e4ffce553eb411682df066">cypher-parser.h</a>
+</li>
 <li>cypher_parse()
 : <a class="el" href="cypher-parser_8h.html#a8e845c6f4b66ec4dd9b55ef08f79620d">cypher-parser.h</a>
+</li>
+<li>cypher_parse_each()
+: <a class="el" href="cypher-parser_8h.html#a0e5e0d23ec8c0eab8bfa1413edc32807">cypher-parser.h</a>
 </li>
 <li>cypher_parse_error_context()
 : <a class="el" href="cypher-parser_8h.html#aee1648954463e15442cc86a6eea34c46">cypher-parser.h</a>
@@ -1006,32 +1012,65 @@
 <li>cypher_parse_error_position()
 : <a class="el" href="cypher-parser_8h.html#a44f2a522dd0e3ea8144b0c342344949c">cypher-parser.h</a>
 </li>
-<li>cypher_parse_result_directive()
-: <a class="el" href="cypher-parser_8h.html#a599c4f4ce15b1c6c6b608f25fc5ac26d">cypher-parser.h</a>
+<li>cypher_parse_result_eof()
+: <a class="el" href="cypher-parser_8h.html#a9e4afe2e5b90afa0cc7ac574da92c00e">cypher-parser.h</a>
 </li>
-<li>cypher_parse_result_element()
-: <a class="el" href="cypher-parser_8h.html#a45d75f8465150e40ad27784cc5a89075">cypher-parser.h</a>
-</li>
-<li>cypher_parse_result_error()
-: <a class="el" href="cypher-parser_8h.html#a18fcbfc2ddda0e85cd6646b0afcdc226">cypher-parser.h</a>
-</li>
-<li>cypher_parse_result_fprint()
-: <a class="el" href="cypher-parser_8h.html#a6a499230e45a2c013e67c09ac1b63da5">cypher-parser.h</a>
+<li>cypher_parse_result_fprint_ast()
+: <a class="el" href="cypher-parser_8h.html#ae4fdf230648a9fac332c14bf41c26713">cypher-parser.h</a>
 </li>
 <li>cypher_parse_result_free()
 : <a class="el" href="cypher-parser_8h.html#acacd5292abb94a7c5dfcba56a9cd4e74">cypher-parser.h</a>
 </li>
+<li>cypher_parse_result_get_directive()
+: <a class="el" href="cypher-parser_8h.html#aa49750771813d095e3a26f3055ba0853">cypher-parser.h</a>
+</li>
+<li>cypher_parse_result_get_error()
+: <a class="el" href="cypher-parser_8h.html#ae3cc09d3f84603d7c1763615deffac0c">cypher-parser.h</a>
+</li>
+<li>cypher_parse_result_get_root()
+: <a class="el" href="cypher-parser_8h.html#a7944eb29da408167272f3ea871c59a40">cypher-parser.h</a>
+</li>
 <li>cypher_parse_result_ndirectives()
 : <a class="el" href="cypher-parser_8h.html#aa4dd4c1e589e36af4956c5d1c6eb2c50">cypher-parser.h</a>
-</li>
-<li>cypher_parse_result_nelements()
-: <a class="el" href="cypher-parser_8h.html#a37fbbc26a40ba74686df6c7944297253">cypher-parser.h</a>
 </li>
 <li>cypher_parse_result_nerrors()
 : <a class="el" href="cypher-parser_8h.html#a042fbc660c8a6a038131e4574145d82a">cypher-parser.h</a>
 </li>
-<li>cypher_parse_result_node_count()
-: <a class="el" href="cypher-parser_8h.html#ada4f30b4539bfebaa7e6926f84c290c7">cypher-parser.h</a>
+<li>cypher_parse_result_nnodes()
+: <a class="el" href="cypher-parser_8h.html#a94bbaef0666da96630f3055662f9cdd0">cypher-parser.h</a>
+</li>
+<li>cypher_parse_result_nroots()
+: <a class="el" href="cypher-parser_8h.html#ade39b014f85042842ef047f238ab005c">cypher-parser.h</a>
+</li>
+<li>cypher_parse_segment_fprint_ast()
+: <a class="el" href="cypher-parser_8h.html#a6d46e89a01e0fcbc7e07c2154c534773">cypher-parser.h</a>
+</li>
+<li>cypher_parse_segment_get_directive()
+: <a class="el" href="cypher-parser_8h.html#ad64962d49f19949caa41ae15ed427c10">cypher-parser.h</a>
+</li>
+<li>cypher_parse_segment_get_error()
+: <a class="el" href="cypher-parser_8h.html#a4f32dee27d1cdefd97e3bb205a596044">cypher-parser.h</a>
+</li>
+<li>cypher_parse_segment_get_range()
+: <a class="el" href="cypher-parser_8h.html#ad6512bb9fe3a272be8bf93af9baadc67">cypher-parser.h</a>
+</li>
+<li>cypher_parse_segment_get_root()
+: <a class="el" href="cypher-parser_8h.html#a2be4956014610639c9560426f2e9f6a7">cypher-parser.h</a>
+</li>
+<li>cypher_parse_segment_nerrors()
+: <a class="el" href="cypher-parser_8h.html#a09fb3ac03809c989c7a50d9071e2e18a">cypher-parser.h</a>
+</li>
+<li>cypher_parse_segment_nnodes()
+: <a class="el" href="cypher-parser_8h.html#aebf5b44c4a3c98a3140fe940aade7de1">cypher-parser.h</a>
+</li>
+<li>cypher_parse_segment_nroots()
+: <a class="el" href="cypher-parser_8h.html#a7b71da89d028df8954905e64ad175971">cypher-parser.h</a>
+</li>
+<li>cypher_parse_segment_release()
+: <a class="el" href="cypher-parser_8h.html#a4bd58bbedc2f3460f3a885256863193d">cypher-parser.h</a>
+</li>
+<li>cypher_parse_segment_retain()
+: <a class="el" href="cypher-parser_8h.html#ac7d4b2dd06d67b52ea9d31619f667ac4">cypher-parser.h</a>
 </li>
 <li>cypher_parser_config_free()
 : <a class="el" href="cypher-parser_8h.html#a061c6734e7d8a2c39c206de889445873">cypher-parser.h</a>
@@ -1050,6 +1089,9 @@
 </li>
 <li>cypher_uparse()
 : <a class="el" href="cypher-parser_8h.html#a79a5d6d4dace2898d7279b7d5e1d0a70">cypher-parser.h</a>
+</li>
+<li>cypher_uparse_each()
+: <a class="el" href="cypher-parser_8h.html#a8fad50ef5ce397346cbb4d9b0f131a62">cypher-parser.h</a>
 </li>
 </ul>
 </div><!-- contents -->

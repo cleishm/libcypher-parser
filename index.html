@@ -160,7 +160,7 @@ description file, enabling you to obtain the required flags using
         <span class="pl-k">return</span> EXIT_FAILURE;
     }
 
-    <span class="pl-c1">printf</span>(<span class="pl-s"><span class="pl-pds">"</span>Parsed <span class="pl-c1">%d</span> AST nodes<span class="pl-cce">\n</span><span class="pl-pds">"</span></span>, <span class="pl-c1">cypher_parse_result_node_count</span>(result));
+    <span class="pl-c1">printf</span>(<span class="pl-s"><span class="pl-pds">"</span>Parsed <span class="pl-c1">%d</span> AST nodes<span class="pl-cce">\n</span><span class="pl-pds">"</span></span>, <span class="pl-c1">cypher_parse_result_nnodes</span>(result));
     <span class="pl-c1">printf</span>(<span class="pl-s"><span class="pl-pds">"</span>Read <span class="pl-c1">%d</span> statements<span class="pl-cce">\n</span><span class="pl-pds">"</span></span>, <span class="pl-c1">cypher_parse_result_ndirectives</span>(result));
     <span class="pl-c1">printf</span>(<span class="pl-s"><span class="pl-pds">"</span>Encountered <span class="pl-c1">%d</span> errors<span class="pl-cce">\n</span><span class="pl-pds">"</span></span>, <span class="pl-c1">cypher_parse_result_nerrors</span>(result));
 

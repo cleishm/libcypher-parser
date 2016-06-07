@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>libcypher-parser-0.3.0: cypher-parser.h File Reference</title>
+<title>libcypher-parser-0.2.1: cypher-parser.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -17,7 +17,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">libcypher-parser-0.3.0
+   <div id="projectname">libcypher-parser-0.2.1
    </div>
   </td>
  </tr>
@@ -74,10 +74,6 @@ typedef struct cypher_operator&#160;</td><td class="memItemRight" valign="bottom
 typedef struct cypher_parser_config&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a1ab07797ed263d9d989250bb0ffd62ba">cypher_parser_config_t</a></td></tr>
 <tr class="memdesc:a1ab07797ed263d9d989250bb0ffd62ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration for a cypher parser. <br /></td></tr>
 <tr class="separator:a1ab07797ed263d9d989250bb0ffd62ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f4b5dc78b2ba5a4c5b87555e1caf5ae"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3f4b5dc78b2ba5a4c5b87555e1caf5ae"></a>
-typedef struct cypher_parse_segment&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a></td></tr>
-<tr class="memdesc:a3f4b5dc78b2ba5a4c5b87555e1caf5ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">A parse segment. <br /></td></tr>
-<tr class="separator:a3f4b5dc78b2ba5a4c5b87555e1caf5ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae9b731202ba9945266f8310a15b636e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aae9b731202ba9945266f8310a15b636e"></a>
 typedef struct cypher_parse_result&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a></td></tr>
 <tr class="memdesc:aae9b731202ba9945266f8310a15b636e"><td class="mdescLeft">&#160;</td><td class="mdescRight">A parse result. <br /></td></tr>
@@ -86,10 +82,6 @@ typedef struct cypher_parse_result&#160;</td><td class="memItemRight" valign="bo
 typedef struct cypher_parse_error&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a2f0e691cc0f64d1079d6f1840ed72c43">cypher_parse_error_t</a></td></tr>
 <tr class="memdesc:a2f0e691cc0f64d1079d6f1840ed72c43"><td class="mdescLeft">&#160;</td><td class="mdescRight">A parse error. <br /></td></tr>
 <tr class="separator:a2f0e691cc0f64d1079d6f1840ed72c43"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64ed24bff906e9fc2ae2cfd4ef2bc46d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a64ed24bff906e9fc2ae2cfd4ef2bc46d"></a>
-typedef int(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a64ed24bff906e9fc2ae2cfd4ef2bc46d">cypher_parser_segment_callback_t</a>) (void *userdata, <a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a> *segment)</td></tr>
-<tr class="memdesc:a64ed24bff906e9fc2ae2cfd4ef2bc46d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A parse callback. <br /></td></tr>
-<tr class="separator:a64ed24bff906e9fc2ae2cfd4ef2bc46d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -1024,9 +1016,9 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:ac283c2464bf22556167cbaf98ee6e1f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#ac283c2464bf22556167cbaf98ee6e1f8">cypher_ast_command</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *name, <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *const *args, unsigned int nargs, <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> **children, unsigned int nchildren, struct <a class="el" href="structcypher__input__range.html">cypher_input_range</a> range)</td></tr>
 <tr class="memdesc:ac283c2464bf22556167cbaf98ee6e1f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <code>CYPHER_AST_COMMAND</code> node.  <a href="#ac283c2464bf22556167cbaf98ee6e1f8">More...</a><br /></td></tr>
 <tr class="separator:ac283c2464bf22556167cbaf98ee6e1f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93ecb1992e04386db0faaf734fdb1313"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a93ecb1992e04386db0faaf734fdb1313">cypher_ast_command_get_name</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *node)</td></tr>
-<tr class="memdesc:a93ecb1992e04386db0faaf734fdb1313"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the name from a CYPHER_AST_COMMAND node.  <a href="#a93ecb1992e04386db0faaf734fdb1313">More...</a><br /></td></tr>
-<tr class="separator:a93ecb1992e04386db0faaf734fdb1313"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a994aff5d02dc4b15970db062ce29b23f"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a994aff5d02dc4b15970db062ce29b23f">cypher_ast_command_name</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *node)</td></tr>
+<tr class="memdesc:a994aff5d02dc4b15970db062ce29b23f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the name from a CYPHER_AST_COMMAND node.  <a href="#a994aff5d02dc4b15970db062ce29b23f">More...</a><br /></td></tr>
+<tr class="separator:a994aff5d02dc4b15970db062ce29b23f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3837d406849d5a5c2cc37387cedc8f71"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a3837d406849d5a5c2cc37387cedc8f71">cypher_ast_command_narguments</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *node)</td></tr>
 <tr class="memdesc:a3837d406849d5a5c2cc37387cedc8f71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of arguments from a CYPHER_AST_COMMAND node.  <a href="#a3837d406849d5a5c2cc37387cedc8f71">More...</a><br /></td></tr>
 <tr class="separator:a3837d406849d5a5c2cc37387cedc8f71"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1072,78 +1064,33 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a6adb90ab702d6db8ef7640150ee78316"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a6adb90ab702d6db8ef7640150ee78316">cypher_parser_config_set_error_colorization</a> (<a class="el" href="cypher-parser_8h.html#a1ab07797ed263d9d989250bb0ffd62ba">cypher_parser_config_t</a> *config, const struct cypher_parser_colorization *colorization)</td></tr>
 <tr class="memdesc:a6adb90ab702d6db8ef7640150ee78316"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the colorization scheme for error messages.  <a href="#a6adb90ab702d6db8ef7640150ee78316">More...</a><br /></td></tr>
 <tr class="separator:a6adb90ab702d6db8ef7640150ee78316"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8fad50ef5ce397346cbb4d9b0f131a62"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a8fad50ef5ce397346cbb4d9b0f131a62">cypher_uparse_each</a> (const char *s, size_t n, <a class="el" href="cypher-parser_8h.html#a64ed24bff906e9fc2ae2cfd4ef2bc46d">cypher_parser_segment_callback_t</a> callback, void *userdata, struct <a class="el" href="structcypher__input__position.html">cypher_input_position</a> *last, <a class="el" href="cypher-parser_8h.html#a1ab07797ed263d9d989250bb0ffd62ba">cypher_parser_config_t</a> *config, uint_fast32_t flags)</td></tr>
-<tr class="memdesc:a8fad50ef5ce397346cbb4d9b0f131a62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse segments from a string.  <a href="#a8fad50ef5ce397346cbb4d9b0f131a62">More...</a><br /></td></tr>
-<tr class="separator:a8fad50ef5ce397346cbb4d9b0f131a62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a79a5d6d4dace2898d7279b7d5e1d0a70"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a79a5d6d4dace2898d7279b7d5e1d0a70">cypher_uparse</a> (const char *s, size_t n, struct <a class="el" href="structcypher__input__position.html">cypher_input_position</a> *last, <a class="el" href="cypher-parser_8h.html#a1ab07797ed263d9d989250bb0ffd62ba">cypher_parser_config_t</a> *config, uint_fast32_t flags)</td></tr>
 <tr class="memdesc:a79a5d6d4dace2898d7279b7d5e1d0a70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a statement or command from a string.  <a href="#a79a5d6d4dace2898d7279b7d5e1d0a70">More...</a><br /></td></tr>
 <tr class="separator:a79a5d6d4dace2898d7279b7d5e1d0a70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53dd2ed457e4ffce553eb411682df066"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a53dd2ed457e4ffce553eb411682df066">cypher_fparse_each</a> (FILE *stream, <a class="el" href="cypher-parser_8h.html#a64ed24bff906e9fc2ae2cfd4ef2bc46d">cypher_parser_segment_callback_t</a> callback, void *userdata, struct <a class="el" href="structcypher__input__position.html">cypher_input_position</a> *last, <a class="el" href="cypher-parser_8h.html#a1ab07797ed263d9d989250bb0ffd62ba">cypher_parser_config_t</a> *config, uint_fast32_t flags)</td></tr>
-<tr class="memdesc:a53dd2ed457e4ffce553eb411682df066"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse segments from a stream.  <a href="#a53dd2ed457e4ffce553eb411682df066">More...</a><br /></td></tr>
-<tr class="separator:a53dd2ed457e4ffce553eb411682df066"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aafa44d8793c3714b14a5a1365d920e29"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#aafa44d8793c3714b14a5a1365d920e29">cypher_fparse</a> (FILE *stream, struct <a class="el" href="structcypher__input__position.html">cypher_input_position</a> *last, <a class="el" href="cypher-parser_8h.html#a1ab07797ed263d9d989250bb0ffd62ba">cypher_parser_config_t</a> *config, uint_fast32_t flags)</td></tr>
 <tr class="memdesc:aafa44d8793c3714b14a5a1365d920e29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a statement or command from a stream.  <a href="#aafa44d8793c3714b14a5a1365d920e29">More...</a><br /></td></tr>
 <tr class="separator:aafa44d8793c3714b14a5a1365d920e29"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6512bb9fe3a272be8bf93af9baadc67"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcypher__input__range.html">cypher_input_range</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#ad6512bb9fe3a272be8bf93af9baadc67">cypher_parse_segment_get_range</a> (const <a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a> *segment)</td></tr>
-<tr class="memdesc:ad6512bb9fe3a272be8bf93af9baadc67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the range of a parse segment.  <a href="#ad6512bb9fe3a272be8bf93af9baadc67">More...</a><br /></td></tr>
-<tr class="separator:ad6512bb9fe3a272be8bf93af9baadc67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a09fb3ac03809c989c7a50d9071e2e18a"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a09fb3ac03809c989c7a50d9071e2e18a">cypher_parse_segment_nerrors</a> (const <a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a> *segment)</td></tr>
-<tr class="memdesc:a09fb3ac03809c989c7a50d9071e2e18a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of errors encountered in a parse segment.  <a href="#a09fb3ac03809c989c7a50d9071e2e18a">More...</a><br /></td></tr>
-<tr class="separator:a09fb3ac03809c989c7a50d9071e2e18a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f32dee27d1cdefd97e3bb205a596044"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a2f0e691cc0f64d1079d6f1840ed72c43">cypher_parse_error_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a4f32dee27d1cdefd97e3bb205a596044">cypher_parse_segment_get_error</a> (const <a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a> *segment, unsigned int index)</td></tr>
-<tr class="memdesc:a4f32dee27d1cdefd97e3bb205a596044"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get an error from a parse segment.  <a href="#a4f32dee27d1cdefd97e3bb205a596044">More...</a><br /></td></tr>
-<tr class="separator:a4f32dee27d1cdefd97e3bb205a596044"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b71da89d028df8954905e64ad175971"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a7b71da89d028df8954905e64ad175971">cypher_parse_segment_nroots</a> (const <a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a> *segment)</td></tr>
-<tr class="memdesc:a7b71da89d028df8954905e64ad175971"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of root AST nodes parsed in a segment.  <a href="#a7b71da89d028df8954905e64ad175971">More...</a><br /></td></tr>
-<tr class="separator:a7b71da89d028df8954905e64ad175971"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2be4956014610639c9560426f2e9f6a7"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a2be4956014610639c9560426f2e9f6a7">cypher_parse_segment_get_root</a> (const <a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a> *segment, unsigned int index)</td></tr>
-<tr class="memdesc:a2be4956014610639c9560426f2e9f6a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a root AST node from a parse segment.  <a href="#a2be4956014610639c9560426f2e9f6a7">More...</a><br /></td></tr>
-<tr class="separator:a2be4956014610639c9560426f2e9f6a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aebf5b44c4a3c98a3140fe940aade7de1"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#aebf5b44c4a3c98a3140fe940aade7de1">cypher_parse_segment_nnodes</a> (const <a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a> *segment)</td></tr>
-<tr class="memdesc:aebf5b44c4a3c98a3140fe940aade7de1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the total number of AST nodes parsed in a segment.  <a href="#aebf5b44c4a3c98a3140fe940aade7de1">More...</a><br /></td></tr>
-<tr class="separator:aebf5b44c4a3c98a3140fe940aade7de1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad64962d49f19949caa41ae15ed427c10"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#ad64962d49f19949caa41ae15ed427c10">cypher_parse_segment_get_directive</a> (const <a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a> *segment)</td></tr>
-<tr class="memdesc:ad64962d49f19949caa41ae15ed427c10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the statement or client command parsed in a segment.  <a href="#ad64962d49f19949caa41ae15ed427c10">More...</a><br /></td></tr>
-<tr class="separator:ad64962d49f19949caa41ae15ed427c10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d46e89a01e0fcbc7e07c2154c534773"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a6d46e89a01e0fcbc7e07c2154c534773">cypher_parse_segment_fprint_ast</a> (const <a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a> *segment, FILE *stream, unsigned int width, const struct cypher_parser_colorization *colorization, uint_fast32_t flags)</td></tr>
-<tr class="memdesc:a6d46e89a01e0fcbc7e07c2154c534773"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print a represetation of the AST from a parse segment to a stream.  <a href="#a6d46e89a01e0fcbc7e07c2154c534773">More...</a><br /></td></tr>
-<tr class="separator:a6d46e89a01e0fcbc7e07c2154c534773"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac7d4b2dd06d67b52ea9d31619f667ac4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#ac7d4b2dd06d67b52ea9d31619f667ac4">cypher_parse_segment_retain</a> (<a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a> *segment)</td></tr>
-<tr class="memdesc:ac7d4b2dd06d67b52ea9d31619f667ac4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retain a reference to a parse segment.  <a href="#ac7d4b2dd06d67b52ea9d31619f667ac4">More...</a><br /></td></tr>
-<tr class="separator:ac7d4b2dd06d67b52ea9d31619f667ac4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4bd58bbedc2f3460f3a885256863193d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a4bd58bbedc2f3460f3a885256863193d">cypher_parse_segment_release</a> (<a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a> *segment)</td></tr>
-<tr class="memdesc:a4bd58bbedc2f3460f3a885256863193d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release a reference to a parse segment.  <a href="#a4bd58bbedc2f3460f3a885256863193d">More...</a><br /></td></tr>
-<tr class="separator:a4bd58bbedc2f3460f3a885256863193d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade39b014f85042842ef047f238ab005c"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#ade39b014f85042842ef047f238ab005c">cypher_parse_result_nroots</a> (const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *result)</td></tr>
-<tr class="memdesc:ade39b014f85042842ef047f238ab005c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of root AST nodes parsed.  <a href="#ade39b014f85042842ef047f238ab005c">More...</a><br /></td></tr>
-<tr class="separator:ade39b014f85042842ef047f238ab005c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7944eb29da408167272f3ea871c59a40"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a7944eb29da408167272f3ea871c59a40">cypher_parse_result_get_root</a> (const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *result, unsigned int index)</td></tr>
-<tr class="memdesc:a7944eb29da408167272f3ea871c59a40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a root AST nodes from a parse result.  <a href="#a7944eb29da408167272f3ea871c59a40">More...</a><br /></td></tr>
-<tr class="separator:a7944eb29da408167272f3ea871c59a40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a94bbaef0666da96630f3055662f9cdd0"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a94bbaef0666da96630f3055662f9cdd0">cypher_parse_result_nnodes</a> (const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *result)</td></tr>
-<tr class="memdesc:a94bbaef0666da96630f3055662f9cdd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the total number of AST nodes parsed.  <a href="#a94bbaef0666da96630f3055662f9cdd0">More...</a><br /></td></tr>
-<tr class="separator:a94bbaef0666da96630f3055662f9cdd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37fbbc26a40ba74686df6c7944297253"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a37fbbc26a40ba74686df6c7944297253">cypher_parse_result_nelements</a> (const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *result)</td></tr>
+<tr class="memdesc:a37fbbc26a40ba74686df6c7944297253"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of elements parsed.  <a href="#a37fbbc26a40ba74686df6c7944297253">More...</a><br /></td></tr>
+<tr class="separator:a37fbbc26a40ba74686df6c7944297253"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45d75f8465150e40ad27784cc5a89075"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a45d75f8465150e40ad27784cc5a89075">cypher_parse_result_element</a> (const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *result, unsigned int index)</td></tr>
+<tr class="memdesc:a45d75f8465150e40ad27784cc5a89075"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a parsed elements from a parse result.  <a href="#a45d75f8465150e40ad27784cc5a89075">More...</a><br /></td></tr>
+<tr class="separator:a45d75f8465150e40ad27784cc5a89075"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada4f30b4539bfebaa7e6926f84c290c7"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#ada4f30b4539bfebaa7e6926f84c290c7">cypher_parse_result_node_count</a> (const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *result)</td></tr>
+<tr class="memdesc:ada4f30b4539bfebaa7e6926f84c290c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the total number of astnodes parsed.  <a href="#ada4f30b4539bfebaa7e6926f84c290c7">More...</a><br /></td></tr>
+<tr class="separator:ada4f30b4539bfebaa7e6926f84c290c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4dd4c1e589e36af4956c5d1c6eb2c50"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#aa4dd4c1e589e36af4956c5d1c6eb2c50">cypher_parse_result_ndirectives</a> (const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *result)</td></tr>
 <tr class="memdesc:aa4dd4c1e589e36af4956c5d1c6eb2c50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of statements or commands parsed.  <a href="#aa4dd4c1e589e36af4956c5d1c6eb2c50">More...</a><br /></td></tr>
 <tr class="separator:aa4dd4c1e589e36af4956c5d1c6eb2c50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa49750771813d095e3a26f3055ba0853"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#aa49750771813d095e3a26f3055ba0853">cypher_parse_result_get_directive</a> (const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *result, unsigned int index)</td></tr>
-<tr class="memdesc:aa49750771813d095e3a26f3055ba0853"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the AST for a parsed statement or command from a parse result.  <a href="#aa49750771813d095e3a26f3055ba0853">More...</a><br /></td></tr>
-<tr class="separator:aa49750771813d095e3a26f3055ba0853"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a599c4f4ce15b1c6c6b608f25fc5ac26d"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a599c4f4ce15b1c6c6b608f25fc5ac26d">cypher_parse_result_directive</a> (const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *result, unsigned int index)</td></tr>
+<tr class="memdesc:a599c4f4ce15b1c6c6b608f25fc5ac26d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the AST for a parsed statement or command from a parse result.  <a href="#a599c4f4ce15b1c6c6b608f25fc5ac26d">More...</a><br /></td></tr>
+<tr class="separator:a599c4f4ce15b1c6c6b608f25fc5ac26d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a042fbc660c8a6a038131e4574145d82a"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a042fbc660c8a6a038131e4574145d82a">cypher_parse_result_nerrors</a> (const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *result)</td></tr>
 <tr class="memdesc:a042fbc660c8a6a038131e4574145d82a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of errors encountered during parsing.  <a href="#a042fbc660c8a6a038131e4574145d82a">More...</a><br /></td></tr>
 <tr class="separator:a042fbc660c8a6a038131e4574145d82a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3cc09d3f84603d7c1763615deffac0c"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a2f0e691cc0f64d1079d6f1840ed72c43">cypher_parse_error_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#ae3cc09d3f84603d7c1763615deffac0c">cypher_parse_result_get_error</a> (const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *result, unsigned int index)</td></tr>
-<tr class="memdesc:ae3cc09d3f84603d7c1763615deffac0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get an error description from a parse result.  <a href="#ae3cc09d3f84603d7c1763615deffac0c">More...</a><br /></td></tr>
-<tr class="separator:ae3cc09d3f84603d7c1763615deffac0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e4afe2e5b90afa0cc7ac574da92c00e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a9e4afe2e5b90afa0cc7ac574da92c00e">cypher_parse_result_eof</a> (const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *result)</td></tr>
-<tr class="memdesc:a9e4afe2e5b90afa0cc7ac574da92c00e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the parse encountered the end of the input.  <a href="#a9e4afe2e5b90afa0cc7ac574da92c00e">More...</a><br /></td></tr>
-<tr class="separator:a9e4afe2e5b90afa0cc7ac574da92c00e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae4fdf230648a9fac332c14bf41c26713"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#ae4fdf230648a9fac332c14bf41c26713">cypher_parse_result_fprint_ast</a> (const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *result, FILE *stream, unsigned int width, const struct cypher_parser_colorization *colorization, uint_fast32_t flags)</td></tr>
-<tr class="memdesc:ae4fdf230648a9fac332c14bf41c26713"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print a represetation of a parse result to a stream.  <a href="#ae4fdf230648a9fac332c14bf41c26713">More...</a><br /></td></tr>
-<tr class="separator:ae4fdf230648a9fac332c14bf41c26713"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acacd5292abb94a7c5dfcba56a9cd4e74"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#acacd5292abb94a7c5dfcba56a9cd4e74">cypher_parse_result_free</a> (<a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *result)</td></tr>
-<tr class="memdesc:acacd5292abb94a7c5dfcba56a9cd4e74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free memory associated with a parse result.  <a href="#acacd5292abb94a7c5dfcba56a9cd4e74">More...</a><br /></td></tr>
-<tr class="separator:acacd5292abb94a7c5dfcba56a9cd4e74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18fcbfc2ddda0e85cd6646b0afcdc226"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a2f0e691cc0f64d1079d6f1840ed72c43">cypher_parse_error_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a18fcbfc2ddda0e85cd6646b0afcdc226">cypher_parse_result_error</a> (const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *result, unsigned int index)</td></tr>
+<tr class="memdesc:a18fcbfc2ddda0e85cd6646b0afcdc226"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get an error description from a parse result.  <a href="#a18fcbfc2ddda0e85cd6646b0afcdc226">More...</a><br /></td></tr>
+<tr class="separator:a18fcbfc2ddda0e85cd6646b0afcdc226"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44f2a522dd0e3ea8144b0c342344949c"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcypher__input__position.html">cypher_input_position</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a44f2a522dd0e3ea8144b0c342344949c">cypher_parse_error_position</a> (const <a class="el" href="cypher-parser_8h.html#a2f0e691cc0f64d1079d6f1840ed72c43">cypher_parse_error_t</a> *error)</td></tr>
 <tr class="memdesc:a44f2a522dd0e3ea8144b0c342344949c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the position of an error.  <a href="#a44f2a522dd0e3ea8144b0c342344949c">More...</a><br /></td></tr>
 <tr class="separator:a44f2a522dd0e3ea8144b0c342344949c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1156,9 +1103,12 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a97b646e58e262b9a5d652563c8a1f745"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a97b646e58e262b9a5d652563c8a1f745">cypher_parse_error_context_offset</a> (const <a class="el" href="cypher-parser_8h.html#a2f0e691cc0f64d1079d6f1840ed72c43">cypher_parse_error_t</a> *error)</td></tr>
 <tr class="memdesc:a97b646e58e262b9a5d652563c8a1f745"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the offset into the context of an error.  <a href="#a97b646e58e262b9a5d652563c8a1f745">More...</a><br /></td></tr>
 <tr class="separator:a97b646e58e262b9a5d652563c8a1f745"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e5e0d23ec8c0eab8bfa1413edc32807"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a0e5e0d23ec8c0eab8bfa1413edc32807">cypher_parse_each</a> (const char *s, <a class="el" href="cypher-parser_8h.html#a64ed24bff906e9fc2ae2cfd4ef2bc46d">cypher_parser_segment_callback_t</a> callback, void *userdata, struct <a class="el" href="structcypher__input__position.html">cypher_input_position</a> *last, <a class="el" href="cypher-parser_8h.html#a1ab07797ed263d9d989250bb0ffd62ba">cypher_parser_config_t</a> *config, uint_fast32_t flags)</td></tr>
-<tr class="memdesc:a0e5e0d23ec8c0eab8bfa1413edc32807"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse segments from a string.  <a href="#a0e5e0d23ec8c0eab8bfa1413edc32807">More...</a><br /></td></tr>
-<tr class="separator:a0e5e0d23ec8c0eab8bfa1413edc32807"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a499230e45a2c013e67c09ac1b63da5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a6a499230e45a2c013e67c09ac1b63da5">cypher_parse_result_fprint</a> (const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *result, FILE *stream, unsigned int width, const struct cypher_parser_colorization *colorization, uint_fast32_t flags)</td></tr>
+<tr class="memdesc:a6a499230e45a2c013e67c09ac1b63da5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print a represetation of a parse result to a stream.  <a href="#a6a499230e45a2c013e67c09ac1b63da5">More...</a><br /></td></tr>
+<tr class="separator:a6a499230e45a2c013e67c09ac1b63da5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acacd5292abb94a7c5dfcba56a9cd4e74"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#acacd5292abb94a7c5dfcba56a9cd4e74">cypher_parse_result_free</a> (<a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *result)</td></tr>
+<tr class="memdesc:acacd5292abb94a7c5dfcba56a9cd4e74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free memory associated with a parse result.  <a href="#acacd5292abb94a7c5dfcba56a9cd4e74">More...</a><br /></td></tr>
+<tr class="separator:acacd5292abb94a7c5dfcba56a9cd4e74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e845c6f4b66ec4dd9b55ef08f79620d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a8e845c6f4b66ec4dd9b55ef08f79620d">cypher_parse</a> (const char *s, struct <a class="el" href="structcypher__input__position.html">cypher_input_position</a> *last, <a class="el" href="cypher-parser_8h.html#a1ab07797ed263d9d989250bb0ffd62ba">cypher_parser_config_t</a> *config, uint_fast32_t flags)</td></tr>
 <tr class="memdesc:a8e845c6f4b66ec4dd9b55ef08f79620d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a command or statement from a string.  <a href="#a8e845c6f4b66ec4dd9b55ef08f79620d">More...</a><br /></td></tr>
 <tr class="separator:a8e845c6f4b66ec4dd9b55ef08f79620d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -3043,12 +2993,12 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a93ecb1992e04386db0faaf734fdb1313"></a>
+<a class="anchor" id="a994aff5d02dc4b15970db062ce29b23f"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_ast_command_get_name </td>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_ast_command_name </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td>
           <td class="paramname"><em>node</em></td><td>)</td>
@@ -13540,76 +13490,10 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Parse a statement or command from a stream. </p>
-<p>All statements and/or client commands are parsed from the input string, and a result returned. The result must be passed to <code>cypher_parse_result_free(...)</code> to release dynamically allocated memory. If the flag CYPHER_PARSE_ONLY_STATEMENTS is set, client commands will not be parsed.</p>
+<p>The first statement or command is parsed from the input string, and a result returned. The result must be passed to <code>cypher_parse_result_free(...)</code> to release dynamically allocated memory.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">[stream]</td><td>The stream to parse. </td></tr>
-    <tr><td class="paramname">[last]</td><td>Either <code>NULL</code>, or a pointer to a <code>struct <a class="el" href="structcypher__input__position.html" title="A position in the input. ">cypher_input_position</a></code> that will be set position of the last character consumed from the input. </td></tr>
-    <tr><td class="paramname">[config]</td><td>Either <code>NULL</code>, or a pointer to configuration for the parser. </td></tr>
-    <tr><td class="paramname">[flags]</td><td>A bitmask of flags to control parsing. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A pointer to a <code>cypher_parse_result_t</code>, or <code>NULL</code> if an error occurs (errno will be set). </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a53dd2ed457e4ffce553eb411682df066"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int cypher_fparse_each </td>
-          <td>(</td>
-          <td class="paramtype">FILE *&#160;</td>
-          <td class="paramname"><em>stream</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="cypher-parser_8h.html#a64ed24bff906e9fc2ae2cfd4ef2bc46d">cypher_parser_segment_callback_t</a>&#160;</td>
-          <td class="paramname"><em>callback</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>userdata</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct <a class="el" href="structcypher__input__position.html">cypher_input_position</a> *&#160;</td>
-          <td class="paramname"><em>last</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="cypher-parser_8h.html#a1ab07797ed263d9d989250bb0ffd62ba">cypher_parser_config_t</a> *&#160;</td>
-          <td class="paramname"><em>config</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint_fast32_t&#160;</td>
-          <td class="paramname"><em>flags</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Parse segments from a stream. </p>
-<p>The provided callback is invoked for every segment of parsed input, where each segments is separated by either a newline or semicolon (<code>;</code>), respectively depending on whether a client command is being parsed or not. If the flag CYPHER_PARSE_ONLY_STATEMENTS is set, then only semicolons will be used for delimiting segments, and client commands will not be parsed.</p>
-<p>The segment will be released after the callback is complete, unless retained using <code>cypher_parse_segment_retain(segment)</code>.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">[stream]</td><td>The stream to parse. </td></tr>
-    <tr><td class="paramname">[callback]</td><td>The callback to be invoked for each parsed segment. </td></tr>
-    <tr><td class="paramname">[userdata]</td><td>A pointer that will be provided to the callback. </td></tr>
     <tr><td class="paramname">[last]</td><td>Either <code>NULL</code>, or a pointer to a <code>struct <a class="el" href="structcypher__input__position.html" title="A position in the input. ">cypher_input_position</a></code> that will be set position of the last character consumed from the input. </td></tr>
     <tr><td class="paramname">[config]</td><td>Either <code>NULL</code>, or a pointer to configuration for the parser. </td></tr>
     <tr><td class="paramname">[flags]</td><td>A bitmask of flags to control parsing. </td></tr>
@@ -13657,7 +13541,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Parse a command or statement from a string. </p>
-<p>All statements and/or client commands are parsed from the input string, and a result returned. The result must be passed to <code>cypher_parse_result_free(...)</code> to release dynamically allocated memory. If the flag CYPHER_PARSE_ONLY_STATEMENTS is set, client commands will not be parsed.</p>
+<p>The first statement or command is parsed from the input string, and a result returned. The result must be passed to <code>cypher_parse_result_free(...)</code> to release dynamically allocated memory.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">[s]</td><td>A null terminated string to parse. </td></tr>
@@ -13668,72 +13552,6 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A pointer to a <code>cypher_parse_result_t</code>, or <code>NULL</code> if an error occurs (errno will be set). </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a0e5e0d23ec8c0eab8bfa1413edc32807"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int cypher_parse_each </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>s</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="cypher-parser_8h.html#a64ed24bff906e9fc2ae2cfd4ef2bc46d">cypher_parser_segment_callback_t</a>&#160;</td>
-          <td class="paramname"><em>callback</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>userdata</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct <a class="el" href="structcypher__input__position.html">cypher_input_position</a> *&#160;</td>
-          <td class="paramname"><em>last</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="cypher-parser_8h.html#a1ab07797ed263d9d989250bb0ffd62ba">cypher_parser_config_t</a> *&#160;</td>
-          <td class="paramname"><em>config</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint_fast32_t&#160;</td>
-          <td class="paramname"><em>flags</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Parse segments from a string. </p>
-<p>The provided callback is invoked for every segment of parsed input, where each segments is separated by either a newline or semicolon (<code>;</code>), respectively depending on whether a client command is being parsed or not. If the flag CYPHER_PARSE_ONLY_STATEMENTS is set, then only semicolons will be used for delimiting segments, and client commands will not be parsed.</p>
-<p>The segment will be released after the callback is complete, unless retained using <code>cypher_parse_segment_retain(segment)</code>.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">[s]</td><td>A null terminated string to parse. </td></tr>
-    <tr><td class="paramname">[callback]</td><td>The callback to be invoked for each parsed segment. </td></tr>
-    <tr><td class="paramname">[userdata]</td><td>A pointer that will be provided to the callback. </td></tr>
-    <tr><td class="paramname">[last]</td><td>Either <code>NULL</code>, or a pointer to a <code>struct <a class="el" href="structcypher__input__position.html" title="A position in the input. ">cypher_input_position</a></code> that will be set position of the last character consumed from the input. </td></tr>
-    <tr><td class="paramname">[config]</td><td>Either <code>NULL</code>, or a pointer to configuration for the parser. </td></tr>
-    <tr><td class="paramname">[flags]</td><td>A bitmask of flags to control parsing. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>0 on success, -1 on failure (errno will be set). </dd></dl>
 
 </div>
 </div>
@@ -13839,38 +13657,120 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a9e4afe2e5b90afa0cc7ac574da92c00e"></a>
+<a class="anchor" id="a599c4f4ce15b1c6c6b608f25fc5ac26d"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool cypher_parse_result_eof </td>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_parse_result_directive </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *&#160;</td>
-          <td class="paramname"><em>result</em></td><td>)</td>
+          <td class="paramname"><em>result</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Check if the parse encountered the end of the input. </p>
-<p>Indicates if the last parsed command or statement was terminated (with a newline or <code>;</code> respectively), or with EOF.</p>
+<p>Get the AST for a parsed statement or command from a parse result. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">[result]</td><td>The parse result. </td></tr>
+    <tr><td class="paramname">[index]</td><td>The directive index. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the end of input was encountered, <code>false</code> if the command or statement was terminated with the expected character. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Either a CYPHER_AST_STATEMENT, a CYPHER_AST_COMMAND node, or <code>NULL</code> if there is no directive at the specified index. </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="ae4fdf230648a9fac332c14bf41c26713"></a>
+<a class="anchor" id="a45d75f8465150e40ad27784cc5a89075"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int cypher_parse_result_fprint_ast </td>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_parse_result_element </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *&#160;</td>
+          <td class="paramname"><em>result</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get a parsed elements from a parse result. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">[result]</td><td>The parse result. </td></tr>
+    <tr><td class="paramname">[index]</td><td>The element index. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the AST node for the element, or <code>NULL</code> if there is no element at the specified index. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a18fcbfc2ddda0e85cd6646b0afcdc226"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#a2f0e691cc0f64d1079d6f1840ed72c43">cypher_parse_error_t</a>* cypher_parse_result_error </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *&#160;</td>
+          <td class="paramname"><em>result</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get an error description from a parse result. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">[result]</td><td>The parse result. </td></tr>
+    <tr><td class="paramname">[index]</td><td>The error index. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the error description, or <code>NULL</code> if there is no value at the specified index. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a6a499230e45a2c013e67c09ac1b63da5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int cypher_parse_result_fprint </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *&#160;</td>
           <td class="paramname"><em>result</em>, </td>
@@ -13908,7 +13808,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Print a represetation of a parse result to a stream. </p>
-<p>Useful for debugging purposes. This is equivalent to calling <code>cypher_ast_fprintv</code> with the an array of root AST nodes from the result.</p>
+<p>Useful for debugging purposes.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">[result]</td><td>The parse result. </td></tr>
@@ -13948,114 +13848,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aa49750771813d095e3a26f3055ba0853"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_parse_result_get_directive </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *&#160;</td>
-          <td class="paramname"><em>result</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>index</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the AST for a parsed statement or command from a parse result. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">[result]</td><td>The parse result. </td></tr>
-    <tr><td class="paramname">[index]</td><td>The directive index. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Either a CYPHER_AST_STATEMENT, a CYPHER_AST_COMMAND node, or <code>NULL</code> if there is no directive at the specified index. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="ae3cc09d3f84603d7c1763615deffac0c"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="cypher-parser_8h.html#a2f0e691cc0f64d1079d6f1840ed72c43">cypher_parse_error_t</a>* cypher_parse_result_get_error </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *&#160;</td>
-          <td class="paramname"><em>result</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>index</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get an error description from a parse result. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">[result]</td><td>The parse result. </td></tr>
-    <tr><td class="paramname">[index]</td><td>The error index. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A pointer to the error description, or <code>NULL</code> if there is no value at the specified index. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a7944eb29da408167272f3ea871c59a40"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_parse_result_get_root </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *&#160;</td>
-          <td class="paramname"><em>result</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>index</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get a root AST nodes from a parse result. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">[result]</td><td>The parse result. </td></tr>
-    <tr><td class="paramname">[index]</td><td>The node index. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A pointer to the AST node, or <code>NULL</code> if there is no element at the specified index. </dd></dl>
-
-</div>
-</div>
 <a class="anchor" id="aa4dd4c1e589e36af4956c5d1c6eb2c50"></a>
 <div class="memitem">
 <div class="memproto">
@@ -14078,6 +13870,31 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The number of statements or commands parsed. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a37fbbc26a40ba74686df6c7944297253"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int cypher_parse_result_nelements </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *&#160;</td>
+          <td class="paramname"><em>result</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the number of elements parsed. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">[result]</td><td>The parse result. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The number of elements. </dd></dl>
 
 </div>
 </div>
@@ -14106,12 +13923,12 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a94bbaef0666da96630f3055662f9cdd0"></a>
+<a class="anchor" id="ada4f30b4539bfebaa7e6926f84c290c7"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">unsigned int cypher_parse_result_nnodes </td>
+          <td class="memname">unsigned int cypher_parse_result_node_count </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *&#160;</td>
           <td class="paramname"><em>result</em></td><td>)</td>
@@ -14120,7 +13937,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Get the total number of AST nodes parsed. </p>
+<p>Get the total number of astnodes parsed. </p>
 <p>Includes all children, at any depth, of all result elements.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -14129,337 +13946,6 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The number of elements. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="ade39b014f85042842ef047f238ab005c"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">unsigned int cypher_parse_result_nroots </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *&#160;</td>
-          <td class="paramname"><em>result</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the number of root AST nodes parsed. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">[result]</td><td>The parse result. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The number of root AST nodes. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a6d46e89a01e0fcbc7e07c2154c534773"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int cypher_parse_segment_fprint_ast </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a> *&#160;</td>
-          <td class="paramname"><em>segment</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">FILE *&#160;</td>
-          <td class="paramname"><em>stream</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>width</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const struct cypher_parser_colorization *&#160;</td>
-          <td class="paramname"><em>colorization</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint_fast32_t&#160;</td>
-          <td class="paramname"><em>flags</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Print a represetation of the AST from a parse segment to a stream. </p>
-<p>Useful for debugging purposes. This is equivalent to calling <code>cypher_ast_fprintv</code> with the an array of root AST nodes from the segment.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">[segment]</td><td>The parse segment. </td></tr>
-    <tr><td class="paramname">[stream]</td><td>The stream to print to. </td></tr>
-    <tr><td class="paramname">[width]</td><td>The width to render, which is advisory and may be exceeded. A value of 0 implies no restriction on width. </td></tr>
-    <tr><td class="paramname">[colorization]</td><td>A colorization scheme to apply, or null. </td></tr>
-    <tr><td class="paramname">[flags]</td><td>A bitmask of flags to control rendering. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>0 on success, or -1 if an error occurs (errno will be set). </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="ad64962d49f19949caa41ae15ed427c10"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_parse_segment_get_directive </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a> *&#160;</td>
-          <td class="paramname"><em>segment</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the statement or client command parsed in a segment. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">[segment]</td><td>The parse segment. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Either a CYPHER_AST_STATEMENT, a CYPHER_AST_COMMAND node, or <code>NULL</code> if neither was encountered in the segment. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a4f32dee27d1cdefd97e3bb205a596044"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="cypher-parser_8h.html#a2f0e691cc0f64d1079d6f1840ed72c43">cypher_parse_error_t</a>* cypher_parse_segment_get_error </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a> *&#160;</td>
-          <td class="paramname"><em>segment</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>index</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get an error from a parse segment. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">[segment]</td><td>The parse segment. </td></tr>
-    <tr><td class="paramname">[index]</td><td>The error index. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A pointer to the error description, or <code>NULL</code> if there is no error at the specified index. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="ad6512bb9fe3a272be8bf93af9baadc67"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct <a class="el" href="structcypher__input__range.html">cypher_input_range</a> cypher_parse_segment_get_range </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a> *&#160;</td>
-          <td class="paramname"><em>segment</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the range of a parse segment. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">[segment]</td><td>The parse segment. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The input range. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a2be4956014610639c9560426f2e9f6a7"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_parse_segment_get_root </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a> *&#160;</td>
-          <td class="paramname"><em>segment</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>index</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get a root AST node from a parse segment. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">[segment]</td><td>The parse segment. </td></tr>
-    <tr><td class="paramname">[index]</td><td>The node index. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A pointer to the AST node, or <code>NULL</code> if there is no node at the specified index. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a09fb3ac03809c989c7a50d9071e2e18a"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">unsigned int cypher_parse_segment_nerrors </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a> *&#160;</td>
-          <td class="paramname"><em>segment</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the number of errors encountered in a parse segment. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">[segment]</td><td>The parse segment. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The number of errors. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="aebf5b44c4a3c98a3140fe940aade7de1"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">unsigned int cypher_parse_segment_nnodes </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a> *&#160;</td>
-          <td class="paramname"><em>segment</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the total number of AST nodes parsed in a segment. </p>
-<p>Includes all root nodes and their children, at any depth.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">[segment]</td><td>The parse segment. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The number of elements. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a7b71da89d028df8954905e64ad175971"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">unsigned int cypher_parse_segment_nroots </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a> *&#160;</td>
-          <td class="paramname"><em>segment</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the number of root AST nodes parsed in a segment. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">[segment]</td><td>The parse segment. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The number of root AST nodes. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a4bd58bbedc2f3460f3a885256863193d"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void cypher_parse_segment_release </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a> *&#160;</td>
-          <td class="paramname"><em>segment</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Release a reference to a parse segment. </p>
-<p>The segment must have been previously retained using <code>cypher_parse_segment_retain(segment)</code>.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">[segment]</td><td>The parse segment. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="ac7d4b2dd06d67b52ea9d31619f667ac4"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void cypher_parse_segment_retain </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a> *&#160;</td>
-          <td class="paramname"><em>segment</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Retain a reference to a parse segment. </p>
-<p>The segment must later be passed to <code>cypher_parse_segment_release(segment)</code>.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">[segment]</td><td>The parse segment. </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>
@@ -14657,84 +14143,11 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Parse a statement or command from a string. </p>
-<p>All statements and/or client commands are parsed from the input string, and a result returned. The result must be passed to <code>cypher_parse_result_free(...)</code> to release dynamically allocated memory. If the flag CYPHER_PARSE_ONLY_STATEMENTS is set, client commands will not be parsed.</p>
+<p>The first statement or command is parsed from the input string, and a result returned. The result must be passed to <code>cypher_parse_result_free(...)</code> to release dynamically allocated memory.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">[s]</td><td>The string to parse. </td></tr>
     <tr><td class="paramname">[n]</td><td>The size of the string. </td></tr>
-    <tr><td class="paramname">[last]</td><td>Either <code>NULL</code>, or a pointer to a <code>struct <a class="el" href="structcypher__input__position.html" title="A position in the input. ">cypher_input_position</a></code> that will be set position of the last character consumed from the input. </td></tr>
-    <tr><td class="paramname">[config]</td><td>Either <code>NULL</code>, or a pointer to configuration for the parser. </td></tr>
-    <tr><td class="paramname">[flags]</td><td>A bitmask of flags to control parsing. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A pointer to a <code>cypher_parse_result_t</code>, or <code>NULL</code> if an error occurs (errno will be set). </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a8fad50ef5ce397346cbb4d9b0f131a62"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int cypher_uparse_each </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>s</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>n</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="cypher-parser_8h.html#a64ed24bff906e9fc2ae2cfd4ef2bc46d">cypher_parser_segment_callback_t</a>&#160;</td>
-          <td class="paramname"><em>callback</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>userdata</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct <a class="el" href="structcypher__input__position.html">cypher_input_position</a> *&#160;</td>
-          <td class="paramname"><em>last</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="cypher-parser_8h.html#a1ab07797ed263d9d989250bb0ffd62ba">cypher_parser_config_t</a> *&#160;</td>
-          <td class="paramname"><em>config</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint_fast32_t&#160;</td>
-          <td class="paramname"><em>flags</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Parse segments from a string. </p>
-<p>The provided callback is invoked for every segment of parsed input, where each segments is separated by either a newline or semicolon (<code>;</code>), respectively depending on whether a client command is being parsed or not. If the flag CYPHER_PARSE_ONLY_STATEMENTS is set, then only semicolons will be used for delimiting segments, and client commands will not be parsed.</p>
-<p>The segment will be released after the callback is complete, unless retained using <code>cypher_parse_segment_retain(segment)</code>.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">[s]</td><td>The string to parse. </td></tr>
-    <tr><td class="paramname">[n]</td><td>The size of the string. </td></tr>
-    <tr><td class="paramname">[callback]</td><td>The callback to be invoked for each parsed segment. </td></tr>
-    <tr><td class="paramname">[userdata]</td><td>A pointer that will be provided to the callback. </td></tr>
     <tr><td class="paramname">[last]</td><td>Either <code>NULL</code>, or a pointer to a <code>struct <a class="el" href="structcypher__input__position.html" title="A position in the input. ">cypher_input_position</a></code> that will be set position of the last character consumed from the input. </td></tr>
     <tr><td class="paramname">[config]</td><td>Either <code>NULL</code>, or a pointer to configuration for the parser. </td></tr>
     <tr><td class="paramname">[flags]</td><td>A bitmask of flags to control parsing. </td></tr>
