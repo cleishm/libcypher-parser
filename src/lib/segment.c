@@ -163,6 +163,12 @@ const cypher_astnode_t *cypher_parse_segment_get_directive(
 }
 
 
+bool cypher_parse_segment_eof(const cypher_parse_segment_t *segment)
+{
+    return segment->eof;
+}
+
+
 int cypher_parse_segment_fprint_ast(const cypher_parse_segment_t *segment,
         FILE *stream, unsigned int width,
         const struct cypher_parser_colorization *colorization,

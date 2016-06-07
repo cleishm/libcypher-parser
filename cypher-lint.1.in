@@ -43,6 +43,10 @@ Only parse cypher statements and not client commands.
 Attempt to limit output to the specified width, and render using wrapped
 columns.
 .TP
+.I \-\-stream
+Output each statement as it is read, rather than parsing the entire input
+first (note: will result in inconsistent formatting of AST dumps).
+.TP
 .I \-\-version
 Print the cypher\-lint version and exit.
 .SH USAGE
