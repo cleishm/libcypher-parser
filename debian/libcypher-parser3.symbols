@@ -468,6 +468,7 @@ libcypher-parser.so.3 libcypher-parser3 #MINVER#
  cypher_parse_result_nerrors@Base 0.3.0
  cypher_parse_result_nnodes@Base 0.3.0
  cypher_parse_result_nroots@Base 0.3.0
+ cypher_parse_segment_eof@Base 0.3.1
  cypher_parse_segment_fprint_ast@Base 0.3.0
  cypher_parse_segment_get_directive@Base 0.3.0
  cypher_parse_segment_get_error@Base 0.3.0
