@@ -5384,6 +5384,18 @@ const cypher_astnode_t *cypher_parse_segment_get_directive(
         const cypher_parse_segment_t *segment);
 
 /**
+ * Check if the parse encountered the end of the input.
+ *
+ * Indicates if the segment was terminated by to the end of the input.
+ *
+ * @param [segment] The parse segment.
+ * @return `true` if the end of input was encountered, `false` if the
+ *         segment was terminated with an expected character.
+ */
+__cypherlang_pure
+bool cypher_parse_segment_eof(const cypher_parse_segment_t *segment);
+
+/**
  * Print a represetation of the AST from a parse segment to a stream.
  *
  * Useful for debugging purposes. This is equivalent to calling
