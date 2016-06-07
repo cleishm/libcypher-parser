@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    printf("Parsed %d AST nodes\n", cypher_parse_result_node_count(result));
+    printf("Parsed %d AST nodes\n", cypher_parse_result_nnodes(result));
     printf("Read %d statements\n", cypher_parse_result_ndirectives(result));
     printf("Encountered %d errors\n", cypher_parse_result_nerrors(result));
 

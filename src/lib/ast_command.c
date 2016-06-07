@@ -71,7 +71,8 @@ cleanup:
 }
 
 
-const cypher_astnode_t *cypher_ast_command_name(const cypher_astnode_t *astnode)
+const cypher_astnode_t *cypher_ast_command_get_name(
+        const cypher_astnode_t *astnode)
 {
     REQUIRE_TYPE(astnode, CYPHER_AST_COMMAND, NULL);
     struct command *node = container_of(astnode, struct command, _astnode);

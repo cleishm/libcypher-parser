@@ -14,15 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef CYPHER_PARSER_RESULT_H
-#define CYPHER_PARSER_RESULT_H
+#ifndef CYPHER_PARSER_SEGMENT_H
+#define CYPHER_PARSER_SEGMENT_H
 
 #include "cypher-parser.h"
 #include "errors.h"
 
 
-struct cypher_parse_result
+struct cypher_parse_segment
 {
+    unsigned int refcount;
+
+    struct cypher_input_range range;
+
     cypher_parse_error_t *errors;
     unsigned int nerrors;
 
@@ -30,16 +34,15 @@ struct cypher_parse_result
     unsigned int nroots;
     unsigned int nnodes;
 
-    const cypher_astnode_t **directives;
-    unsigned int ndirectives;
-    unsigned int directives_cap;
-
+    const cypher_astnode_t *directive;
     bool eof;
 };
 
 
-int cp_result_merge_segment(cypher_parse_result_t *result,
-        cypher_parse_segment_t *segment);
+cypher_parse_segment_t *cypher_parse_segment(unsigned int ordinal,
+        struct cypher_input_range range, cypher_parse_error_t *errors,
+        unsigned int nerrors, cypher_astnode_t **roots, unsigned int nroots,
+        const cypher_astnode_t *directive, bool eof);
 
 
-#endif/*CYPHER_PARSER_RESULT_H*/
+#endif/*CYPHER_PARSER_SEGMENT_H*/

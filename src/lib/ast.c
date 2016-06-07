@@ -421,6 +421,15 @@ struct cypher_input_range cypher_astnode_range(const cypher_astnode_t *node)
 }
 
 
+void cypher_ast_vfree(cypher_astnode_t * const *ast, unsigned int n)
+{
+    for (; n > 0; ++ast, --n)
+    {
+        cypher_ast_free(*ast);
+    }
+}
+
+
 void cypher_ast_free(cypher_astnode_t *ast)
 {
     if (ast == NULL)
