@@ -23,23 +23,29 @@
 # previous block, should have an associated set of rules delimited by `<` and
 # `>`.
 
+__entry_points = directive | statement
 
-directive = - (SEMICOLON -)*
-    ( _directive                       { complete(yy); }
-    | _error_ (EOF | skip-to-directive) directive
-    )
+
+directive = - _directive
 _directive =
+    ( __directive                      { finished(yy); }
+    | _error_ (EOF | skip-to-directive) _directive
+    )
+__directive =
     ( EOF                              { yy->result = NULL; }
-    | d:client-command line-end        { yy->result = d; }
+    | SEMICOLON                        { yy->result = NULL; }
+    | d:client-command                 { yy->result = d; }
     | d:cypher-statement               { yy->result = d; }
     )
 
-statement = - (SEMICOLON -)*
-    ( _statement                       { complete(yy); }
-    | _error_ (EOF | skip-to-statement) statement
-    )
+statement = - _statement
 _statement =
+    ( __statement                      { finished(yy); }
+    | _error_ (EOF | skip-to-statement) _statement
+    )
+__statement =
     ( EOF                              { yy->result = NULL; }
+    | SEMICOLON                        { yy->result = NULL; }
     | d:cypher-statement               { yy->result = d; }
     )
 
@@ -750,6 +756,7 @@ client-command =
       ( a:client-command-arg           { sequence_add(a); }
       )*
     >                                  { $$ = command(n); }
+    line-end
 
 client-command-name = n:client-command-arg ~{ERR("a command name")}
                                        { $$ = n; }
@@ -834,7 +841,7 @@ block-comment = '/*' < (EOL | !'*/' .)* >
 WS = HWS | EOL
 HWS = [ \t]
 EOL = ( '\n' | '\r\n' | '\r' ) _line_start_
-EOF = !.
+EOF = !.                               { yy->eof = true; }
 
 #----------------------------------------------------
 # Keywords and Operators
@@ -997,6 +1004,7 @@ WB = &(EOF | !sym-part .)
 # remove one char of input, then as much as necessary to reach a sync point
 skip-to-directive = < . (!(
       EOF
+    | SEMICOLON
     | (WS | comment) resync-directive
     ) .)* >                            { $$ = skip(); }
 resync-directive =
@@ -1005,6 +1013,7 @@ resync-directive =
 
 skip-to-statement = < . (!(
       EOF
+    | SEMICOLON
     | (WS | comment) resync-statement
     ) .)* >                            { $$ = skip(); }
 resync-statement =
@@ -1015,11 +1024,11 @@ resync-statement =
 
 skip-to-clause = < . (!(
       EOF
+    | SEMICOLON
     | (WS | comment) resync-clause
     ) .)* >                            { $$ = skip(); }
 resync-clause =
-      SEMICOLON
-    | LOADCSV
+      LOADCSV
     | START
     | MATCH
     | UNWIND

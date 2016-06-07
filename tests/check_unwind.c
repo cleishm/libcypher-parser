@@ -51,7 +51,7 @@ START_TEST (parse_unwind)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 29);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 " @0   0..29  statement           body=@1\n"
@@ -67,7 +67,7 @@ START_TEST (parse_unwind)
 "@10  27..28  > > > > identifier  `x`\n";
     ck_assert_str_eq(memstream_buffer, expected);
 
-    const cypher_astnode_t *ast = cypher_parse_result_directive(result, 0);
+    const cypher_astnode_t *ast = cypher_parse_result_get_directive(result, 0);
     const cypher_astnode_t *query = cypher_ast_statement_get_body(ast);
     const cypher_astnode_t *clause = cypher_ast_query_get_clause(query, 0);
     ck_assert_int_eq(cypher_astnode_type(clause), CYPHER_AST_UNWIND);

@@ -246,11 +246,10 @@ am_libcypher_parser_la_OBJECTS = libcypher_parser_la-ast.lo \
 	libcypher_parser_la-ast_using_join.lo \
 	libcypher_parser_la-ast_using_periodic_commit.lo \
 	libcypher_parser_la-ast_using_scan.lo \
-	libcypher_parser_la-ast_with.lo \
-	libcypher_parser_la-error_tracking.lo \
+	libcypher_parser_la-ast_with.lo libcypher_parser_la-errors.lo \
 	libcypher_parser_la-operators.lo libcypher_parser_la-parser.lo \
 	libcypher_parser_la-parser_config.lo \
-	libcypher_parser_la-result.lo \
+	libcypher_parser_la-result.lo libcypher_parser_la-segment.lo \
 	libcypher_parser_la-string_buffer.lo \
 	libcypher_parser_la-util.lo libcypher_parser_la-vector.lo
 libcypher_parser_la_OBJECTS = $(am_libcypher_parser_la_OBJECTS)
@@ -589,8 +588,8 @@ libcypher_parser_la_SOURCES = \
 	ast_using_periodic_commit.c \
 	ast_using_scan.c \
 	ast_with.c \
-	error_tracking.c \
-	error_tracking.h \
+	errors.c \
+	errors.h \
 	operators.c \
 	operators.h \
 	parser.c \
@@ -599,6 +598,8 @@ libcypher_parser_la_SOURCES = \
 	parser_config.h \
 	result.c \
 	result.h \
+	segment.c \
+	segment.h \
 	string_buffer.c \
 	string_buffer.h \
 	util.c \
@@ -607,7 +608,7 @@ libcypher_parser_la_SOURCES = \
 	vector.h
 
 libcypher_parser_la_CFLAGS = $(PTHREAD_CFLAGS) $(OPENSSL_CFLAGS) -Wpedantic -Wvla
-libcypher_parser_la_LDFLAGS = -version-info 2:1:0
+libcypher_parser_la_LDFLAGS = -version-info 3:0:0
 libcypher_parser_la_LIBADD = $(PTHREAD_LIBS) $(OPENSSL_LIBS) $(LIBM)
 EXTRA_DIST = parser_leg.c
 MAINTAINERCLEANFILES = parser_leg.c
@@ -796,11 +797,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcypher_parser_la-ast_using_periodic_commit.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcypher_parser_la-ast_using_scan.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcypher_parser_la-ast_with.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcypher_parser_la-error_tracking.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcypher_parser_la-errors.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcypher_parser_la-operators.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcypher_parser_la-parser.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcypher_parser_la-parser_config.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcypher_parser_la-result.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcypher_parser_la-segment.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcypher_parser_la-string_buffer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcypher_parser_la-util.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcypher_parser_la-vector.Plo@am__quote@
@@ -1575,12 +1577,12 @@ libcypher_parser_la-ast_with.lo: ast_with.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcypher_parser_la_CFLAGS) $(CFLAGS) -c -o libcypher_parser_la-ast_with.lo `test -f 'ast_with.c' || echo '$(srcdir)/'`ast_with.c
 
-libcypher_parser_la-error_tracking.lo: error_tracking.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcypher_parser_la_CFLAGS) $(CFLAGS) -MT libcypher_parser_la-error_tracking.lo -MD -MP -MF $(DEPDIR)/libcypher_parser_la-error_tracking.Tpo -c -o libcypher_parser_la-error_tracking.lo `test -f 'error_tracking.c' || echo '$(srcdir)/'`error_tracking.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcypher_parser_la-error_tracking.Tpo $(DEPDIR)/libcypher_parser_la-error_tracking.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='error_tracking.c' object='libcypher_parser_la-error_tracking.lo' libtool=yes @AMDEPBACKSLASH@
+libcypher_parser_la-errors.lo: errors.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcypher_parser_la_CFLAGS) $(CFLAGS) -MT libcypher_parser_la-errors.lo -MD -MP -MF $(DEPDIR)/libcypher_parser_la-errors.Tpo -c -o libcypher_parser_la-errors.lo `test -f 'errors.c' || echo '$(srcdir)/'`errors.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcypher_parser_la-errors.Tpo $(DEPDIR)/libcypher_parser_la-errors.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='errors.c' object='libcypher_parser_la-errors.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcypher_parser_la_CFLAGS) $(CFLAGS) -c -o libcypher_parser_la-error_tracking.lo `test -f 'error_tracking.c' || echo '$(srcdir)/'`error_tracking.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcypher_parser_la_CFLAGS) $(CFLAGS) -c -o libcypher_parser_la-errors.lo `test -f 'errors.c' || echo '$(srcdir)/'`errors.c
 
 libcypher_parser_la-operators.lo: operators.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcypher_parser_la_CFLAGS) $(CFLAGS) -MT libcypher_parser_la-operators.lo -MD -MP -MF $(DEPDIR)/libcypher_parser_la-operators.Tpo -c -o libcypher_parser_la-operators.lo `test -f 'operators.c' || echo '$(srcdir)/'`operators.c
@@ -1609,6 +1611,13 @@ libcypher_parser_la-result.lo: result.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='result.c' object='libcypher_parser_la-result.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcypher_parser_la_CFLAGS) $(CFLAGS) -c -o libcypher_parser_la-result.lo `test -f 'result.c' || echo '$(srcdir)/'`result.c
+
+libcypher_parser_la-segment.lo: segment.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcypher_parser_la_CFLAGS) $(CFLAGS) -MT libcypher_parser_la-segment.lo -MD -MP -MF $(DEPDIR)/libcypher_parser_la-segment.Tpo -c -o libcypher_parser_la-segment.lo `test -f 'segment.c' || echo '$(srcdir)/'`segment.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcypher_parser_la-segment.Tpo $(DEPDIR)/libcypher_parser_la-segment.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='segment.c' object='libcypher_parser_la-segment.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcypher_parser_la_CFLAGS) $(CFLAGS) -c -o libcypher_parser_la-segment.lo `test -f 'segment.c' || echo '$(srcdir)/'`segment.c
 
 libcypher_parser_la-string_buffer.lo: string_buffer.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcypher_parser_la_CFLAGS) $(CFLAGS) -MT libcypher_parser_la-string_buffer.lo -MD -MP -MF $(DEPDIR)/libcypher_parser_la-string_buffer.Tpo -c -o libcypher_parser_la-string_buffer.lo `test -f 'string_buffer.c' || echo '$(srcdir)/'`string_buffer.c

@@ -24,6 +24,9 @@ cypher\-lint \- a linting tool for Cypher
 \fBcypher\-lint\fR is a linting tool for Cypher.
 .SH OPTIONS
 .TP
+.I \-1
+Only parse the first statement or client command and then exit.
+.TP
 .I \-a, \-\-ast
 Output an AST representation for the parsed input.
 .TP
@@ -32,6 +35,9 @@ Enable colorization of output and errors using ANSI escape sequences.
 .TP
 .I \-h, \-\-help
 Display a brief help listing.
+.TP
+.I \-\-only\-statements
+Only parse cypher statements and not client commands.
 .TP
 .I \-\-output\-width <n>
 Attempt to limit output to the specified width, and render using wrapped

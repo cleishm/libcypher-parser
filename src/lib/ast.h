@@ -27,5 +27,7 @@ int cypher_ast_fprintv(cypher_astnode_t * const *asts, unsigned int n,
         const struct cypher_parser_colorization *colorization,
         uint_fast32_t flags);
 
+void cypher_ast_vfree(cypher_astnode_t * const *ast, unsigned int n);
+
 
 #endif/*CYPHER_PARSER_AST_H*/

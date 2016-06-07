@@ -242,7 +242,7 @@ DIST_SUBDIRS = m4 src . tests
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/aminclude.am \
 	$(srcdir)/config.h.in $(srcdir)/cypher-lint.1.in \
 	$(srcdir)/cypher-parser.pc.in compile config.guess config.sub \
-	install-sh ltmain.sh missing
+	depcomp install-sh ltmain.sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -1094,7 +1094,7 @@ docker-check:
 docker-valgrind:
 	$(MAKE) dist
 	id=`docker create -i debian-dev \
-		sh -c 'cd $(PACKAGE_TARNAME)-$(PACKAGE_VERSION) && ./configure --enable-silent-rules --disable-debug && make check && CK_FORK=no valgrind --leak-check=full ./tests/check_libcypher-parser'` && \
+		sh -c 'cd $(PACKAGE_TARNAME)-$(PACKAGE_VERSION) && ./configure --enable-silent-rules --disable-debug && make check && CK_FORK=no valgrind --leak-check=full --show-leak-kinds=all ./tests/check_libcypher-parser'` && \
 	trap "docker rm $$id" EXIT && \
 	docker cp - $$id:/ < $(PACKAGE_TARNAME)-$(PACKAGE_VERSION).tar.gz && \
 	docker start -i $$id

@@ -53,7 +53,7 @@ START_TEST (parse_simple_with)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 35);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 " @0   0..35  statement           body=@1\n"
@@ -72,7 +72,7 @@ START_TEST (parse_simple_with)
 "@13  34..35  > > > > identifier  `y`\n";
     ck_assert_str_eq(memstream_buffer, expected);
 
-    const cypher_astnode_t *ast = cypher_parse_result_directive(result, 0);
+    const cypher_astnode_t *ast = cypher_parse_result_get_directive(result, 0);
     const cypher_astnode_t *query = cypher_ast_statement_get_body(ast);
     const cypher_astnode_t *clause = cypher_ast_query_get_clause(query, 0);
     ck_assert_int_eq(cypher_astnode_type(clause), CYPHER_AST_WITH);
@@ -118,7 +118,7 @@ START_TEST (parse_distinct_with)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 44);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 " @0   0..44  statement           body=@1\n"
@@ -137,7 +137,7 @@ START_TEST (parse_distinct_with)
 "@13  43..44  > > > > identifier  `y`\n";
     ck_assert_str_eq(memstream_buffer, expected);
 
-    const cypher_astnode_t *ast = cypher_parse_result_directive(result, 0);
+    const cypher_astnode_t *ast = cypher_parse_result_get_directive(result, 0);
     const cypher_astnode_t *query = cypher_ast_statement_get_body(ast);
     const cypher_astnode_t *clause = cypher_ast_query_get_clause(query, 0);
     ck_assert_int_eq(cypher_astnode_type(clause), CYPHER_AST_WITH);
@@ -183,7 +183,7 @@ START_TEST (parse_with_including_existing)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 38);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 " @0   0..38  statement           body=@1\n"
@@ -202,7 +202,7 @@ START_TEST (parse_with_including_existing)
 "@13  37..38  > > > > identifier  `y`\n";
     ck_assert_str_eq(memstream_buffer, expected);
 
-    const cypher_astnode_t *ast = cypher_parse_result_directive(result, 0);
+    const cypher_astnode_t *ast = cypher_parse_result_get_directive(result, 0);
     const cypher_astnode_t *query = cypher_ast_statement_get_body(ast);
     const cypher_astnode_t *clause = cypher_ast_query_get_clause(query, 0);
     ck_assert_int_eq(cypher_astnode_type(clause), CYPHER_AST_WITH);
@@ -248,7 +248,7 @@ START_TEST (parse_with_and_order_by)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 59);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 " @0   0..59  statement                  body=@1\n"
@@ -273,7 +273,7 @@ START_TEST (parse_with_and_order_by)
 "@19  57..59  > > > > > > integer        10\n";
     ck_assert_str_eq(memstream_buffer, expected);
 
-    const cypher_astnode_t *ast = cypher_parse_result_directive(result, 0);
+    const cypher_astnode_t *ast = cypher_parse_result_get_directive(result, 0);
     const cypher_astnode_t *query = cypher_ast_statement_get_body(ast);
     const cypher_astnode_t *clause = cypher_ast_query_get_clause(query, 0);
     ck_assert_int_eq(cypher_astnode_type(clause), CYPHER_AST_WITH);
@@ -343,7 +343,7 @@ START_TEST (parse_with_and_skip)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 34);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 "@0   0..34  statement           body=@1\n"
@@ -358,7 +358,7 @@ START_TEST (parse_with_and_skip)
 "@9  32..34  > > > integer       10\n";
     ck_assert_str_eq(memstream_buffer, expected);
 
-    const cypher_astnode_t *ast = cypher_parse_result_directive(result, 0);
+    const cypher_astnode_t *ast = cypher_parse_result_get_directive(result, 0);
     const cypher_astnode_t *query = cypher_ast_statement_get_body(ast);
     const cypher_astnode_t *clause = cypher_ast_query_get_clause(query, 0);
     ck_assert_int_eq(cypher_astnode_type(clause), CYPHER_AST_WITH);
@@ -408,7 +408,7 @@ START_TEST (parse_with_and_skip_limit)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 42);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 " @0   0..42  statement           body=@1\n"
@@ -424,7 +424,7 @@ START_TEST (parse_with_and_skip_limit)
 "@10  41..42  > > > integer       5\n";
     ck_assert_str_eq(memstream_buffer, expected);
 
-    const cypher_astnode_t *ast = cypher_parse_result_directive(result, 0);
+    const cypher_astnode_t *ast = cypher_parse_result_get_directive(result, 0);
     const cypher_astnode_t *query = cypher_ast_statement_get_body(ast);
     const cypher_astnode_t *clause = cypher_ast_query_get_clause(query, 0);
     ck_assert_int_eq(cypher_astnode_type(clause), CYPHER_AST_WITH);
@@ -475,7 +475,7 @@ START_TEST (parse_with_and_predicate)
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 23);
 
-    ck_assert(cypher_parse_result_fprint(result, memstream, 0, NULL, 0) == 0);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
 "@0   0..23  statement             body=@1\n"
@@ -488,7 +488,7 @@ START_TEST (parse_with_and_predicate)
 "@7  21..23  > > > > integer       10\n";
     ck_assert_str_eq(memstream_buffer, expected);
 
-    const cypher_astnode_t *ast = cypher_parse_result_directive(result, 0);
+    const cypher_astnode_t *ast = cypher_parse_result_get_directive(result, 0);
     const cypher_astnode_t *query = cypher_ast_statement_get_body(ast);
     const cypher_astnode_t *clause = cypher_ast_query_get_clause(query, 0);
     ck_assert_int_eq(cypher_astnode_type(clause), CYPHER_AST_WITH);
