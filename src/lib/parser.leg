@@ -23,6 +23,8 @@
 # previous block, should have an associated set of rules delimited by `<` and
 # `>`.
 
+__entry_points = directive | statement
+
 
 directive = - _directive
 _directive =
