@@ -113,6 +113,7 @@ am__objects_1 = check_libcypher_parser-check_call.$(OBJEXT) \
 	check_libcypher_parser-check_constraints.$(OBJEXT) \
 	check_libcypher_parser-check_create.$(OBJEXT) \
 	check_libcypher_parser-check_delete.$(OBJEXT) \
+	check_libcypher_parser-check_eof.$(OBJEXT) \
 	check_libcypher_parser-check_error_tracking.$(OBJEXT) \
 	check_libcypher_parser-check_errors.$(OBJEXT) \
 	check_libcypher_parser-check_expression.$(OBJEXT) \
@@ -127,6 +128,7 @@ am__objects_1 = check_libcypher_parser-check_call.$(OBJEXT) \
 	check_libcypher_parser-check_reduce.$(OBJEXT) \
 	check_libcypher_parser-check_remove.$(OBJEXT) \
 	check_libcypher_parser-check_return.$(OBJEXT) \
+	check_libcypher_parser-check_segments.$(OBJEXT) \
 	check_libcypher_parser-check_set.$(OBJEXT) \
 	check_libcypher_parser-check_start.$(OBJEXT) \
 	check_libcypher_parser-check_statement.$(OBJEXT) \
@@ -582,6 +584,7 @@ check_libcypher_parser_CHECKS = \
 	check_constraints.c \
 	check_create.c \
 	check_delete.c \
+	check_eof.c \
 	check_error_tracking.c \
 	check_errors.c \
 	check_expression.c \
@@ -596,6 +599,7 @@ check_libcypher_parser_CHECKS = \
 	check_reduce.c \
 	check_remove.c \
 	check_return.c \
+	check_segments.c \
 	check_set.c \
 	check_start.c \
 	check_statement.c \
@@ -670,6 +674,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_libcypher_parser-check_constraints.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_libcypher_parser-check_create.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_libcypher_parser-check_delete.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_libcypher_parser-check_eof.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_libcypher_parser-check_error_tracking.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_libcypher_parser-check_errors.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_libcypher_parser-check_expression.Po@am__quote@
@@ -686,6 +691,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_libcypher_parser-check_reduce.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_libcypher_parser-check_remove.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_libcypher_parser-check_return.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_libcypher_parser-check_segments.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_libcypher_parser-check_set.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_libcypher_parser-check_start.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_libcypher_parser-check_statement.Po@am__quote@
@@ -799,6 +805,20 @@ check_libcypher_parser-check_delete.obj: check_delete.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='check_delete.c' object='check_libcypher_parser-check_delete.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_libcypher_parser_CFLAGS) $(CFLAGS) -c -o check_libcypher_parser-check_delete.obj `if test -f 'check_delete.c'; then $(CYGPATH_W) 'check_delete.c'; else $(CYGPATH_W) '$(srcdir)/check_delete.c'; fi`
+
+check_libcypher_parser-check_eof.o: check_eof.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_libcypher_parser_CFLAGS) $(CFLAGS) -MT check_libcypher_parser-check_eof.o -MD -MP -MF $(DEPDIR)/check_libcypher_parser-check_eof.Tpo -c -o check_libcypher_parser-check_eof.o `test -f 'check_eof.c' || echo '$(srcdir)/'`check_eof.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/check_libcypher_parser-check_eof.Tpo $(DEPDIR)/check_libcypher_parser-check_eof.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='check_eof.c' object='check_libcypher_parser-check_eof.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_libcypher_parser_CFLAGS) $(CFLAGS) -c -o check_libcypher_parser-check_eof.o `test -f 'check_eof.c' || echo '$(srcdir)/'`check_eof.c
+
+check_libcypher_parser-check_eof.obj: check_eof.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_libcypher_parser_CFLAGS) $(CFLAGS) -MT check_libcypher_parser-check_eof.obj -MD -MP -MF $(DEPDIR)/check_libcypher_parser-check_eof.Tpo -c -o check_libcypher_parser-check_eof.obj `if test -f 'check_eof.c'; then $(CYGPATH_W) 'check_eof.c'; else $(CYGPATH_W) '$(srcdir)/check_eof.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/check_libcypher_parser-check_eof.Tpo $(DEPDIR)/check_libcypher_parser-check_eof.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='check_eof.c' object='check_libcypher_parser-check_eof.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_libcypher_parser_CFLAGS) $(CFLAGS) -c -o check_libcypher_parser-check_eof.obj `if test -f 'check_eof.c'; then $(CYGPATH_W) 'check_eof.c'; else $(CYGPATH_W) '$(srcdir)/check_eof.c'; fi`
 
 check_libcypher_parser-check_error_tracking.o: check_error_tracking.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_libcypher_parser_CFLAGS) $(CFLAGS) -MT check_libcypher_parser-check_error_tracking.o -MD -MP -MF $(DEPDIR)/check_libcypher_parser-check_error_tracking.Tpo -c -o check_libcypher_parser-check_error_tracking.o `test -f 'check_error_tracking.c' || echo '$(srcdir)/'`check_error_tracking.c
@@ -995,6 +1015,20 @@ check_libcypher_parser-check_return.obj: check_return.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='check_return.c' object='check_libcypher_parser-check_return.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_libcypher_parser_CFLAGS) $(CFLAGS) -c -o check_libcypher_parser-check_return.obj `if test -f 'check_return.c'; then $(CYGPATH_W) 'check_return.c'; else $(CYGPATH_W) '$(srcdir)/check_return.c'; fi`
+
+check_libcypher_parser-check_segments.o: check_segments.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_libcypher_parser_CFLAGS) $(CFLAGS) -MT check_libcypher_parser-check_segments.o -MD -MP -MF $(DEPDIR)/check_libcypher_parser-check_segments.Tpo -c -o check_libcypher_parser-check_segments.o `test -f 'check_segments.c' || echo '$(srcdir)/'`check_segments.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/check_libcypher_parser-check_segments.Tpo $(DEPDIR)/check_libcypher_parser-check_segments.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='check_segments.c' object='check_libcypher_parser-check_segments.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_libcypher_parser_CFLAGS) $(CFLAGS) -c -o check_libcypher_parser-check_segments.o `test -f 'check_segments.c' || echo '$(srcdir)/'`check_segments.c
+
+check_libcypher_parser-check_segments.obj: check_segments.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_libcypher_parser_CFLAGS) $(CFLAGS) -MT check_libcypher_parser-check_segments.obj -MD -MP -MF $(DEPDIR)/check_libcypher_parser-check_segments.Tpo -c -o check_libcypher_parser-check_segments.obj `if test -f 'check_segments.c'; then $(CYGPATH_W) 'check_segments.c'; else $(CYGPATH_W) '$(srcdir)/check_segments.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/check_libcypher_parser-check_segments.Tpo $(DEPDIR)/check_libcypher_parser-check_segments.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='check_segments.c' object='check_libcypher_parser-check_segments.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_libcypher_parser_CFLAGS) $(CFLAGS) -c -o check_libcypher_parser-check_segments.obj `if test -f 'check_segments.c'; then $(CYGPATH_W) 'check_segments.c'; else $(CYGPATH_W) '$(srcdir)/check_segments.c'; fi`
 
 check_libcypher_parser-check_set.o: check_set.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_libcypher_parser_CFLAGS) $(CFLAGS) -MT check_libcypher_parser-check_set.o -MD -MP -MF $(DEPDIR)/check_libcypher_parser-check_set.Tpo -c -o check_libcypher_parser-check_set.o `test -f 'check_set.c' || echo '$(srcdir)/'`check_set.c

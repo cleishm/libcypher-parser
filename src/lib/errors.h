@@ -14,10 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef CYPHER_PARSER_ERROR_TRACKING_H
-#define CYPHER_PARSER_ERROR_TRACKING_H
+#ifndef CYPHER_PARSER_ERRORS_H
+#define CYPHER_PARSER_ERRORS_H
 
-#include "result.h"
+#include "cypher-parser.h"
+
+
+struct cypher_parse_error
+{
+    struct cypher_input_position position;
+    char *msg;
+    char *context;
+    size_t context_offset;
+};
+
+
+void cp_errors_vcleanup(cypher_parse_error_t *errors, unsigned int n);
 
 
 typedef struct cp_error_tracking cp_error_tracking_t;
@@ -46,15 +58,26 @@ int cp_et_note_potential_error(cp_error_tracking_t *et,
 
 int cp_et_reify_potentials(cp_error_tracking_t *et);
 
-cypher_parse_error_t *cp_et_extract_errors(cp_error_tracking_t *et,
-        unsigned int *nerrors);
-
 static inline void cp_et_clear_potentials(cp_error_tracking_t *et)
 {
     et->nlabels = 0;
 }
 
+static inline unsigned int cp_et_nerrors(const cp_error_tracking_t *et)
+{
+    return et->nerrors;
+}
+
+static inline cypher_parse_error_t *cp_et_errors(cp_error_tracking_t *et)
+{
+    return et->errors;
+}
+
+static inline void cp_et_clear_errors(cp_error_tracking_t *et)
+{
+    et->nerrors = 0;
+}
+
 void cp_et_cleanup(cp_error_tracking_t *et);
 
-
-#endif/*CYPHER_PARSER_ERROR_TRACKING_H*/
+#endif/*CYPHER_PARSER_ERRORS_H*/

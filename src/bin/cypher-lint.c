@@ -25,16 +25,18 @@
 #include <unistd.h>
 
 
-const char *shortopts = "ahv";
+const char *shortopts = "1ahv";
 
 #define COLORIZE_OPT 1004
-#define OUTPUT_WIDTH_OPT 1005
-#define VERSION_OPT 1006
+#define ONLY_STATEMENTS_OPT 1005
+#define OUTPUT_WIDTH_OPT 1006
+#define VERSION_OPT 1007
 
 static struct option longopts[] =
     { { "ast", no_argument, NULL, 'a' },
       { "colorize", no_argument, NULL, COLORIZE_OPT },
       { "help", no_argument, NULL, 'h' },
+      { "only-statements", no_argument, NULL, ONLY_STATEMENTS_OPT },
       { "output-width", required_argument, NULL, OUTPUT_WIDTH_OPT },
       { "version", no_argument, NULL, VERSION_OPT },
       { NULL, 0, NULL, 0 } };
@@ -44,9 +46,11 @@ static void usage(FILE *s, const char *prog_name)
     fprintf(s,
 "usage: %s [OPTIONS]\n"
 "options:\n"
+" -1                  Only parse the first statement or client-command.\n"
 " --ast, -a           Dump the AST to stdout.\n"
 " --colorize          Colorize output using ANSI escape sequences.\n"
 " --help, -h          Output this usage information.\n"
+" --only-statements   Only parse statements (and not client commands).\n"
 " --output-width <n>  Attempt to limit output to the specified width.\n"
 " --version           Output the version of cypher-lint and libcypher-parser\n"
 "\n",
@@ -57,6 +61,7 @@ static void usage(FILE *s, const char *prog_name)
 struct lint_config
 {
     unsigned int width;
+    int flags;
     bool dump_ast;
     bool colorize_output;
     bool colorize_errors;
@@ -64,6 +69,7 @@ struct lint_config
 
 
 static int process(FILE *stream, struct lint_config *config);
+static int parse_callback(void *data, cypher_parse_segment_t *segment);
 
 
 int main(int argc, char *argv[])
@@ -94,6 +100,9 @@ int main(int argc, char *argv[])
     {
         switch (c)
         {
+        case '1':
+            config.flags |= CYPHER_PARSE_SINGLE;
+            break;
         case 'a':
             config.dump_ast = true;
             break;
@@ -105,6 +114,9 @@ int main(int argc, char *argv[])
             usage(stdout, prog_name);
             result = EXIT_SUCCESS;
             goto cleanup;
+        case ONLY_STATEMENTS_OPT:
+            config.flags |= CYPHER_PARSE_ONLY_STATEMENTS;
+            break;
         case OUTPUT_WIDTH_OPT:
             config.width = atoi(optarg);
             break;
@@ -134,6 +146,15 @@ cleanup:
 }
 
 
+struct parse_callback_data
+{
+    struct lint_config *config;
+    const struct cypher_parser_colorization *error_colorization;
+    const struct cypher_parser_colorization *output_colorization;
+    unsigned int nerrors;
+};
+
+
 int process(FILE *stream, struct lint_config *config)
 {
     cypher_parser_config_t *cp_config = cypher_parser_new_config();
@@ -151,19 +172,45 @@ int process(FILE *stream, struct lint_config *config)
                 error_colorization);
     }
 
-    int err = -1;
+    const struct cypher_parser_colorization *output_colorization =
+        config->colorize_output? cypher_parser_ansi_colorization : NULL;
 
-    cypher_parse_result_t *result = cypher_fparse(stream, NULL, cp_config, 0);
-    if (result == NULL)
+
+    struct parse_callback_data callback_data =
+        { .config = config,
+          .error_colorization = error_colorization,
+          .output_colorization = output_colorization,
+          .nerrors = 0
+        };
+
+    int result = -1;
+    if (cypher_fparse_each(stream, parse_callback, &callback_data, NULL,
+                cp_config, config->flags))
     {
-        // TODO: report error
-        perror("cypher_fparse");
+        perror("cypher_fparse_each");
         goto cleanup;
     }
 
+    result = (callback_data.nerrors > 0)? 0 : 1;
+
+    int errsv;
+cleanup:
+    errsv = errno;
+    cypher_parser_config_free(cp_config);
+    errno = errsv;
+    return result;
+}
+
+
+int parse_callback(void *data, cypher_parse_segment_t *segment)
+{
+    struct parse_callback_data *callback_data =
+            (struct parse_callback_data *)data;
+    struct lint_config *config = callback_data->config;
+
+    unsigned int i = 0;
     const cypher_parse_error_t *error;
-    for (unsigned int i = 0;
-            (error = cypher_parse_result_error(result, i)) != NULL; ++i)
+    for (; (error = cypher_parse_segment_get_error(segment, i)) != NULL; ++i)
     {
         struct cypher_input_position pos =
                 cypher_parse_error_position(error);
@@ -171,29 +218,21 @@ int process(FILE *stream, struct lint_config *config)
         const char *context = cypher_parse_error_context(error);
         unsigned int offset = cypher_parse_error_context_offset(error);
         fprintf(stderr, "%s %s(line %u, column %u, offset %zu)%s%s\n", msg,
-                error_colorization->error_message[0],
+                callback_data->error_colorization->error_message[0],
                 pos.line, pos.column, pos.offset,
-                error_colorization->error_message[1],
+                callback_data->error_colorization->error_message[1],
                 (context == NULL)? "" : ":");
         fprintf(stderr, "%s\n%*.*s^\n", context, offset, offset, " ");
     }
 
-    const struct cypher_parser_colorization *output_colorization =
-        config->colorize_output? cypher_parser_ansi_colorization : NULL;
-    if (config->dump_ast && cypher_parse_result_fprint(result, stdout,
-            config->width, output_colorization, 0) < 0)
+    callback_data->nerrors += i;
+
+    if (config->dump_ast && cypher_parse_segment_fprint_ast(segment, stdout,
+                config->width, callback_data->output_colorization, 0) < 0)
     {
         perror("cypher_parse_result_fprint");
-        goto cleanup;
+        return -1;
     }
 
-    err = (cypher_parse_result_ndirectives(result) > 0)? 0 : 1;
-
-    int errsv;
-cleanup:
-    errsv = errno;
-    cypher_parser_config_free(cp_config);
-    cypher_parse_result_free(result);
-    errno = errsv;
-    return err;
+    return 0;
 }

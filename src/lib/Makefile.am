@@ -111,8 +111,8 @@ libcypher_parser_la_SOURCES = \
 	ast_using_periodic_commit.c \
 	ast_using_scan.c \
 	ast_with.c \
-	error_tracking.c \
-	error_tracking.h \
+	errors.c \
+	errors.h \
 	operators.c \
 	operators.h \
 	parser.c \
@@ -121,6 +121,8 @@ libcypher_parser_la_SOURCES = \
 	parser_config.h \
 	result.c \
 	result.h \
+	segment.c \
+	segment.h \
 	string_buffer.c \
 	string_buffer.h \
 	util.c \
@@ -129,7 +131,7 @@ libcypher_parser_la_SOURCES = \
 	vector.h
 
 libcypher_parser_la_CFLAGS = $(PTHREAD_CFLAGS) $(OPENSSL_CFLAGS) -Wpedantic -Wvla
-libcypher_parser_la_LDFLAGS = -version-info 2:1:0
+libcypher_parser_la_LDFLAGS = -version-info 3:0:0
 libcypher_parser_la_LIBADD = $(PTHREAD_LIBS) $(OPENSSL_LIBS) $(LIBM)
 
 parser.c: parser_leg.c

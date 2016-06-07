@@ -14,6 +14,7 @@ check_libcypher_parser_CHECKS = \
 	check_constraints.c \
 	check_create.c \
 	check_delete.c \
+	check_eof.c \
 	check_error_tracking.c \
 	check_errors.c \
 	check_expression.c \
@@ -28,6 +29,7 @@ check_libcypher_parser_CHECKS = \
 	check_reduce.c \
 	check_remove.c \
 	check_return.c \
+	check_segments.c \
 	check_set.c \
 	check_start.c \
 	check_statement.c \

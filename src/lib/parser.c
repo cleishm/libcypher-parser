@@ -17,10 +17,11 @@
 #include "../../config.h"
 #include "cypher-parser.h"
 #include "ast.h"
-#include "error_tracking.h"
+#include "errors.h"
 #include "operators.h"
 #include "parser_config.h"
 #include "result.h"
+#include "segment.h"
 #include "string_buffer.h"
 #include "util.h"
 #include "vector.h"
@@ -46,12 +47,16 @@ DECLARE_VECTOR(blocks, struct block *, NULL);
 
 typedef struct _yycontext yycontext;
 typedef int (*yyrule)(yycontext *yy);
-typedef int (*source_func_t)(void *data, char *buf, int n);
+typedef int (*source_cb_t)(void *data, char *buf, int n);
 
-static cypher_parse_result_t *parse(yyrule rule, source_func_t source,
-        void *data, struct cypher_input_position *last,
+static int parse_each(yyrule rule, source_cb_t source, void *sourcedata,
+        cypher_parser_segment_callback_t callback, void *userdata,
+        struct cypher_input_position *last, cypher_parser_config_t *config,
+        uint_fast32_t flags);
+static cypher_parse_result_t *parse(yyrule rule, source_cb_t source,
+        void *sourcedata, struct cypher_input_position *last,
         cypher_parser_config_t *config, uint_fast32_t flags);
-static int parse_one(yycontext *yy, yyrule rule, cypher_astnode_t **result);
+static int parse_one(yycontext *yy, yyrule rule);
 static void source(yycontext *yy, char *buf, int *result, int max_size);
 
 
@@ -76,13 +81,26 @@ static int source_from_buffer(void *data, char *buf, int n)
 }
 
 
+static int uparse_each(yyrule rule, const char *s, size_t n,
+        cypher_parser_segment_callback_t callback, void *userdata,
+        struct cypher_input_position *last, cypher_parser_config_t *config,
+        uint_fast32_t flags)
+{
+    REQUIRE(s != NULL, -1);
+    REQUIRE(callback != NULL, -1);
+    struct source_from_buffer_data sourcedata = { .buffer = s, .length = n };
+    return parse_each(rule, source_from_buffer, &sourcedata, callback,
+            userdata, last, config, flags);
+}
+
+
 static cypher_parse_result_t *uparse(yyrule rule, const char *s, size_t n,
         struct cypher_input_position *last, cypher_parser_config_t *config,
         uint_fast32_t flags)
 {
     REQUIRE(s != NULL, NULL);
-    struct source_from_buffer_data data = { .buffer = s, .length = n };
-    return parse(rule, source_from_buffer, &data, last, config, flags);
+    struct source_from_buffer_data sourcedata = { .buffer = s, .length = n };
+    return parse(rule, source_from_buffer, &sourcedata, last, config, flags);
 }
 
 
@@ -99,6 +117,18 @@ static int source_from_stream(void *data, char *buf, int n)
 }
 
 
+static int fparse_each(yyrule rule, FILE *stream,
+        cypher_parser_segment_callback_t callback, void *userdata,
+        struct cypher_input_position *last, cypher_parser_config_t *config,
+        uint_fast32_t flags)
+{
+    REQUIRE(stream != NULL, -1);
+    REQUIRE(callback != NULL, -1);
+    return parse_each(rule, source_from_stream, stream, callback, userdata,
+            last, config, flags);
+}
+
+
 static cypher_parse_result_t *fparse(yyrule rule, FILE *stream,
         struct cypher_input_position *last, cypher_parser_config_t *config,
         uint_fast32_t flags)
@@ -110,7 +140,7 @@ static cypher_parse_result_t *fparse(yyrule rule, FILE *stream,
 
 static void *abort_malloc(yycontext *yy, size_t size);
 static void *abort_realloc(yycontext *yy, void *ptr, size_t size);
-static void complete(yycontext *yy);
+static void finished(yycontext *yy);
 static void line_start(yycontext *yy);
 static void block_start_action(yycontext *yy, char *text, int count);
 static struct block *block_start(yycontext *yy, size_t offset,
@@ -440,9 +470,10 @@ static cypher_astnode_t *_skip(yycontext *yy);
     const cypher_operator_t *op; \
     operators_t operators; \
     precedences_t precedences; \
-    source_func_t source; \
+    source_cb_t source; \
     void *source_data; \
     cypher_astnode_t *result; \
+    bool eof; \
     cp_error_tracking_t error_tracking; \
     unsigned int consumed;
 
@@ -491,6 +522,17 @@ void source(yycontext *yy, char *buf, int *result, int max_size)
 }
 
 
+int cypher_uparse_each(const char *s, size_t n,
+        cypher_parser_segment_callback_t callback, void *userdata,
+        struct cypher_input_position *last, cypher_parser_config_t *config,
+        uint_fast32_t flags)
+{
+    yyrule rule = (flags & CYPHER_PARSE_ONLY_STATEMENTS)?
+            yy_statement : yy_directive;
+    return uparse_each(rule, s, n, callback, userdata, last, config, flags);
+}
+
+
 cypher_parse_result_t *cypher_uparse(const char *s, size_t n,
         struct cypher_input_position *last, cypher_parser_config_t *config,
         uint_fast32_t flags)
@@ -498,6 +540,16 @@ cypher_parse_result_t *cypher_uparse(const char *s, size_t n,
     yyrule rule = (flags & CYPHER_PARSE_ONLY_STATEMENTS)?
             yy_statement : yy_directive;
     return uparse(rule, s, n, last, config, flags);
+}
+
+
+int cypher_fparse_each(FILE *stream, cypher_parser_segment_callback_t callback,
+        void *userdata, struct cypher_input_position *last,
+        cypher_parser_config_t *config, uint_fast32_t flags)
+{
+    yyrule rule = (flags & CYPHER_PARSE_ONLY_STATEMENTS)?
+            yy_statement : yy_directive;
+    return fparse_each(rule, stream, callback, userdata, last, config, flags);
 }
 
 
@@ -511,11 +563,12 @@ cypher_parse_result_t *cypher_fparse(FILE *stream,
 }
 
 
-cypher_parse_result_t *parse(yyrule rule, source_func_t source, void *data,
+int parse_each(yyrule rule, source_cb_t source, void *sourcedata,
+        cypher_parser_segment_callback_t callback, void *userdata,
         struct cypher_input_position *last, cypher_parser_config_t *config,
         uint_fast32_t flags)
 {
-    assert(source != NULL);
+    int result = -1;
 
     yycontext yy;
     memset(&yy, 0, sizeof(yycontext));
@@ -526,138 +579,147 @@ cypher_parse_result_t *parse(yyrule rule, source_func_t source, void *data,
     operators_init(&(yy.operators));
     precedences_init(&(yy.precedences));
     yy.source = source;
-    yy.source_data = data;
+    yy.source_data = sourcedata;
     cp_et_init(&(yy.error_tracking), yy.config->error_colorization);
 
-    cypher_parse_result_t *result = NULL;
+    struct block *top_block = NULL;
 
     if (offsets_push(&(yy.line_start_offsets), 0))
     {
         goto cleanup;
     }
-    struct block *top_block = block_start(&yy, 0, input_position(&yy, 0));
+    top_block = block_start(&yy, 0, input_position(&yy, 0));
     if (top_block == NULL)
     {
         goto cleanup;
     }
 
-    astnodes_t directives;
-    astnodes_init(&directives);
+    unsigned int ordinal = yy.config->initial_ordinal;
 
-    cypher_astnode_t *directive;
     for (;;)
     {
-        if (parse_one(&yy, rule, &directive))
+        if (parse_one(&yy, rule))
         {
             goto cleanup;
         }
 
-        if (directive == NULL)
+        if (yy.consumed == 0)
+        {
+            assert(yy.result == NULL);
+            assert(cp_et_nerrors(&(yy.error_tracking)) == 0);
+            assert(yy.eof);
+            break;
+        }
+
+        // TODO: last should be set even on parse failure
+        if (last != NULL)
+        {
+            *last = input_position(&yy, yy.consumed);
+        }
+
+        struct cypher_input_range range =
+            { .start = yy.position_offset,
+              .end = input_position(&yy, yy.consumed) };
+
+        cypher_parse_error_t *errors = cp_et_errors(&(yy.error_tracking));
+        unsigned int nerrors = cp_et_nerrors(&(yy.error_tracking));
+        cypher_astnode_t **roots = astnodes_elements(&(top_block->children));
+        unsigned int nroots = astnodes_size(&(top_block->children));
+
+        cypher_parse_segment_t *segment = cypher_parse_segment(ordinal,
+                range, errors, nerrors, roots, nroots, yy.result, yy.eof);
+        if (segment == NULL)
+        {
+            goto cleanup;
+        }
+
+        cp_et_clear_errors(&(yy.error_tracking));
+        astnodes_clear(&(top_block->children));
+        ordinal += segment->nnodes;
+
+        int err = callback(userdata, segment);
+        cypher_parse_segment_release(segment);
+        if (err > 0)
+        {
+            break;
+        }
+        else if (err)
+        {
+            result = err;
+            goto cleanup;
+        }
+
+        if (yy.eof || flags & CYPHER_PARSE_SINGLE)
         {
             break;
         }
 
-        if (astnodes_push(&directives, directive))
-        {
-            goto cleanup;
-        }
-
-        if (flags & CYPHER_PARSE_SINGLE)
-        {
-            break;
-        }
-
-        yy.position_offset = input_position(&yy, yy.consumed);
+        yy.position_offset = range.end;
     }
 
-    result = calloc(1, sizeof(cypher_parse_result_t));
-    if (result == NULL)
-    {
-        goto cleanup;
-    }
-
-    result->ndirectives = astnodes_size(&directives);
-    if (result->ndirectives > 0)
-    {
-        result->directives = mdup(astnodes_elements(&directives),
-                result->ndirectives * sizeof(cypher_astnode_t *));
-        if (result->directives == NULL)
-        {
-            free(result);
-            result = NULL;
-            goto cleanup;
-        }
-    }
-
-    result->nelements = astnodes_size(&(top_block->children));
-    if (result->nelements > 0)
-    {
-        result->elements = mdup(astnodes_elements(&(top_block->children)),
-                result->nelements * sizeof(cypher_astnode_t *));
-        if (result->elements == NULL)
-        {
-            free(result->directives);
-            free(result);
-            result = NULL;
-            goto cleanup;
-        }
-    }
-    astnodes_clear(&(top_block->children));
-
-    result->errors = cp_et_extract_errors(&(yy.error_tracking),
-            &(result->nerrors));
-
-    result->node_count = yy.config->initial_ordinal;
-    for (unsigned int i = 0; i < result->nelements; ++i)
-    {
-        result->node_count = cypher_ast_set_ordinals(
-                result->elements[i], result->node_count);
-    }
-
-    // TODO: last should be set even on parse failure
-    if (last != NULL)
-    {
-        *last = input_position(&yy, yy.consumed);
-    }
+    result = 0;
 
     int errsv;
 cleanup:
     errsv = errno;
-
-    astnodes_cleanup(&directives);
-
     offsets_cleanup(&(yy.line_start_offsets));
-
-    struct block *block;
-    while ((block = blocks_pop(&(yy.blocks))) != NULL)
-    {
-        block_free(&yy, block);
-    }
+    block_free(&yy, top_block);
     blocks_cleanup(&(yy.blocks));
-    block_free(&yy, yy.prev_block);
-
     operators_cleanup(&(yy.operators));
     precedences_cleanup(&(yy.precedences));
-
     cp_et_cleanup(&(yy.error_tracking));
     cp_sb_cleanup(&(yy.string_buffer));
-
     yyrelease(&yy);
-
     errno = errsv;
     return result;
 }
 
 
-int parse_one(yycontext *yy, yyrule rule, cypher_astnode_t **result)
+static int parse_all_callback(void *data, cypher_parse_segment_t *segment)
+{
+    cypher_parse_result_t *result = (cypher_parse_result_t *)data;
+    return cp_result_merge_segment(result, segment);
+}
+
+
+cypher_parse_result_t *parse(yyrule rule, source_cb_t source, void *sourcedata,
+        struct cypher_input_position *last, cypher_parser_config_t *config,
+        uint_fast32_t flags)
+{
+    cypher_parse_result_t *result = calloc(1, sizeof(cypher_parse_result_t));
+    if (result == NULL)
+    {
+        return NULL;
+    }
+
+    if (parse_each(rule, source, sourcedata, parse_all_callback, result,
+                last, config, flags))
+    {
+        cypher_parse_result_free(result);
+        return NULL;
+    }
+
+    return result;
+}
+
+
+int parse_one(yycontext *yy, yyrule rule)
 {
 #ifndef NDEBUG
     struct block *top_block = blocks_last(&(yy->blocks));
 #endif
 
+    yy->result = NULL;
+    yy->eof = false;
     if (safe_yyparsefrom(yy, rule) <= 0)
     {
-        return -1;
+        goto failure;
+    }
+
+    offsets_clear(&(yy->line_start_offsets));
+    if (offsets_push(&(yy->line_start_offsets), 0))
+    {
+        goto failure;
     }
 
     assert(blocks_size(&(yy->blocks)) == 1 &&
@@ -674,12 +736,26 @@ int parse_one(yycontext *yy, yyrule rule, cypher_astnode_t **result)
     assert(precedences_size(&(yy->precedences)) == 0 &&
             "Precedence stack not emptied");
 
-    *result = yy->result;
-    yy->result = NULL;
-
     cp_et_clear_potentials(&(yy->error_tracking));
 
     return 0;
+
+    int errsv;
+failure:
+    errsv = errno;
+    offsets_clear(&(yy->line_start_offsets));
+    struct block *block;
+    while ((block = blocks_pop(&(yy->blocks))) != NULL)
+    {
+        block_free(yy, block);
+    }
+    block_free(yy, yy->prev_block);
+    yy->prev_block = NULL;
+    operators_clear(&(yy->operators));
+    precedences_clear(&(yy->precedences));
+    cp_et_clear_potentials(&(yy->error_tracking));
+    errno = errsv;
+    return -1;
 }
 
 
@@ -720,11 +796,11 @@ void *abort_realloc(yycontext *yy, void *ptr, size_t size)
 }
 
 
-void complete(yycontext *yy)
+void finished(yycontext *yy)
 {
     yy->consumed = yy->__pos;
 
-    for (unsigned int i = yy->error_tracking.nerrors; i-- > 0; )
+    for (unsigned int i = cp_et_nerrors(&(yy->error_tracking)); i-- > 0; )
     {
         cypher_parse_error_t *err = yy->error_tracking.errors + i;
         if (err->context != NULL)
