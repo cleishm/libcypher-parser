@@ -9,9 +9,8 @@ libcypher-parser is a parser library and validation (lint) tool for Cypher, the
 graph query language. The parser is written in C, and is intended for building
 tools and libraries in various languages.
 
-For more details, see [the project page](
-https://cleishm.github.io/libcypher-parser/) and the [FAQ](
-https://github.com/cleishm/libcypher-parser/wiki/FAQ)
+For more details, see [the project page](https://git.io/libcypher-parser)
+and the [FAQ](https://github.com/cleishm/libcypher-parser/wiki/FAQ)
 
 
 Requirements
@@ -19,7 +18,7 @@ Requirements
 
 libcypher-parser is known to work on GNU/Linux, Mac OS X and FreeBSD.
 
-Note that libcypher-parser is still an alpha release, and may change in
+Note that libcypher-parser is still a beta release, and may change in
 incompatible ways before a stable release is made.
 
 
@@ -41,7 +40,7 @@ $ brew install cleishm/neo4j/cypher-lint
 If you're using Ubuntu, libcypher-parser can be install using APT:
 
 ```console
-$ sudo add-apt-repository ppa:cleishm/libcypher-parser
+$ sudo add-apt-repository ppa:cleishm/neo4j
 $ sudo apt-get update
 $ sudo apt-get install cypher-lint libcypher-parser-dev
 ```

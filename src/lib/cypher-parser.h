@@ -5601,6 +5601,25 @@ __cypherlang_pure
 size_t cypher_parse_error_context_offset(const cypher_parse_error_t *error);
 
 
+/**
+ * A quick parse callback.
+ */
+typedef int (*cypher_parser_quick_segment_callback_t)(void *userdata,
+        const char *segment, size_t n, bool eof);
+
+/**
+ * Quick parse a statement or command from a stream.
+ *
+ * @param [stream] The stream to parse.
+ * @param [callback] The callback to be invoked for each parsed segment.
+ * @param [userdata] A pointer that will be provided to the callback.
+ * @param [flags] A bitmask of flags to control parsing.
+ */
+int cypher_quick_fparse(FILE *stream,
+        cypher_parser_quick_segment_callback_t callback, void *userdata,
+        uint_fast32_t flags);
+
+
 #pragma GCC visibility pop
 
 #ifdef __cplusplus
