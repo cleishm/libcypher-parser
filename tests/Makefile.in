@@ -125,6 +125,7 @@ am__objects_1 = check_libcypher_parser-check_call.$(OBJEXT) \
 	check_libcypher_parser-check_merge.$(OBJEXT) \
 	check_libcypher_parser-check_pattern.$(OBJEXT) \
 	check_libcypher_parser-check_query.$(OBJEXT) \
+	check_libcypher_parser-check_quick_parse.$(OBJEXT) \
 	check_libcypher_parser-check_reduce.$(OBJEXT) \
 	check_libcypher_parser-check_remove.$(OBJEXT) \
 	check_libcypher_parser-check_return.$(OBJEXT) \
@@ -596,6 +597,7 @@ check_libcypher_parser_CHECKS = \
 	check_merge.c \
 	check_pattern.c \
 	check_query.c \
+	check_quick_parse.c \
 	check_reduce.c \
 	check_remove.c \
 	check_return.c \
@@ -688,6 +690,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_libcypher_parser-check_merge.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_libcypher_parser-check_pattern.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_libcypher_parser-check_query.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_libcypher_parser-check_quick_parse.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_libcypher_parser-check_reduce.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_libcypher_parser-check_remove.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_libcypher_parser-check_return.Po@am__quote@
@@ -973,6 +976,20 @@ check_libcypher_parser-check_query.obj: check_query.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='check_query.c' object='check_libcypher_parser-check_query.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_libcypher_parser_CFLAGS) $(CFLAGS) -c -o check_libcypher_parser-check_query.obj `if test -f 'check_query.c'; then $(CYGPATH_W) 'check_query.c'; else $(CYGPATH_W) '$(srcdir)/check_query.c'; fi`
+
+check_libcypher_parser-check_quick_parse.o: check_quick_parse.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_libcypher_parser_CFLAGS) $(CFLAGS) -MT check_libcypher_parser-check_quick_parse.o -MD -MP -MF $(DEPDIR)/check_libcypher_parser-check_quick_parse.Tpo -c -o check_libcypher_parser-check_quick_parse.o `test -f 'check_quick_parse.c' || echo '$(srcdir)/'`check_quick_parse.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/check_libcypher_parser-check_quick_parse.Tpo $(DEPDIR)/check_libcypher_parser-check_quick_parse.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='check_quick_parse.c' object='check_libcypher_parser-check_quick_parse.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_libcypher_parser_CFLAGS) $(CFLAGS) -c -o check_libcypher_parser-check_quick_parse.o `test -f 'check_quick_parse.c' || echo '$(srcdir)/'`check_quick_parse.c
+
+check_libcypher_parser-check_quick_parse.obj: check_quick_parse.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_libcypher_parser_CFLAGS) $(CFLAGS) -MT check_libcypher_parser-check_quick_parse.obj -MD -MP -MF $(DEPDIR)/check_libcypher_parser-check_quick_parse.Tpo -c -o check_libcypher_parser-check_quick_parse.obj `if test -f 'check_quick_parse.c'; then $(CYGPATH_W) 'check_quick_parse.c'; else $(CYGPATH_W) '$(srcdir)/check_quick_parse.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/check_libcypher_parser-check_quick_parse.Tpo $(DEPDIR)/check_libcypher_parser-check_quick_parse.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='check_quick_parse.c' object='check_libcypher_parser-check_quick_parse.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_libcypher_parser_CFLAGS) $(CFLAGS) -c -o check_libcypher_parser-check_quick_parse.obj `if test -f 'check_quick_parse.c'; then $(CYGPATH_W) 'check_quick_parse.c'; else $(CYGPATH_W) '$(srcdir)/check_quick_parse.c'; fi`
 
 check_libcypher_parser-check_reduce.o: check_reduce.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(check_libcypher_parser_CFLAGS) $(CFLAGS) -MT check_libcypher_parser-check_reduce.o -MD -MP -MF $(DEPDIR)/check_libcypher_parser-check_reduce.Tpo -c -o check_libcypher_parser-check_reduce.o `test -f 'check_reduce.c' || echo '$(srcdir)/'`check_reduce.c

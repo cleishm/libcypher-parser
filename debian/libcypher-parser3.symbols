@@ -485,6 +485,7 @@ libcypher-parser.so.3 libcypher-parser3 #MINVER#
  cypher_parser_config_set_initial_position@Base 0.3.0
  cypher_parser_new_config@Base 0.3.0
  cypher_parser_no_colorization@Base 0.3.0
+ cypher_quick_fparse@Base 0.3.2
  cypher_uparse@Base 0.3.0
  cypher_uparse_each@Base 0.3.0
  libcypher_parser_version@Base 0.3.0

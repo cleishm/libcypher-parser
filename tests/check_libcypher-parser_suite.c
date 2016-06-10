@@ -18,6 +18,7 @@ TCase* match_tcase(void);
 TCase* merge_tcase(void);
 TCase* pattern_tcase(void);
 TCase* query_tcase(void);
+TCase* quick_parse_tcase(void);
 TCase* reduce_tcase(void);
 TCase* remove_tcase(void);
 TCase* return_tcase(void);
@@ -51,6 +52,7 @@ Suite *libcypher_parser_suite(void)
     suite_add_tcase(s, merge_tcase());
     suite_add_tcase(s, pattern_tcase());
     suite_add_tcase(s, query_tcase());
+    suite_add_tcase(s, quick_parse_tcase());
     suite_add_tcase(s, reduce_tcase());
     suite_add_tcase(s, remove_tcase());
     suite_add_tcase(s, return_tcase());
