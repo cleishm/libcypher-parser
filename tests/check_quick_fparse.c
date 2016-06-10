@@ -23,6 +23,8 @@
 
 #define MAX_SEGMENTS 8
 
+static FILE *in;
+static FILE *out;
 static unsigned int nsegments;
 static char *segments[MAX_SEGMENTS];
 static bool eofs[MAX_SEGMENTS];
@@ -30,6 +32,13 @@ static bool eofs[MAX_SEGMENTS];
 
 static void setup(void)
 {
+    int fds[2];
+    ck_assert(pipe(fds) == 0);
+    in = fdopen(fds[0], "r");
+    ck_assert_ptr_ne(in, NULL);
+    out = fdopen(fds[1], "w");
+    ck_assert_ptr_ne(out, NULL);
+
     nsegments = 0;
     memset(segments, 0, sizeof(segments));
     memset(eofs, 0, sizeof(eofs));
@@ -38,10 +47,24 @@ static void setup(void)
 
 static void teardown(void)
 {
+    if (out != NULL)
+    {
+        fclose(out);
+    }
+    fclose(in);
+
     for (unsigned int i = 0; i < nsegments; ++i)
     {
         free(segments[i]);
     }
+}
+
+
+static void fill_stream(const char *content)
+{
+    fputs(content, out);
+    fclose(out);
+    out = NULL;
 }
 
 
@@ -56,18 +79,22 @@ static int segment_callback(void *data, const char *s, size_t n, bool eof)
 }
 
 
-START_TEST (parse_empty)
+START_TEST (fparse_empty)
 {
-    int result = cypher_quick_parse("", segment_callback, NULL, 0);
+    fill_stream("");
+
+    int result = cypher_quick_fparse(in, segment_callback, NULL, 0);
     ck_assert_int_eq(result, 0);
     ck_assert_int_eq(nsegments, 0);
 }
 END_TEST
 
 
-START_TEST (parse_single)
+START_TEST (fparse_single)
 {
-    int result = cypher_quick_parse("return 1;", segment_callback, NULL, 0);
+    fill_stream("return 1;");
+
+    int result = cypher_quick_fparse(in, segment_callback, NULL, 0);
     ck_assert_int_eq(result, 0);
     ck_assert_int_eq(nsegments, 1);
 
@@ -77,10 +104,11 @@ START_TEST (parse_single)
 END_TEST
 
 
-START_TEST (parse_multiple)
+START_TEST (fparse_multiple)
 {
-    int result = cypher_quick_parse("return 1; return 2;\n   return 3    ;",
-            segment_callback, NULL, 0);
+    fill_stream("return 1; return 2;\n   return 3    ;");
+
+    int result = cypher_quick_fparse(in, segment_callback, NULL, 0);
     ck_assert_int_eq(result, 0);
     ck_assert_int_eq(nsegments, 3);
 
@@ -94,10 +122,11 @@ START_TEST (parse_multiple)
 END_TEST
 
 
-START_TEST (parse_commands)
+START_TEST (fparse_commands)
 {
-    int result = cypher_quick_parse(":foo bar\"baz\"\n",
-            segment_callback, NULL, 0);
+    fill_stream(":foo bar\"baz\"\n");
+
+    int result = cypher_quick_fparse(in, segment_callback, NULL, 0);
     ck_assert_int_eq(result, 0);
     ck_assert_int_eq(nsegments, 1);
 
@@ -107,10 +136,12 @@ START_TEST (parse_commands)
 END_TEST
 
 
-START_TEST (parse_statements_only)
+START_TEST (fparse_statements_only)
 {
-    int result = cypher_quick_parse("return 1; :foo bar\"baz\"\n return 2;",
-            segment_callback, NULL, CYPHER_PARSE_ONLY_STATEMENTS);
+    fill_stream("return 1; :foo bar\"baz\"\n return 2;");
+
+    int result = cypher_quick_fparse(in, segment_callback, NULL,
+            CYPHER_PARSE_ONLY_STATEMENTS);
     ck_assert_int_eq(result, 0);
     ck_assert_int_eq(nsegments, 2);
 
@@ -122,10 +153,11 @@ START_TEST (parse_statements_only)
 END_TEST
 
 
-START_TEST (parse_eof_statement)
+START_TEST (fparse_eof_statement)
 {
-    int result = cypher_quick_parse("return 1; return 2",
-            segment_callback, NULL, 0);
+    fill_stream("return 1; return 2");
+
+    int result = cypher_quick_fparse(in, segment_callback, NULL, 0);
     ck_assert_int_eq(result, 0);
     ck_assert_int_eq(nsegments, 2);
 
@@ -137,10 +169,11 @@ START_TEST (parse_eof_statement)
 END_TEST
 
 
-START_TEST (parse_eof_command)
+START_TEST (fparse_eof_command)
 {
-    int result = cypher_quick_parse(":bar\n:foo bar\"baz\"",
-            segment_callback, NULL, 0);
+    fill_stream(":bar\n:foo bar\"baz\"");
+
+    int result = cypher_quick_fparse(in, segment_callback, NULL, 0);
     ck_assert_int_eq(result, 0);
     ck_assert_int_eq(nsegments, 2);
 
@@ -152,16 +185,16 @@ START_TEST (parse_eof_command)
 END_TEST
 
 
-TCase* quick_parse_tcase(void)
+TCase* quick_fparse_tcase(void)
 {
-    TCase *tc = tcase_create("quick_parse");
+    TCase *tc = tcase_create("quick_fparse");
     tcase_add_checked_fixture(tc, setup, teardown);
-    tcase_add_test(tc, parse_empty);
-    tcase_add_test(tc, parse_single);
-    tcase_add_test(tc, parse_multiple);
-    tcase_add_test(tc, parse_commands);
-    tcase_add_test(tc, parse_statements_only);
-    tcase_add_test(tc, parse_eof_statement);
-    tcase_add_test(tc, parse_eof_command);
+    tcase_add_test(tc, fparse_empty);
+    tcase_add_test(tc, fparse_single);
+    tcase_add_test(tc, fparse_multiple);
+    tcase_add_test(tc, fparse_commands);
+    tcase_add_test(tc, fparse_statements_only);
+    tcase_add_test(tc, fparse_eof_statement);
+    tcase_add_test(tc, fparse_eof_command);
     return tc;
 }

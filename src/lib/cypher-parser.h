@@ -5604,12 +5604,58 @@ typedef int (*cypher_parser_quick_segment_callback_t)(void *userdata,
         const char *segment, size_t n, bool eof);
 
 /**
+ * @fn int cypher_quick_parse(const char *s, cypher_parser_quick_segment_callback_t callback, void *userdata, uint_fast32_t flags);
+ * @brief Quick parse segments from a string.
+ *
+ * The provided callback is invoked for every segment of parsed input, where
+ * each segments is separated by either a newline or semicolon (`;`),
+ * respectively depending on whether a client command is being parsed or not.
+ * If the flag CYPHER_PARSE_ONLY_STATEMENTS is set, then only semicolons will
+ * be used for delimiting segments, and client commands will not be parsed.
+ *
+ * @param [s] The string to parse.
+ * @param [callback] The callback to be invoked for each parsed segment.
+ * @param [userdata] A pointer that will be provided to the callback.
+ * @param [flags] A bitmask of flags to control parsing.
+ * @return 0 on success, or -1 on failure (errno will be set).
+ */
+#define cypher_quick_parse(s,c,u,f) (cypher_quick_uparse(s,strlen(s),c,u,f))
+
+/**
+ * Quick parse segments from a string.
+ *
+ * The provided callback is invoked for every segment of parsed input, where
+ * each segments is separated by either a newline or semicolon (`;`),
+ * respectively depending on whether a client command is being parsed or not.
+ * If the flag CYPHER_PARSE_ONLY_STATEMENTS is set, then only semicolons will
+ * be used for delimiting segments, and client commands will not be parsed.
+ *
+ * @param [s] The string to parse.
+ * @param [n] The size of the string.
+ * @param [callback] The callback to be invoked for each parsed segment.
+ * @param [userdata] A pointer that will be provided to the callback.
+ * @param [flags] A bitmask of flags to control parsing.
+ * @return 0 on success, or -1 on failure (errno will be set).
+ */
+__cypherlang_must_check
+int cypher_quick_uparse(const char *s, size_t n,
+        cypher_parser_quick_segment_callback_t callback, void *userdata,
+        uint_fast32_t flags);
+
+/**
  * Quick parse a statement or command from a stream.
+ *
+ * The provided callback is invoked for every segment of parsed input, where
+ * each segments is separated by either a newline or semicolon (`;`),
+ * respectively depending on whether a client command is being parsed or not.
+ * If the flag CYPHER_PARSE_ONLY_STATEMENTS is set, then only semicolons will
+ * be used for delimiting segments, and client commands will not be parsed.
  *
  * @param [stream] The stream to parse.
  * @param [callback] The callback to be invoked for each parsed segment.
  * @param [userdata] A pointer that will be provided to the callback.
  * @param [flags] A bitmask of flags to control parsing.
+ * @return 0 on success, or -1 on failure (errno will be set).
  */
 int cypher_quick_fparse(FILE *stream,
         cypher_parser_quick_segment_callback_t callback, void *userdata,
