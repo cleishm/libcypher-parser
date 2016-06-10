@@ -119,6 +119,8 @@ libcypher_parser_la_SOURCES = \
 	parser.leg \
 	parser_config.c \
 	parser_config.h \
+	quick_parser.c \
+	quick_parser.leg \
 	result.c \
 	result.h \
 	segment.c \
@@ -131,10 +133,11 @@ libcypher_parser_la_SOURCES = \
 	vector.h
 
 libcypher_parser_la_CFLAGS = $(PTHREAD_CFLAGS) $(OPENSSL_CFLAGS) -Wpedantic -Wvla
-libcypher_parser_la_LDFLAGS = -version-info 4:0:1
+libcypher_parser_la_LDFLAGS = -version-info 5:0:2
 libcypher_parser_la_LIBADD = $(PTHREAD_LIBS) $(OPENSSL_LIBS) $(LIBM)
 
 parser.c: parser_leg.c
+quick_parser.c: quick_parser_leg.c
 
 if HAVE_LEG
 %_leg.c: %.leg
@@ -144,5 +147,5 @@ else
 	$(error Cannot compile .leg source file, as the leg compiler was not found by the configure script: please install http://piumarta.com/software/peg/ and re-run the configure script)
 endif
 
-EXTRA_DIST = parser_leg.c
-MAINTAINERCLEANFILES = parser_leg.c
+EXTRA_DIST = parser_leg.c quick_parser_leg.c
+MAINTAINERCLEANFILES = parser_leg.c quick_parser_leg.c

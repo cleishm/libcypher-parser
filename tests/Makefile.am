@@ -26,6 +26,7 @@ check_libcypher_parser_CHECKS = \
 	check_merge.c \
 	check_pattern.c \
 	check_query.c \
+	check_quick_parse.c \
 	check_reduce.c \
 	check_remove.c \
 	check_return.c \

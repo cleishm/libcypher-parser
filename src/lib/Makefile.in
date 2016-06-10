@@ -249,6 +249,7 @@ am_libcypher_parser_la_OBJECTS = libcypher_parser_la-ast.lo \
 	libcypher_parser_la-ast_with.lo libcypher_parser_la-errors.lo \
 	libcypher_parser_la-operators.lo libcypher_parser_la-parser.lo \
 	libcypher_parser_la-parser_config.lo \
+	libcypher_parser_la-quick_parser.lo \
 	libcypher_parser_la-result.lo libcypher_parser_la-segment.lo \
 	libcypher_parser_la-string_buffer.lo \
 	libcypher_parser_la-util.lo libcypher_parser_la-vector.lo
@@ -596,6 +597,8 @@ libcypher_parser_la_SOURCES = \
 	parser.leg \
 	parser_config.c \
 	parser_config.h \
+	quick_parser.c \
+	quick_parser.leg \
 	result.c \
 	result.h \
 	segment.c \
@@ -608,10 +611,10 @@ libcypher_parser_la_SOURCES = \
 	vector.h
 
 libcypher_parser_la_CFLAGS = $(PTHREAD_CFLAGS) $(OPENSSL_CFLAGS) -Wpedantic -Wvla
-libcypher_parser_la_LDFLAGS = -version-info 4:0:1
+libcypher_parser_la_LDFLAGS = -version-info 5:0:2
 libcypher_parser_la_LIBADD = $(PTHREAD_LIBS) $(OPENSSL_LIBS) $(LIBM)
-EXTRA_DIST = parser_leg.c
-MAINTAINERCLEANFILES = parser_leg.c
+EXTRA_DIST = parser_leg.c quick_parser_leg.c
+MAINTAINERCLEANFILES = parser_leg.c quick_parser_leg.c
 all: all-am
 
 .SUFFIXES:
@@ -801,6 +804,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcypher_parser_la-operators.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcypher_parser_la-parser.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcypher_parser_la-parser_config.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcypher_parser_la-quick_parser.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcypher_parser_la-result.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcypher_parser_la-segment.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcypher_parser_la-string_buffer.Plo@am__quote@
@@ -1605,6 +1609,13 @@ libcypher_parser_la-parser_config.lo: parser_config.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcypher_parser_la_CFLAGS) $(CFLAGS) -c -o libcypher_parser_la-parser_config.lo `test -f 'parser_config.c' || echo '$(srcdir)/'`parser_config.c
 
+libcypher_parser_la-quick_parser.lo: quick_parser.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcypher_parser_la_CFLAGS) $(CFLAGS) -MT libcypher_parser_la-quick_parser.lo -MD -MP -MF $(DEPDIR)/libcypher_parser_la-quick_parser.Tpo -c -o libcypher_parser_la-quick_parser.lo `test -f 'quick_parser.c' || echo '$(srcdir)/'`quick_parser.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcypher_parser_la-quick_parser.Tpo $(DEPDIR)/libcypher_parser_la-quick_parser.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='quick_parser.c' object='libcypher_parser_la-quick_parser.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcypher_parser_la_CFLAGS) $(CFLAGS) -c -o libcypher_parser_la-quick_parser.lo `test -f 'quick_parser.c' || echo '$(srcdir)/'`quick_parser.c
+
 libcypher_parser_la-result.lo: result.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcypher_parser_la_CFLAGS) $(CFLAGS) -MT libcypher_parser_la-result.lo -MD -MP -MF $(DEPDIR)/libcypher_parser_la-result.Tpo -c -o libcypher_parser_la-result.lo `test -f 'result.c' || echo '$(srcdir)/'`result.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcypher_parser_la-result.Tpo $(DEPDIR)/libcypher_parser_la-result.Plo
@@ -1880,6 +1891,7 @@ uninstall-am: uninstall-includeHEADERS uninstall-libLTLIBRARIES
 
 
 parser.c: parser_leg.c
+quick_parser.c: quick_parser_leg.c
 
 @HAVE_LEG_TRUE@%_leg.c: %.leg
 @HAVE_LEG_TRUE@	$(LEG) -o $@ $<
