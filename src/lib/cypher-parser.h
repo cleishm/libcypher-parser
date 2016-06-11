@@ -5075,7 +5075,7 @@ typedef struct cypher_parser_config cypher_parser_config_t;
  * Generate a new parser configuration.
  *
  * The returned configuration must be later released using
- * `cypher_parser_config_free(...)`.
+ * cypher_parser_config_free().
  *
  * @return A pointer to a new parser configuration, or `NULL` if an error
  *         occurs (errno will be set).
@@ -5167,7 +5167,7 @@ typedef int (*cypher_parser_segment_callback_t)(void *userdata,
  * be used for delimiting segments, and client commands will not be parsed.
  *
  * The segment will be released after the callback is complete, unless retained
- * using `cypher_parse_segment_retain(segment)`.
+ * using cypher_parse_segment_retain().
  *
  * @param [s] A null terminated string to parse.
  * @param [callback] The callback to be invoked for each parsed segment.
@@ -5187,7 +5187,7 @@ typedef int (*cypher_parser_segment_callback_t)(void *userdata,
  *
  * All statements and/or client commands are parsed from the input string, and
  * a result returned. The result must be passed to
- * `cypher_parse_result_free(...)` to release dynamically allocated memory.
+ * cypher_parse_result_free() to release dynamically allocated memory.
  * If the flag CYPHER_PARSE_ONLY_STATEMENTS is set, client commands will not be
  * parsed.
  *
@@ -5212,7 +5212,7 @@ typedef int (*cypher_parser_segment_callback_t)(void *userdata,
  * be used for delimiting segments, and client commands will not be parsed.
  *
  * The segment will be released after the callback is complete, unless retained
- * using `cypher_parse_segment_retain(segment)`.
+ * using cypher_parse_segment_retain().
  *
  * @param [s] The string to parse.
  * @param [n] The size of the string.
@@ -5237,7 +5237,7 @@ int cypher_uparse_each(const char *s, size_t n,
  *
  * All statements and/or client commands are parsed from the input string, and
  * a result returned. The result must be passed to
- * `cypher_parse_result_free(...)` to release dynamically allocated memory.
+ * cypher_parse_result_free() to release dynamically allocated memory.
  * If the flag CYPHER_PARSE_ONLY_STATEMENTS is set, client commands will not be
  * parsed.
  *
@@ -5266,7 +5266,7 @@ cypher_parse_result_t *cypher_uparse(const char *s, size_t n,
  * be used for delimiting segments, and client commands will not be parsed.
  *
  * The segment will be released after the callback is complete, unless retained
- * using `cypher_parse_segment_retain(segment)`.
+ * using cypher_parse_segment_retain().
  *
  * @param [stream] The stream to parse.
  * @param [callback] The callback to be invoked for each parsed segment.
@@ -5289,7 +5289,7 @@ int cypher_fparse_each(FILE *stream, cypher_parser_segment_callback_t callback,
  *
  * All statements and/or client commands are parsed from the input string, and
  * a result returned. The result must be passed to
- * `cypher_parse_result_free(...)` to release dynamically allocated memory.
+ * cypher_parse_result_free() to release dynamically allocated memory.
  * If the flag CYPHER_PARSE_ONLY_STATEMENTS is set, client commands will not be
  * parsed.
  *
@@ -5398,9 +5398,7 @@ bool cypher_parse_segment_eof(const cypher_parse_segment_t *segment);
 /**
  * Print a represetation of the AST from a parse segment to a stream.
  *
- * Useful for debugging purposes. This is equivalent to calling
- * `cypher_ast_fprintv` with the an array of root AST nodes from the
- * segment.
+ * Useful for debugging purposes.
  *
  * @param [segment] The parse segment.
  * @param [stream] The stream to print to.
@@ -5418,7 +5416,7 @@ int cypher_parse_segment_fprint_ast(const cypher_parse_segment_t *segment,
 /**
  * Retain a reference to a parse segment.
  *
- * The segment must later be passed to `cypher_parse_segment_release(segment)`.
+ * The segment must later be passed to cypher_parse_segment_release().
  *
  * @param [segment] The parse segment.
  */
@@ -5429,7 +5427,7 @@ void cypher_parse_segment_retain(cypher_parse_segment_t *segment);
  * Release a reference to a parse segment.
  *
  * The segment must have been previously retained using
- * `cypher_parse_segment_retain(segment)`.
+ * cypher_parse_segment_retain().
  *
  * @param [segment] The parse segment.
  */
@@ -5528,9 +5526,7 @@ bool cypher_parse_result_eof(const cypher_parse_result_t *result);
 /**
  * Print a represetation of a parse result to a stream.
  *
- * Useful for debugging purposes. This is equivalent to calling
- * `cypher_ast_fprintv` with the an array of root AST nodes from the
- * result.
+ * Useful for debugging purposes.
  *
  * @param [result] The parse result.
  * @param [stream] The stream to print to.
@@ -5608,12 +5604,58 @@ typedef int (*cypher_parser_quick_segment_callback_t)(void *userdata,
         const char *segment, size_t n, bool eof);
 
 /**
+ * @fn int cypher_quick_parse(const char *s, cypher_parser_quick_segment_callback_t callback, void *userdata, uint_fast32_t flags);
+ * @brief Quick parse segments from a string.
+ *
+ * The provided callback is invoked for every segment of parsed input, where
+ * each segments is separated by either a newline or semicolon (`;`),
+ * respectively depending on whether a client command is being parsed or not.
+ * If the flag CYPHER_PARSE_ONLY_STATEMENTS is set, then only semicolons will
+ * be used for delimiting segments, and client commands will not be parsed.
+ *
+ * @param [s] The string to parse.
+ * @param [callback] The callback to be invoked for each parsed segment.
+ * @param [userdata] A pointer that will be provided to the callback.
+ * @param [flags] A bitmask of flags to control parsing.
+ * @return 0 on success, or -1 on failure (errno will be set).
+ */
+#define cypher_quick_parse(s,c,u,f) (cypher_quick_uparse(s,strlen(s),c,u,f))
+
+/**
+ * Quick parse segments from a string.
+ *
+ * The provided callback is invoked for every segment of parsed input, where
+ * each segments is separated by either a newline or semicolon (`;`),
+ * respectively depending on whether a client command is being parsed or not.
+ * If the flag CYPHER_PARSE_ONLY_STATEMENTS is set, then only semicolons will
+ * be used for delimiting segments, and client commands will not be parsed.
+ *
+ * @param [s] The string to parse.
+ * @param [n] The size of the string.
+ * @param [callback] The callback to be invoked for each parsed segment.
+ * @param [userdata] A pointer that will be provided to the callback.
+ * @param [flags] A bitmask of flags to control parsing.
+ * @return 0 on success, or -1 on failure (errno will be set).
+ */
+__cypherlang_must_check
+int cypher_quick_uparse(const char *s, size_t n,
+        cypher_parser_quick_segment_callback_t callback, void *userdata,
+        uint_fast32_t flags);
+
+/**
  * Quick parse a statement or command from a stream.
+ *
+ * The provided callback is invoked for every segment of parsed input, where
+ * each segments is separated by either a newline or semicolon (`;`),
+ * respectively depending on whether a client command is being parsed or not.
+ * If the flag CYPHER_PARSE_ONLY_STATEMENTS is set, then only semicolons will
+ * be used for delimiting segments, and client commands will not be parsed.
  *
  * @param [stream] The stream to parse.
  * @param [callback] The callback to be invoked for each parsed segment.
  * @param [userdata] A pointer that will be provided to the callback.
  * @param [flags] A bitmask of flags to control parsing.
+ * @return 0 on success, or -1 on failure (errno will be set).
  */
 int cypher_quick_fparse(FILE *stream,
         cypher_parser_quick_segment_callback_t callback, void *userdata,

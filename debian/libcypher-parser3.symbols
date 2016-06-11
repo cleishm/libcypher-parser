@@ -452,6 +452,7 @@ libcypher-parser.so.3 libcypher-parser3 #MINVER#
  cypher_astnode_type@Base 0.3.0
  cypher_astnode_typestr@Base 0.3.0
  cypher_fparse@Base 0.3.0
+ cypher_quick_uparse@Base 0.3.3
  cypher_fparse_each@Base 0.3.0
  cypher_input_position_zero@Base 0.3.0
  cypher_parse_error_context@Base 0.3.0

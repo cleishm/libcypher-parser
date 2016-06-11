@@ -1,5 +1,5 @@
-libcypher-parser (0.3.2-1) unstable; urgency=low
+libcypher-parser (0.3.3-1) unstable; urgency=low
 
   * Initial packaging. Closes: #825072
 
- -- Chris Leishman <chris@leishman.org>  Fri, 10 Jun 2016 01:44:53 +0000
+ -- Chris Leishman <chris@leishman.org>  Sat, 11 Jun 2016 18:40:50 +0000

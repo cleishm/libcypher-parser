@@ -16,11 +16,11 @@
 
 directive = command | statement
 
-command = - < ':' command-body ( line-end | EOF ) >        { capture(yy); }
+command = - < ':' command-body ( line-end | EOF ) >        { segment(yy); }
 command-body = (quoted | !line-end .)*
 line-end = (HWS | block-comment)* (line-comment | EOL)
 
-statement = < - statement-body - ( ';' | EOF ) >           { capture(yy); }
+statement = < - statement-body - ( ';' | EOF ) >           { segment(yy); }
 statement-body = (comment | quoted | ESC | !(- ';') .)*
 
 comment = line-comment | block-comment
