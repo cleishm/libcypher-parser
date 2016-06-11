@@ -155,7 +155,7 @@ int parse(source_cb_t source, void *sourcedata,
             goto cleanup;
         }
 
-        if (yy.eof)
+        if (yy.eof || flags & CYPHER_PARSE_SINGLE)
         {
             break;
         }
