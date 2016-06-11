@@ -149,7 +149,11 @@ int parse(source_cb_t source, void *sourcedata,
             goto cleanup;
         }
 
-        if (yy.result)
+        if (yy.result > 0)
+        {
+            break;
+        }
+        else if (yy.result < 0)
         {
             err = yy.result;
             goto cleanup;
