@@ -16,20 +16,82 @@
  */
 #include "../../config.h"
 #include "cypher-parser.h"
+#include "util.h"
 #include <assert.h>
 #include <errno.h>
 #include <setjmp.h>
 
 typedef struct _yycontext yycontext;
+typedef int (*yyrule)(yycontext *yy);
+typedef int (*source_cb_t)(void *data, char *buf, int n);
+
+static int parse(source_cb_t source, void *sourcedata,
+        cypher_parser_quick_segment_callback_t callback, void *userdata,
+        uint_fast32_t flags);
+static void source(yycontext *yy, char *buf, int *result, int max_size);
+
+
+struct source_from_buffer_data
+{
+    const char *buffer;
+    size_t length;
+};
+
+
+static int source_from_buffer(void *data, char *buf, int n)
+{
+    struct source_from_buffer_data *input = data;
+    int len = min(input->length, n);
+    input->length -= len;
+    if (len == 0)
+    {
+        return len;
+    }
+    memcpy(buf, input->buffer, len);
+    return len;
+}
+
+
+static int source_from_stream(void *data, char *buf, int n)
+{
+    FILE *stream = data;
+    int c = getc(stream);
+    if (c == EOF)
+    {
+        return 0;
+    }
+    *buf = c;
+    return 1;
+}
+
+
+int cypher_quick_uparse(const char *s, size_t n,
+        cypher_parser_quick_segment_callback_t callback, void *userdata,
+        uint_fast32_t flags)
+{
+    struct source_from_buffer_data sourcedata = { .buffer = s, .length = n };
+    return parse(source_from_buffer, &sourcedata, callback, userdata, flags);
+}
+
+
+int cypher_quick_fparse(FILE *stream,
+        cypher_parser_quick_segment_callback_t callback, void *userdata,
+        uint_fast32_t flags)
+{
+    return parse(source_from_stream, stream, callback, userdata, flags);
+}
+
 
 #define YY_CTX_LOCAL
 #define YY_PARSE(T) static T
 #define YY_CTX_MEMBERS \
-    FILE *stream; \
+    source_cb_t source; \
+    void *source_data; \
+    cypher_parser_quick_segment_callback_t callback; \
+    void *callback_data; \
     sigjmp_buf abort_env; \
-    size_t begin; \
-    size_t end; \
-    bool eof;
+    bool eof; \
+    int result;
 
 #define YY_MALLOC abort_malloc
 #define YY_REALLOC abort_realloc
@@ -40,7 +102,7 @@ typedef struct _yycontext yycontext;
 static void *abort_malloc(yycontext *yy, size_t size);
 static void *abort_realloc(yycontext *yy, void *ptr, size_t size);
 static inline void source(yycontext *yy, char *buf, int *result, int max_size);
-static inline void capture(yycontext *yy);
+static inline void segment(yycontext *yy);
 
 #pragma GCC diagnostic ignored "-Wunused-function"
 #include "quick_parser_leg.c"
@@ -53,29 +115,31 @@ static int safe_yyparsefrom(yycontext *yy, yyrule rule);
 
 void source(yycontext *yy, char *buf, int *result, int max_size)
 {
-    int c = getc(yy->stream);
-    if (c == EOF)
+    if (buf == NULL)
     {
         *result = 0;
         return;
     }
-    *buf = c;
-    *result = 1;
+    assert(yy != NULL && yy->source != NULL);
+    *result = yy->source(yy->source_data, buf, max_size);
 }
 
 
-int cypher_quick_fparse(FILE *stream,
+int parse(source_cb_t source, void *sourcedata,
         cypher_parser_quick_segment_callback_t callback, void *userdata,
         uint_fast32_t flags)
 {
     yycontext yy;
     memset(&yy, 0, sizeof(yycontext));
 
-    yy.stream = stream;
+    yy.source = source;
+    yy.source_data = sourcedata;
+    yy.callback = callback;
+    yy.callback_data = userdata;
     int err = -1;
 
     yyrule rule = (flags & CYPHER_PARSE_ONLY_STATEMENTS)?
-        yy_statement : yy_directive;
+            yy_statement : yy_directive;
 
     for (;;)
     {
@@ -85,15 +149,19 @@ int cypher_quick_fparse(FILE *stream,
             goto cleanup;
         }
 
-        if (yy.end == 0)
+        if (yy.result > 0)
         {
             break;
         }
-
-        err = callback(userdata, yy.__buf + yy.begin, yy.end - yy.begin, yy.eof);
-        if (err)
+        else if (yy.result < 0)
         {
+            err = yy.result;
             goto cleanup;
+        }
+
+        if (yy.eof || flags & CYPHER_PARSE_SINGLE)
+        {
+            break;
         }
     }
 
@@ -142,8 +210,14 @@ void *abort_realloc(yycontext *yy, void *ptr, size_t size)
 }
 
 
-void capture(yycontext *yy)
+void segment(yycontext *yy)
 {
-    yy->begin = yy->__begin;
-    yy->end = yy->__end;
+    if (yy->__end == 0)
+    {
+        assert(yy->eof);
+        yy->result = 0;
+        return;
+    }
+    yy->result = yy->callback(yy->callback_data, yy->__buf + yy->__begin,
+            yy->__end - yy->__begin, yy->eof);
 }
