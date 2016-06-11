@@ -311,7 +311,7 @@ YY_ACTION(void) yy_1_statement(yycontext *yy, char *yytext, int yyleng)
 #define yythunkpos yy->__thunkpos
   yyprintf((stderr, "do yy_1_statement\n"));
   {
-   capture(yy); ;
+   segment(yy); ;
   }
 #undef yythunkpos
 #undef yypos
@@ -324,7 +324,7 @@ YY_ACTION(void) yy_1_command(yycontext *yy, char *yytext, int yyleng)
 #define yythunkpos yy->__thunkpos
   yyprintf((stderr, "do yy_1_command\n"));
   {
-   capture(yy); ;
+   segment(yy); ;
   }
 #undef yythunkpos
 #undef yypos
