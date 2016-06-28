@@ -72,6 +72,7 @@ used in the Neo4j graph database.
 Summary: Development files for %{libname}
 Group: Development/Libraries
 Requires: %{libname}%{?_isa} = %{version}-%{release}
+Provides: %{name}-devel
 
 %description -n %{libname}-devel
 ibcypher-parser provides efficient parsing of Cypher into an Abstract Syntax
@@ -92,6 +93,7 @@ This package contains the development files (headers, etc).
 Summary: Development documentation for %{libname}
 Group: Development/Libraries
 BuildArch: noarch
+Provides: %{name}-devel-doc
 
 %description -n %{libname}-devel-doc
 ibcypher-parser provides efficient parsing of Cypher into an Abstract Syntax
