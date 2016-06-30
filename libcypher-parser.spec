@@ -15,7 +15,7 @@
 Summary: Parsing library for the Cypher query language
 Name: libcypher-parser
 Version: 0.3.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 Group: System Environment/Libraries
 License: Apache-2.0
 URL: https://github.com/cleishm/libcypher-parser
@@ -68,20 +68,19 @@ used in the Neo4j graph database.
 
 #------------------------------------------------------------------------------
 
-%package -n %{libname}-devel
-Summary: Development files for %{libname}
+%package -n %{name}-devel
+Summary: Development files for %{name}
 Group: Development/Libraries
 Requires: %{libname}%{?_isa} = %{version}-%{release}
-Provides: %{name}-devel
 
-%description -n %{libname}-devel
+%description -n %{name}-devel
 ibcypher-parser provides efficient parsing of Cypher into an Abstract Syntax
 Tree (AST) form, using a parsing expression grammar that is equivalent to that
 used in the Neo4j graph database.
 
 This package contains the development files (headers, etc).
 
-%files -n %{libname}-devel
+%files -n %{name}-devel
 %defattr(-, root, root)
 %{_includedir}/cypher-parser.h
 %{_libdir}/*.so
@@ -89,13 +88,12 @@ This package contains the development files (headers, etc).
 
 #------------------------------------------------------------------------------
 
-%package -n %{libname}-devel-doc
-Summary: Development documentation for %{libname}
+%package -n %{name}-devel-doc
+Summary: Development documentation for %{name}
 Group: Development/Libraries
 BuildArch: noarch
-Provides: %{name}-devel-doc
 
-%description -n %{libname}-devel-doc
+%description -n %{name}-devel-doc
 ibcypher-parser provides efficient parsing of Cypher into an Abstract Syntax
 Tree (AST) form, using a parsing expression grammar that is equivalent to that
 used in the Neo4j graph database.
@@ -103,7 +101,7 @@ used in the Neo4j graph database.
 This package contains the API documentation that is also available on the
 libcypher-parser website (https://github.com/cleishm/libcypher-parser).
 
-%files -n %{libname}-devel-doc
+%files -n %{name}-devel-doc
 %defattr(-, root, root)
 %doc doc/html
 
@@ -125,5 +123,7 @@ used to output the Abstract Syntax Tree (AST) of the parsed input.
 #------------------------------------------------------------------------------
 
 %changelog
+* Thu Jun 30 2016 Chris Leishman <chris@leishman.org> - 0.3.3-2
+- Changed -devel package names to remove soname
 * Sat Jun 11 2016 Chris Leishman <chris@leishman.org> - 0.3.3-1
 -Initial RPM Release
