@@ -1,3 +1,10 @@
+libcypher-parser (0.3.3-2) unstable; urgency=high
+
+  * Renamed -dev package to remove the soname.
+  * Add support for Multi-Arch.
+
+ -- Chris Leishman <chris@leishman.org>  Thu, 30 Jun 2016 06:50:18 +0000
+
 libcypher-parser (0.3.3-1) unstable; urgency=low
 
   * Initial packaging. Closes: #825072

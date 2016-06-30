@@ -10,7 +10,6 @@ Vcs-Git: https://github.com/cleishm/libcypher-parser.git
 Vcs-Browser: https://github.com/cleishm/libcypher-parser
 
 Package: cypher-lint
-Section: devel
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Lint tool for the Cypher query language
@@ -24,6 +23,7 @@ Package: libcypher-parser3
 Provides: libcypher-parser
 Section: libs
 Architecture: any
+Multi-Arch: same
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Parsing library for the Cypher query language
  Cypher is a graph query language that allows for expressive and efficient
@@ -35,11 +35,14 @@ Description: Parsing library for the Cypher query language
  .
  This version is compatible with Cypher as implemented in Neo4j 3.0.
 
-Package: libcypher-parser3-dev
-Provides: libcypher-parser-dev
+Package: libcypher-parser-dev
 Section: libdevel
 Architecture: any
+Multi-Arch: same
 Depends: libcypher-parser3 (= ${binary:Version}), ${misc:Depends}
+Provides: libcypher-parser3-dev
+Conflicts: libcypher-parser3-dev
+Replaces: libcypher-parser3-dev
 Suggests: pkg-config
 Description: Development files for libcypher-parser
  Cypher is a graph query language that allows for expressive and efficient
