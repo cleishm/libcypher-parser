@@ -1,10 +1,11 @@
-libcypher-parser (0.3.3-2) unstable; urgency=high
+libcypher-parser (0.3.4-1) unstable; urgency=high
 
+  * New upstream release. Closes: #829209, #829211, #829212
   * Renamed -dev package to remove the soname.
   * Add support for Multi-Arch.
   * Updated debian/copyright.
 
- -- Chris Leishman <chris@leishman.org>  Fri, 31 Jun 2016 06:50:18 +0000
+ -- Chris Leishman <chris@leishman.org>  Fri, 01 Jul 2016 22:27:30 +0000
 
 libcypher-parser (0.3.3-1) unstable; urgency=low
 
