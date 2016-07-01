@@ -19,9 +19,11 @@
 .SH NAME
 cypher\-lint \- a linting tool for Cypher
 .SH SYNOPSIS
-.B cypher\-lint \fI[options...]\fR
+.B cypher\-lint \fI[options] [file ...]\fR
 .SH "DESCRIPTION"
-\fBcypher\-lint\fR is a linting tool for Cypher.
+\fBcypher\-lint\fR is a linting tool for Cypher. It reads from input files,
+reports any errors found, and optionally outputs the parsed AST. If \fBfile\fR
+is a single dash (`-') or absent, \fBcypher\-lint\fR reads from standard input.
 .SH OPTIONS
 .TP
 .I \-1
@@ -52,8 +54,8 @@ first (note: will result in inconsistent formatting of AST dumps).
 .TP
 .I \-\-version
 Print the cypher\-lint version and exit.
-.SH USAGE
-.SH ERRORS
+.SH EXIT STATUS
+\fBcypher\-lint\fR exits 0 if no errors are found, and >0 otherwise.
 .SH VERSION
 This man page is current for version @VERSION@ of cypher\-lint.
 .SH COPYRIGHT
