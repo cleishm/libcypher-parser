@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
             config.stream = true;
             break;
         case VERSION_OPT:
-            fprintf(stdout, "neo4j-lint: %s\n", PACKAGE_VERSION);
+            fprintf(stdout, "cypher-lint: %s\n", PACKAGE_VERSION);
             fprintf(stdout, "libcypher-parser: %s\n",
                     libcypher_parser_version());
             result = EXIT_SUCCESS;
