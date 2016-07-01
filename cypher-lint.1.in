@@ -33,6 +33,9 @@ Output an AST representation for the parsed input.
 .I \-\-colorize
 Enable colorization of output and errors using ANSI escape sequences.
 .TP
+.I \-\-no-colorize
+Disable colorization of output and errors even when connected to a TTY.
+.TP
 .I \-h, \-\-help
 Display a brief help listing.
 .TP
