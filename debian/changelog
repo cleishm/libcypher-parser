@@ -1,3 +1,9 @@
+libcypher-parser (0.4.0-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Chris Leishman <chris@leishman.org>  Mon, 18 Jul 2016 17:30:20 +0000
+
 libcypher-parser (0.3.4-1) unstable; urgency=high
 
   * New upstream release. Closes: #829209, #829211, #829212

@@ -5601,7 +5601,8 @@ size_t cypher_parse_error_context_offset(const cypher_parse_error_t *error);
  * A quick parse callback.
  */
 typedef int (*cypher_parser_quick_segment_callback_t)(void *userdata,
-        const char *segment, size_t n, bool eof);
+        const char *segment, size_t n, struct cypher_input_range range,
+        bool eof);
 
 /**
  * @fn int cypher_quick_parse(const char *s, cypher_parser_quick_segment_callback_t callback, void *userdata, uint_fast32_t flags);
