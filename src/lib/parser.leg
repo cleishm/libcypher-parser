@@ -777,12 +777,14 @@ unquoted = < (!(['"] | WS | '//' | '/*' | EOF) .)+ >
                                        { strbuf_append_block(); }
 quoted = single-quoted | double-quoted
 single-quoted = "'"
-    ( ESC |
-      < (!("'" | ESC) .)+ >            { strbuf_append_block(); }
+    ( ESC
+    | < EOL >                          { strbuf_append_block(); }
+    | < (!("'" | ESC | EOL) .)+ >      { strbuf_append_block(); }
     )* "'" ~{ERR("'")}
 double-quoted = '"'
-    ( ESC |
-      < (!('"' | ESC) .)+ >            { strbuf_append_block(); }
+    ( ESC
+    | < EOL >                          { strbuf_append_block(); }
+    | < (!('"' | ESC | EOL) .)+ >      { strbuf_append_block(); }
     )* '"' ~{ERR("\"")}
 
 ESC = "\\a"                            { strbuf_append("\a", 1); }
@@ -840,7 +842,7 @@ block-comment = '/*' < (EOL | !'*/' .)* >
 
 WS = HWS | EOL
 HWS = [ \t]
-EOL = ( '\n' | '\r\n' | '\r' ) _line_start_
+EOL = ( '\n' | '\r\n' ) _line_start_
 EOF = !.                               { yy->eof = true; }
 
 #----------------------------------------------------

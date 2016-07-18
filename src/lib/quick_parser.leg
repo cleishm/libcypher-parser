@@ -16,24 +16,26 @@
 
 directive = command | statement
 
-command = - < ':' command-body ( line-end | EOF ) >        { segment(yy); }
+command = - < ':' command-body > ( line-end | EOF )        { segment(yy); }
 command-body = (quoted | !line-end .)*
 line-end = (HWS | block-comment)* (line-comment | EOL)
 
-statement = < - statement-body - ( ';' | EOF ) >           { segment(yy); }
+statement = - < statement-body > - ( ';' | EOF )           { segment(yy); }
 statement-body = (comment | quoted | ESC | !(- ';') .)*
 
 comment = line-comment | block-comment
 line-comment = '//' (!EOL .)* EOL
-block-comment = '/*' (!'*/' .)* '*/'
+block-comment = '/*' (EOL | !'*/' .)* '*/'
 
 quoted = single-quoted | double-quoted
-single-quoted = "'" (ESC | !"'" .)* "'"
-double-quoted = '"' (ESC | !'"' .)* '"'
+single-quoted = "'" (ESC | EOL | !"'" .)* "'"
+double-quoted = '"' (ESC | EOL | !'"' .)* '"'
 
 - = (WS | comment)*
 WS = HWS | EOL
 HWS = [ \t]
 ESC = '\\' .
-EOL = '\n' | '\r\n' | '\r'
+EOL = ('\n' | '\r\n') _line_start_
 EOF = !.                                                   { yy->eof = true; }
+
+_line_start_ = &{ (line_start(yy), 1) }

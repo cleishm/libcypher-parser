@@ -27,6 +27,7 @@ static FILE *in;
 static FILE *out;
 static unsigned int nsegments;
 static char *segments[MAX_SEGMENTS];
+static struct cypher_input_range ranges[MAX_SEGMENTS];
 static bool eofs[MAX_SEGMENTS];
 
 
@@ -41,6 +42,7 @@ static void setup(void)
 
     nsegments = 0;
     memset(segments, 0, sizeof(segments));
+    memset(ranges, 0, sizeof(ranges));
     memset(eofs, 0, sizeof(eofs));
 }
 
@@ -68,24 +70,69 @@ static void fill_stream(const char *content)
 }
 
 
-static int segment_callback(void *data, const char *s, size_t n, bool eof)
+static int segment_callback(void *data, const char *s, size_t n,
+        struct cypher_input_range range, bool eof)
 {
     ck_assert(nsegments < MAX_SEGMENTS);
     segments[nsegments] = strndup(s, n);
     ck_assert(segments[nsegments] != NULL);
+    ranges[nsegments] = range;
     eofs[nsegments] = eof;
     ++nsegments;
     return 0;
 }
 
 
-START_TEST (fparse_empty)
+START_TEST (fparse_none)
 {
     fill_stream("");
 
     int result = cypher_quick_fparse(in, segment_callback, NULL, 0);
     ck_assert_int_eq(result, 0);
     ck_assert_int_eq(nsegments, 0);
+}
+END_TEST
+
+
+START_TEST (fparse_empty_statement)
+{
+    fill_stream(";");
+
+    int result = cypher_quick_fparse(in, segment_callback, NULL, 0);
+    ck_assert_int_eq(result, 0);
+    ck_assert_int_eq(nsegments, 1);
+    ck_assert_str_eq(segments[0], "");
+    ck_assert_int_eq(ranges[0].start.line, 1);
+    ck_assert_int_eq(ranges[0].start.column, 1);
+    ck_assert_int_eq(ranges[0].start.offset, 0);
+    ck_assert_int_eq(ranges[0].end.line, 1);
+    ck_assert_int_eq(ranges[0].end.column, 1);
+    ck_assert_int_eq(ranges[0].end.offset, 0);
+}
+END_TEST
+
+
+START_TEST (fparse_whitespace_statement)
+{
+    fill_stream("  ; ");
+
+    int result = cypher_quick_fparse(in, segment_callback, NULL, 0);
+    ck_assert_int_eq(result, 0);
+    ck_assert_int_eq(nsegments, 2);
+    ck_assert_str_eq(segments[0], "");
+    ck_assert_int_eq(ranges[0].start.line, 1);
+    ck_assert_int_eq(ranges[0].start.column, 3);
+    ck_assert_int_eq(ranges[0].start.offset, 2);
+    ck_assert_int_eq(ranges[0].end.line, 1);
+    ck_assert_int_eq(ranges[0].end.column, 3);
+    ck_assert_int_eq(ranges[0].end.offset, 2);
+    ck_assert_str_eq(segments[1], "");
+    ck_assert_int_eq(ranges[1].start.line, 1);
+    ck_assert_int_eq(ranges[1].start.column, 5);
+    ck_assert_int_eq(ranges[1].start.offset, 4);
+    ck_assert_int_eq(ranges[1].end.line, 1);
+    ck_assert_int_eq(ranges[1].end.column, 5);
+    ck_assert_int_eq(ranges[1].end.offset, 4);
 }
 END_TEST
 
@@ -98,7 +145,13 @@ START_TEST (fparse_single)
     ck_assert_int_eq(result, 0);
     ck_assert_int_eq(nsegments, 1);
 
-    ck_assert_str_eq(segments[0], "return 1;");
+    ck_assert_str_eq(segments[0], "return 1");
+    ck_assert_int_eq(ranges[0].start.line, 1);
+    ck_assert_int_eq(ranges[0].start.column, 1);
+    ck_assert_int_eq(ranges[0].start.offset, 0);
+    ck_assert_int_eq(ranges[0].end.line, 1);
+    ck_assert_int_eq(ranges[0].end.column, 9);
+    ck_assert_int_eq(ranges[0].end.offset, 8);
     ck_assert(!eofs[0]);
 }
 END_TEST
@@ -112,11 +165,31 @@ START_TEST (fparse_multiple)
     ck_assert_int_eq(result, 0);
     ck_assert_int_eq(nsegments, 3);
 
-    ck_assert_str_eq(segments[0], "return 1;");
+    ck_assert_str_eq(segments[0], "return 1");
+    ck_assert_int_eq(ranges[0].start.line, 1);
+    ck_assert_int_eq(ranges[0].start.column, 1);
+    ck_assert_int_eq(ranges[0].start.offset, 0);
+    ck_assert_int_eq(ranges[0].end.line, 1);
+    ck_assert_int_eq(ranges[0].end.column, 9);
+    ck_assert_int_eq(ranges[0].end.offset, 8);
     ck_assert(!eofs[0]);
-    ck_assert_str_eq(segments[1], " return 2;");
+
+    ck_assert_str_eq(segments[1], "return 2");
+    ck_assert_int_eq(ranges[1].start.line, 1);
+    ck_assert_int_eq(ranges[1].start.column, 11);
+    ck_assert_int_eq(ranges[1].start.offset, 10);
+    ck_assert_int_eq(ranges[1].end.line, 1);
+    ck_assert_int_eq(ranges[1].end.column, 19);
+    ck_assert_int_eq(ranges[1].end.offset, 18);
     ck_assert(!eofs[1]);
-    ck_assert_str_eq(segments[2], "\n   return 3    ;");
+
+    ck_assert_str_eq(segments[2], "return 3");
+    ck_assert_int_eq(ranges[2].start.line, 2);
+    ck_assert_int_eq(ranges[2].start.column, 4);
+    ck_assert_int_eq(ranges[2].start.offset, 23);
+    ck_assert_int_eq(ranges[2].end.line, 2);
+    ck_assert_int_eq(ranges[2].end.column, 12);
+    ck_assert_int_eq(ranges[2].end.offset, 31);
     ck_assert(!eofs[2]);
 }
 END_TEST
@@ -130,7 +203,13 @@ START_TEST (fparse_commands)
     ck_assert_int_eq(result, 0);
     ck_assert_int_eq(nsegments, 1);
 
-    ck_assert_str_eq(segments[0], ":foo bar\"baz\"\n");
+    ck_assert_str_eq(segments[0], ":foo bar\"baz\"");
+    ck_assert_int_eq(ranges[0].start.line, 1);
+    ck_assert_int_eq(ranges[0].start.column, 1);
+    ck_assert_int_eq(ranges[0].start.offset, 0);
+    ck_assert_int_eq(ranges[0].end.line, 1);
+    ck_assert_int_eq(ranges[0].end.column, 14);
+    ck_assert_int_eq(ranges[0].end.offset, 13);
     ck_assert(!eofs[0]);
 }
 END_TEST
@@ -145,9 +224,22 @@ START_TEST (fparse_statements_only)
     ck_assert_int_eq(result, 0);
     ck_assert_int_eq(nsegments, 2);
 
-    ck_assert_str_eq(segments[0], "return 1;");
+    ck_assert_str_eq(segments[0], "return 1");
+    ck_assert_int_eq(ranges[0].start.line, 1);
+    ck_assert_int_eq(ranges[0].start.column, 1);
+    ck_assert_int_eq(ranges[0].start.offset, 0);
+    ck_assert_int_eq(ranges[0].end.line, 1);
+    ck_assert_int_eq(ranges[0].end.column, 9);
+    ck_assert_int_eq(ranges[0].end.offset, 8);
     ck_assert(!eofs[0]);
-    ck_assert_str_eq(segments[1], " :foo bar\"baz\"\n return 2;");
+
+    ck_assert_str_eq(segments[1], ":foo bar\"baz\"\n return 2");
+    ck_assert_int_eq(ranges[1].start.line, 1);
+    ck_assert_int_eq(ranges[1].start.column, 11);
+    ck_assert_int_eq(ranges[1].start.offset, 10);
+    ck_assert_int_eq(ranges[1].end.line, 2);
+    ck_assert_int_eq(ranges[1].end.column, 10);
+    ck_assert_int_eq(ranges[1].end.offset, 33);
     ck_assert(!eofs[1]);
 }
 END_TEST
@@ -161,9 +253,22 @@ START_TEST (fparse_eof_statement)
     ck_assert_int_eq(result, 0);
     ck_assert_int_eq(nsegments, 2);
 
-    ck_assert_str_eq(segments[0], "return 1;");
+    ck_assert_str_eq(segments[0], "return 1");
+    ck_assert_int_eq(ranges[0].start.line, 1);
+    ck_assert_int_eq(ranges[0].start.column, 1);
+    ck_assert_int_eq(ranges[0].start.offset, 0);
+    ck_assert_int_eq(ranges[0].end.line, 1);
+    ck_assert_int_eq(ranges[0].end.column, 9);
+    ck_assert_int_eq(ranges[0].end.offset, 8);
     ck_assert(!eofs[0]);
-    ck_assert_str_eq(segments[1], " return 2");
+
+    ck_assert_str_eq(segments[1], "return 2");
+    ck_assert_int_eq(ranges[1].start.line, 1);
+    ck_assert_int_eq(ranges[1].start.column, 11);
+    ck_assert_int_eq(ranges[1].start.offset, 10);
+    ck_assert_int_eq(ranges[1].end.line, 1);
+    ck_assert_int_eq(ranges[1].end.column, 19);
+    ck_assert_int_eq(ranges[1].end.offset, 18);
     ck_assert(eofs[1]);
 }
 END_TEST
@@ -177,9 +282,22 @@ START_TEST (fparse_eof_command)
     ck_assert_int_eq(result, 0);
     ck_assert_int_eq(nsegments, 2);
 
-    ck_assert_str_eq(segments[0], ":bar\n");
+    ck_assert_str_eq(segments[0], ":bar");
+    ck_assert_int_eq(ranges[0].start.line, 1);
+    ck_assert_int_eq(ranges[0].start.column, 1);
+    ck_assert_int_eq(ranges[0].start.offset, 0);
+    ck_assert_int_eq(ranges[0].end.line, 1);
+    ck_assert_int_eq(ranges[0].end.column, 5);
+    ck_assert_int_eq(ranges[0].end.offset, 4);
     ck_assert(!eofs[0]);
+
     ck_assert_str_eq(segments[1], ":foo bar\"baz\"");
+    ck_assert_int_eq(ranges[1].start.line, 2);
+    ck_assert_int_eq(ranges[1].start.column, 1);
+    ck_assert_int_eq(ranges[1].start.offset, 5);
+    ck_assert_int_eq(ranges[1].end.line, 2);
+    ck_assert_int_eq(ranges[1].end.column, 14);
+    ck_assert_int_eq(ranges[1].end.offset, 18);
     ck_assert(eofs[1]);
 }
 END_TEST
@@ -189,7 +307,9 @@ TCase* quick_fparse_tcase(void)
 {
     TCase *tc = tcase_create("quick_fparse");
     tcase_add_checked_fixture(tc, setup, teardown);
-    tcase_add_test(tc, fparse_empty);
+    tcase_add_test(tc, fparse_none);
+    tcase_add_test(tc, fparse_empty_statement);
+    tcase_add_test(tc, fparse_whitespace_statement);
     tcase_add_test(tc, fparse_single);
     tcase_add_test(tc, fparse_multiple);
     tcase_add_test(tc, fparse_commands);
