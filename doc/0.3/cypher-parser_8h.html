@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>libcypher-parser-0.4.1~devel: cypher-parser.h File Reference</title>
+<title>libcypher-parser-0.3.3: cypher-parser.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -17,7 +17,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">libcypher-parser-0.4.1~devel
+   <div id="projectname">libcypher-parser-0.3.3
    </div>
   </td>
  </tr>
@@ -90,10 +90,10 @@ typedef struct cypher_parse_error&#160;</td><td class="memItemRight" valign="bot
 typedef int(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a64ed24bff906e9fc2ae2cfd4ef2bc46d">cypher_parser_segment_callback_t</a>) (void *userdata, <a class="el" href="cypher-parser_8h.html#a3f4b5dc78b2ba5a4c5b87555e1caf5ae">cypher_parse_segment_t</a> *segment)</td></tr>
 <tr class="memdesc:a64ed24bff906e9fc2ae2cfd4ef2bc46d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A parse callback. <br /></td></tr>
 <tr class="separator:a64ed24bff906e9fc2ae2cfd4ef2bc46d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf346b5084e464bafdd79f9567e8b416"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acf346b5084e464bafdd79f9567e8b416"></a>
-typedef int(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#acf346b5084e464bafdd79f9567e8b416">cypher_parser_quick_segment_callback_t</a>) (void *userdata, const char *segment, size_t n, struct <a class="el" href="structcypher__input__range.html">cypher_input_range</a> range, bool eof)</td></tr>
-<tr class="memdesc:acf346b5084e464bafdd79f9567e8b416"><td class="mdescLeft">&#160;</td><td class="mdescRight">A quick parse callback. <br /></td></tr>
-<tr class="separator:acf346b5084e464bafdd79f9567e8b416"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a967e4f71a69e4a8bf47b81984c81457c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a967e4f71a69e4a8bf47b81984c81457c"></a>
+typedef int(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a967e4f71a69e4a8bf47b81984c81457c">cypher_parser_quick_segment_callback_t</a>) (void *userdata, const char *segment, size_t n, bool eof)</td></tr>
+<tr class="memdesc:a967e4f71a69e4a8bf47b81984c81457c"><td class="mdescLeft">&#160;</td><td class="mdescRight">A quick parse callback. <br /></td></tr>
+<tr class="separator:a967e4f71a69e4a8bf47b81984c81457c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -1163,10 +1163,10 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a97b646e58e262b9a5d652563c8a1f745"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a97b646e58e262b9a5d652563c8a1f745">cypher_parse_error_context_offset</a> (const <a class="el" href="cypher-parser_8h.html#a2f0e691cc0f64d1079d6f1840ed72c43">cypher_parse_error_t</a> *error)</td></tr>
 <tr class="memdesc:a97b646e58e262b9a5d652563c8a1f745"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the offset into the context of an error.  <a href="#a97b646e58e262b9a5d652563c8a1f745">More...</a><br /></td></tr>
 <tr class="separator:a97b646e58e262b9a5d652563c8a1f745"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6aed97a60281509a96d19957736c65d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#ad6aed97a60281509a96d19957736c65d">cypher_quick_uparse</a> (const char *s, size_t n, <a class="el" href="cypher-parser_8h.html#acf346b5084e464bafdd79f9567e8b416">cypher_parser_quick_segment_callback_t</a> callback, void *userdata, uint_fast32_t flags)</td></tr>
+<tr class="memitem:ad6aed97a60281509a96d19957736c65d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#ad6aed97a60281509a96d19957736c65d">cypher_quick_uparse</a> (const char *s, size_t n, <a class="el" href="cypher-parser_8h.html#a967e4f71a69e4a8bf47b81984c81457c">cypher_parser_quick_segment_callback_t</a> callback, void *userdata, uint_fast32_t flags)</td></tr>
 <tr class="memdesc:ad6aed97a60281509a96d19957736c65d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Quick parse segments from a string.  <a href="#ad6aed97a60281509a96d19957736c65d">More...</a><br /></td></tr>
 <tr class="separator:ad6aed97a60281509a96d19957736c65d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a889c292cb5d0e7f57972df5ae0753c92"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a889c292cb5d0e7f57972df5ae0753c92">cypher_quick_fparse</a> (FILE *stream, <a class="el" href="cypher-parser_8h.html#acf346b5084e464bafdd79f9567e8b416">cypher_parser_quick_segment_callback_t</a> callback, void *userdata, uint_fast32_t flags)</td></tr>
+<tr class="memitem:a889c292cb5d0e7f57972df5ae0753c92"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a889c292cb5d0e7f57972df5ae0753c92">cypher_quick_fparse</a> (FILE *stream, <a class="el" href="cypher-parser_8h.html#a967e4f71a69e4a8bf47b81984c81457c">cypher_parser_quick_segment_callback_t</a> callback, void *userdata, uint_fast32_t flags)</td></tr>
 <tr class="memdesc:a889c292cb5d0e7f57972df5ae0753c92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Quick parse a statement or command from a stream.  <a href="#a889c292cb5d0e7f57972df5ae0753c92">More...</a><br /></td></tr>
 <tr class="separator:a889c292cb5d0e7f57972df5ae0753c92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e5e0d23ec8c0eab8bfa1413edc32807"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a0e5e0d23ec8c0eab8bfa1413edc32807">cypher_parse_each</a> (const char *s, <a class="el" href="cypher-parser_8h.html#a64ed24bff906e9fc2ae2cfd4ef2bc46d">cypher_parser_segment_callback_t</a> callback, void *userdata, struct <a class="el" href="structcypher__input__position.html">cypher_input_position</a> *last, <a class="el" href="cypher-parser_8h.html#a1ab07797ed263d9d989250bb0ffd62ba">cypher_parser_config_t</a> *config, uint_fast32_t flags)</td></tr>
@@ -1175,7 +1175,7 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a8e845c6f4b66ec4dd9b55ef08f79620d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cypher-parser_8h.html#aae9b731202ba9945266f8310a15b636e">cypher_parse_result_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a8e845c6f4b66ec4dd9b55ef08f79620d">cypher_parse</a> (const char *s, struct <a class="el" href="structcypher__input__position.html">cypher_input_position</a> *last, <a class="el" href="cypher-parser_8h.html#a1ab07797ed263d9d989250bb0ffd62ba">cypher_parser_config_t</a> *config, uint_fast32_t flags)</td></tr>
 <tr class="memdesc:a8e845c6f4b66ec4dd9b55ef08f79620d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a command or statement from a string.  <a href="#a8e845c6f4b66ec4dd9b55ef08f79620d">More...</a><br /></td></tr>
 <tr class="separator:a8e845c6f4b66ec4dd9b55ef08f79620d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7750e810d873ac13d7831cc19092e2f9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a7750e810d873ac13d7831cc19092e2f9">cypher_quick_parse</a> (const char *s, <a class="el" href="cypher-parser_8h.html#acf346b5084e464bafdd79f9567e8b416">cypher_parser_quick_segment_callback_t</a> callback, void *userdata, uint_fast32_t flags)</td></tr>
+<tr class="memitem:a7750e810d873ac13d7831cc19092e2f9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a7750e810d873ac13d7831cc19092e2f9">cypher_quick_parse</a> (const char *s, <a class="el" href="cypher-parser_8h.html#a967e4f71a69e4a8bf47b81984c81457c">cypher_parser_quick_segment_callback_t</a> callback, void *userdata, uint_fast32_t flags)</td></tr>
 <tr class="memdesc:a7750e810d873ac13d7831cc19092e2f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Quick parse segments from a string.  <a href="#a7750e810d873ac13d7831cc19092e2f9">More...</a><br /></td></tr>
 <tr class="separator:a7750e810d873ac13d7831cc19092e2f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -14669,7 +14669,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="cypher-parser_8h.html#acf346b5084e464bafdd79f9567e8b416">cypher_parser_quick_segment_callback_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="cypher-parser_8h.html#a967e4f71a69e4a8bf47b81984c81457c">cypher_parser_quick_segment_callback_t</a>&#160;</td>
           <td class="paramname"><em>callback</em>, </td>
         </tr>
         <tr>
@@ -14720,7 +14720,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="cypher-parser_8h.html#acf346b5084e464bafdd79f9567e8b416">cypher_parser_quick_segment_callback_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="cypher-parser_8h.html#a967e4f71a69e4a8bf47b81984c81457c">cypher_parser_quick_segment_callback_t</a>&#160;</td>
           <td class="paramname"><em>callback</em>, </td>
         </tr>
         <tr>
@@ -14777,7 +14777,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="cypher-parser_8h.html#acf346b5084e464bafdd79f9567e8b416">cypher_parser_quick_segment_callback_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="cypher-parser_8h.html#a967e4f71a69e4a8bf47b81984c81457c">cypher_parser_quick_segment_callback_t</a>&#160;</td>
           <td class="paramname"><em>callback</em>, </td>
         </tr>
         <tr>
