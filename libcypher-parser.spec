@@ -14,8 +14,8 @@
 #
 Summary: Parsing library for the Cypher query language
 Name: libcypher-parser
-Version: 0.3.3
-Release: 2%{?dist}
+Version: 0.4.0
+Release: 1%{?dist}
 Group: System Environment/Libraries
 License: Apache-2.0
 URL: https://github.com/cleishm/libcypher-parser
@@ -27,7 +27,7 @@ libcypher-parser provides efficient parsing of Cypher into an Abstract Syntax
 Tree (AST) form, using a parsing expression grammar that is equivalent to that
 used in the Neo4j graph database.
 
-%define sover 3
+%define sover 7
 %define libname %{name}%{sover}
 
 %prep
@@ -123,6 +123,8 @@ used to output the Abstract Syntax Tree (AST) of the parsed input.
 #------------------------------------------------------------------------------
 
 %changelog
+* Mon Jul 18 2016 Chris Leishman <chris@leishman.org> - 0.4.0-1
+- New upstream release
 * Thu Jun 30 2016 Chris Leishman <chris@leishman.org> - 0.3.3-2
 - Changed -devel package names to remove soname
 * Sat Jun 11 2016 Chris Leishman <chris@leishman.org> - 0.3.3-1
