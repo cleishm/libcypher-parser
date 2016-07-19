@@ -133,7 +133,7 @@ libcypher_parser_la_SOURCES = \
 	vector.h
 
 libcypher_parser_la_CFLAGS = $(PTHREAD_CFLAGS) $(OPENSSL_CFLAGS) -Wpedantic -Wvla
-libcypher_parser_la_LDFLAGS = -version-info 6:0:3
+libcypher_parser_la_LDFLAGS = -version-info 7:0:0
 libcypher_parser_la_LIBADD = $(PTHREAD_LIBS) $(OPENSSL_LIBS) $(LIBM)
 
 parser.c: parser_leg.c

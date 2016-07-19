@@ -39,8 +39,10 @@ static struct option longopts[] =
     { { "ast", no_argument, NULL, 'a' },
       { "colorize", no_argument, NULL, COLORIZE_OPT },
       { "colorise", no_argument, NULL, COLORIZE_OPT },
+      { "colourise", no_argument, NULL, COLORIZE_OPT },
       { "no-colorize", no_argument, NULL, NO_COLORIZE_OPT },
       { "no-colorise", no_argument, NULL, NO_COLORIZE_OPT },
+      { "no-colourise", no_argument, NULL, NO_COLORIZE_OPT },
       { "help", no_argument, NULL, 'h' },
       { "only-statements", no_argument, NULL, ONLY_STATEMENTS_OPT },
       { "output-width", required_argument, NULL, OUTPUT_WIDTH_OPT },
@@ -56,7 +58,7 @@ static void usage(FILE *s, const char *prog_name)
 " -1                  Only parse the first statement or client-command.\n"
 " --ast, -a           Dump the AST to stdout.\n"
 " --colorize          Colorize output using ANSI escape sequences.\n"
-" --no-colorize       Disable colorization even when outputing to a TTY.\n"
+" --no-colorize       Disable colorization even when outputting to a TTY.\n"
 " --help, -h          Output this usage information.\n"
 " --only-statements   Only parse statements (and not client commands).\n"
 " --output-width <n>  Attempt to limit output to the specified width.\n"

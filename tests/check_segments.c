@@ -112,7 +112,11 @@ START_TEST (single_segment_without_directive)
 
     ck_assert_int_eq(nsegments, 1);
 
+    ck_assert_int_eq(ranges[0].start.line, 1);
+    ck_assert_int_eq(ranges[0].start.column, 1);
     ck_assert_int_eq(ranges[0].start.offset, 0);
+    ck_assert_int_eq(ranges[0].end.line, 1);
+    ck_assert_int_eq(ranges[0].end.column, 3);
     ck_assert_int_eq(ranges[0].end.offset, 2);
     ck_assert_ptr_eq(directives[0], NULL);
 }
@@ -135,7 +139,11 @@ START_TEST (single_segment_with_only_a_comment)
 
     ck_assert_int_eq(nsegments, 1);
 
+    ck_assert_int_eq(ranges[0].start.line, 1);
+    ck_assert_int_eq(ranges[0].start.column, 1);
     ck_assert_int_eq(ranges[0].start.offset, 0);
+    ck_assert_int_eq(ranges[0].end.line, 1);
+    ck_assert_int_eq(ranges[0].end.column, 13);
     ck_assert_int_eq(ranges[0].end.offset, 12);
     ck_assert_ptr_eq(directives[0], NULL);
 }
@@ -181,21 +189,37 @@ START_TEST (segments_with_directives)
 
     ck_assert_int_eq(nsegments, 4);
 
+    ck_assert_int_eq(ranges[0].start.line, 1);
+    ck_assert_int_eq(ranges[0].start.column, 1);
     ck_assert_int_eq(ranges[0].start.offset, 0);
+    ck_assert_int_eq(ranges[0].end.line, 1);
+    ck_assert_int_eq(ranges[0].end.column, 11);
     ck_assert_int_eq(ranges[0].end.offset, 10);
     ck_assert_ptr_ne(directives[0], NULL);
     ck_assert_int_eq(cypher_astnode_type(directives[0]), CYPHER_AST_STATEMENT);
 
+    ck_assert_int_eq(ranges[1].start.line, 1);
+    ck_assert_int_eq(ranges[1].start.column, 11);
     ck_assert_int_eq(ranges[1].start.offset, 10);
+    ck_assert_int_eq(ranges[1].end.line, 1);
+    ck_assert_int_eq(ranges[1].end.column, 22);
     ck_assert_int_eq(ranges[1].end.offset, 21);
     ck_assert_ptr_eq(directives[1], NULL);
 
+    ck_assert_int_eq(ranges[2].start.line, 1);
+    ck_assert_int_eq(ranges[2].start.column, 22);
     ck_assert_int_eq(ranges[2].start.offset, 21);
+    ck_assert_int_eq(ranges[2].end.line, 1);
+    ck_assert_int_eq(ranges[2].end.column, 32);
     ck_assert_int_eq(ranges[2].end.offset, 31);
     ck_assert_ptr_ne(directives[2], NULL);
     ck_assert_int_eq(cypher_astnode_type(directives[2]), CYPHER_AST_STATEMENT);
 
+    ck_assert_int_eq(ranges[3].start.line, 1);
+    ck_assert_int_eq(ranges[3].start.column, 32);
     ck_assert_int_eq(ranges[3].start.offset, 31);
+    ck_assert_int_eq(ranges[3].end.line, 1);
+    ck_assert_int_eq(ranges[3].end.column, 41);
     ck_assert_int_eq(ranges[3].end.offset, 40);
     ck_assert_ptr_ne(directives[3], NULL);
     ck_assert_int_eq(cypher_astnode_type(directives[3]), CYPHER_AST_STATEMENT);
