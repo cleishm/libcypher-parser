@@ -776,7 +776,7 @@ client-arg-string =                    { strbuf_reset(); }
 
 unquoted =
     ( escaped-char
-    | "\\;"                            { strbuf_append(";", 1); }
+    | '\\;'                            { strbuf_append(";", 1); }
     | < (!(['"] | WS | '//' | '/*' | '\\' | SEMICOLON | EOF) .)+ >
                                        { strbuf_append_block(); }
     )+

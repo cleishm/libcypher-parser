@@ -266,6 +266,141 @@ START_TEST (parse_eof_command)
 END_TEST
 
 
+START_TEST (parse_multiple_commands)
+{
+    int result = cypher_quick_parse(":hunter\n:s;:thompson // loathing",
+            segment_callback, NULL, 0);
+    ck_assert_int_eq(result, 0);
+    ck_assert_int_eq(nsegments, 3);
+
+    ck_assert_str_eq(segments[0], ":hunter");
+    ck_assert_int_eq(ranges[0].start.line, 1);
+    ck_assert_int_eq(ranges[0].start.column, 1);
+    ck_assert_int_eq(ranges[0].start.offset, 0);
+    ck_assert_int_eq(ranges[0].end.line, 1);
+    ck_assert_int_eq(ranges[0].end.column, 8);
+    ck_assert_int_eq(ranges[0].end.offset, 7);
+    ck_assert(!eofs[0]);
+
+    ck_assert_str_eq(segments[1], ":s");
+    ck_assert_int_eq(ranges[1].start.line, 2);
+    ck_assert_int_eq(ranges[1].start.column, 1);
+    ck_assert_int_eq(ranges[1].start.offset, 8);
+    ck_assert_int_eq(ranges[1].end.line, 2);
+    ck_assert_int_eq(ranges[1].end.column, 3);
+    ck_assert_int_eq(ranges[1].end.offset, 10);
+    ck_assert(!eofs[1]);
+
+    ck_assert_str_eq(segments[2], ":thompson");
+    ck_assert_int_eq(ranges[2].start.line, 2);
+    ck_assert_int_eq(ranges[2].start.column, 4);
+    ck_assert_int_eq(ranges[2].start.offset, 11);
+    ck_assert_int_eq(ranges[2].end.line, 2);
+    ck_assert_int_eq(ranges[2].end.column, 13);
+    ck_assert_int_eq(ranges[2].end.offset, 20);
+    ck_assert(eofs[2]);
+}
+END_TEST
+
+
+START_TEST (parse_multiline_command)
+{
+    int result = cypher_quick_parse(
+            ":hunter \\ //firstname\ns \\\nthompson //lastname\n",
+            segment_callback, NULL, 0);
+    ck_assert_int_eq(result, 0);
+    ck_assert_int_eq(nsegments, 1);
+
+    ck_assert_str_eq(segments[0], ":hunter \\ //firstname\ns \\\nthompson");
+    ck_assert_int_eq(ranges[0].start.line, 1);
+    ck_assert_int_eq(ranges[0].start.column, 1);
+    ck_assert_int_eq(ranges[0].start.offset, 0);
+    ck_assert_int_eq(ranges[0].end.line, 3);
+    ck_assert_int_eq(ranges[0].end.column, 9);
+    ck_assert_int_eq(ranges[0].end.offset, 34);
+    ck_assert(!eofs[0]);
+}
+END_TEST
+
+
+START_TEST (parse_command_with_escape_chars)
+{
+    int result = cypher_quick_parse(
+            ":hunter\\;s\\\"thom\\\\\"pson;\"\n",
+            segment_callback, NULL, 0);
+    ck_assert_int_eq(result, 0);
+    ck_assert_int_eq(nsegments, 1);
+
+    ck_assert_str_eq(segments[0], ":hunter\\;s\\\"thom\\\\\"pson;\"");
+    ck_assert_int_eq(ranges[0].start.line, 1);
+    ck_assert_int_eq(ranges[0].start.column, 1);
+    ck_assert_int_eq(ranges[0].start.offset, 0);
+    ck_assert_int_eq(ranges[0].end.line, 1);
+    ck_assert_int_eq(ranges[0].end.column, 26);
+    ck_assert_int_eq(ranges[0].end.offset, 25);
+    ck_assert(!eofs[0]);
+}
+END_TEST
+
+
+START_TEST (parse_command_with_block_comment)
+{
+    int result = cypher_quick_parse(
+            ":hunter /*;s\n*/thompson\n",
+            segment_callback, NULL, 0);
+    ck_assert_int_eq(result, 0);
+    ck_assert_int_eq(nsegments, 1);
+
+    ck_assert_str_eq(segments[0], ":hunter /*;s\n*/thompson");
+    ck_assert_int_eq(ranges[0].start.line, 1);
+    ck_assert_int_eq(ranges[0].start.column, 1);
+    ck_assert_int_eq(ranges[0].start.offset, 0);
+    ck_assert_int_eq(ranges[0].end.line, 2);
+    ck_assert_int_eq(ranges[0].end.column, 11);
+    ck_assert_int_eq(ranges[0].end.offset, 23);
+    ck_assert(!eofs[0]);
+}
+END_TEST
+
+
+START_TEST (parse_command_with_line_comment)
+{
+    int result = cypher_quick_parse(
+            ":hunter //;s\n:thompson \"fear /*\"\n:and \"*/loathing\"",
+            segment_callback, NULL, 0);
+    ck_assert_int_eq(result, 0);
+    ck_assert_int_eq(nsegments, 3);
+
+    ck_assert_str_eq(segments[0], ":hunter");
+    ck_assert_int_eq(ranges[0].start.line, 1);
+    ck_assert_int_eq(ranges[0].start.column, 1);
+    ck_assert_int_eq(ranges[0].start.offset, 0);
+    ck_assert_int_eq(ranges[0].end.line, 1);
+    ck_assert_int_eq(ranges[0].end.column, 8);
+    ck_assert_int_eq(ranges[0].end.offset, 7);
+    ck_assert(!eofs[0]);
+
+    ck_assert_str_eq(segments[1], ":thompson \"fear /*\"");
+    ck_assert_int_eq(ranges[1].start.line, 2);
+    ck_assert_int_eq(ranges[1].start.column, 1);
+    ck_assert_int_eq(ranges[1].start.offset, 13);
+    ck_assert_int_eq(ranges[1].end.line, 2);
+    ck_assert_int_eq(ranges[1].end.column, 20);
+    ck_assert_int_eq(ranges[1].end.offset, 32);
+    ck_assert(!eofs[1]);
+
+    ck_assert_str_eq(segments[2], ":and \"*/loathing\"");
+    ck_assert_int_eq(ranges[2].start.line, 3);
+    ck_assert_int_eq(ranges[2].start.column, 1);
+    ck_assert_int_eq(ranges[2].start.offset, 33);
+    ck_assert_int_eq(ranges[2].end.line, 3);
+    ck_assert_int_eq(ranges[2].end.column, 18);
+    ck_assert_int_eq(ranges[2].end.offset, 50);
+    ck_assert(eofs[2]);
+}
+END_TEST
+
+
 TCase* quick_parse_tcase(void)
 {
     TCase *tc = tcase_create("quick_parse");
@@ -279,5 +414,10 @@ TCase* quick_parse_tcase(void)
     tcase_add_test(tc, parse_statements_only);
     tcase_add_test(tc, parse_eof_statement);
     tcase_add_test(tc, parse_eof_command);
+    tcase_add_test(tc, parse_multiple_commands);
+    tcase_add_test(tc, parse_multiline_command);
+    tcase_add_test(tc, parse_command_with_escape_chars);
+    tcase_add_test(tc, parse_command_with_block_comment);
+    tcase_add_test(tc, parse_command_with_line_comment);
     return tc;
 }

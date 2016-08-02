@@ -14,27 +14,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-directive = command | statement
+directive = (client-command | statement)
 
-command = - < ':' command-body > ( line-end | EOF )        { segment(yy); }
-command-body = (quoted | !line-end .)*
-line-end = (HWS | block-comment)* (line-comment | EOL)
+client-command = - < ':' command-body > -- (';' | line-end)
+                                                           { segment(yy); }
+command-body =
+    ( escaped-char
+    | '\\;'
+    | '\\' -- line-end
+    | block-comment
+    | quoted
+    | !(';' | -- line-end) .
+    )*
 
 statement = - < statement-body > - ( ';' | EOF )           { segment(yy); }
-statement-body = (comment | quoted | ESC | !(- ';') .)*
-
-comment = line-comment | block-comment
-line-comment = '//' (!EOL .)* EOL
-block-comment = '/*' (EOL | !'*/' .)* '*/'
+statement-body = (comment | quoted | escaped-char | !(- ';') .)*
 
 quoted = single-quoted | double-quoted
-single-quoted = "'" (ESC | EOL | !"'" .)* "'"
-double-quoted = '"' (ESC | EOL | !'"' .)* '"'
+single-quoted = "'" (escaped-char | EOL | !"'" .)* "'"
+double-quoted = '"' (escaped-char | EOL | !'"' .)* '"'
+
+escaped-char = '\\' [abfnrtv"'?\\]
 
 - = (WS | comment)*
+-- = (HWS | block-comment)*
+line-end = (line-comment | EOL | EOF)
+
+comment = line-comment | block-comment
+line-comment = '//' (!EOL .)* (EOL | EOF)
+block-comment = '/*' (EOL | !'*/' .)* '*/'
+
 WS = HWS | EOL
 HWS = [ \t]
-ESC = '\\' .
 EOL = ('\n' | '\r\n') _line_start_
 EOF = !.                                                   { yy->eof = true; }
 
