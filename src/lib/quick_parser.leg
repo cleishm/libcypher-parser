@@ -17,7 +17,7 @@
 directive = (client-command | statement)
 
 client-command = - < ':' command-body > -- (';' | line-end)
-                                                           { segment(yy); }
+                                       { segment(false, yy); }
 command-body =
     ( escaped-char
     | '\\;'
@@ -27,7 +27,8 @@ command-body =
     | !(';' | -- line-end) .
     )*
 
-statement = - < statement-body > - ( ';' | EOF )           { segment(yy); }
+statement = - < statement-body > - ( ';' | EOF )
+                                       { segment(true, yy); }
 statement-body = (comment | quoted | escaped-char | !(- ';') .)*
 
 quoted = single-quoted | double-quoted
@@ -47,6 +48,6 @@ block-comment = '/*' (EOL | !'*/' .)* '*/'
 WS = HWS | EOL
 HWS = [ \t]
 EOL = ('\n' | '\r\n') _line_start_
-EOF = !.                                                   { yy->eof = true; }
+EOF = !.                               { yy->eof = true; }
 
 _line_start_ = &{ (line_start(yy), 1) }

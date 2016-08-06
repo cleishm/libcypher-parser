@@ -5674,6 +5674,28 @@ int cypher_quick_fparse(FILE *stream,
         uint_fast32_t flags);
 
 /**
+ * Check if the quick parse segment is for a statement.
+ *
+ * @param [segment] The quick parse segment.
+ * @return `true` if the parsed segment was for a statement
+ *         (vs a command), `false` otherwise.
+ */
+__cypherlang_pure
+bool cypher_quick_parse_segment_is_statement(
+        const cypher_quick_parse_segment_t *segment);
+
+/**
+ * Check if the quick parse segment is for a command.
+ *
+ * @param [segment] The quick parse segment.
+ * @return `true` if the parsed segment was for a command
+ *         (vs a statement), `false` otherwise.
+ */
+__cypherlang_pure
+bool cypher_quick_parse_segment_is_command(
+        const cypher_quick_parse_segment_t *segment);
+
+/**
  * Get a pointer to the start of the segment string.
  *
  * @param [segment] The quick parse segment.

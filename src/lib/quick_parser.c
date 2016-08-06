@@ -107,7 +107,7 @@ int cypher_quick_fparse(FILE *stream,
 static void *abort_malloc(yycontext *yy, size_t size);
 static void *abort_realloc(yycontext *yy, void *ptr, size_t size);
 static inline void source(yycontext *yy, char *buf, int *result, int max_size);
-static inline void segment(yycontext *yy);
+static inline void segment(bool is_statement, yycontext *yy);
 static inline void line_start(yycontext *yy);
 
 #pragma GCC diagnostic ignored "-Wunused-function"
@@ -235,6 +235,7 @@ void *abort_realloc(yycontext *yy, void *ptr, size_t size)
 
 struct cypher_quick_parse_segment
 {
+    bool is_statement;
     const char *ptr;
     size_t length;
     struct cypher_input_range range;
@@ -242,7 +243,7 @@ struct cypher_quick_parse_segment
 };
 
 
-void segment(yycontext *yy)
+void segment(bool is_statement, yycontext *yy)
 {
     if (yy->__end == 0 && yy->eof)
     {
@@ -258,13 +259,28 @@ void segment(yycontext *yy)
     struct cypher_input_position start =
             input_position(yy, (unsigned int)yy->__begin);
     struct cypher_quick_parse_segment segment =
-        { .ptr = yy->__buf + yy->__begin,
+        { .is_statement = is_statement,
+          .ptr = yy->__buf + yy->__begin,
           .length = yy->__end - yy->__begin,
           .range = { .start = start, .end = end },
           .eof = yy->eof };
 
     yy->result = yy->callback(yy->callback_data, &segment);
     yy->position_offset = consumed_offset;
+}
+
+
+bool cypher_quick_parse_segment_is_statement(
+        const cypher_quick_parse_segment_t *segment)
+{
+    return segment->is_statement;
+}
+
+
+bool cypher_quick_parse_segment_is_command(
+        const cypher_quick_parse_segment_t *segment)
+{
+    return !(segment->is_statement);
 }
 
 
