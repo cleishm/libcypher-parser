@@ -70,14 +70,16 @@ static void fill_stream(const char *content)
 }
 
 
-static int segment_callback(void *data, const char *s, size_t n,
-        struct cypher_input_range range, bool eof)
+static int segment_callback(void *data,
+        const cypher_quick_parse_segment_t *segment)
 {
     ck_assert(nsegments < MAX_SEGMENTS);
-    segments[nsegments] = strndup(s, n);
+    segments[nsegments] = strndup(
+            cypher_quick_parse_segment_get_ptr(segment),
+            cypher_quick_parse_segment_get_length(segment));
     ck_assert(segments[nsegments] != NULL);
-    ranges[nsegments] = range;
-    eofs[nsegments] = eof;
+    ranges[nsegments] = cypher_quick_parse_segment_get_range(segment);
+    eofs[nsegments] = cypher_quick_parse_segment_eof(segment);
     ++nsegments;
     return 0;
 }

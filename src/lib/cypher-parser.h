@@ -5597,12 +5597,23 @@ __cypherlang_pure
 size_t cypher_parse_error_context_offset(const cypher_parse_error_t *error);
 
 
+/*
+ * ====================================
+ * quick parser
+ * ====================================
+ */
+
+/**
+ * A quick parse segment.
+ */
+typedef struct cypher_quick_parse_segment cypher_quick_parse_segment_t;
+
+
 /**
  * A quick parse callback.
  */
 typedef int (*cypher_parser_quick_segment_callback_t)(void *userdata,
-        const char *segment, size_t n, struct cypher_input_range range,
-        bool eof);
+        const cypher_quick_parse_segment_t *segment);
 
 /**
  * @fn int cypher_quick_parse(const char *s, cypher_parser_quick_segment_callback_t callback, void *userdata, uint_fast32_t flags);
@@ -5661,6 +5672,49 @@ int cypher_quick_uparse(const char *s, size_t n,
 int cypher_quick_fparse(FILE *stream,
         cypher_parser_quick_segment_callback_t callback, void *userdata,
         uint_fast32_t flags);
+
+/**
+ * Get a pointer to the start of the segment string.
+ *
+ * @param [segment] The quick parse segment.
+ * @return A pointer to a character string.
+ */
+__cypherlang_pure
+const char *cypher_quick_parse_segment_get_ptr(
+        const cypher_quick_parse_segment_t *segment);
+
+/**
+ * Get the length of the segment string.
+ *
+ * @param [segment] The quick parse segment.
+ * @return The length of the string (in bytes).
+ */
+__cypherlang_pure
+size_t cypher_quick_parse_segment_get_length(
+        const cypher_quick_parse_segment_t *segment);
+
+/**
+ * Get the range of a quick parse segment.
+ *
+ * @param [segment] The quick parse segment.
+ * @return The input range.
+ */
+__cypherlang_pure
+struct cypher_input_range cypher_quick_parse_segment_get_range(
+        const cypher_quick_parse_segment_t *segment);
+
+/**
+ * Check if the quick parse encountered the end of the input.
+ *
+ * Indicates if the segment was terminated by to the end of the input.
+ *
+ * @param [segment] The quick parse segment.
+ * @return `true` if the end of input was encountered, `false` if the
+ *         segment was terminated with an expected character.
+ */
+__cypherlang_pure
+bool cypher_quick_parse_segment_eof(
+        const cypher_quick_parse_segment_t *segment);
 
 
 #pragma GCC visibility pop

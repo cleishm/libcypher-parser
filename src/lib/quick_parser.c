@@ -233,6 +233,15 @@ void *abort_realloc(yycontext *yy, void *ptr, size_t size)
 }
 
 
+struct cypher_quick_parse_segment
+{
+    const char *ptr;
+    size_t length;
+    struct cypher_input_range range;
+    bool eof;
+};
+
+
 void segment(yycontext *yy)
 {
     if (yy->__end == 0 && yy->eof)
@@ -248,12 +257,42 @@ void segment(yycontext *yy)
             input_position(yy, (unsigned int)yy->__end);
     struct cypher_input_position start =
             input_position(yy, (unsigned int)yy->__begin);
-    struct cypher_input_range range = { .start = start, .end = end };
+    struct cypher_quick_parse_segment segment =
+        { .ptr = yy->__buf + yy->__begin,
+          .length = yy->__end - yy->__begin,
+          .range = { .start = start, .end = end },
+          .eof = yy->eof };
 
-    yy->result = yy->callback(yy->callback_data, yy->__buf + yy->__begin,
-            yy->__end - yy->__begin, range, yy->eof);
-
+    yy->result = yy->callback(yy->callback_data, &segment);
     yy->position_offset = consumed_offset;
+}
+
+
+const char *cypher_quick_parse_segment_get_ptr(
+        const cypher_quick_parse_segment_t *segment)
+{
+    return segment->ptr;
+}
+
+
+size_t cypher_quick_parse_segment_get_length(
+        const cypher_quick_parse_segment_t *segment)
+{
+    return segment->length;
+}
+
+
+struct cypher_input_range cypher_quick_parse_segment_get_range(
+        const cypher_quick_parse_segment_t *segment)
+{
+    return segment->range;
+}
+
+
+bool cypher_quick_parse_segment_eof(
+        const cypher_quick_parse_segment_t *segment)
+{
+    return segment->eof;
 }
 
 
