@@ -77,12 +77,12 @@ static int segment_callback(void *data,
 {
     ck_assert(nsegments < MAX_SEGMENTS);
     is_statement[nsegments] = cypher_quick_parse_segment_is_statement(segment);
-    segments[nsegments] = strndup(
-            cypher_quick_parse_segment_get_ptr(segment),
-            cypher_quick_parse_segment_get_length(segment));
+    size_t n;
+    const char *s = cypher_quick_parse_segment_get_text(segment, &n);
+    segments[nsegments] = strndup(s, n);
     ck_assert(segments[nsegments] != NULL);
     ranges[nsegments] = cypher_quick_parse_segment_get_range(segment);
-    eofs[nsegments] = cypher_quick_parse_segment_eof(segment);
+    eofs[nsegments] = cypher_quick_parse_segment_is_eof(segment);
     ++nsegments;
     return 0;
 }

@@ -5393,7 +5393,7 @@ const cypher_astnode_t *cypher_parse_segment_get_directive(
  *         segment was terminated with an expected character.
  */
 __cypherlang_pure
-bool cypher_parse_segment_eof(const cypher_parse_segment_t *segment);
+bool cypher_parse_segment_is_eof(const cypher_parse_segment_t *segment);
 
 /**
  * Print a represetation of the AST from a parse segment to a stream.
@@ -5696,24 +5696,18 @@ bool cypher_quick_parse_segment_is_command(
         const cypher_quick_parse_segment_t *segment);
 
 /**
- * Get a pointer to the start of the segment string.
+ * Get the character string of a segment.
+ *
+ * Will include all characters within the parsed statement or command,
+ * excepting any leading or trailing comments or whitespace.
  *
  * @param [segment] The quick parse segment.
+ * @param [n] A `size_t` pointer that will be updated to the length of the
+ *         character string.
  * @return A pointer to a character string.
  */
-__cypherlang_pure
-const char *cypher_quick_parse_segment_get_ptr(
-        const cypher_quick_parse_segment_t *segment);
-
-/**
- * Get the length of the segment string.
- *
- * @param [segment] The quick parse segment.
- * @return The length of the string (in bytes).
- */
-__cypherlang_pure
-size_t cypher_quick_parse_segment_get_length(
-        const cypher_quick_parse_segment_t *segment);
+const char *cypher_quick_parse_segment_get_text(
+        const cypher_quick_parse_segment_t *segment, size_t *n);
 
 /**
  * Get the range of a quick parse segment.
@@ -5735,7 +5729,7 @@ struct cypher_input_range cypher_quick_parse_segment_get_range(
  *         segment was terminated with an expected character.
  */
 __cypherlang_pure
-bool cypher_quick_parse_segment_eof(
+bool cypher_quick_parse_segment_is_eof(
         const cypher_quick_parse_segment_t *segment);
 
 

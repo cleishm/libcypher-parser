@@ -284,6 +284,15 @@ bool cypher_quick_parse_segment_is_command(
 }
 
 
+const char *cypher_quick_parse_segment_get_text(
+        const cypher_quick_parse_segment_t *segment, size_t *n)
+{
+    REQUIRE(n != NULL, NULL);
+    *n = (segment->length);
+    return segment->ptr;
+}
+
+
 const char *cypher_quick_parse_segment_get_ptr(
         const cypher_quick_parse_segment_t *segment)
 {
@@ -305,7 +314,7 @@ struct cypher_input_range cypher_quick_parse_segment_get_range(
 }
 
 
-bool cypher_quick_parse_segment_eof(
+bool cypher_quick_parse_segment_is_eof(
         const cypher_quick_parse_segment_t *segment)
 {
     return segment->eof;
