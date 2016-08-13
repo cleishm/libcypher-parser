@@ -26,6 +26,7 @@
 static FILE *in;
 static FILE *out;
 static unsigned int nsegments;
+static bool is_statement[MAX_SEGMENTS];
 static char *segments[MAX_SEGMENTS];
 static struct cypher_input_range ranges[MAX_SEGMENTS];
 static bool eofs[MAX_SEGMENTS];
@@ -41,6 +42,7 @@ static void setup(void)
     ck_assert_ptr_ne(out, NULL);
 
     nsegments = 0;
+    memset(is_statement, 0, sizeof(is_statement));
     memset(segments, 0, sizeof(segments));
     memset(ranges, 0, sizeof(ranges));
     memset(eofs, 0, sizeof(eofs));
@@ -70,14 +72,17 @@ static void fill_stream(const char *content)
 }
 
 
-static int segment_callback(void *data, const char *s, size_t n,
-        struct cypher_input_range range, bool eof)
+static int segment_callback(void *data,
+        const cypher_quick_parse_segment_t *segment)
 {
     ck_assert(nsegments < MAX_SEGMENTS);
+    is_statement[nsegments] = cypher_quick_parse_segment_is_statement(segment);
+    size_t n;
+    const char *s = cypher_quick_parse_segment_get_text(segment, &n);
     segments[nsegments] = strndup(s, n);
     ck_assert(segments[nsegments] != NULL);
-    ranges[nsegments] = range;
-    eofs[nsegments] = eof;
+    ranges[nsegments] = cypher_quick_parse_segment_get_range(segment);
+    eofs[nsegments] = cypher_quick_parse_segment_is_eof(segment);
     ++nsegments;
     return 0;
 }
@@ -101,6 +106,8 @@ START_TEST (fparse_empty_statement)
     int result = cypher_quick_fparse(in, segment_callback, NULL, 0);
     ck_assert_int_eq(result, 0);
     ck_assert_int_eq(nsegments, 1);
+
+    ck_assert(is_statement[0]);
     ck_assert_str_eq(segments[0], "");
     ck_assert_int_eq(ranges[0].start.line, 1);
     ck_assert_int_eq(ranges[0].start.column, 1);
@@ -119,6 +126,8 @@ START_TEST (fparse_whitespace_statement)
     int result = cypher_quick_fparse(in, segment_callback, NULL, 0);
     ck_assert_int_eq(result, 0);
     ck_assert_int_eq(nsegments, 2);
+
+    ck_assert(is_statement[0]);
     ck_assert_str_eq(segments[0], "");
     ck_assert_int_eq(ranges[0].start.line, 1);
     ck_assert_int_eq(ranges[0].start.column, 3);
@@ -126,6 +135,8 @@ START_TEST (fparse_whitespace_statement)
     ck_assert_int_eq(ranges[0].end.line, 1);
     ck_assert_int_eq(ranges[0].end.column, 3);
     ck_assert_int_eq(ranges[0].end.offset, 2);
+
+    ck_assert(is_statement[1]);
     ck_assert_str_eq(segments[1], "");
     ck_assert_int_eq(ranges[1].start.line, 1);
     ck_assert_int_eq(ranges[1].start.column, 5);
@@ -145,6 +156,7 @@ START_TEST (fparse_single)
     ck_assert_int_eq(result, 0);
     ck_assert_int_eq(nsegments, 1);
 
+    ck_assert(is_statement[0]);
     ck_assert_str_eq(segments[0], "return 1");
     ck_assert_int_eq(ranges[0].start.line, 1);
     ck_assert_int_eq(ranges[0].start.column, 1);
@@ -165,6 +177,7 @@ START_TEST (fparse_multiple)
     ck_assert_int_eq(result, 0);
     ck_assert_int_eq(nsegments, 3);
 
+    ck_assert(is_statement[0]);
     ck_assert_str_eq(segments[0], "return 1");
     ck_assert_int_eq(ranges[0].start.line, 1);
     ck_assert_int_eq(ranges[0].start.column, 1);
@@ -174,6 +187,7 @@ START_TEST (fparse_multiple)
     ck_assert_int_eq(ranges[0].end.offset, 8);
     ck_assert(!eofs[0]);
 
+    ck_assert(is_statement[1]);
     ck_assert_str_eq(segments[1], "return 2");
     ck_assert_int_eq(ranges[1].start.line, 1);
     ck_assert_int_eq(ranges[1].start.column, 11);
@@ -183,6 +197,7 @@ START_TEST (fparse_multiple)
     ck_assert_int_eq(ranges[1].end.offset, 18);
     ck_assert(!eofs[1]);
 
+    ck_assert(is_statement[2]);
     ck_assert_str_eq(segments[2], "return 3");
     ck_assert_int_eq(ranges[2].start.line, 2);
     ck_assert_int_eq(ranges[2].start.column, 4);
@@ -203,6 +218,7 @@ START_TEST (fparse_commands)
     ck_assert_int_eq(result, 0);
     ck_assert_int_eq(nsegments, 1);
 
+    ck_assert(!is_statement[0]);
     ck_assert_str_eq(segments[0], ":foo bar\"baz\"");
     ck_assert_int_eq(ranges[0].start.line, 1);
     ck_assert_int_eq(ranges[0].start.column, 1);
@@ -224,6 +240,7 @@ START_TEST (fparse_statements_only)
     ck_assert_int_eq(result, 0);
     ck_assert_int_eq(nsegments, 2);
 
+    ck_assert(is_statement[0]);
     ck_assert_str_eq(segments[0], "return 1");
     ck_assert_int_eq(ranges[0].start.line, 1);
     ck_assert_int_eq(ranges[0].start.column, 1);
@@ -233,6 +250,7 @@ START_TEST (fparse_statements_only)
     ck_assert_int_eq(ranges[0].end.offset, 8);
     ck_assert(!eofs[0]);
 
+    ck_assert(is_statement[1]);
     ck_assert_str_eq(segments[1], ":foo bar\"baz\"\n return 2");
     ck_assert_int_eq(ranges[1].start.line, 1);
     ck_assert_int_eq(ranges[1].start.column, 11);
@@ -253,6 +271,7 @@ START_TEST (fparse_eof_statement)
     ck_assert_int_eq(result, 0);
     ck_assert_int_eq(nsegments, 2);
 
+    ck_assert(is_statement[0]);
     ck_assert_str_eq(segments[0], "return 1");
     ck_assert_int_eq(ranges[0].start.line, 1);
     ck_assert_int_eq(ranges[0].start.column, 1);
@@ -262,6 +281,7 @@ START_TEST (fparse_eof_statement)
     ck_assert_int_eq(ranges[0].end.offset, 8);
     ck_assert(!eofs[0]);
 
+    ck_assert(is_statement[1]);
     ck_assert_str_eq(segments[1], "return 2");
     ck_assert_int_eq(ranges[1].start.line, 1);
     ck_assert_int_eq(ranges[1].start.column, 11);
@@ -282,6 +302,7 @@ START_TEST (fparse_eof_command)
     ck_assert_int_eq(result, 0);
     ck_assert_int_eq(nsegments, 2);
 
+    ck_assert(!is_statement[0]);
     ck_assert_str_eq(segments[0], ":bar");
     ck_assert_int_eq(ranges[0].start.line, 1);
     ck_assert_int_eq(ranges[0].start.column, 1);
@@ -291,6 +312,7 @@ START_TEST (fparse_eof_command)
     ck_assert_int_eq(ranges[0].end.offset, 4);
     ck_assert(!eofs[0]);
 
+    ck_assert(!is_statement[1]);
     ck_assert_str_eq(segments[1], ":foo bar\"baz\"");
     ck_assert_int_eq(ranges[1].start.line, 2);
     ck_assert_int_eq(ranges[1].start.column, 1);

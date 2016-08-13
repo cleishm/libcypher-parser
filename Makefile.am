@@ -27,19 +27,13 @@ EXTRA_DIST = \
 
 docker-check:
 	$(MAKE) dist
-	id=`docker create -i debian-dev \
-		sh -c 'cd $(PACKAGE_TARNAME)-$(PACKAGE_VERSION) && ./configure --enable-silent-rules && make check'` && \
-	trap "docker rm $$id" EXIT && \
-	docker cp - $$id:/ < $(PACKAGE_TARNAME)-$(PACKAGE_VERSION).tar.gz && \
-	docker start -i $$id
+	docker run --rm -v $(abs_builddir):/$(PACKAGE) -ti debian-unstable-dev \
+		sh -c 'tar xzmf /$(PACKAGE)/$(DIST_ARCHIVES) && cd $(distdir) && ./configure --enable-silent-rules && make check'
 
 docker-valgrind:
 	$(MAKE) dist
-	id=`docker create -i debian-dev \
-		sh -c 'cd $(PACKAGE_TARNAME)-$(PACKAGE_VERSION) && ./configure --enable-silent-rules --disable-debug && make check && CK_FORK=no valgrind --leak-check=full --show-leak-kinds=all ./tests/check_libcypher-parser'` && \
-	trap "docker rm $$id" EXIT && \
-	docker cp - $$id:/ < $(PACKAGE_TARNAME)-$(PACKAGE_VERSION).tar.gz && \
-	docker start -i $$id
+	docker run --rm -v $(abs_builddir):/$(PACKAGE) -ti debian-unstable-dev \
+		sh -c 'tar xzmf /$(PACKAGE)/$(DIST_ARCHIVES) && cd $(distdir) && ./configure --enable-silent-rules --disable-debug && make check && CK_FORK=no valgrind --leak-check=full --show-leak-kinds=all ./tests/check_$(PACKAGE)'
 
 clean-local:
 	rm -rf doc src/.doc
