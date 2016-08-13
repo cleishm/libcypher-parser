@@ -189,6 +189,105 @@ START_TEST (parse_single_command_with_partial_quoted_args)
 END_TEST
 
 
+START_TEST (parse_multiple_commands)
+{
+    result = cypher_parse(":hunter\n:s;:thompson // loathing", NULL, NULL, 0);
+    ck_assert_ptr_ne(result, NULL);
+
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
+    fflush(memstream);
+    const char *expected = "\n"
+"@0   0..7   command       name=@1, args=[]\n"
+"@1   1..7   > string      \"hunter\"\n"
+"@2   8..10  command       name=@3, args=[]\n"
+"@3   9..10  > string      \"s\"\n"
+"@4  11..21  command       name=@5, args=[]\n"
+"@5  12..20  > string      \"thompson\"\n"
+"@6  23..32  line_comment  // loathing\n";
+    ck_assert_str_eq(memstream_buffer, expected);
+}
+END_TEST
+
+
+START_TEST (parse_multiline_command)
+{
+    result = cypher_parse(
+            ":hunter \\ //firstname\ns \\\nthompson //lastname\n",
+            NULL, NULL, 0);
+    ck_assert_ptr_ne(result, NULL);
+
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
+    fflush(memstream);
+    const char *expected = "\n"
+"@0   0..35  command         name=@1, args=[@3, @4]\n"
+"@1   1..7   > string        \"hunter\"\n"
+"@2  12..21  > line_comment  //firstname\n"
+"@3  22..23  > string        \"s\"\n"
+"@4  26..34  > string        \"thompson\"\n"
+"@5  37..45  line_comment    //lastname\n";
+    ck_assert_str_eq(memstream_buffer, expected);
+}
+END_TEST
+
+
+START_TEST (parse_command_with_escape_chars)
+{
+    result = cypher_parse(
+            ":hunter\\;s\\\"thom\\\\\"pson;\"\n", NULL, NULL, 0);
+    ck_assert_ptr_ne(result, NULL);
+
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
+    fflush(memstream);
+    const char *expected = "\n"
+"@0  0..25  command   name=@1, args=[]\n"
+"@1  1..25  > string  \"hunter;s\"thom\\pson;\"\n";
+    ck_assert_str_eq(memstream_buffer, expected);
+}
+END_TEST
+
+
+START_TEST (parse_command_with_block_comment)
+{
+    result = cypher_parse(
+            ":hunter /*;s\n*/thompson\n", NULL, NULL, 0);
+    ck_assert_ptr_ne(result, NULL);
+
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
+    fflush(memstream);
+    const char *expected = "\n"
+"@0   0..23  command          name=@1, args=[@3]\n"
+"@1   1..7   > string         \"hunter\"\n"
+"@2  10..13  > block_comment  /*;s\\n*/\n"
+"@3  15..23  > string         \"thompson\"\n";
+    ck_assert_str_eq(memstream_buffer, expected);
+}
+END_TEST
+
+
+START_TEST (parse_command_with_line_comment)
+{
+    result = cypher_parse(
+            ":hunter //;s\n:thompson \"fear /*\"\n:and \"*/loathing\"",
+            NULL, NULL, 0);
+    ck_assert_ptr_ne(result, NULL);
+
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
+    fflush(memstream);
+    const char *expected = "\n"
+"@0   0..8   command       name=@1, args=[]\n"
+"@1   1..7   > string      \"hunter\"\n"
+"@2  10..12  line_comment  //;s\n"
+"@3  13..32  command       name=@4, args=[@5]\n"
+"@4  14..22  > string      \"thompson\"\n"
+"@5  23..32  > string      \"fear /*\"\n"
+"@6  33..50  command       name=@7, args=[@8]\n"
+"@7  34..37  > string      \"and\"\n"
+"@8  38..50  > string      \"*/loathing\"\n";
+    ck_assert_str_eq(memstream_buffer, expected);
+}
+END_TEST
+
+
 TCase* command_tcase(void)
 {
     TCase *tc = tcase_create("command");
@@ -197,5 +296,10 @@ TCase* command_tcase(void)
     tcase_add_test(tc, parse_single_command_with_args);
     tcase_add_test(tc, parse_single_command_with_quoted_args);
     tcase_add_test(tc, parse_single_command_with_partial_quoted_args);
+    tcase_add_test(tc, parse_multiple_commands);
+    tcase_add_test(tc, parse_multiline_command);
+    tcase_add_test(tc, parse_command_with_escape_chars);
+    tcase_add_test(tc, parse_command_with_block_comment);
+    tcase_add_test(tc, parse_command_with_line_comment);
     return tc;
 }
