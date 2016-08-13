@@ -112,7 +112,7 @@ PROGRAMS = $(bin_PROGRAMS)
 am_cypher_lint_OBJECTS = cypher_lint-cypher-lint.$(OBJEXT)
 cypher_lint_OBJECTS = $(am_cypher_lint_OBJECTS)
 cypher_lint_DEPENDENCIES =  \
-	${top_builddir}/src/lib/libcypher-parser.la
+	$(top_builddir)/src/lib/libcypher-parser.la
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
@@ -332,8 +332,8 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 cypher_lint_SOURCES = cypher-lint.c
-cypher_lint_CPPFLAGS = -I${top_builddir}/src/lib
-cypher_lint_LDADD = ${top_builddir}/src/lib/libcypher-parser.la ${LIBEDIT_LIBS}
+cypher_lint_CPPFLAGS = -I$(top_srcdir)/src/lib
+cypher_lint_LDADD = $(top_builddir)/src/lib/libcypher-parser.la ${LIBEDIT_LIBS}
 all: all-am
 
 .SUFFIXES:
