@@ -133,8 +133,17 @@ libcypher_parser_la_SOURCES = \
 	vector.h
 
 libcypher_parser_la_CFLAGS = $(PTHREAD_CFLAGS) $(OPENSSL_CFLAGS) -Wpedantic -Wvla
-libcypher_parser_la_LDFLAGS = -version-info 7:0:0
 libcypher_parser_la_LIBADD = $(PTHREAD_LIBS) $(OPENSSL_LIBS) $(LIBM)
+# Updating the version-info:
+# 1. If the library source code has changed at all since the last update, then
+#    increment revision (‘c:r:a’ becomes ‘c:r+1:a’).
+# 2. If any interfaces have been added, removed, or changed since the last
+#    update, increment current, and set revision to 0.
+# 3. If any interfaces have been added since the last public release, then
+#    increment age.
+# 4. If any interfaces have been removed or changed since the last public
+#    release, then set age to 0.
+libcypher_parser_la_LDFLAGS = -version-info 8:0:0
 
 parser.c: parser_leg.c
 quick_parser.c: quick_parser_leg.c
