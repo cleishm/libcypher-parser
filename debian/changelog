@@ -1,3 +1,9 @@
+libcypher-parser (0.5.1-1) xenial; urgency=medium
+
+  * New upstream release. 
+
+ -- Chris Leishman <chris@leishman.org>  Mon, 15 Aug 2016 15:22:16 +0000
+
 libcypher-parser (0.5.0-1) xenial; urgency=medium
 
   * New upstream release.

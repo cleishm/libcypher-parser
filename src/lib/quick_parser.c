@@ -239,6 +239,7 @@ struct cypher_quick_parse_segment
     const char *ptr;
     size_t length;
     struct cypher_input_range range;
+    struct cypher_input_position next;
     bool eof;
 };
 
@@ -263,6 +264,7 @@ void segment(bool is_statement, yycontext *yy)
           .ptr = yy->__buf + yy->__begin,
           .length = yy->__end - yy->__begin,
           .range = { .start = start, .end = end },
+          .next = consumed_offset,
           .eof = yy->eof };
 
     yy->result = yy->callback(yy->callback_data, &segment);
@@ -311,6 +313,13 @@ struct cypher_input_range cypher_quick_parse_segment_get_range(
         const cypher_quick_parse_segment_t *segment)
 {
     return segment->range;
+}
+
+
+struct cypher_input_position cypher_quick_parse_segment_get_next(
+        const cypher_quick_parse_segment_t *segment)
+{
+    return segment->next;
 }
 
 
