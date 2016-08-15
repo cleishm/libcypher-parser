@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>libcypher-parser-0.5.1~devel: cypher-parser.h File Reference</title>
+<title>libcypher-parser-0.5.2~devel: cypher-parser.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -17,7 +17,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">libcypher-parser-0.5.1~devel
+   <div id="projectname">libcypher-parser-0.5.2~devel
    </div>
   </td>
  </tr>
@@ -1185,6 +1185,9 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a218b82c04f2ed8e73b62bf3b18f07161"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcypher__input__range.html">cypher_input_range</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a218b82c04f2ed8e73b62bf3b18f07161">cypher_quick_parse_segment_get_range</a> (const <a class="el" href="cypher-parser_8h.html#a5320fbbaecad0fd46f7c067fb577c694">cypher_quick_parse_segment_t</a> *segment)</td></tr>
 <tr class="memdesc:a218b82c04f2ed8e73b62bf3b18f07161"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the range of a quick parse segment.  <a href="#a218b82c04f2ed8e73b62bf3b18f07161">More...</a><br /></td></tr>
 <tr class="separator:a218b82c04f2ed8e73b62bf3b18f07161"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8856184cecfb570afad9238d9ca88d43"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structcypher__input__position.html">cypher_input_position</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a8856184cecfb570afad9238d9ca88d43">cypher_quick_parse_segment_get_next</a> (const <a class="el" href="cypher-parser_8h.html#a5320fbbaecad0fd46f7c067fb577c694">cypher_quick_parse_segment_t</a> *segment)</td></tr>
+<tr class="memdesc:a8856184cecfb570afad9238d9ca88d43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the next input position that will be parsed.  <a href="#a8856184cecfb570afad9238d9ca88d43">More...</a><br /></td></tr>
+<tr class="separator:a8856184cecfb570afad9238d9ca88d43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c80279fe2f7c8629331cee57362f52a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a2c80279fe2f7c8629331cee57362f52a">cypher_quick_parse_segment_is_eof</a> (const <a class="el" href="cypher-parser_8h.html#a5320fbbaecad0fd46f7c067fb577c694">cypher_quick_parse_segment_t</a> *segment)</td></tr>
 <tr class="memdesc:a2c80279fe2f7c8629331cee57362f52a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the quick parse encountered the end of the input.  <a href="#a2c80279fe2f7c8629331cee57362f52a">More...</a><br /></td></tr>
 <tr class="separator:a2c80279fe2f7c8629331cee57362f52a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -14774,6 +14777,31 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 on success, or -1 on failure (errno will be set). </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a8856184cecfb570afad9238d9ca88d43"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="structcypher__input__position.html">cypher_input_position</a> cypher_quick_parse_segment_get_next </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#a5320fbbaecad0fd46f7c067fb577c694">cypher_quick_parse_segment_t</a> *&#160;</td>
+          <td class="paramname"><em>segment</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the next input position that will be parsed. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">[segment]</td><td>The parse segment. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The input position. </dd></dl>
 
 </div>
 </div>
