@@ -487,6 +487,7 @@ libcypher-parser.so.8 libcypher-parser8 #MINVER#
  cypher_parser_new_config@Base 0.5.0
  cypher_parser_no_colorization@Base 0.5.0
  cypher_quick_fparse@Base 0.5.0
+ cypher_quick_parse_segment_get_next@Base 0.5.1
  cypher_quick_parse_segment_get_range@Base 0.5.0
  cypher_quick_parse_segment_get_text@Base 0.5.0
  cypher_quick_parse_segment_is_command@Base 0.5.0
