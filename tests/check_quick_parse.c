@@ -435,6 +435,132 @@ START_TEST (parse_command_with_line_comment)
 END_TEST
 
 
+START_TEST (parse_statement_with_concluding_block_comment)
+{
+    int result = cypher_quick_parse(
+            " return 1 /* s;hunter */;",
+            segment_callback, NULL, 0);
+    ck_assert_int_eq(result, 0);
+    ck_assert_int_eq(nsegments, 1);
+
+    ck_assert(is_statement[0]);
+    ck_assert_str_eq(segments[0], "return 1");
+    ck_assert_int_eq(ranges[0].start.line, 1);
+    ck_assert_int_eq(ranges[0].start.column, 2);
+    ck_assert_int_eq(ranges[0].start.offset, 1);
+    ck_assert_int_eq(ranges[0].end.line, 1);
+    ck_assert_int_eq(ranges[0].end.column, 10);
+    ck_assert_int_eq(ranges[0].end.offset, 9);
+    ck_assert(!eofs[0]);
+}
+END_TEST
+
+
+START_TEST (parse_command_with_concluding_block_comment)
+{
+    int result = cypher_quick_parse(
+            ":hunter /* s\nthompson */\n",
+            segment_callback, NULL, 0);
+    ck_assert_int_eq(result, 0);
+    ck_assert_int_eq(nsegments, 1);
+
+    ck_assert(!is_statement[0]);
+    ck_assert_str_eq(segments[0], ":hunter");
+    ck_assert_int_eq(ranges[0].start.line, 1);
+    ck_assert_int_eq(ranges[0].start.column, 1);
+    ck_assert_int_eq(ranges[0].start.offset, 0);
+    ck_assert_int_eq(ranges[0].end.line, 1);
+    ck_assert_int_eq(ranges[0].end.column, 8);
+    ck_assert_int_eq(ranges[0].end.offset, 7);
+    ck_assert(!eofs[0]);
+}
+END_TEST
+
+
+START_TEST (parse_statement_with_unclosed_block_comment)
+{
+    int result = cypher_quick_parse(
+            "return 1 /* hunter;thompson\n",
+            segment_callback, NULL, 0);
+    ck_assert_int_eq(result, 0);
+    ck_assert_int_eq(nsegments, 1);
+
+    ck_assert(is_statement[0]);
+    ck_assert_str_eq(segments[0], "return 1 /* hunter;thompson\n");
+    ck_assert_int_eq(ranges[0].start.line, 1);
+    ck_assert_int_eq(ranges[0].start.column, 1);
+    ck_assert_int_eq(ranges[0].start.offset, 0);
+    ck_assert_int_eq(ranges[0].end.line, 2);
+    ck_assert_int_eq(ranges[0].end.column, 1);
+    ck_assert_int_eq(ranges[0].end.offset, 28);
+    ck_assert(eofs[0]);
+}
+END_TEST
+
+
+START_TEST (parse_command_with_unclosed_block_comment)
+{
+    int result = cypher_quick_parse(
+            ":hunter /* s\nthompson\n",
+            segment_callback, NULL, 0);
+    ck_assert_int_eq(result, 0);
+    ck_assert_int_eq(nsegments, 1);
+
+    ck_assert(!is_statement[0]);
+    ck_assert_str_eq(segments[0], ":hunter /* s\nthompson\n");
+    ck_assert_int_eq(ranges[0].start.line, 1);
+    ck_assert_int_eq(ranges[0].start.column, 1);
+    ck_assert_int_eq(ranges[0].start.offset, 0);
+    ck_assert_int_eq(ranges[0].end.line, 3);
+    ck_assert_int_eq(ranges[0].end.column, 1);
+    ck_assert_int_eq(ranges[0].end.offset, 22);
+    ck_assert(eofs[0]);
+}
+END_TEST
+
+
+START_TEST (parse_statement_with_unclosed_quote)
+{
+    int result = cypher_quick_parse(
+            "return 's;thompson",
+            segment_callback, NULL, 0);
+    ck_assert_int_eq(result, 0);
+    ck_assert_int_eq(nsegments, 1);
+
+    ck_assert(is_statement[0]);
+    ck_assert_str_eq(segments[0], "return 's;thompson");
+    ck_assert_int_eq(ranges[0].start.line, 1);
+    ck_assert_int_eq(ranges[0].start.column, 1);
+    ck_assert_int_eq(ranges[0].start.offset, 0);
+    ck_assert_int_eq(ranges[0].end.line, 1);
+    ck_assert_int_eq(ranges[0].end.column, 19);
+    ck_assert_int_eq(ranges[0].end.offset, 18);
+    ck_assert(eofs[0]);
+}
+END_TEST
+
+
+START_TEST (parse_command_with_unclosed_quote)
+{
+    int result = cypher_quick_parse(
+            ":hunter \"s\nthompson",
+            segment_callback, NULL, 0);
+    ck_assert_int_eq(result, 0);
+    ck_assert_int_eq(nsegments, 1);
+
+    ck_assert(!is_statement[0]);
+    ck_assert_str_eq(segments[0], ":hunter \"s\nthompson");
+    ck_assert_int_eq(ranges[0].start.line, 1);
+    ck_assert_int_eq(ranges[0].start.column, 1);
+    ck_assert_int_eq(ranges[0].start.offset, 0);
+    ck_assert_int_eq(ranges[0].end.line, 2);
+    ck_assert_int_eq(ranges[0].end.column, 9);
+    ck_assert_int_eq(ranges[0].end.offset, 19);
+    ck_assert(eofs[0]);
+}
+END_TEST
+
+
 TCase* quick_parse_tcase(void)
 {
     TCase *tc = tcase_create("quick_parse");
@@ -453,5 +579,11 @@ TCase* quick_parse_tcase(void)
     tcase_add_test(tc, parse_command_with_escape_chars);
     tcase_add_test(tc, parse_command_with_block_comment);
     tcase_add_test(tc, parse_command_with_line_comment);
+    tcase_add_test(tc, parse_statement_with_concluding_block_comment);
+    tcase_add_test(tc, parse_command_with_concluding_block_comment);
+    tcase_add_test(tc, parse_statement_with_unclosed_block_comment);
+    tcase_add_test(tc, parse_command_with_unclosed_block_comment);
+    tcase_add_test(tc, parse_statement_with_unclosed_quote);
+    tcase_add_test(tc, parse_command_with_unclosed_quote);
     return tc;
 }

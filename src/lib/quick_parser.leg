@@ -23,17 +23,24 @@ command-body =
     | '\\;'
     | '\\' -- line-end
     | block-comment
+    | unclosed-block-comment
     | quoted
     | !(';' | -- line-end) .
     )*
 
 statement = - < statement-body > - ( ';' | EOF )
                                        { segment(true, yy); }
-statement-body = (comment | quoted | escaped-char | !(- ';') .)*
+statement-body =
+    ( comment
+    | quoted
+    | unclosed-block-comment
+    | escaped-char
+    | !(- ';') .
+    )*
 
 quoted = single-quoted | double-quoted
-single-quoted = "'" (escaped-char | EOL | !"'" .)* "'"
-double-quoted = '"' (escaped-char | EOL | !'"' .)* '"'
+single-quoted = "'" (escaped-char | EOL | !"'" .)* ("'" | EOF)
+double-quoted = '"' (escaped-char | EOL | !'"' .)* ('"' | EOF)
 
 escaped-char = '\\' [abfnrtv"'?\\]
 
@@ -44,6 +51,7 @@ line-end = (line-comment | EOL | EOF)
 comment = line-comment | block-comment
 line-comment = '//' (!EOL .)* (EOL | EOF)
 block-comment = '/*' (EOL | !'*/' .)* '*/'
+unclosed-block-comment = '/*' (EOL | !'*/' .)* EOF
 
 WS = HWS | EOL
 HWS = [ \t]
