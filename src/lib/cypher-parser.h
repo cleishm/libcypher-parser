@@ -5720,6 +5720,16 @@ struct cypher_input_range cypher_quick_parse_segment_get_range(
         const cypher_quick_parse_segment_t *segment);
 
 /**
+ * Get the next input position that will be parsed.
+ *
+ * @param [segment] The parse segment.
+ * @return The input position.
+ */
+__cypherlang_pure
+struct cypher_input_position cypher_quick_parse_segment_get_next(
+        const cypher_quick_parse_segment_t *segment);
+
+/**
  * Check if the quick parse encountered the end of the input.
  *
  * Indicates if the segment was terminated by to the end of the input.
