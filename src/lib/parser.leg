@@ -753,10 +753,11 @@ pattern-properties = map-literal | parameter
 
 client-command =
     < COLON -- n:client-command-name
-      ( a:client-command-arg           { sequence_add(a); }
+      ( '\\' -- line-end
+      | a:client-command-arg           { sequence_add(a); }
       )*
     >                                  { $$ = command(n); }
-    line-end
+    (SEMICOLON | line-end)
 
 client-command-name = n:client-command-arg ~{ERR("a command name")}
                                        { $$ = n; }
@@ -773,19 +774,29 @@ client-arg-string =                    { strbuf_reset(); }
 # Note: ensure strbuf_reset() is evaluated before these rules
 #----------------------------------------------------
 
-unquoted = < (!(['"] | WS | '//' | '/*' | EOF) .)+ >
+unquoted =
+    ( escaped-char
+    | '\\;'                            { strbuf_append(";", 1); }
+    | < (!(['"] | WS | '//' | '/*' | '\\' | SEMICOLON | EOF) .)+ >
                                        { strbuf_append_block(); }
+    )+
+
 quoted = single-quoted | double-quoted
 single-quoted = "'"
-    ( ESC |
-      < (!("'" | ESC) .)+ >            { strbuf_append_block(); }
+    ( escaped-char
+    | < EOL >                          { strbuf_append_block(); }
+    | < (!("'" | escaped-char | EOL) .)+ >
+                                       { strbuf_append_block(); }
     )* "'" ~{ERR("'")}
 double-quoted = '"'
-    ( ESC |
-      < (!('"' | ESC) .)+ >            { strbuf_append_block(); }
+    ( escaped-char
+    | < EOL >                          { strbuf_append_block(); }
+    | < (!('"' | escaped-char | EOL) .)+ >
+                                       { strbuf_append_block(); }
     )* '"' ~{ERR("\"")}
 
-ESC = "\\a"                            { strbuf_append("\a", 1); }
+escaped-char =
+      "\\a"                            { strbuf_append("\a", 1); }
     | "\\b"                            { strbuf_append("\b", 1); }
     | "\\f"                            { strbuf_append("\f", 1); }
     | "\\n"                            { strbuf_append("\n", 1); }
@@ -840,7 +851,7 @@ block-comment = '/*' < (EOL | !'*/' .)* >
 
 WS = HWS | EOL
 HWS = [ \t]
-EOL = ( '\n' | '\r\n' | '\r' ) _line_start_
+EOL = ( '\n' | '\r\n' ) _line_start_
 EOF = !.                               { yy->eof = true; }
 
 #----------------------------------------------------

@@ -5393,7 +5393,7 @@ const cypher_astnode_t *cypher_parse_segment_get_directive(
  *         segment was terminated with an expected character.
  */
 __cypherlang_pure
-bool cypher_parse_segment_eof(const cypher_parse_segment_t *segment);
+bool cypher_parse_segment_is_eof(const cypher_parse_segment_t *segment);
 
 /**
  * Print a represetation of the AST from a parse segment to a stream.
@@ -5597,11 +5597,23 @@ __cypherlang_pure
 size_t cypher_parse_error_context_offset(const cypher_parse_error_t *error);
 
 
+/*
+ * ====================================
+ * quick parser
+ * ====================================
+ */
+
+/**
+ * A quick parse segment.
+ */
+typedef struct cypher_quick_parse_segment cypher_quick_parse_segment_t;
+
+
 /**
  * A quick parse callback.
  */
 typedef int (*cypher_parser_quick_segment_callback_t)(void *userdata,
-        const char *segment, size_t n, bool eof);
+        const cypher_quick_parse_segment_t *segment);
 
 /**
  * @fn int cypher_quick_parse(const char *s, cypher_parser_quick_segment_callback_t callback, void *userdata, uint_fast32_t flags);
@@ -5660,6 +5672,75 @@ int cypher_quick_uparse(const char *s, size_t n,
 int cypher_quick_fparse(FILE *stream,
         cypher_parser_quick_segment_callback_t callback, void *userdata,
         uint_fast32_t flags);
+
+/**
+ * Check if the quick parse segment is for a statement.
+ *
+ * @param [segment] The quick parse segment.
+ * @return `true` if the parsed segment was for a statement
+ *         (vs a command), `false` otherwise.
+ */
+__cypherlang_pure
+bool cypher_quick_parse_segment_is_statement(
+        const cypher_quick_parse_segment_t *segment);
+
+/**
+ * Check if the quick parse segment is for a command.
+ *
+ * @param [segment] The quick parse segment.
+ * @return `true` if the parsed segment was for a command
+ *         (vs a statement), `false` otherwise.
+ */
+__cypherlang_pure
+bool cypher_quick_parse_segment_is_command(
+        const cypher_quick_parse_segment_t *segment);
+
+/**
+ * Get the character string of a segment.
+ *
+ * Will include all characters within the parsed statement or command,
+ * excepting any leading or trailing comments or whitespace.
+ *
+ * @param [segment] The quick parse segment.
+ * @param [n] A `size_t` pointer that will be updated to the length of the
+ *         character string.
+ * @return A pointer to a character string.
+ */
+const char *cypher_quick_parse_segment_get_text(
+        const cypher_quick_parse_segment_t *segment, size_t *n);
+
+/**
+ * Get the range of a quick parse segment.
+ *
+ * @param [segment] The quick parse segment.
+ * @return The input range.
+ */
+__cypherlang_pure
+struct cypher_input_range cypher_quick_parse_segment_get_range(
+        const cypher_quick_parse_segment_t *segment);
+
+/**
+ * Get the next input position that will be parsed.
+ *
+ * @param [segment] The parse segment.
+ * @return The input position.
+ */
+__cypherlang_pure
+struct cypher_input_position cypher_quick_parse_segment_get_next(
+        const cypher_quick_parse_segment_t *segment);
+
+/**
+ * Check if the quick parse encountered the end of the input.
+ *
+ * Indicates if the segment was terminated by to the end of the input.
+ *
+ * @param [segment] The quick parse segment.
+ * @return `true` if the end of input was encountered, `false` if the
+ *         segment was terminated with an expected character.
+ */
+__cypherlang_pure
+bool cypher_quick_parse_segment_is_eof(
+        const cypher_quick_parse_segment_t *segment);
 
 
 #pragma GCC visibility pop

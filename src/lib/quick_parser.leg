@@ -14,26 +14,48 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-directive = command | statement
+directive = (client-command | statement)
 
-command = - < ':' command-body ( line-end | EOF ) >        { segment(yy); }
-command-body = (quoted | !line-end .)*
-line-end = (HWS | block-comment)* (line-comment | EOL)
+client-command = - < ':' command-body > -- (';' | line-end)
+                                       { segment(false, yy); }
+command-body =
+    ( escaped-char
+    | '\\;'
+    | '\\' -- line-end
+    | block-comment
+    | unclosed-block-comment
+    | quoted
+    | !(';' | -- line-end) .
+    )*
 
-statement = < - statement-body - ( ';' | EOF ) >           { segment(yy); }
-statement-body = (comment | quoted | ESC | !(- ';') .)*
-
-comment = line-comment | block-comment
-line-comment = '//' (!EOL .)* EOL
-block-comment = '/*' (!'*/' .)* '*/'
+statement = - < statement-body > - ( ';' | EOF )
+                                       { segment(true, yy); }
+statement-body =
+    ( comment
+    | quoted
+    | unclosed-block-comment
+    | escaped-char
+    | !(- ';') .
+    )*
 
 quoted = single-quoted | double-quoted
-single-quoted = "'" (ESC | !"'" .)* "'"
-double-quoted = '"' (ESC | !'"' .)* '"'
+single-quoted = "'" (escaped-char | EOL | !"'" .)* ("'" | EOF)
+double-quoted = '"' (escaped-char | EOL | !'"' .)* ('"' | EOF)
+
+escaped-char = '\\' [abfnrtv"'?\\]
 
 - = (WS | comment)*
+-- = (HWS | block-comment)*
+line-end = (line-comment | EOL | EOF)
+
+comment = line-comment | block-comment
+line-comment = '//' (!EOL .)* (EOL | EOF)
+block-comment = '/*' (EOL | !'*/' .)* '*/'
+unclosed-block-comment = '/*' (EOL | !'*/' .)* EOF
+
 WS = HWS | EOL
 HWS = [ \t]
-ESC = '\\' .
-EOL = '\n' | '\r\n' | '\r'
-EOF = !.                                                   { yy->eof = true; }
+EOL = ('\n' | '\r\n') _line_start_
+EOF = !.                               { yy->eof = true; }
+
+_line_start_ = &{ (line_start(yy), 1) }

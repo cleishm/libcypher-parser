@@ -163,7 +163,7 @@ const cypher_astnode_t *cypher_parse_segment_get_directive(
 }
 
 
-bool cypher_parse_segment_eof(const cypher_parse_segment_t *segment)
+bool cypher_parse_segment_is_eof(const cypher_parse_segment_t *segment)
 {
     return segment->eof;
 }
