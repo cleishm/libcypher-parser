@@ -655,6 +655,12 @@ int parse_each(yyrule rule, source_cb_t source, void *sourcedata,
         }
 
         yy.position_offset = range.end;
+
+        offsets_clear(&(yy.line_start_offsets));
+        if (offsets_push(&(yy.line_start_offsets), 0))
+        {
+            goto cleanup;
+        }
     }
 
     result = 0;
@@ -712,12 +718,6 @@ int parse_one(yycontext *yy, yyrule rule)
     yy->result = NULL;
     yy->eof = false;
     if (safe_yyparsefrom(yy, rule) <= 0)
-    {
-        goto failure;
-    }
-
-    offsets_clear(&(yy->line_start_offsets));
-    if (offsets_push(&(yy->line_start_offsets), 0))
     {
         goto failure;
     }

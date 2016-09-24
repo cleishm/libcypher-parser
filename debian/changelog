@@ -1,3 +1,10 @@
+libcypher-parser (0.5.2-1) unstable; urgency=medium
+
+  * New upstream release.
+    - Fixes an issue tracking line numbers over multiple statements.
+
+ -- Chris Leishman <chris@leishman.org>  Sat, 24 Sep 2016 17:40:49 +0000
+
 libcypher-parser (0.5.1-1) unstable; urgency=medium
 
   * New upstream release. 
