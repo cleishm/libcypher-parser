@@ -14,7 +14,7 @@
 #
 Summary: Parsing library for the Cypher query language
 Name: libcypher-parser
-Version: 0.5.1
+Version: 0.5.2
 Release: 1%{?dist}
 Group: System Environment/Libraries
 License: Apache-2.0
