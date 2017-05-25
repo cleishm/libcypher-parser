@@ -1,3 +1,10 @@
+libcypher-parser (0.5.3-1) unstable; urgency=medium
+
+  * New upstream release.
+    - Fixes an issue with indentation on multiline commands.
+
+ -- Chris Leishman <chris@leishman.org>  Thu, 25 May 2017 19:02:28 +0000
+
 libcypher-parser (0.5.2-1) unstable; urgency=medium
 
   * New upstream release.

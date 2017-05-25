@@ -11622,7 +11622,7 @@ if (!(YY_BEGIN)) goto l1132;
   }  if (!yy_COLON(yy)) goto l1132;  if (!yy___(yy)) goto l1132;  if (!yy_client_command_name(yy)) goto l1132;  yyDo(yy, yySet, -2, 0);
   l1133:;	
   {  int yypos1134= yy->__pos, yythunkpos1134= yy->__thunkpos;
-  {  int yypos1135= yy->__pos, yythunkpos1135= yy->__thunkpos;  if (!yymatchChar(yy, '\\')) goto l1136;  if (!yy___(yy)) goto l1136;  if (!yy_line_end(yy)) goto l1136;  goto l1135;
+  {  int yypos1135= yy->__pos, yythunkpos1135= yy->__thunkpos;  if (!yymatchChar(yy, '\\')) goto l1136;  if (!yy___(yy)) goto l1136;  if (!yy_line_end(yy)) goto l1136;  if (!yy___(yy)) goto l1136;  goto l1135;
   l1136:;	  yy->__pos= yypos1135; yy->__thunkpos= yythunkpos1135;  if (!yy_client_command_arg(yy)) goto l1134;  yyDo(yy, yySet, -1, 0);  yyDo(yy, yy_1_client_command, yy->__begin, yy->__end);
   }
   l1135:;	  goto l1133;
