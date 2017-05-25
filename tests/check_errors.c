@@ -230,6 +230,76 @@ START_TEST (track_error_position_over_embedded_newline)
 END_TEST
 
 
+START_TEST (track_error_position_across_statements)
+{
+    struct cypher_input_position last = cypher_input_position_zero;
+    result = cypher_parse(
+            "match (n) return n;\n"
+            "m atch (n) return n;\n"
+            "match (d) return d;\n"
+            "match (bc e) return a;\n",
+            &last, NULL, 0);
+    ck_assert_ptr_ne(result, NULL);
+    ck_assert_int_eq(last.offset, 84);
+
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
+    fflush(memstream);
+    const char *expected = "\n"
+" @0   0..19  statement               body=@1\n"
+" @1   0..19  > query                 clauses=[@2, @7]\n"
+" @2   0..10  > > MATCH               pattern=@3\n"
+" @3   6..9   > > > pattern           paths=[@4]\n"
+" @4   6..9   > > > > pattern path    (@5)\n"
+" @5   6..9   > > > > > node pattern  (@6)\n"
+" @6   7..8   > > > > > > identifier  `n`\n"
+" @7  10..18  > > RETURN              projections=[@8]\n"
+" @8  17..18  > > > projection        expression=@9\n"
+" @9  17..18  > > > > identifier      `n`\n"
+"@10  20..30  error                   >>m atch (n)<<\n"
+"@11  30..40  statement               body=@12\n"
+"@12  31..40  > query                 clauses=[@13]\n"
+"@13  31..39  > > RETURN              projections=[@14]\n"
+"@14  38..39  > > > projection        expression=@15\n"
+"@15  38..39  > > > > identifier      `n`\n"
+"@16  41..60  statement               body=@17\n"
+"@17  41..60  > query                 clauses=[@18, @23]\n"
+"@18  41..51  > > MATCH               pattern=@19\n"
+"@19  47..50  > > > pattern           paths=[@20]\n"
+"@20  47..50  > > > > pattern path    (@21)\n"
+"@21  47..50  > > > > > node pattern  (@22)\n"
+"@22  48..49  > > > > > > identifier  `d`\n"
+"@23  51..59  > > RETURN              projections=[@24]\n"
+"@24  58..59  > > > projection        expression=@25\n"
+"@25  58..59  > > > > identifier      `d`\n"
+"@26  61..73  error                   >>match (bc e)<<\n"
+"@27  73..83  statement               body=@28\n"
+"@28  74..83  > query                 clauses=[@29]\n"
+"@29  74..82  > > RETURN              projections=[@30]\n"
+"@30  81..82  > > > projection        expression=@31\n"
+"@31  81..82  > > > > identifier      `a`\n";
+    ck_assert_str_eq(memstream_buffer, expected);
+
+    ck_assert_int_eq(cypher_parse_result_nerrors(result), 2);
+
+    const cypher_parse_error_t *err = cypher_parse_result_get_error(result, 0);
+    struct cypher_input_position pos = cypher_parse_error_position(err);
+    ck_assert_int_eq(pos.line, 2);
+    ck_assert_int_eq(pos.column, 2);
+    ck_assert_int_eq(pos.offset, 21);
+    ck_assert_str_eq(cypher_parse_error_message(err),
+            "Invalid input ' ': expected MATCH or MERGE");
+
+    err = cypher_parse_result_get_error(result, 1);
+    pos = cypher_parse_error_position(err);
+    ck_assert_int_eq(pos.line, 4);
+    ck_assert_int_eq(pos.column, 11);
+    ck_assert_int_eq(pos.offset, 71);
+    ck_assert_str_eq(cypher_parse_error_message(err),
+            "Invalid input 'e': expected a label, '{', a parameter or ')'");
+}
+END_TEST
+
+
 TCase* errors_tcase(void)
 {
     TCase *tc = tcase_create("errors");
@@ -240,5 +310,6 @@ TCase* errors_tcase(void)
     tcase_add_test(tc, parse_invalid_query_and_resync);
     tcase_add_test(tc, parse_single_invalid_query);
     tcase_add_test(tc, track_error_position_over_embedded_newline);
+    tcase_add_test(tc, track_error_position_across_statements);
     return tc;
 }
