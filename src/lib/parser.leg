@@ -753,7 +753,7 @@ pattern-properties = map-literal | parameter
 
 client-command =
     < COLON -- n:client-command-name
-      ( '\\' -- line-end
+      ( '\\' -- line-end --
       | a:client-command-arg           { sequence_add(a); }
       )*
     >                                  { $$ = command(n); }
