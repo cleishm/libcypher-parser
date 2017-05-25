@@ -212,19 +212,19 @@ END_TEST
 START_TEST (parse_multiline_command)
 {
     result = cypher_parse(
-            ":hunter \\ //firstname\ns \\\nthompson //lastname\n",
+            ":hunter \\ //firstname\ns \\\n  \\\n thompson //lastname\n",
             NULL, NULL, 0);
     ck_assert_ptr_ne(result, NULL);
 
     ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
-"@0   0..35  command         name=@1, args=[@3, @4]\n"
+"@0   0..40  command         name=@1, args=[@3, @4]\n"
 "@1   1..7   > string        \"hunter\"\n"
 "@2  12..21  > line_comment  //firstname\n"
 "@3  22..23  > string        \"s\"\n"
-"@4  26..34  > string        \"thompson\"\n"
-"@5  37..45  line_comment    //lastname\n";
+"@4  31..39  > string        \"thompson\"\n"
+"@5  42..50  line_comment    //lastname\n";
     ck_assert_str_eq(memstream_buffer, expected);
 }
 END_TEST
