@@ -365,6 +365,8 @@ extern const cypher_operator_t *CYPHER_OP_REGEX;
 extern const cypher_operator_t *CYPHER_OP_IN;
 /** The infix binary `STARTS WITH` operator. */
 extern const cypher_operator_t *CYPHER_OP_STARTS_WITH;
+/** The infix binary `ENDS WITH` operator. */
+extern const cypher_operator_t *CYPHER_OP_ENDS_WITH;
 /** The infix binary `CONTAINS` operator. */
 extern const cypher_operator_t *CYPHER_OP_CONTAINS;
 /** The infix binary `IS NULL` operator. */

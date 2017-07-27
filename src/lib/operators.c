@@ -118,6 +118,10 @@ const cypher_operator_t *CYPHER_OP_IN = &_CYPHER_OP_IN;
 static const cypher_operator_t _CYPHER_OP_STARTS_WITH =
     { .precedence = 11, .associativity = LEFT_ASSOC, .str = "STARTS WITH" };
 const cypher_operator_t *CYPHER_OP_STARTS_WITH = &_CYPHER_OP_STARTS_WITH;
+// `l ENDS WITH r`
+static const cypher_operator_t _CYPHER_OP_ENDS_WITH =
+    { .precedence = 11, .associativity = LEFT_ASSOC, .str = "ENDS WITH" };
+const cypher_operator_t *CYPHER_OP_ENDS_WITH = &_CYPHER_OP_ENDS_WITH;
 // `l CONTAINS r`
 static const cypher_operator_t _CYPHER_OP_CONTAINS =
     { .precedence = 11, .associativity = LEFT_ASSOC, .str = "CONTAINS" };

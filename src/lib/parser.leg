@@ -495,6 +495,7 @@ INFIX-OP =
     | REGEX &{OP(REGEX)}               { op_push(REGEX); }
     | CONTAINS &{OP(CONTAINS)}         { op_push(CONTAINS); }
     | STARTS-WITH &{OP(STARTS_WITH)}   { op_push(STARTS_WITH); }
+    | ENDS-WITH &{OP(ENDS_WITH)}       { op_push(ENDS_WITH); }
     ) -
 
 COMPARISON-OP =
@@ -891,6 +892,7 @@ POW = '^' ~{ERR("'^'")}
 IN = ([Ii][Nn] WB) ~{ERR("IN")}
 REGEX = '=~' ~{ERR("'=~'")}
 STARTS-WITH = ([Ss][Tt][Aa][Rr][Tt][Ss] WB - [Ww][Ii][Tt][Hh] WB) ~{ERR("STARTS WITH")}
+ENDS-WITH = ([Ee][Nn][Dd][Ss] WB - [Ww][Ii][Tt][Hh] WB) ~{ERR("ENDS WITH")}
 CONTAINS = ([Cc][Oo][Nn][Tt][Aa][Ii][Nn][Ss] WB) ~{ERR("CONTAINS")}
 IS-NULL = ([Ii][Ss] WB - [Nn][Uu][Ll][Ll] WB) ~{ERR("IS NULL")}
 IS-NOT-NULL = ([Ii][Ss] WB - [Nn][Oo][Tt] WB - [Nn][Uu][Ll][Ll] WB) ~{ERR("IS NOT NULL")}
