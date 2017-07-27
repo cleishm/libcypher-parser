@@ -615,8 +615,9 @@ null-literal =
     -
 
 parameter = _block_start_              { strbuf_reset(); }
-    ( '{' - symbolic-name ) ~{ERR("a parameter")}
-    - RIGHT-CURLY _block_merge_        { $$ = strbuf_parameter(); }
+    ( ( '$' - parameter-name ) ~{ERR("a parameter")}
+    | ( '{' - parameter-name ) ~{ERR("a parameter")} - RIGHT-CURLY
+    ) _block_merge_                    { $$ = strbuf_parameter(); }
     -
 
 label = _block_start_                  { strbuf_reset(); }
@@ -651,7 +652,7 @@ index-name = <                         { strbuf_reset(); }
 
 proc-name = <                          { strbuf_reset(); }
     ( (symbolic-name DOT               { strbuf_append(".", 1); }
-      )* symbolic-name 
+      )* symbolic-name
     ) ~{ERR("a procedure name")}
     >                                  { $$ = strbuf_proc_name(); }
     -
@@ -816,6 +817,10 @@ unescaped-symbolic-name = < sym-start sym-part* >
 escaped-symbolic-name = '`' < (!'`' .)* > '`' ~{ERR("`")}
                                        { strbuf_append_block(); }
 
+parameter-name =
+      symbolic-name
+    | < [1-9] [0-9]* >                 { strbuf_append_block(); }
+
 # NOTE: accepts char sequences that are not valid floats, allowing
 # the validity checking to be done during semantic checking.
 float-string =
@@ -830,7 +835,7 @@ float-string =
 # tried first.
 integer-string = < [0-9] sym-part* >   { strbuf_append_block(); }
 
-sym-start = [a-zA-Z_$]
+sym-start = [a-zA-Z_]
 sym-part = [a-zA-Z0-9_$]
 
 

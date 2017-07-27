@@ -73,5 +73,5 @@ ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_PARAMETER, -1);
     struct parameter *node = container_of(self, struct parameter, _astnode);
-    return snprintf(str, size, "{`%s`}", node->p);
+    return snprintf(str, size, "$`%s`", node->p);
 }
