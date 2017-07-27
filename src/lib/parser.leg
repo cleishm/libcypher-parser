@@ -332,10 +332,13 @@ call-clause =
         )?
         RIGHT-PAREN -
       )?
-      ( YIELD r:proc-projection        { sequence_add(r); }
-        ( COMMA - r:proc-projection    { sequence_add(r); }
-        )*
-      )?  >                            { $$ = call_clause(p); }
+      ( YIELD
+        ( r:proc-projection            { sequence_add(r); }
+          ( COMMA - r:proc-projection  { sequence_add(r); }
+          )*
+        | '-'
+        ) -
+      )? >                             { $$ = call_clause(p); }
 
 proc-projection = < r:identifier (
       AS i:identifier >                { $$ = projection(r, i); }
