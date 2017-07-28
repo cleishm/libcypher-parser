@@ -460,7 +460,7 @@ atom =
     | function-application
     | identifier
 
-property-expression = _block_start_ p:identifier
+property-expression = _block_start_ p:atom
     ( DOT - n:prop-name _block_replace_
                                        { p = property_operator(p, n); }
     )+ _block_merge_                   { $$ = p; }
