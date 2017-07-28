@@ -362,6 +362,10 @@ static cypher_astnode_t *_labels_operator(yycontext *yy,
 static cypher_astnode_t *_list_comprehension(yycontext *yy,
         cypher_astnode_t *identifier, cypher_astnode_t *expression,
         cypher_astnode_t *predicate, cypher_astnode_t *eval);
+#define pattern_comprehension(i,r,p,v) _pattern_comprehension(yy, i, r, p, v)
+static cypher_astnode_t *_pattern_comprehension(yycontext *yy,
+        cypher_astnode_t *identifier, cypher_astnode_t *pattern,
+        cypher_astnode_t *predicate, cypher_astnode_t *eval);
 #define case_expression(e,d) _case_expression(yy, e, d)
 static cypher_astnode_t *_case_expression(yycontext *yy,
         cypher_astnode_t *expression, cypher_astnode_t *deflt);
@@ -2341,6 +2345,28 @@ cypher_astnode_t *_list_comprehension(yycontext *yy,
             "An AST node can only be created immediately after a `>` in the grammar");
     cypher_astnode_t *node = cypher_ast_list_comprehension(identifier,
             expression, predicate, eval,
+            astnodes_elements(&(yy->prev_block->children)),
+            astnodes_size(&(yy->prev_block->children)),
+            yy->prev_block->range);
+    if (node == NULL)
+    {
+        abort_parse(yy);
+    }
+    astnodes_clear(&(yy->prev_block->children));
+    block_free(yy, yy->prev_block);
+    yy->prev_block = NULL;
+    return add_child(yy, node);
+}
+
+
+cypher_astnode_t *_pattern_comprehension(yycontext *yy,
+        cypher_astnode_t *identifier, cypher_astnode_t *pattern,
+        cypher_astnode_t *predicate, cypher_astnode_t *eval)
+{
+    assert(yy->prev_block != NULL &&
+            "An AST node can only be created immediately after a `>` in the grammar");
+    cypher_astnode_t *node = cypher_ast_pattern_comprehension(identifier,
+            pattern, predicate, eval,
             astnodes_elements(&(yy->prev_block->children)),
             astnodes_size(&(yy->prev_block->children)),
             yy->prev_block->range);

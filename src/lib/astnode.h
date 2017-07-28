@@ -145,6 +145,7 @@ extern const struct cypher_astnode_vt cypher_subscript_operator_astnode_vt;
 extern const struct cypher_astnode_vt cypher_slice_operator_astnode_vt;
 extern const struct cypher_astnode_vt cypher_labels_operator_astnode_vt;
 extern const struct cypher_astnode_vt cypher_list_comprehension_astnode_vt;
+extern const struct cypher_astnode_vt cypher_pattern_comprehension_astnode_vt;
 extern const struct cypher_astnode_vt cypher_case_astnode_vt;
 extern const struct cypher_astnode_vt cypher_filter_astnode_vt;
 extern const struct cypher_astnode_vt cypher_extract_astnode_vt;

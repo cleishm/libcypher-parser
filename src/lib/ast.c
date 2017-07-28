@@ -93,6 +93,7 @@ struct cypher_astnode_vts
     const struct cypher_astnode_vt *slice_operator;
     const struct cypher_astnode_vt *labels_operator;
     const struct cypher_astnode_vt *list_comprehension;
+    const struct cypher_astnode_vt *pattern_comprehension;
     const struct cypher_astnode_vt *case_expression;
     const struct cypher_astnode_vt *filter;
     const struct cypher_astnode_vt *extract;
@@ -203,6 +204,7 @@ static const struct cypher_astnode_vts cypher_astnode_vts =
     .slice_operator = &cypher_slice_operator_astnode_vt,
     .labels_operator = &cypher_labels_operator_astnode_vt,
     .list_comprehension = &cypher_list_comprehension_astnode_vt,
+    .pattern_comprehension = &cypher_pattern_comprehension_astnode_vt,
     .case_expression = &cypher_case_astnode_vt,
     .filter = &cypher_filter_astnode_vt,
     .extract = &cypher_extract_astnode_vt,
@@ -322,6 +324,7 @@ const uint8_t CYPHER_AST_SUBSCRIPT_OPERATOR = VT_OFFSET(subscript_operator);
 const uint8_t CYPHER_AST_SLICE_OPERATOR = VT_OFFSET(slice_operator);
 const uint8_t CYPHER_AST_LABELS_OPERATOR = VT_OFFSET(labels_operator);
 const uint8_t CYPHER_AST_LIST_COMPREHENSION = VT_OFFSET(list_comprehension);
+const uint8_t CYPHER_AST_PATTERN_COMPREHENSION = VT_OFFSET(pattern_comprehension);
 const uint8_t CYPHER_AST_CASE = VT_OFFSET(case_expression);
 const uint8_t CYPHER_AST_FILTER = VT_OFFSET(filter);
 const uint8_t CYPHER_AST_EXTRACT = VT_OFFSET(extract);

@@ -442,6 +442,7 @@ atom =
     | float-literal
     | integer-literal
     | list-comprehension
+    | pattern-comprehension
     | collection-literal
     | parameter
     | map-literal
@@ -510,6 +511,14 @@ list-comprehension = < LEFT-SQ-PAREN -
     (WHERE p:expression | p:_null_)
     (PIPE - v:expression | v:_null_)
     RIGHT-SQ-PAREN >                   { $$ = list_comprehension(i, e, p, v); }
+    -
+
+pattern-comprehension = < LEFT-SQ-PAREN -
+    (i:identifier EQUAL - | i:_null_)
+    r:pattern-expression-path -
+    (WHERE p:expression | p:_null_)
+    PIPE - v:expression
+    RIGHT-SQ-PAREN >                   { $$ = pattern_comprehension(i, r, p, v); }
     -
 
 case-expression =
@@ -695,11 +704,13 @@ pattern-path =
 
 pattern-expression =
       p:shortest-path-pattern -        { $$ = p; }
-    | < n:node-pattern                 { sequence_add(n); }
-      ( - r:relationship-pattern - n:node-pattern
+    | p:pattern-expression-path -      { $$ = p; }
+
+pattern-expression-path =
+    < n:node-pattern                   { sequence_add(n); }
+    ( - r:relationship-pattern - n:node-pattern
                                        { sequence_add(r); sequence_add(n); }
-      )+ >                             { $$ = pattern_path(); }
-      -
+    )+ >                               { $$ = pattern_path(); }
 
 node-pattern = < LEFT-PAREN -
     (i:identifier | i:_null_)

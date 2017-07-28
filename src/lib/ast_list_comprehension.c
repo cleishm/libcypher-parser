@@ -231,11 +231,10 @@ ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
         n += r;
     }
 
-    if (n+1 < size)
+    if (n < size)
     {
         str[n] = ']';
-        str[n+1] = '\0';
     }
-
-    return n+1;
+    n++;
+    return n;
 }

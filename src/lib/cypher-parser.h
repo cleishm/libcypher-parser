@@ -241,6 +241,8 @@ extern const cypher_astnode_type_t CYPHER_AST_SLICE_OPERATOR;
 extern const cypher_astnode_type_t CYPHER_AST_LABELS_OPERATOR;
 /** Type for an AST list comprehension node. */
 extern const cypher_astnode_type_t CYPHER_AST_LIST_COMPREHENSION;
+/** Type for an AST pattern comprehension node. */
+extern const cypher_astnode_type_t CYPHER_AST_PATTERN_COMPREHENSION;
 /** Type for an AST CASE expression node. */
 extern const cypher_astnode_type_t CYPHER_AST_CASE;
 /** Type for an AST filter expression node. */
@@ -3724,7 +3726,7 @@ const cypher_astnode_t *cypher_ast_list_comprehension_get_identifier(
  * result will be undefined.
  *
  * @param [node] The AST node.
- * @return A `CYPHER_AST_IDENTIFIER` node.
+ * @return A `CYPHER_AST_EXPRESSION` node.
  */
 __cypherlang_pure
 const cypher_astnode_t *cypher_ast_list_comprehension_get_expression(
@@ -3875,6 +3877,81 @@ cypher_astnode_t *cypher_ast_none(const cypher_astnode_t *identifier,
         const cypher_astnode_t *expression, const cypher_astnode_t *predicate,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
+
+
+/**
+ * Construct a `CYPHER_AST_PATTERN_COMPREHENSION` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_EXPRESSION`.
+ *
+ * @param [identifier] A `CYPHER_AST_IDENTIFIER` node, or null.
+ * @param [pattern] A `CYPHER_AST_PATTERN` node.
+ * @param [predicate] A `CYPHER_AST_EXPRESSION` node, or null.
+ * @param [eval] A `CYPHER_AST_EXPRESSION` node.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+__cypherlang_must_check
+cypher_astnode_t *cypher_ast_pattern_comprehension(
+        const cypher_astnode_t *identifier, const cypher_astnode_t *pattern,
+        const cypher_astnode_t *predicate, const cypher_astnode_t *eval,
+        cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range);
+
+
+/**
+ * Get the identifier from a `CYPHER_AST_PATTERN_COMPREHENSION` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_PATTERN_COMPREHENSION` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_IDENTIFIER` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_pattern_comprehension_get_identifier(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the expression from a `CYPHER_AST_PATTERN_COMPREHENSION` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_PATTERN_COMPREHENSION` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_PATTERN_PATH` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_pattern_comprehension_get_pattern(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the predicate from a `CYPHER_AST_PATTERN_COMPREHENSION` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_PATTERN_COMPREHENSION` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_pattern_comprehension_get_predicate(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the evaluation from a `CYPHER_AST_PATTERN_COMPREHENSION` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_PATTERN_COMPREHENSION` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_pattern_comprehension_get_eval(
+        const cypher_astnode_t *node);
 
 
 /**
