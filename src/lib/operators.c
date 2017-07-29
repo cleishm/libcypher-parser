@@ -35,7 +35,7 @@ static const cypher_operator_t _CYPHER_OP_AND =
     { .precedence = 3, .associativity = LEFT_ASSOC, .str = "AND" };
 const cypher_operator_t *CYPHER_OP_AND = &_CYPHER_OP_AND;
 
-// `l NOT r`
+// `NOT r`
 static const cypher_operator_t _CYPHER_OP_NOT =
     { .precedence = 4, .associativity = UNARY, .str = "NOT" };
 const cypher_operator_t *CYPHER_OP_NOT = &_CYPHER_OP_NOT;

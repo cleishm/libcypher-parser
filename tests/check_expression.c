@@ -183,6 +183,32 @@ START_TEST (parse_simple_binary_operators)
 END_TEST
 
 
+START_TEST (parse_unary_and_binary_operators)
+{
+    struct cypher_input_position last = cypher_input_position_zero;
+    result = cypher_parse("RETURN NOT 1 - 2 AND 3;", &last, NULL, 0);
+    ck_assert_ptr_ne(result, NULL);
+    ck_assert_int_eq(last.offset, 23);
+
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
+    fflush(memstream);
+    const char *expected = "\n"
+" @0   0..23  statement                    body=@1\n"
+" @1   0..23  > query                      clauses=[@2]\n"
+" @2   0..22  > > RETURN                   projections=[@3]\n"
+" @3   7..22  > > > projection             expression=@4, alias=@10\n"
+" @4   7..22  > > > > binary operator      @5 AND @9\n"
+" @5   7..17  > > > > > unary operator     NOT @6\n"
+" @6  11..17  > > > > > > binary operator  @7 - @8\n"
+" @7  11..12  > > > > > > > integer        1\n"
+" @8  15..16  > > > > > > > integer        2\n"
+" @9  21..22  > > > > > integer            3\n"
+"@10   7..22  > > > > identifier           `NOT 1 - 2 AND 3`\n";
+    ck_assert_str_eq(memstream_buffer, expected);
+}
+END_TEST
+
+
 START_TEST (parse_comparison_operators)
 {
     struct cypher_input_position last = cypher_input_position_zero;
@@ -517,6 +543,7 @@ TCase* expression_tcase(void)
     tcase_add_checked_fixture(tc, setup, teardown);
     tcase_add_test(tc, parse_simple_unary_operators);
     tcase_add_test(tc, parse_simple_binary_operators);
+    tcase_add_test(tc, parse_unary_and_binary_operators);
     tcase_add_test(tc, parse_comparison_operators);
     tcase_add_test(tc, parse_apply);
     tcase_add_test(tc, parse_subscript);

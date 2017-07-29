@@ -408,9 +408,7 @@ expression = &{PREC_PUSH_TOP()} e:_expression ~{PREC_POP()} &{PREC_POP()}
 _prec_expression = &{PREC_PUSH()} e:_expression ~{PREC_POP()} &{PREC_POP()}
                                        { $$ = e; }
 _expression =
-      _block_start_ PREFIX-OP - r:_prec_expression _block_end_
-                                       { $$ = unary_operator(op_pop(), r); }
-    | _block_start_ l:atom
+      _block_start_ l:_atom
         ( DOT &{OP(PROPERTY)} &{PREC_CHK()} - n:prop-name _block_replace_
                                        { l = property_operator(l, n); }
         | INFIX-OP &{PREC_CHK()} - r:_prec_expression _block_replace_
@@ -432,6 +430,10 @@ _expression =
                                        { sequence_add(n); }
           )+ _block_replace_           { l = labels_operator(l); }
         )+ _block_merge_               { $$ = l; }
+    | _atom
+_atom =
+      _block_start_ PREFIX-OP - r:_prec_expression _block_end_
+                                       { $$ = unary_operator(op_pop(), r); }
     | atom
 
 atom =
