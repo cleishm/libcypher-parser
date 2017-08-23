@@ -103,6 +103,12 @@ libcypher_parser_la_SOURCES = \
 	ast_statement_option.c \
 	ast_string.c \
 	ast_subscript_operator.c \
+	ast_map_projection.c \
+	ast_map_projection_selector.c \
+	ast_map_projection_literal.c \
+	ast_map_projection_property.c \
+	ast_map_projection_identifier.c \
+	ast_map_projection_all_properties.c \
 	ast_true.c \
 	ast_unary_operator.c \
 	ast_union.c \

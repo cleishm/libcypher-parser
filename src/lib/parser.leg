@@ -426,6 +426,13 @@ _expression =
           (s:expression | s:_null_) ELLIPSIS - (e:expression | e:_null_)
           RIGHT-SQ-PAREN - _block_replace_
                                        { l = slice_operator(l, s, e); }
+        | LEFT-CURLY &{OP(MAP_PROJECTION)} &{PREC_CHK()} -
+          ( m:map_projection_element   { sequence_add(m); }
+            ( COMMA - m:map_projection_element
+                                       { sequence_add(m); }
+            )*
+          )? RIGHT-CURLY - _block_replace_
+                                       { l = map_projection(l); }
         | ( &{OP(LABEL)} &{PREC_CHK()} n:label
                                        { sequence_add(n); }
           )+ _block_replace_           { l = labels_operator(l); }
@@ -435,6 +442,13 @@ _atom =
       _block_start_ PREFIX-OP - r:_prec_expression _block_end_
                                        { $$ = unary_operator(op_pop(), r); }
     | atom
+
+map-projection-element =
+      < p:prop-name COLON - e:expression >
+                                       { $$ = map_projection_literal(p, e); }
+    | < DOT - p:prop-name >            { $$ = map_projection_property(p); }
+    | < i:identifier >                 { $$ = map_projection_identifier(i); }
+    | < DOT-STAR - >                   { $$ = map_projection_all_properties(); }
 
 atom =
       true-literal
@@ -910,6 +924,7 @@ CONTAINS = ([Cc][Oo][Nn][Tt][Aa][Ii][Nn][Ss] WB) ~{ERR("CONTAINS")}
 IS-NULL = ([Ii][Ss] WB - [Nn][Uu][Ll][Ll] WB) ~{ERR("IS NULL")}
 IS-NOT-NULL = ([Ii][Ss] WB - [Nn][Oo][Tt] WB - [Nn][Uu][Ll][Ll] WB) ~{ERR("IS NOT NULL")}
 DOT = '.' ~{ERR("'.'")}
+DOT-STAR = ('.' - '*') ~{ERR("'.*'")}
 
 COLON = ':' ~{ERR("':'")}
 SEMICOLON = ';' ~{ERR("';'")}

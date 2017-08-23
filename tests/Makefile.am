@@ -22,6 +22,7 @@ check_libcypher_parser_CHECKS = \
 	check_indexes.c \
 	check_list_comprehensions.c \
 	check_load_csv.c \
+	check_map_projection.c \
 	check_match.c \
 	check_merge.c \
 	check_pattern.c \

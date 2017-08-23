@@ -106,6 +106,10 @@ const cypher_operator_t *CYPHER_OP_UNARY_MINUS = &_CYPHER_OP_UNARY_MINUS;
 static const cypher_operator_t _CYPHER_OP_SUBSCRIPT =
     { .precedence = 11, .associativity = LEFT_ASSOC, .str = "[" };
 const cypher_operator_t *CYPHER_OP_SUBSCRIPT = &_CYPHER_OP_SUBSCRIPT;
+// `l{e}`
+static const cypher_operator_t _CYPHER_OP_MAP_PROJECTION =
+    { .precedence = 11, .associativity = LEFT_ASSOC, .str = "{" };
+const cypher_operator_t *CYPHER_OP_MAP_PROJECTION = &_CYPHER_OP_MAP_PROJECTION;
 // `l =~ r`
 static const cypher_operator_t _CYPHER_OP_REGEX =
     { .precedence = 11, .associativity = LEFT_ASSOC, .str = "=~" };

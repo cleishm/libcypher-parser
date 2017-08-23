@@ -131,6 +131,12 @@ struct cypher_astnode_vts
     const struct cypher_astnode_vt *line_comment;
     const struct cypher_astnode_vt *block_comment;
     const struct cypher_astnode_vt *error;
+    const struct cypher_astnode_vt *map_projection;
+    const struct cypher_astnode_vt *map_projection_selector;
+    const struct cypher_astnode_vt *map_projection_literal;
+    const struct cypher_astnode_vt *map_projection_property;
+    const struct cypher_astnode_vt *map_projection_identifier;
+    const struct cypher_astnode_vt *map_projection_all_properties;
 };
 static const struct cypher_astnode_vts cypher_astnode_vts =
 {
@@ -240,7 +246,14 @@ static const struct cypher_astnode_vts cypher_astnode_vts =
     .command = &cypher_command_astnode_vt,
     .line_comment = &cypher_line_comment_astnode_vt,
     .block_comment = &cypher_block_comment_astnode_vt,
-    .error = &cypher_error_astnode_vt
+    .error = &cypher_error_astnode_vt,
+    .map_projection = &cypher_map_projection_astnode_vt,
+    .map_projection_selector = &cypher_map_projection_selector_astnode_vt,
+    .map_projection_literal = &cypher_map_projection_literal_astnode_vt,
+    .map_projection_property = &cypher_map_projection_property_astnode_vt,
+    .map_projection_identifier = &cypher_map_projection_identifier_astnode_vt,
+    .map_projection_all_properties =
+            &cypher_map_projection_all_properties_astnode_vt
 };
 
 #define VT_OFFSET(name) offsetof(struct cypher_astnode_vts, name) \
@@ -362,6 +375,16 @@ const uint8_t CYPHER_AST_COMMENT = VT_OFFSET(comment);
 const uint8_t CYPHER_AST_LINE_COMMENT = VT_OFFSET(line_comment);
 const uint8_t CYPHER_AST_BLOCK_COMMENT = VT_OFFSET(block_comment);
 const uint8_t CYPHER_AST_ERROR = VT_OFFSET(error);
+const uint8_t CYPHER_AST_MAP_PROJECTION = VT_OFFSET(map_projection);
+const uint8_t CYPHER_AST_MAP_PROJECTION_SELECTOR = VT_OFFSET(map_projection_selector);
+const uint8_t CYPHER_AST_MAP_PROJECTION_LITERAL =
+        VT_OFFSET(map_projection_literal);
+const uint8_t CYPHER_AST_MAP_PROJECTION_PROPERTY =
+        VT_OFFSET(map_projection_property);
+const uint8_t CYPHER_AST_MAP_PROJECTION_IDENTIFIER =
+        VT_OFFSET(map_projection_identifier);
+const uint8_t CYPHER_AST_MAP_PROJECTION_ALL_PROPERTIES =
+        VT_OFFSET(map_projection_all_properties);
 static const uint8_t _MAX_VT_OFF =
     (sizeof(struct cypher_astnode_vts) / sizeof(struct cypher_astnode_vt *));
 

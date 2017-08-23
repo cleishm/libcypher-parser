@@ -183,9 +183,18 @@ extern const struct cypher_astnode_vt cypher_comment_astnode_vt;
 extern const struct cypher_astnode_vt cypher_line_comment_astnode_vt;
 extern const struct cypher_astnode_vt cypher_block_comment_astnode_vt;
 extern const struct cypher_astnode_vt cypher_error_astnode_vt;
+extern const struct cypher_astnode_vt cypher_map_projection_astnode_vt;
+extern const struct cypher_astnode_vt cypher_map_projection_selector_astnode_vt;
+extern const struct cypher_astnode_vt cypher_map_projection_literal_astnode_vt;
+extern const struct cypher_astnode_vt cypher_map_projection_property_astnode_vt;
+extern const struct cypher_astnode_vt
+        cypher_map_projection_identifier_astnode_vt;
+extern const struct cypher_astnode_vt
+        cypher_map_projection_all_properties_astnode_vt;
 
 
-typedef struct cypher_list_comprehension_astnode cypher_list_comprehension_astnode_t;
+typedef struct cypher_list_comprehension_astnode
+        cypher_list_comprehension_astnode_t;
 
 struct cypher_list_comprehension_astnode_vt
 {
