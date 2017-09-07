@@ -20,10 +20,9 @@
 #include <assert.h>
 
 
-struct parameter
+struct map_projection_all_properties
 {
     cypher_astnode_t _astnode;
-    char p[];
 };
 
 
@@ -31,47 +30,39 @@ static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
 static const struct cypher_astnode_vt *parents[] =
-    { &cypher_expression_astnode_vt };
+    { &cypher_map_projection_selector_astnode_vt };
 
-const struct cypher_astnode_vt cypher_parameter_astnode_vt =
+const struct cypher_astnode_vt cypher_map_projection_all_properties_astnode_vt =
     { .parents = parents,
       .nparents = 1,
-      .name = "parameter",
+      .name = "all properties projection",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
 
-cypher_astnode_t *cypher_ast_parameter(const char *s, size_t n,
+cypher_astnode_t *cypher_ast_map_projection_all_properties(
+        cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    struct parameter *node = calloc(1, sizeof(struct parameter) + n+1);
+    struct map_projection_all_properties *node =
+            calloc(1, sizeof(struct map_projection_all_properties));
     if (node == NULL)
     {
         return NULL;
     }
-    if (cypher_astnode_init(&(node->_astnode), CYPHER_AST_PARAMETER,
-                NULL, 0, range))
+    if (cypher_astnode_init(&(node->_astnode),
+            CYPHER_AST_MAP_PROJECTION_ALL_PROPERTIES,
+            children, nchildren, range))
     {
         free(node);
         return NULL;
     }
-    memcpy(node->p, s, n);
-    node->p[n] = '\0';
     return &(node->_astnode);
-}
-
-
-const char *cypher_ast_parameter_get_name(const cypher_astnode_t *astnode)
-{
-    REQUIRE_TYPE(astnode, CYPHER_AST_PARAMETER, NULL);
-    struct parameter *node = container_of(astnode, struct parameter, _astnode);
-    return node->p;
 }
 
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE_TYPE(self, CYPHER_AST_PARAMETER, -1);
-    struct parameter *node = container_of(self, struct parameter, _astnode);
-    return snprintf(str, size, "$`%s`", node->p);
+    REQUIRE_TYPE(self, CYPHER_AST_MAP_PROJECTION_ALL_PROPERTIES, -1);
+    return snprintf(str, size, ".*");
 }

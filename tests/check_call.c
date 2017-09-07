@@ -180,6 +180,41 @@ START_TEST (parse_call_with_projections)
 END_TEST
 
 
+START_TEST (parse_call_with_blank_projection)
+{
+    struct cypher_input_position last = cypher_input_position_zero;
+    result = cypher_parse(
+            "CALL foo.bar.baz(1, 2) YIELD -;",
+            &last, NULL, 0);
+    ck_assert_ptr_ne(result, NULL);
+    ck_assert_int_eq(last.offset, 31);
+
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
+    fflush(memstream);
+    const char *expected = "\n"
+"@0   0..31  statement        body=@1\n"
+"@1   0..31  > query          clauses=[@2]\n"
+"@2   0..30  > > CALL         name=@3, args=[@4, @5]\n"
+"@3   5..16  > > > proc name  `foo.bar.baz`\n"
+"@4  17..18  > > > integer    1\n"
+"@5  20..21  > > > integer    2\n";
+    ck_assert_str_eq(memstream_buffer, expected);
+
+    const cypher_astnode_t *ast = cypher_parse_result_get_directive(result, 0);
+    const cypher_astnode_t *query = cypher_ast_statement_get_body(ast);
+    const cypher_astnode_t *clause = cypher_ast_query_get_clause(query, 0);
+    ck_assert_int_eq(cypher_astnode_type(clause), CYPHER_AST_CALL);
+
+    const cypher_astnode_t *proc = cypher_ast_call_get_proc_name(clause);
+    ck_assert_int_eq(cypher_astnode_type(proc), CYPHER_AST_PROC_NAME);
+    ck_assert_str_eq(cypher_ast_proc_name_get_value(proc), "foo.bar.baz");
+
+    ck_assert_int_eq(cypher_ast_call_narguments(clause), 2);
+    ck_assert_int_eq(cypher_ast_call_nprojections(clause), 0);
+}
+END_TEST
+
+
 TCase* call_tcase(void)
 {
     TCase *tc = tcase_create("call");
@@ -187,5 +222,6 @@ TCase* call_tcase(void)
     tcase_add_test(tc, parse_simple_call);
     tcase_add_test(tc, parse_call_with_args);
     tcase_add_test(tc, parse_call_with_projections);
+    tcase_add_test(tc, parse_call_with_blank_projection);
     return tc;
 }

@@ -139,6 +139,128 @@ START_TEST (parse_set_all_properties)
 END_TEST
 
 
+START_TEST (parse_set_nested_property)
+{
+    struct cypher_input_position last = cypher_input_position_zero;
+    result = cypher_parse("/*MATCH*/ SET n.foo.bar = baz;", &last, NULL, 0);
+    ck_assert_ptr_ne(result, NULL);
+    ck_assert_int_eq(last.offset, 30);
+
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
+    fflush(memstream);
+    const char *expected = "\n"
+" @0   2..7   block_comment           /*MATCH*/\n"
+" @1  10..30  statement               body=@2\n"
+" @2  10..30  > query                 clauses=[@3]\n"
+" @3  10..29  > > SET                 items=[@4]\n"
+" @4  14..29  > > > set property      @5 = @10\n"
+" @5  14..24  > > > > property        @6.@9\n"
+" @6  14..19  > > > > > property      @7.@8\n"
+" @7  14..15  > > > > > > identifier  `n`\n"
+" @8  16..19  > > > > > > prop name   `foo`\n"
+" @9  20..23  > > > > > prop name     `bar`\n"
+"@10  26..29  > > > > identifier      `baz`\n";
+    ck_assert_str_eq(memstream_buffer, expected);
+
+    const cypher_astnode_t *ast = cypher_parse_result_get_directive(result, 0);
+    ck_assert_int_eq(cypher_astnode_type(ast), CYPHER_AST_STATEMENT);
+    const cypher_astnode_t *query = cypher_ast_statement_get_body(ast);
+    ck_assert_int_eq(cypher_astnode_type(query), CYPHER_AST_QUERY);
+    const cypher_astnode_t *set = cypher_ast_query_get_clause(query, 0);
+    ck_assert_int_eq(cypher_astnode_type(set), CYPHER_AST_SET);
+
+    ck_assert_int_eq(cypher_ast_set_nitems(set), 1);
+    ck_assert_ptr_eq(cypher_ast_set_get_item(set, 1), NULL);
+
+    const cypher_astnode_t *item = cypher_ast_set_get_item(set, 0);
+    ck_assert_int_eq(cypher_astnode_type(item), CYPHER_AST_SET_PROPERTY);
+
+    const cypher_astnode_t *prop = cypher_ast_set_property_get_property(item);
+    ck_assert_int_eq(cypher_astnode_type(prop), CYPHER_AST_PROPERTY_OPERATOR);
+
+    const cypher_astnode_t *exp = cypher_ast_property_operator_get_expression(prop);
+    ck_assert_int_eq(cypher_astnode_type(exp), CYPHER_AST_PROPERTY_OPERATOR);
+
+    const cypher_astnode_t *id = cypher_ast_property_operator_get_expression(exp);
+    ck_assert_int_eq(cypher_astnode_type(id), CYPHER_AST_IDENTIFIER);
+    ck_assert_str_eq(cypher_ast_identifier_get_name(id), "n");
+    const cypher_astnode_t *propname =
+            cypher_ast_property_operator_get_prop_name(exp);
+    ck_assert_int_eq(cypher_astnode_type(propname), CYPHER_AST_PROP_NAME);
+    ck_assert_str_eq(cypher_ast_prop_name_get_value(propname), "foo");
+
+    propname = cypher_ast_property_operator_get_prop_name(prop);
+    ck_assert_int_eq(cypher_astnode_type(propname), CYPHER_AST_PROP_NAME);
+    ck_assert_str_eq(cypher_ast_prop_name_get_value(propname), "bar");
+
+    const cypher_astnode_t *expr = cypher_ast_set_property_get_expression(item);
+    ck_assert_int_eq(cypher_astnode_type(expr), CYPHER_AST_IDENTIFIER);
+    ck_assert_str_eq(cypher_ast_identifier_get_name(expr), "baz");
+}
+END_TEST
+
+
+START_TEST (parse_set_expression_property)
+{
+    struct cypher_input_position last = cypher_input_position_zero;
+    result = cypher_parse("/*MATCH*/ SET (n.foo).bar = baz;", &last, NULL, 0);
+    ck_assert_ptr_ne(result, NULL);
+    ck_assert_int_eq(last.offset, 32);
+
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
+    fflush(memstream);
+    const char *expected = "\n"
+" @0   2..7   block_comment           /*MATCH*/\n"
+" @1  10..32  statement               body=@2\n"
+" @2  10..32  > query                 clauses=[@3]\n"
+" @3  10..31  > > SET                 items=[@4]\n"
+" @4  14..31  > > > set property      @5 = @10\n"
+" @5  14..26  > > > > property        @6.@9\n"
+" @6  15..20  > > > > > property      @7.@8\n"
+" @7  15..16  > > > > > > identifier  `n`\n"
+" @8  17..20  > > > > > > prop name   `foo`\n"
+" @9  22..25  > > > > > prop name     `bar`\n"
+"@10  28..31  > > > > identifier      `baz`\n";
+    ck_assert_str_eq(memstream_buffer, expected);
+
+    const cypher_astnode_t *ast = cypher_parse_result_get_directive(result, 0);
+    ck_assert_int_eq(cypher_astnode_type(ast), CYPHER_AST_STATEMENT);
+    const cypher_astnode_t *query = cypher_ast_statement_get_body(ast);
+    ck_assert_int_eq(cypher_astnode_type(query), CYPHER_AST_QUERY);
+    const cypher_astnode_t *set = cypher_ast_query_get_clause(query, 0);
+    ck_assert_int_eq(cypher_astnode_type(set), CYPHER_AST_SET);
+
+    ck_assert_int_eq(cypher_ast_set_nitems(set), 1);
+    ck_assert_ptr_eq(cypher_ast_set_get_item(set, 1), NULL);
+
+    const cypher_astnode_t *item = cypher_ast_set_get_item(set, 0);
+    ck_assert_int_eq(cypher_astnode_type(item), CYPHER_AST_SET_PROPERTY);
+
+    const cypher_astnode_t *prop = cypher_ast_set_property_get_property(item);
+    ck_assert_int_eq(cypher_astnode_type(prop), CYPHER_AST_PROPERTY_OPERATOR);
+
+    const cypher_astnode_t *exp = cypher_ast_property_operator_get_expression(prop);
+    ck_assert_int_eq(cypher_astnode_type(exp), CYPHER_AST_PROPERTY_OPERATOR);
+
+    const cypher_astnode_t *id = cypher_ast_property_operator_get_expression(exp);
+    ck_assert_int_eq(cypher_astnode_type(id), CYPHER_AST_IDENTIFIER);
+    ck_assert_str_eq(cypher_ast_identifier_get_name(id), "n");
+    const cypher_astnode_t *propname =
+            cypher_ast_property_operator_get_prop_name(exp);
+    ck_assert_int_eq(cypher_astnode_type(propname), CYPHER_AST_PROP_NAME);
+    ck_assert_str_eq(cypher_ast_prop_name_get_value(propname), "foo");
+
+    propname = cypher_ast_property_operator_get_prop_name(prop);
+    ck_assert_int_eq(cypher_astnode_type(propname), CYPHER_AST_PROP_NAME);
+    ck_assert_str_eq(cypher_ast_prop_name_get_value(propname), "bar");
+
+    const cypher_astnode_t *expr = cypher_ast_set_property_get_expression(item);
+    ck_assert_int_eq(cypher_astnode_type(expr), CYPHER_AST_IDENTIFIER);
+    ck_assert_str_eq(cypher_ast_identifier_get_name(expr), "baz");
+}
+END_TEST
+
+
 START_TEST (parse_merge_properties)
 {
     struct cypher_input_position last = cypher_input_position_zero;
@@ -236,6 +358,8 @@ TCase* set_tcase(void)
     tcase_add_checked_fixture(tc, setup, teardown);
     tcase_add_test(tc, parse_set_property);
     tcase_add_test(tc, parse_set_all_properties);
+    tcase_add_test(tc, parse_set_nested_property);
+    tcase_add_test(tc, parse_set_expression_property);
     tcase_add_test(tc, parse_merge_properties);
     tcase_add_test(tc, parse_set_labels);
     return tc;

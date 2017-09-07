@@ -235,12 +235,26 @@ extern const cypher_astnode_type_t CYPHER_AST_APPLY_ALL_OPERATOR;
 extern const cypher_astnode_type_t CYPHER_AST_PROPERTY_OPERATOR;
 /** Type for an AST subscript operator node. */
 extern const cypher_astnode_type_t CYPHER_AST_SUBSCRIPT_OPERATOR;
-/** Type for an AST subscript operator node. */
+/** Type for an AST slice operator node. */
 extern const cypher_astnode_type_t CYPHER_AST_SLICE_OPERATOR;
+/** Type for an AST map projection operator node. */
+extern const cypher_astnode_type_t CYPHER_AST_MAP_PROJECTION;
+/** Type for an AST map projection selector node. */
+extern const cypher_astnode_type_t CYPHER_AST_MAP_PROJECTION_SELECTOR;
+/** Type for an AST map projection literal entry node. */
+extern const cypher_astnode_type_t CYPHER_AST_MAP_PROJECTION_LITERAL;
+/** Type for an AST map projection property entry node. */
+extern const cypher_astnode_type_t CYPHER_AST_MAP_PROJECTION_PROPERTY;
+/** Type for an AST map projection identifier entry node. */
+extern const cypher_astnode_type_t CYPHER_AST_MAP_PROJECTION_IDENTIFIER;
+/** Type for an AST map projection all properties entry node. */
+extern const cypher_astnode_type_t CYPHER_AST_MAP_PROJECTION_ALL_PROPERTIES;
 /** Type for an AST label check operator node. */
 extern const cypher_astnode_type_t CYPHER_AST_LABELS_OPERATOR;
 /** Type for an AST list comprehension node. */
 extern const cypher_astnode_type_t CYPHER_AST_LIST_COMPREHENSION;
+/** Type for an AST pattern comprehension node. */
+extern const cypher_astnode_type_t CYPHER_AST_PATTERN_COMPREHENSION;
 /** Type for an AST CASE expression node. */
 extern const cypher_astnode_type_t CYPHER_AST_CASE;
 /** Type for an AST filter expression node. */
@@ -359,17 +373,21 @@ extern const cypher_operator_t *CYPHER_OP_UNARY_PLUS;
 extern const cypher_operator_t *CYPHER_OP_UNARY_MINUS;
 /** The postfix binary subscript (`[exp]`) operator. */
 extern const cypher_operator_t *CYPHER_OP_SUBSCRIPT;
+/** The postfix binary map projection (`{exp}`) operator. */
+extern const cypher_operator_t *CYPHER_OP_MAP_PROJECTION;
 /** The infix binary `=~` operator. */
 extern const cypher_operator_t *CYPHER_OP_REGEX;
 /** The infix binary `IN` operator. */
 extern const cypher_operator_t *CYPHER_OP_IN;
 /** The infix binary `STARTS WITH` operator. */
 extern const cypher_operator_t *CYPHER_OP_STARTS_WITH;
+/** The infix binary `ENDS WITH` operator. */
+extern const cypher_operator_t *CYPHER_OP_ENDS_WITH;
 /** The infix binary `CONTAINS` operator. */
 extern const cypher_operator_t *CYPHER_OP_CONTAINS;
-/** The infix binary `IS NULL` operator. */
+/** The postfix unary `IS NULL` operator. */
 extern const cypher_operator_t *CYPHER_OP_IS_NULL;
-/** The infix binary `IS NOT NULL` operator. */
+/** The postfix unary `IS NOT NULL` operator. */
 extern const cypher_operator_t *CYPHER_OP_IS_NOT_NULL;
 /** The infix binary property lookup (`l.r`) operator. */
 extern const cypher_operator_t *CYPHER_OP_PROPERTY;
@@ -535,7 +553,7 @@ const cypher_astnode_t *cypher_ast_statement_get_body(
  *         null.
  * @param [params] Parameters for the option, all of type
  *         `CYPHER_AST_CYPHER_OPTION_PARAM`.
- * @param [nparams] The number of parameters (maybe zero).
+ * @param [nparams] The number of parameters (may be zero).
  * @param [children] The children of the node.
  * @param [nchildren] The number of children.
  * @param [range] The input range.
@@ -3623,6 +3641,190 @@ const cypher_astnode_t *cypher_ast_slice_operator_get_end(
 
 
 /**
+ * Construct a `CYPHER_AST_MAP_PROJECTION` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_EXPRESSION`.
+ *
+ * @param [expression] A `CYPHER_AST_EXPRESSION` node.
+ * @param [selectors] Selectors for the projection, all of type
+ *         `CYPHER_AST_MAP_PROJECTION_SELECTOR`.
+ * @param [nselectors] The number of selectors (may be zero).
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+__cypherlang_must_check
+cypher_astnode_t *cypher_ast_map_projection(
+        const cypher_astnode_t *expression,
+        cypher_astnode_t * const *selectors, unsigned int nselectors,
+        cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range);
+
+/**
+ * Get the expression of a `CYPHER_AST_MAP_PROJECTION` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_MAP_PROJECTION` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_map_projection_get_expression(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the number of selectors in a `CYPHER_AST_MAP_PROJECTION` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_MAP_PROJECTION` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return The number of selectors.
+ */
+__cypherlang_pure
+unsigned int cypher_ast_map_projection_nselectors(const cypher_astnode_t *node);
+
+/**
+ * Get a selector from a `CYPHER_AST_MAP_PROJECTION` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_MAP_PROJECTION` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @param [index] The index of the selector.
+ * @return A `CYPHER_AST_MAP_PROJECTION_SELECTOR` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_map_projection_get_selector(
+        const cypher_astnode_t *node, unsigned int index);
+
+
+/**
+ * Construct a `CYPHER_AST_MAP_PROJECTION_LITERAL` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_MAP_PROJECTION_SELECTOR`.
+ *
+ * @param [prop_name] A `CYPHER_AST_PROP_NAME` node.
+ * @param [expression] A `CYPHER_AST_EXPRESSION` node.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+__cypherlang_must_check
+cypher_astnode_t *cypher_ast_map_projection_literal(
+        const cypher_astnode_t *prop_name, const cypher_astnode_t *expression,
+        cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range);
+
+/**
+ * Get the property name of a `CYPHER_AST_MAP_PROJECTION_LITERAL` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_MAP_PROJECTION_LITERAL` then
+ * the result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_PROP_NAME` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_map_projection_literal_get_prop_name(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the expression of a `CYPHER_AST_MAP_PROJECTION_LITERAL` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_MAP_PROJECTION_LITERAL` then
+ * the result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_map_projection_literal_get_expression(
+        const cypher_astnode_t *node);
+
+
+/**
+ * Construct a `CYPHER_AST_MAP_PROJECTION_PROPERTY` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_MAP_PROJECTION_SELECTOR`.
+ *
+ * @param [prop_name] A `CYPHER_AST_PROP_NAME` node.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+__cypherlang_must_check
+cypher_astnode_t *cypher_ast_map_projection_property(
+        const cypher_astnode_t *prop_name,
+        cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range);
+
+/**
+ * Get the property name of a `CYPHER_AST_MAP_PROJECTION_PROPERTY` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_MAP_PROJECTION_PROPERTY` then
+ * the result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_PROP_NAME` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_map_projection_property_get_prop_name(
+        const cypher_astnode_t *node);
+
+
+/**
+ * Construct a `CYPHER_AST_MAP_PROJECTION_IDENTIFIER` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_MAP_PROJECTION_SELECTOR`.
+ *
+ * @param [identifier] A `CYPHER_AST_IDENTIFIER` node.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+__cypherlang_must_check
+cypher_astnode_t *cypher_ast_map_projection_identifier(
+        const cypher_astnode_t *identifier,
+        cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range);
+
+/**
+ * Get the identifier of a `CYPHER_AST_MAP_PROJECTION_IDENTIFIER` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_MAP_PROJECTION_IDENTIFIER`
+ * then the result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_IDENTIFIER` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_map_projection_identifier_get_identifier(
+        const cypher_astnode_t *node);
+
+
+/**
+ * Construct a `CYPHER_AST_MAP_PROJECTION_ALL_PROPERTIES` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_MAP_PROJECTION_SELECTOR`.
+ *
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+__cypherlang_must_check
+cypher_astnode_t *cypher_ast_map_projection_all_properties(
+        cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range);
+
+
+/**
  * Construct a `CYPHER_AST_LABELS_OPERATOR` node.
  *
  * The node will also be an instance of `CYPHER_AST_EXPRESSION`.
@@ -3722,7 +3924,7 @@ const cypher_astnode_t *cypher_ast_list_comprehension_get_identifier(
  * result will be undefined.
  *
  * @param [node] The AST node.
- * @return A `CYPHER_AST_IDENTIFIER` node.
+ * @return A `CYPHER_AST_EXPRESSION` node.
  */
 __cypherlang_pure
 const cypher_astnode_t *cypher_ast_list_comprehension_get_expression(
@@ -3873,6 +4075,81 @@ cypher_astnode_t *cypher_ast_none(const cypher_astnode_t *identifier,
         const cypher_astnode_t *expression, const cypher_astnode_t *predicate,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
+
+
+/**
+ * Construct a `CYPHER_AST_PATTERN_COMPREHENSION` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_EXPRESSION`.
+ *
+ * @param [identifier] A `CYPHER_AST_IDENTIFIER` node, or null.
+ * @param [pattern] A `CYPHER_AST_PATTERN` node.
+ * @param [predicate] A `CYPHER_AST_EXPRESSION` node, or null.
+ * @param [eval] A `CYPHER_AST_EXPRESSION` node.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+__cypherlang_must_check
+cypher_astnode_t *cypher_ast_pattern_comprehension(
+        const cypher_astnode_t *identifier, const cypher_astnode_t *pattern,
+        const cypher_astnode_t *predicate, const cypher_astnode_t *eval,
+        cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range);
+
+
+/**
+ * Get the identifier from a `CYPHER_AST_PATTERN_COMPREHENSION` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_PATTERN_COMPREHENSION` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_IDENTIFIER` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_pattern_comprehension_get_identifier(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the expression from a `CYPHER_AST_PATTERN_COMPREHENSION` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_PATTERN_COMPREHENSION` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_PATTERN_PATH` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_pattern_comprehension_get_pattern(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the predicate from a `CYPHER_AST_PATTERN_COMPREHENSION` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_PATTERN_COMPREHENSION` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_pattern_comprehension_get_predicate(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the evaluation from a `CYPHER_AST_PATTERN_COMPREHENSION` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_PATTERN_COMPREHENSION` then the
+ * result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_EXPRESSION` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_pattern_comprehension_get_eval(
+        const cypher_astnode_t *node);
 
 
 /**
