@@ -297,7 +297,7 @@ START_TEST (parse_node_with_param_props)
 " @5   6..24  > > > > > node pattern  (@6:@7 {@8})\n"
 " @6   7..8   > > > > > > identifier  `n`\n"
 " @7   8..15  > > > > > > label       :`Person`\n"
-" @8  16..23  > > > > > > parameter   {`param`}\n"
+" @8  16..23  > > > > > > parameter   $`param`\n"
 " @9  25..33  > > RETURN              projections=[@10]\n"
 "@10  32..33  > > > projection        expression=@11\n"
 "@11  32..33  > > > > identifier      `n`\n";
@@ -849,7 +849,7 @@ START_TEST (parse_rel_with_param_props)
 " @6   8..9   > > > > > > identifier  `n`\n"
 " @7  10..27  > > > > > rel pattern   -[:@8 {@9}]->\n"
 " @8  12..16  > > > > > > rel type    :`Foo`\n"
-" @9  17..24  > > > > > > parameter   {`param`}\n"
+" @9  17..24  > > > > > > parameter   $`param`\n"
 "@10  27..30  > > > > > node pattern  (@11)\n"
 "@11  28..29  > > > > > > identifier  `m`\n"
 "@12  34..35  > > > > identifier      `p`\n";

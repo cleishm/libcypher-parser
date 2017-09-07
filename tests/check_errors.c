@@ -200,32 +200,32 @@ END_TEST
 START_TEST (track_error_position_over_embedded_newline)
 {
     struct cypher_input_position last = cypher_input_position_zero;
-    result = cypher_parse("RETURN \"foo\nbar\" SET @",
+    result = cypher_parse("RETURN \"foo\nbar\" MA TCH (n)",
             &last, NULL, CYPHER_PARSE_SINGLE);
     ck_assert_ptr_ne(result, NULL);
-    ck_assert_int_eq(last.offset, 22);
+    ck_assert_int_eq(last.offset, 27);
 
     ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
-"@0   0..22  statement           body=@1\n"
-"@1   0..22  > query             clauses=[@2]\n"
+"@0   0..27  statement           body=@1\n"
+"@1   0..27  > query             clauses=[@2]\n"
 "@2   0..17  > > RETURN          projections=[@3]\n"
 "@3   7..17  > > > projection    expression=@4, alias=@5\n"
 "@4   7..16  > > > > string      \"foo\\nbar\"\n"
 "@5   7..17  > > > > identifier  `\"foo\\nbar\"`\n"
-"@6  17..22  > > error           >>SET @<<\n";
+"@6  17..27  > > error           >>MA TCH (n)<<\n";
     ck_assert_str_eq(memstream_buffer, expected);
 
     ck_assert_int_eq(cypher_parse_result_nerrors(result), 1);
     const cypher_parse_error_t *err = cypher_parse_result_get_error(result, 0);
     struct cypher_input_position pos = cypher_parse_error_position(err);
     ck_assert_int_eq(pos.line, 2);
-    ck_assert_int_eq(pos.column, 10);
-    ck_assert_int_eq(pos.offset, 21);
+    ck_assert_int_eq(pos.column, 8);
+    ck_assert_int_eq(pos.offset, 19);
 
     ck_assert_str_eq(cypher_parse_error_message(err), 
-            "Invalid input '@': expected an identifier");
+            "Invalid input ' ': expected MATCH");
 }
 END_TEST
 

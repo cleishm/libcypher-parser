@@ -42,6 +42,12 @@ libcypher-parser.so.8 libcypher-parser8 #MINVER#
  CYPHER_AST_LIST_COMPREHENSION@Base 0.5.0
  CYPHER_AST_LOAD_CSV@Base 0.5.0
  CYPHER_AST_MAP@Base 0.5.0
+ CYPHER_AST_MAP_PROJECTION@Base 0.5.4
+ CYPHER_AST_MAP_PROJECTION_ALL_PROPERTIES@Base 0.5.4
+ CYPHER_AST_MAP_PROJECTION_IDENTIFIER@Base 0.5.4
+ CYPHER_AST_MAP_PROJECTION_LITERAL@Base 0.5.4
+ CYPHER_AST_MAP_PROJECTION_PROPERTY@Base 0.5.4
+ CYPHER_AST_MAP_PROJECTION_SELECTOR@Base 0.5.4
  CYPHER_AST_MATCH@Base 0.5.0
  CYPHER_AST_MATCH_HINT@Base 0.5.0
  CYPHER_AST_MERGE@Base 0.5.0
@@ -59,6 +65,7 @@ libcypher-parser.so.8 libcypher-parser8 #MINVER#
  CYPHER_AST_ORDER_BY@Base 0.5.0
  CYPHER_AST_PARAMETER@Base 0.5.0
  CYPHER_AST_PATTERN@Base 0.5.0
+ CYPHER_AST_PATTERN_COMPREHENSION@Base 0.5.4
  CYPHER_AST_PATTERN_PATH@Base 0.5.0
  CYPHER_AST_PROC_NAME@Base 0.5.0
  CYPHER_AST_PROFILE_OPTION@Base 0.5.0
@@ -108,6 +115,7 @@ libcypher-parser.so.8 libcypher-parser8 #MINVER#
  CYPHER_OP_AND@Base 0.5.0
  CYPHER_OP_CONTAINS@Base 0.5.0
  CYPHER_OP_DIV@Base 0.5.0
+ CYPHER_OP_ENDS_WITH@Base 0.5.4
  CYPHER_OP_EQUAL@Base 0.5.0
  CYPHER_OP_GT@Base 0.5.0
  CYPHER_OP_GTE@Base 0.5.0
@@ -117,6 +125,7 @@ libcypher-parser.so.8 libcypher-parser8 #MINVER#
  CYPHER_OP_LABEL@Base 0.5.0
  CYPHER_OP_LT@Base 0.5.0
  CYPHER_OP_LTE@Base 0.5.0
+ CYPHER_OP_MAP_PROJECTION@Base 0.5.4
  CYPHER_OP_MINUS@Base 0.5.0
  CYPHER_OP_MOD@Base 0.5.0
  CYPHER_OP_MULT@Base 0.5.0
@@ -260,6 +269,18 @@ libcypher-parser.so.8 libcypher-parser8 #MINVER#
  cypher_ast_map_get_key@Base 0.5.0
  cypher_ast_map_get_value@Base 0.5.0
  cypher_ast_map_nentries@Base 0.5.0
+ cypher_ast_map_projection@Base 0.5.4
+ cypher_ast_map_projection_all_properties@Base 0.5.4
+ cypher_ast_map_projection_get_expression@Base 0.5.4
+ cypher_ast_map_projection_get_selector@Base 0.5.4
+ cypher_ast_map_projection_identifier@Base 0.5.4
+ cypher_ast_map_projection_identifier_get_identifier@Base 0.5.4
+ cypher_ast_map_projection_literal@Base 0.5.4
+ cypher_ast_map_projection_literal_get_expression@Base 0.5.4
+ cypher_ast_map_projection_literal_get_prop_name@Base 0.5.4
+ cypher_ast_map_projection_nselectors@Base 0.5.4
+ cypher_ast_map_projection_property@Base 0.5.4
+ cypher_ast_map_projection_property_get_prop_name@Base 0.5.4
  cypher_ast_match@Base 0.5.0
  cypher_ast_match_get_hint@Base 0.5.0
  cypher_ast_match_get_pattern@Base 0.5.0
@@ -309,6 +330,11 @@ libcypher-parser.so.8 libcypher-parser8 #MINVER#
  cypher_ast_parameter@Base 0.5.0
  cypher_ast_parameter_get_name@Base 0.5.0
  cypher_ast_pattern@Base 0.5.0
+ cypher_ast_pattern_comprehension@Base 0.5.4
+ cypher_ast_pattern_comprehension_get_eval@Base 0.5.4
+ cypher_ast_pattern_comprehension_get_identifier@Base 0.5.4
+ cypher_ast_pattern_comprehension_get_pattern@Base 0.5.4
+ cypher_ast_pattern_comprehension_get_predicate@Base 0.5.4
  cypher_ast_pattern_get_path@Base 0.5.0
  cypher_ast_pattern_npaths@Base 0.5.0
  cypher_ast_pattern_path@Base 0.5.0

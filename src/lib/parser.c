@@ -282,8 +282,8 @@ static cypher_astnode_t *_create_clause(yycontext *yy, bool unique,
 #define set_clause() _set_clause(yy)
 static cypher_astnode_t *_set_clause(yycontext *yy);
 #define set_property(p, e) _set_property(yy, p, e)
-static cypher_astnode_t *_set_property(yycontext *yy, cypher_astnode_t *prop,
-        cypher_astnode_t *expression);
+static cypher_astnode_t *_set_property(yycontext *yy,
+        cypher_astnode_t *prop_name, cypher_astnode_t *expression);
 #define set_all_properties(i, e) _set_all_properties(yy, i, e)
 static cypher_astnode_t *_set_all_properties(yycontext *yy,
         cypher_astnode_t *identifier, cypher_astnode_t *expression);
@@ -298,7 +298,8 @@ static cypher_astnode_t *_delete(yycontext *yy, bool detach);
 #define remove_clause() _remove_clause(yy)
 static cypher_astnode_t *_remove_clause(yycontext *yy);
 #define remove_property(p) _remove_property(yy, p)
-static cypher_astnode_t *_remove_property(yycontext *yy, cypher_astnode_t *prop);
+static cypher_astnode_t *_remove_property(yycontext *yy,
+        cypher_astnode_t *prop_name);
 #define remove_labels(i) _remove_labels(yy, i)
 static cypher_astnode_t *_remove_labels(yycontext *yy,
         cypher_astnode_t *identifier);
@@ -355,12 +356,30 @@ static cypher_astnode_t *_subscript_operator(yycontext *yy,
 static cypher_astnode_t *_slice_operator(yycontext *yy,
         cypher_astnode_t *expression, cypher_astnode_t *start,
         cypher_astnode_t* end);
+#define map_projection(l) _map_projection(yy, l)
+static cypher_astnode_t *_map_projection(yycontext *yy,
+        cypher_astnode_t *expression);
+#define map_projection_literal(p, e) _map_projection_literal(yy, p, e)
+static cypher_astnode_t *_map_projection_literal(yycontext *yy,
+        cypher_astnode_t *prop_name, cypher_astnode_t *expression);
+#define map_projection_property(p) _map_projection_property(yy, p)
+static cypher_astnode_t *_map_projection_property(yycontext *yy,
+        cypher_astnode_t *prop_name);
+#define map_projection_identifier(p) _map_projection_identifier(yy, p)
+static cypher_astnode_t *_map_projection_identifier(yycontext *yy,
+        cypher_astnode_t *identifier);
+#define map_projection_all_properties() _map_projection_all_properties(yy)
+static cypher_astnode_t *_map_projection_all_properties(yycontext *yy);
 #define labels_operator(l) _labels_operator(yy, l)
 static cypher_astnode_t *_labels_operator(yycontext *yy,
         cypher_astnode_t *left);
 #define list_comprehension(i,e,p,v) _list_comprehension(yy, i, e, p, v)
 static cypher_astnode_t *_list_comprehension(yycontext *yy,
         cypher_astnode_t *identifier, cypher_astnode_t *expression,
+        cypher_astnode_t *predicate, cypher_astnode_t *eval);
+#define pattern_comprehension(i,r,p,v) _pattern_comprehension(yy, i, r, p, v)
+static cypher_astnode_t *_pattern_comprehension(yycontext *yy,
+        cypher_astnode_t *identifier, cypher_astnode_t *pattern,
         cypher_astnode_t *predicate, cypher_astnode_t *eval);
 #define case_expression(e,d) _case_expression(yy, e, d)
 static cypher_astnode_t *_case_expression(yycontext *yy,
@@ -1764,12 +1783,12 @@ cypher_astnode_t *_set_clause(yycontext *yy)
 }
 
 
-cypher_astnode_t *_set_property(yycontext *yy, cypher_astnode_t *prop,
+cypher_astnode_t *_set_property(yycontext *yy, cypher_astnode_t *prop_name,
         cypher_astnode_t *expression)
 {
     assert(yy->prev_block != NULL &&
             "An AST node can only be created immediately after a `>` in the grammar");
-    cypher_astnode_t *node = cypher_ast_set_property(prop, expression,
+    cypher_astnode_t *node = cypher_ast_set_property(prop_name, expression,
             astnodes_elements(&(yy->prev_block->children)),
             astnodes_size(&(yy->prev_block->children)),
             yy->prev_block->range);
@@ -1890,11 +1909,11 @@ cypher_astnode_t *_remove_clause(yycontext *yy)
 }
 
 
-cypher_astnode_t *_remove_property(yycontext *yy, cypher_astnode_t *prop)
+cypher_astnode_t *_remove_property(yycontext *yy, cypher_astnode_t *prop_name)
 {
     assert(yy->prev_block != NULL &&
             "An AST node can only be created immediately after a `>` in the grammar");
-    cypher_astnode_t *node = cypher_ast_remove_property(prop,
+    cypher_astnode_t *node = cypher_ast_remove_property(prop_name,
             astnodes_elements(&(yy->prev_block->children)),
             astnodes_size(&(yy->prev_block->children)),
             yy->prev_block->range);
@@ -2311,6 +2330,108 @@ cypher_astnode_t *_slice_operator(yycontext *yy, cypher_astnode_t *expression,
 }
 
 
+cypher_astnode_t *_map_projection(yycontext *yy, cypher_astnode_t *expression)
+{
+    assert(yy->prev_block != NULL &&
+            "An AST node can only be created immediately after a `>` in the grammar");
+    cypher_astnode_t *node = cypher_ast_map_projection(expression,
+            astnodes_elements(&(yy->prev_block->sequence)),
+            astnodes_size(&(yy->prev_block->sequence)),
+            astnodes_elements(&(yy->prev_block->children)),
+            astnodes_size(&(yy->prev_block->children)),
+            yy->prev_block->range);
+    if (node == NULL)
+    {
+        abort_parse(yy);
+    }
+    astnodes_clear(&(yy->prev_block->sequence));
+    astnodes_clear(&(yy->prev_block->children));
+    block_free(yy, yy->prev_block);
+    yy->prev_block = NULL;
+    return add_child(yy, node);
+}
+
+
+cypher_astnode_t *_map_projection_literal(yycontext *yy,
+        cypher_astnode_t *prop_name, cypher_astnode_t *expression)
+{
+    assert(yy->prev_block != NULL &&
+            "An AST node can only be created immediately after a `>` in the grammar");
+    cypher_astnode_t *node = cypher_ast_map_projection_literal(
+            prop_name, expression,
+            astnodes_elements(&(yy->prev_block->children)),
+            astnodes_size(&(yy->prev_block->children)),
+            yy->prev_block->range);
+    if (node == NULL)
+    {
+        abort_parse(yy);
+    }
+    astnodes_clear(&(yy->prev_block->children));
+    block_free(yy, yy->prev_block);
+    yy->prev_block = NULL;
+    return add_child(yy, node);
+}
+
+
+cypher_astnode_t *_map_projection_property(yycontext *yy,
+        cypher_astnode_t *prop_name)
+{
+    assert(yy->prev_block != NULL &&
+            "An AST node can only be created immediately after a `>` in the grammar");
+    cypher_astnode_t *node = cypher_ast_map_projection_property(prop_name,
+            astnodes_elements(&(yy->prev_block->children)),
+            astnodes_size(&(yy->prev_block->children)),
+            yy->prev_block->range);
+    if (node == NULL)
+    {
+        abort_parse(yy);
+    }
+    astnodes_clear(&(yy->prev_block->children));
+    block_free(yy, yy->prev_block);
+    yy->prev_block = NULL;
+    return add_child(yy, node);
+}
+
+
+cypher_astnode_t *_map_projection_identifier(yycontext *yy,
+        cypher_astnode_t *identifier)
+{
+    assert(yy->prev_block != NULL &&
+            "An AST node can only be created immediately after a `>` in the grammar");
+    cypher_astnode_t *node = cypher_ast_map_projection_identifier(identifier,
+            astnodes_elements(&(yy->prev_block->children)),
+            astnodes_size(&(yy->prev_block->children)),
+            yy->prev_block->range);
+    if (node == NULL)
+    {
+        abort_parse(yy);
+    }
+    astnodes_clear(&(yy->prev_block->children));
+    block_free(yy, yy->prev_block);
+    yy->prev_block = NULL;
+    return add_child(yy, node);
+}
+
+
+cypher_astnode_t *_map_projection_all_properties(yycontext *yy)
+{
+    assert(yy->prev_block != NULL &&
+            "An AST node can only be created immediately after a `>` in the grammar");
+    cypher_astnode_t *node = cypher_ast_map_projection_all_properties(
+            astnodes_elements(&(yy->prev_block->children)),
+            astnodes_size(&(yy->prev_block->children)),
+            yy->prev_block->range);
+    if (node == NULL)
+    {
+        abort_parse(yy);
+    }
+    astnodes_clear(&(yy->prev_block->children));
+    block_free(yy, yy->prev_block);
+    yy->prev_block = NULL;
+    return add_child(yy, node);
+}
+
+
 cypher_astnode_t *_labels_operator(yycontext *yy, cypher_astnode_t *left)
 {
     assert(yy->prev_block != NULL &&
@@ -2341,6 +2462,28 @@ cypher_astnode_t *_list_comprehension(yycontext *yy,
             "An AST node can only be created immediately after a `>` in the grammar");
     cypher_astnode_t *node = cypher_ast_list_comprehension(identifier,
             expression, predicate, eval,
+            astnodes_elements(&(yy->prev_block->children)),
+            astnodes_size(&(yy->prev_block->children)),
+            yy->prev_block->range);
+    if (node == NULL)
+    {
+        abort_parse(yy);
+    }
+    astnodes_clear(&(yy->prev_block->children));
+    block_free(yy, yy->prev_block);
+    yy->prev_block = NULL;
+    return add_child(yy, node);
+}
+
+
+cypher_astnode_t *_pattern_comprehension(yycontext *yy,
+        cypher_astnode_t *identifier, cypher_astnode_t *pattern,
+        cypher_astnode_t *predicate, cypher_astnode_t *eval)
+{
+    assert(yy->prev_block != NULL &&
+            "An AST node can only be created immediately after a `>` in the grammar");
+    cypher_astnode_t *node = cypher_ast_pattern_comprehension(identifier,
+            pattern, predicate, eval,
             astnodes_elements(&(yy->prev_block->children)),
             astnodes_size(&(yy->prev_block->children)),
             yy->prev_block->range);

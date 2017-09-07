@@ -20,10 +20,10 @@
 #include <assert.h>
 
 
-struct parameter
+struct map_projection_property
 {
     cypher_astnode_t _astnode;
-    char p[];
+    const cypher_astnode_t *prop_name;
 };
 
 
@@ -31,47 +31,54 @@ static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
 static const struct cypher_astnode_vt *parents[] =
-    { &cypher_expression_astnode_vt };
+    { &cypher_map_projection_selector_astnode_vt };
 
-const struct cypher_astnode_vt cypher_parameter_astnode_vt =
+const struct cypher_astnode_vt cypher_map_projection_property_astnode_vt =
     { .parents = parents,
       .nparents = 1,
-      .name = "parameter",
+      .name = "property projection",
       .detailstr = detailstr,
       .free = cypher_astnode_free };
 
 
-cypher_astnode_t *cypher_ast_parameter(const char *s, size_t n,
+cypher_astnode_t *cypher_ast_map_projection_property(
+        const cypher_astnode_t *prop_name,
+        cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    struct parameter *node = calloc(1, sizeof(struct parameter) + n+1);
+    REQUIRE_TYPE(prop_name, CYPHER_AST_PROP_NAME, NULL);
+
+    struct map_projection_property *node =
+            calloc(1, sizeof(struct map_projection_property));
     if (node == NULL)
     {
         return NULL;
     }
-    if (cypher_astnode_init(&(node->_astnode), CYPHER_AST_PARAMETER,
-                NULL, 0, range))
+    if (cypher_astnode_init(&(node->_astnode),
+            CYPHER_AST_MAP_PROJECTION_PROPERTY, children, nchildren, range))
     {
         free(node);
         return NULL;
     }
-    memcpy(node->p, s, n);
-    node->p[n] = '\0';
+    node->prop_name = prop_name;
     return &(node->_astnode);
 }
 
 
-const char *cypher_ast_parameter_get_name(const cypher_astnode_t *astnode)
+const cypher_astnode_t *cypher_ast_map_projection_property_get_prop_name(
+        const cypher_astnode_t *astnode)
 {
-    REQUIRE_TYPE(astnode, CYPHER_AST_PARAMETER, NULL);
-    struct parameter *node = container_of(astnode, struct parameter, _astnode);
-    return node->p;
+    REQUIRE_TYPE(astnode, CYPHER_AST_MAP_PROJECTION_PROPERTY, NULL);
+    struct map_projection_property *node =
+            container_of(astnode, struct map_projection_property, _astnode);
+    return node->prop_name;
 }
 
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE_TYPE(self, CYPHER_AST_PARAMETER, -1);
-    struct parameter *node = container_of(self, struct parameter, _astnode);
-    return snprintf(str, size, "$`%s`", node->p);
+    REQUIRE_TYPE(self, CYPHER_AST_MAP_PROJECTION_PROPERTY, -1);
+    struct map_projection_property *node =
+            container_of(self, struct map_projection_property, _astnode);
+    return snprintf(str, size, ".@%u", node->prop_name->ordinal);
 }

@@ -1,3 +1,14 @@
+libcypher-parser (0.5.4-1) unstable; urgency=medium
+
+  * New upstream release.
+    - Accept parameters using leading `$`
+    - Support pattern comprehensions
+    - Support ENDS WITH
+    - Support map projections
+    - Various other fixes and updates
+
+ -- Chris Leishman <chris@leishman.org>  Thu, 07 Sep 2017 21:13:35 +0000
+
 libcypher-parser (0.5.3-1) unstable; urgency=medium
 
   * New upstream release.
