@@ -35,7 +35,7 @@ static const cypher_operator_t _CYPHER_OP_AND =
     { .precedence = 3, .associativity = LEFT_ASSOC, .str = "AND" };
 const cypher_operator_t *CYPHER_OP_AND = &_CYPHER_OP_AND;
 
-// `l NOT r`
+// `NOT r`
 static const cypher_operator_t _CYPHER_OP_NOT =
     { .precedence = 4, .associativity = UNARY, .str = "NOT" };
 const cypher_operator_t *CYPHER_OP_NOT = &_CYPHER_OP_NOT;
@@ -106,6 +106,10 @@ const cypher_operator_t *CYPHER_OP_UNARY_MINUS = &_CYPHER_OP_UNARY_MINUS;
 static const cypher_operator_t _CYPHER_OP_SUBSCRIPT =
     { .precedence = 11, .associativity = LEFT_ASSOC, .str = "[" };
 const cypher_operator_t *CYPHER_OP_SUBSCRIPT = &_CYPHER_OP_SUBSCRIPT;
+// `l{e}`
+static const cypher_operator_t _CYPHER_OP_MAP_PROJECTION =
+    { .precedence = 11, .associativity = LEFT_ASSOC, .str = "{" };
+const cypher_operator_t *CYPHER_OP_MAP_PROJECTION = &_CYPHER_OP_MAP_PROJECTION;
 // `l =~ r`
 static const cypher_operator_t _CYPHER_OP_REGEX =
     { .precedence = 11, .associativity = LEFT_ASSOC, .str = "=~" };
@@ -118,6 +122,10 @@ const cypher_operator_t *CYPHER_OP_IN = &_CYPHER_OP_IN;
 static const cypher_operator_t _CYPHER_OP_STARTS_WITH =
     { .precedence = 11, .associativity = LEFT_ASSOC, .str = "STARTS WITH" };
 const cypher_operator_t *CYPHER_OP_STARTS_WITH = &_CYPHER_OP_STARTS_WITH;
+// `l ENDS WITH r`
+static const cypher_operator_t _CYPHER_OP_ENDS_WITH =
+    { .precedence = 11, .associativity = LEFT_ASSOC, .str = "ENDS WITH" };
+const cypher_operator_t *CYPHER_OP_ENDS_WITH = &_CYPHER_OP_ENDS_WITH;
 // `l CONTAINS r`
 static const cypher_operator_t _CYPHER_OP_CONTAINS =
     { .precedence = 11, .associativity = LEFT_ASSOC, .str = "CONTAINS" };

@@ -93,6 +93,7 @@ struct cypher_astnode_vts
     const struct cypher_astnode_vt *slice_operator;
     const struct cypher_astnode_vt *labels_operator;
     const struct cypher_astnode_vt *list_comprehension;
+    const struct cypher_astnode_vt *pattern_comprehension;
     const struct cypher_astnode_vt *case_expression;
     const struct cypher_astnode_vt *filter;
     const struct cypher_astnode_vt *extract;
@@ -130,6 +131,12 @@ struct cypher_astnode_vts
     const struct cypher_astnode_vt *line_comment;
     const struct cypher_astnode_vt *block_comment;
     const struct cypher_astnode_vt *error;
+    const struct cypher_astnode_vt *map_projection;
+    const struct cypher_astnode_vt *map_projection_selector;
+    const struct cypher_astnode_vt *map_projection_literal;
+    const struct cypher_astnode_vt *map_projection_property;
+    const struct cypher_astnode_vt *map_projection_identifier;
+    const struct cypher_astnode_vt *map_projection_all_properties;
 };
 static const struct cypher_astnode_vts cypher_astnode_vts =
 {
@@ -203,6 +210,7 @@ static const struct cypher_astnode_vts cypher_astnode_vts =
     .slice_operator = &cypher_slice_operator_astnode_vt,
     .labels_operator = &cypher_labels_operator_astnode_vt,
     .list_comprehension = &cypher_list_comprehension_astnode_vt,
+    .pattern_comprehension = &cypher_pattern_comprehension_astnode_vt,
     .case_expression = &cypher_case_astnode_vt,
     .filter = &cypher_filter_astnode_vt,
     .extract = &cypher_extract_astnode_vt,
@@ -238,7 +246,14 @@ static const struct cypher_astnode_vts cypher_astnode_vts =
     .command = &cypher_command_astnode_vt,
     .line_comment = &cypher_line_comment_astnode_vt,
     .block_comment = &cypher_block_comment_astnode_vt,
-    .error = &cypher_error_astnode_vt
+    .error = &cypher_error_astnode_vt,
+    .map_projection = &cypher_map_projection_astnode_vt,
+    .map_projection_selector = &cypher_map_projection_selector_astnode_vt,
+    .map_projection_literal = &cypher_map_projection_literal_astnode_vt,
+    .map_projection_property = &cypher_map_projection_property_astnode_vt,
+    .map_projection_identifier = &cypher_map_projection_identifier_astnode_vt,
+    .map_projection_all_properties =
+            &cypher_map_projection_all_properties_astnode_vt
 };
 
 #define VT_OFFSET(name) offsetof(struct cypher_astnode_vts, name) \
@@ -322,6 +337,7 @@ const uint8_t CYPHER_AST_SUBSCRIPT_OPERATOR = VT_OFFSET(subscript_operator);
 const uint8_t CYPHER_AST_SLICE_OPERATOR = VT_OFFSET(slice_operator);
 const uint8_t CYPHER_AST_LABELS_OPERATOR = VT_OFFSET(labels_operator);
 const uint8_t CYPHER_AST_LIST_COMPREHENSION = VT_OFFSET(list_comprehension);
+const uint8_t CYPHER_AST_PATTERN_COMPREHENSION = VT_OFFSET(pattern_comprehension);
 const uint8_t CYPHER_AST_CASE = VT_OFFSET(case_expression);
 const uint8_t CYPHER_AST_FILTER = VT_OFFSET(filter);
 const uint8_t CYPHER_AST_EXTRACT = VT_OFFSET(extract);
@@ -359,6 +375,16 @@ const uint8_t CYPHER_AST_COMMENT = VT_OFFSET(comment);
 const uint8_t CYPHER_AST_LINE_COMMENT = VT_OFFSET(line_comment);
 const uint8_t CYPHER_AST_BLOCK_COMMENT = VT_OFFSET(block_comment);
 const uint8_t CYPHER_AST_ERROR = VT_OFFSET(error);
+const uint8_t CYPHER_AST_MAP_PROJECTION = VT_OFFSET(map_projection);
+const uint8_t CYPHER_AST_MAP_PROJECTION_SELECTOR = VT_OFFSET(map_projection_selector);
+const uint8_t CYPHER_AST_MAP_PROJECTION_LITERAL =
+        VT_OFFSET(map_projection_literal);
+const uint8_t CYPHER_AST_MAP_PROJECTION_PROPERTY =
+        VT_OFFSET(map_projection_property);
+const uint8_t CYPHER_AST_MAP_PROJECTION_IDENTIFIER =
+        VT_OFFSET(map_projection_identifier);
+const uint8_t CYPHER_AST_MAP_PROJECTION_ALL_PROPERTIES =
+        VT_OFFSET(map_projection_all_properties);
 static const uint8_t _MAX_VT_OFF =
     (sizeof(struct cypher_astnode_vts) / sizeof(struct cypher_astnode_vt *));
 
