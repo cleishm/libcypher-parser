@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>libcypher-parser-0.5.3: cypher-parser.h File Reference</title>
+<title>libcypher-parser-0.5.4: cypher-parser.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -18,7 +18,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">libcypher-parser-0.5.3
+   <div id="projectname">libcypher-parser-0.5.4
    </div>
   </td>
  </tr>
@@ -772,6 +772,42 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a292132b8159891f3197617df0d6766cc"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a292132b8159891f3197617df0d6766cc">cypher_ast_slice_operator_get_end</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *node)</td></tr>
 <tr class="memdesc:a292132b8159891f3197617df0d6766cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the end of a <code>CYPHER_AST_SLICE_OPERATOR</code> node.  <a href="#a292132b8159891f3197617df0d6766cc">More...</a><br /></td></tr>
 <tr class="separator:a292132b8159891f3197617df0d6766cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04e0aec94e2e00c3e28449f1e397580b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a04e0aec94e2e00c3e28449f1e397580b">cypher_ast_map_projection</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *expression, <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *const *selectors, unsigned int nselectors, <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> **children, unsigned int nchildren, struct <a class="el" href="structcypher__input__range.html">cypher_input_range</a> range)</td></tr>
+<tr class="memdesc:a04e0aec94e2e00c3e28449f1e397580b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <code>CYPHER_AST_MAP_PROJECTION</code> node.  <a href="#a04e0aec94e2e00c3e28449f1e397580b">More...</a><br /></td></tr>
+<tr class="separator:a04e0aec94e2e00c3e28449f1e397580b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7b2162fbe832c53ee065e6bd8df9c2b"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#ae7b2162fbe832c53ee065e6bd8df9c2b">cypher_ast_map_projection_get_expression</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *node)</td></tr>
+<tr class="memdesc:ae7b2162fbe832c53ee065e6bd8df9c2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the expression of a <code>CYPHER_AST_MAP_PROJECTION</code> node.  <a href="#ae7b2162fbe832c53ee065e6bd8df9c2b">More...</a><br /></td></tr>
+<tr class="separator:ae7b2162fbe832c53ee065e6bd8df9c2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafe90556458f1b319e842d9f41b7d91e"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#aafe90556458f1b319e842d9f41b7d91e">cypher_ast_map_projection_nselectors</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *node)</td></tr>
+<tr class="memdesc:aafe90556458f1b319e842d9f41b7d91e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of selectors in a <code>CYPHER_AST_MAP_PROJECTION</code> node.  <a href="#aafe90556458f1b319e842d9f41b7d91e">More...</a><br /></td></tr>
+<tr class="separator:aafe90556458f1b319e842d9f41b7d91e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5152f23a5cc3bd6cfcd251353965a8d8"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a5152f23a5cc3bd6cfcd251353965a8d8">cypher_ast_map_projection_get_selector</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *node, unsigned int index)</td></tr>
+<tr class="memdesc:a5152f23a5cc3bd6cfcd251353965a8d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a selector from a <code>CYPHER_AST_MAP_PROJECTION</code> node.  <a href="#a5152f23a5cc3bd6cfcd251353965a8d8">More...</a><br /></td></tr>
+<tr class="separator:a5152f23a5cc3bd6cfcd251353965a8d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae768c70883d1802118e8bc5f8248b869"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#ae768c70883d1802118e8bc5f8248b869">cypher_ast_map_projection_literal</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *prop_name, const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *expression, <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> **children, unsigned int nchildren, struct <a class="el" href="structcypher__input__range.html">cypher_input_range</a> range)</td></tr>
+<tr class="memdesc:ae768c70883d1802118e8bc5f8248b869"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <code>CYPHER_AST_MAP_PROJECTION_LITERAL</code> node.  <a href="#ae768c70883d1802118e8bc5f8248b869">More...</a><br /></td></tr>
+<tr class="separator:ae768c70883d1802118e8bc5f8248b869"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c436004783a577eba6ae1694e8e2a01"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a2c436004783a577eba6ae1694e8e2a01">cypher_ast_map_projection_literal_get_prop_name</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *node)</td></tr>
+<tr class="memdesc:a2c436004783a577eba6ae1694e8e2a01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the property name of a <code>CYPHER_AST_MAP_PROJECTION_LITERAL</code> node.  <a href="#a2c436004783a577eba6ae1694e8e2a01">More...</a><br /></td></tr>
+<tr class="separator:a2c436004783a577eba6ae1694e8e2a01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeae171227c74bee568e3d20619115c03"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#aeae171227c74bee568e3d20619115c03">cypher_ast_map_projection_literal_get_expression</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *node)</td></tr>
+<tr class="memdesc:aeae171227c74bee568e3d20619115c03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the expression of a <code>CYPHER_AST_MAP_PROJECTION_LITERAL</code> node.  <a href="#aeae171227c74bee568e3d20619115c03">More...</a><br /></td></tr>
+<tr class="separator:aeae171227c74bee568e3d20619115c03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af01289f725369c788d381a63af4ad8b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#af01289f725369c788d381a63af4ad8b3">cypher_ast_map_projection_property</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *prop_name, <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> **children, unsigned int nchildren, struct <a class="el" href="structcypher__input__range.html">cypher_input_range</a> range)</td></tr>
+<tr class="memdesc:af01289f725369c788d381a63af4ad8b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <code>CYPHER_AST_MAP_PROJECTION_PROPERTY</code> node.  <a href="#af01289f725369c788d381a63af4ad8b3">More...</a><br /></td></tr>
+<tr class="separator:af01289f725369c788d381a63af4ad8b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1c734e6f54c0c4955fa075d42a1ebf9"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#ab1c734e6f54c0c4955fa075d42a1ebf9">cypher_ast_map_projection_property_get_prop_name</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *node)</td></tr>
+<tr class="memdesc:ab1c734e6f54c0c4955fa075d42a1ebf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the property name of a <code>CYPHER_AST_MAP_PROJECTION_PROPERTY</code> node.  <a href="#ab1c734e6f54c0c4955fa075d42a1ebf9">More...</a><br /></td></tr>
+<tr class="separator:ab1c734e6f54c0c4955fa075d42a1ebf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64e3733fc158b9c023820a1a0655455f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a64e3733fc158b9c023820a1a0655455f">cypher_ast_map_projection_identifier</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *identifier, <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> **children, unsigned int nchildren, struct <a class="el" href="structcypher__input__range.html">cypher_input_range</a> range)</td></tr>
+<tr class="memdesc:a64e3733fc158b9c023820a1a0655455f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <code>CYPHER_AST_MAP_PROJECTION_IDENTIFIER</code> node.  <a href="#a64e3733fc158b9c023820a1a0655455f">More...</a><br /></td></tr>
+<tr class="separator:a64e3733fc158b9c023820a1a0655455f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fae855faa978c5f5b79d3a641f7725c"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a4fae855faa978c5f5b79d3a641f7725c">cypher_ast_map_projection_identifier_get_identifier</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *node)</td></tr>
+<tr class="memdesc:a4fae855faa978c5f5b79d3a641f7725c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the identifier of a <code>CYPHER_AST_MAP_PROJECTION_IDENTIFIER</code> node.  <a href="#a4fae855faa978c5f5b79d3a641f7725c">More...</a><br /></td></tr>
+<tr class="separator:a4fae855faa978c5f5b79d3a641f7725c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30c151c070975cf7e348775b3db2e7f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a30c151c070975cf7e348775b3db2e7f0">cypher_ast_map_projection_all_properties</a> (<a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> **children, unsigned int nchildren, struct <a class="el" href="structcypher__input__range.html">cypher_input_range</a> range)</td></tr>
+<tr class="memdesc:a30c151c070975cf7e348775b3db2e7f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <code>CYPHER_AST_MAP_PROJECTION_ALL_PROPERTIES</code> node.  <a href="#a30c151c070975cf7e348775b3db2e7f0">More...</a><br /></td></tr>
+<tr class="separator:a30c151c070975cf7e348775b3db2e7f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae163b7a9c3a9085047b23fea407c817c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#ae163b7a9c3a9085047b23fea407c817c">cypher_ast_labels_operator</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *expression, <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *const *labels, unsigned int nlabels, <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> **children, unsigned int nchildren, struct <a class="el" href="structcypher__input__range.html">cypher_input_range</a> range)</td></tr>
 <tr class="memdesc:ae163b7a9c3a9085047b23fea407c817c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <code>CYPHER_AST_LABELS_OPERATOR</code> node.  <a href="#ae163b7a9c3a9085047b23fea407c817c">More...</a><br /></td></tr>
 <tr class="separator:ae163b7a9c3a9085047b23fea407c817c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -817,6 +853,21 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a5b372991d2616aafe989971c2d5373f4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a5b372991d2616aafe989971c2d5373f4">cypher_ast_none</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *identifier, const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *expression, const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *predicate, <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> **children, unsigned int nchildren, struct <a class="el" href="structcypher__input__range.html">cypher_input_range</a> range)</td></tr>
 <tr class="memdesc:a5b372991d2616aafe989971c2d5373f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <code>CYPHER_AST_NONE</code> node.  <a href="#a5b372991d2616aafe989971c2d5373f4">More...</a><br /></td></tr>
 <tr class="separator:a5b372991d2616aafe989971c2d5373f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec36a29fc93e7ca1eac31624e4a2e757"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#aec36a29fc93e7ca1eac31624e4a2e757">cypher_ast_pattern_comprehension</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *identifier, const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *pattern, const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *predicate, const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *eval, <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> **children, unsigned int nchildren, struct <a class="el" href="structcypher__input__range.html">cypher_input_range</a> range)</td></tr>
+<tr class="memdesc:aec36a29fc93e7ca1eac31624e4a2e757"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <code>CYPHER_AST_PATTERN_COMPREHENSION</code> node.  <a href="#aec36a29fc93e7ca1eac31624e4a2e757">More...</a><br /></td></tr>
+<tr class="separator:aec36a29fc93e7ca1eac31624e4a2e757"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20d96263f5863b7da51990e393d972e4"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a20d96263f5863b7da51990e393d972e4">cypher_ast_pattern_comprehension_get_identifier</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *node)</td></tr>
+<tr class="memdesc:a20d96263f5863b7da51990e393d972e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the identifier from a <code>CYPHER_AST_PATTERN_COMPREHENSION</code> node.  <a href="#a20d96263f5863b7da51990e393d972e4">More...</a><br /></td></tr>
+<tr class="separator:a20d96263f5863b7da51990e393d972e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a552212f04c87b758af25c3eefe890c8c"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a552212f04c87b758af25c3eefe890c8c">cypher_ast_pattern_comprehension_get_pattern</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *node)</td></tr>
+<tr class="memdesc:a552212f04c87b758af25c3eefe890c8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the expression from a <code>CYPHER_AST_PATTERN_COMPREHENSION</code> node.  <a href="#a552212f04c87b758af25c3eefe890c8c">More...</a><br /></td></tr>
+<tr class="separator:a552212f04c87b758af25c3eefe890c8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f45a2f66c12419a393a349e1beae86b"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a6f45a2f66c12419a393a349e1beae86b">cypher_ast_pattern_comprehension_get_predicate</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *node)</td></tr>
+<tr class="memdesc:a6f45a2f66c12419a393a349e1beae86b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the predicate from a <code>CYPHER_AST_PATTERN_COMPREHENSION</code> node.  <a href="#a6f45a2f66c12419a393a349e1beae86b">More...</a><br /></td></tr>
+<tr class="separator:a6f45a2f66c12419a393a349e1beae86b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e253316f8046dd9e8d0a16d37284ed5"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a3e253316f8046dd9e8d0a16d37284ed5">cypher_ast_pattern_comprehension_get_eval</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *node)</td></tr>
+<tr class="memdesc:a3e253316f8046dd9e8d0a16d37284ed5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the evaluation from a <code>CYPHER_AST_PATTERN_COMPREHENSION</code> node.  <a href="#a3e253316f8046dd9e8d0a16d37284ed5">More...</a><br /></td></tr>
+<tr class="separator:a3e253316f8046dd9e8d0a16d37284ed5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4db3cc2a22543f8b26bd006d6470866"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#ac4db3cc2a22543f8b26bd006d6470866">cypher_ast_reduce</a> (const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *accumulator, const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *init, const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *identifier, const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *expression, const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *eval, <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> **children, unsigned int nchildren, struct <a class="el" href="structcypher__input__range.html">cypher_input_range</a> range)</td></tr>
 <tr class="memdesc:ac4db3cc2a22543f8b26bd006d6470866"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a <code>CYPHER_AST_REDUCE</code> node.  <a href="#ac4db3cc2a22543f8b26bd006d6470866">More...</a><br /></td></tr>
 <tr class="separator:ac4db3cc2a22543f8b26bd006d6470866"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1412,14 +1463,35 @@ Variables</h2></td></tr>
 <tr class="memdesc:a44f35c475e91675d703cd90565219d8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for an AST subscript operator node.  <a href="#a44f35c475e91675d703cd90565219d8c">More...</a><br /></td></tr>
 <tr class="separator:a44f35c475e91675d703cd90565219d8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac761f6b293811d757a20a10854eb901a"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a16f65198f3dc03adb7b197ed246040a3">cypher_astnode_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#ac761f6b293811d757a20a10854eb901a">CYPHER_AST_SLICE_OPERATOR</a></td></tr>
-<tr class="memdesc:ac761f6b293811d757a20a10854eb901a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for an AST subscript operator node.  <a href="#ac761f6b293811d757a20a10854eb901a">More...</a><br /></td></tr>
+<tr class="memdesc:ac761f6b293811d757a20a10854eb901a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for an AST slice operator node.  <a href="#ac761f6b293811d757a20a10854eb901a">More...</a><br /></td></tr>
 <tr class="separator:ac761f6b293811d757a20a10854eb901a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afee9a53a0c8c2562214ad7444ad38640"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a16f65198f3dc03adb7b197ed246040a3">cypher_astnode_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#afee9a53a0c8c2562214ad7444ad38640">CYPHER_AST_MAP_PROJECTION</a></td></tr>
+<tr class="memdesc:afee9a53a0c8c2562214ad7444ad38640"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for an AST map projection operator node.  <a href="#afee9a53a0c8c2562214ad7444ad38640">More...</a><br /></td></tr>
+<tr class="separator:afee9a53a0c8c2562214ad7444ad38640"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab676a95def3440d90d0bd80f21db4cc2"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a16f65198f3dc03adb7b197ed246040a3">cypher_astnode_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#ab676a95def3440d90d0bd80f21db4cc2">CYPHER_AST_MAP_PROJECTION_SELECTOR</a></td></tr>
+<tr class="memdesc:ab676a95def3440d90d0bd80f21db4cc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for an AST map projection selector node.  <a href="#ab676a95def3440d90d0bd80f21db4cc2">More...</a><br /></td></tr>
+<tr class="separator:ab676a95def3440d90d0bd80f21db4cc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f427d50c21709be0c772712cb7a2158"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a16f65198f3dc03adb7b197ed246040a3">cypher_astnode_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a6f427d50c21709be0c772712cb7a2158">CYPHER_AST_MAP_PROJECTION_LITERAL</a></td></tr>
+<tr class="memdesc:a6f427d50c21709be0c772712cb7a2158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for an AST map projection literal entry node.  <a href="#a6f427d50c21709be0c772712cb7a2158">More...</a><br /></td></tr>
+<tr class="separator:a6f427d50c21709be0c772712cb7a2158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7db953833fa650490ec6dda7233236ab"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a16f65198f3dc03adb7b197ed246040a3">cypher_astnode_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a7db953833fa650490ec6dda7233236ab">CYPHER_AST_MAP_PROJECTION_PROPERTY</a></td></tr>
+<tr class="memdesc:a7db953833fa650490ec6dda7233236ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for an AST map projection property entry node.  <a href="#a7db953833fa650490ec6dda7233236ab">More...</a><br /></td></tr>
+<tr class="separator:a7db953833fa650490ec6dda7233236ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12e7804a998ae65b53242b2354ab3f7c"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a16f65198f3dc03adb7b197ed246040a3">cypher_astnode_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a12e7804a998ae65b53242b2354ab3f7c">CYPHER_AST_MAP_PROJECTION_IDENTIFIER</a></td></tr>
+<tr class="memdesc:a12e7804a998ae65b53242b2354ab3f7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for an AST map projection identifier entry node.  <a href="#a12e7804a998ae65b53242b2354ab3f7c">More...</a><br /></td></tr>
+<tr class="separator:a12e7804a998ae65b53242b2354ab3f7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbb81c724c67980337575c9cba18b8d7"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a16f65198f3dc03adb7b197ed246040a3">cypher_astnode_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#afbb81c724c67980337575c9cba18b8d7">CYPHER_AST_MAP_PROJECTION_ALL_PROPERTIES</a></td></tr>
+<tr class="memdesc:afbb81c724c67980337575c9cba18b8d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for an AST map projection all properties entry node.  <a href="#afbb81c724c67980337575c9cba18b8d7">More...</a><br /></td></tr>
+<tr class="separator:afbb81c724c67980337575c9cba18b8d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aafcdfffc0d559a701ba48e3ff5b69d25"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a16f65198f3dc03adb7b197ed246040a3">cypher_astnode_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#aafcdfffc0d559a701ba48e3ff5b69d25">CYPHER_AST_LABELS_OPERATOR</a></td></tr>
 <tr class="memdesc:aafcdfffc0d559a701ba48e3ff5b69d25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for an AST label check operator node.  <a href="#aafcdfffc0d559a701ba48e3ff5b69d25">More...</a><br /></td></tr>
 <tr class="separator:aafcdfffc0d559a701ba48e3ff5b69d25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae68e349e46f94242dfb6ccf36c9ec522"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a16f65198f3dc03adb7b197ed246040a3">cypher_astnode_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#ae68e349e46f94242dfb6ccf36c9ec522">CYPHER_AST_LIST_COMPREHENSION</a></td></tr>
 <tr class="memdesc:ae68e349e46f94242dfb6ccf36c9ec522"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for an AST list comprehension node.  <a href="#ae68e349e46f94242dfb6ccf36c9ec522">More...</a><br /></td></tr>
 <tr class="separator:ae68e349e46f94242dfb6ccf36c9ec522"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03fd83e2bfee0b66508ef64578f5b310"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a16f65198f3dc03adb7b197ed246040a3">cypher_astnode_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a03fd83e2bfee0b66508ef64578f5b310">CYPHER_AST_PATTERN_COMPREHENSION</a></td></tr>
+<tr class="memdesc:a03fd83e2bfee0b66508ef64578f5b310"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for an AST pattern comprehension node.  <a href="#a03fd83e2bfee0b66508ef64578f5b310">More...</a><br /></td></tr>
+<tr class="separator:a03fd83e2bfee0b66508ef64578f5b310"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c55bd3f48057cdadd4b1e40f86011f7"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a16f65198f3dc03adb7b197ed246040a3">cypher_astnode_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a5c55bd3f48057cdadd4b1e40f86011f7">CYPHER_AST_CASE</a></td></tr>
 <tr class="memdesc:a5c55bd3f48057cdadd4b1e40f86011f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for an AST CASE expression node.  <a href="#a5c55bd3f48057cdadd4b1e40f86011f7">More...</a><br /></td></tr>
 <tr class="separator:a5c55bd3f48057cdadd4b1e40f86011f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1588,6 +1660,9 @@ Variables</h2></td></tr>
 <tr class="memitem:a69061f61ecca3072ddf6c826a85fd8a0"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a5b153aef719b467f8fc012e6c272ef26">cypher_operator_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a69061f61ecca3072ddf6c826a85fd8a0">CYPHER_OP_SUBSCRIPT</a></td></tr>
 <tr class="memdesc:a69061f61ecca3072ddf6c826a85fd8a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The postfix binary subscript (<code>[exp]</code>) operator.  <a href="#a69061f61ecca3072ddf6c826a85fd8a0">More...</a><br /></td></tr>
 <tr class="separator:a69061f61ecca3072ddf6c826a85fd8a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59306341943376c220e2cba29be9589f"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a5b153aef719b467f8fc012e6c272ef26">cypher_operator_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a59306341943376c220e2cba29be9589f">CYPHER_OP_MAP_PROJECTION</a></td></tr>
+<tr class="memdesc:a59306341943376c220e2cba29be9589f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The postfix binary map projection (<code>{exp}</code>) operator.  <a href="#a59306341943376c220e2cba29be9589f">More...</a><br /></td></tr>
+<tr class="separator:a59306341943376c220e2cba29be9589f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a571dcef9971ec032d3eb62c6a77af68f"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a5b153aef719b467f8fc012e6c272ef26">cypher_operator_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a571dcef9971ec032d3eb62c6a77af68f">CYPHER_OP_REGEX</a></td></tr>
 <tr class="memdesc:a571dcef9971ec032d3eb62c6a77af68f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The infix binary <code>=~</code> operator.  <a href="#a571dcef9971ec032d3eb62c6a77af68f">More...</a><br /></td></tr>
 <tr class="separator:a571dcef9971ec032d3eb62c6a77af68f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1597,14 +1672,17 @@ Variables</h2></td></tr>
 <tr class="memitem:a7e034db5cddd1653b3d4d79a258dffc2"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a5b153aef719b467f8fc012e6c272ef26">cypher_operator_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a7e034db5cddd1653b3d4d79a258dffc2">CYPHER_OP_STARTS_WITH</a></td></tr>
 <tr class="memdesc:a7e034db5cddd1653b3d4d79a258dffc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The infix binary <code>STARTS WITH</code> operator.  <a href="#a7e034db5cddd1653b3d4d79a258dffc2">More...</a><br /></td></tr>
 <tr class="separator:a7e034db5cddd1653b3d4d79a258dffc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ff2fbfb306b41fa1d7b6ffadad99fc8"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a5b153aef719b467f8fc012e6c272ef26">cypher_operator_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a2ff2fbfb306b41fa1d7b6ffadad99fc8">CYPHER_OP_ENDS_WITH</a></td></tr>
+<tr class="memdesc:a2ff2fbfb306b41fa1d7b6ffadad99fc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The infix binary <code>ENDS WITH</code> operator.  <a href="#a2ff2fbfb306b41fa1d7b6ffadad99fc8">More...</a><br /></td></tr>
+<tr class="separator:a2ff2fbfb306b41fa1d7b6ffadad99fc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa86237d998763c6766a368d7b22da032"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a5b153aef719b467f8fc012e6c272ef26">cypher_operator_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#aa86237d998763c6766a368d7b22da032">CYPHER_OP_CONTAINS</a></td></tr>
 <tr class="memdesc:aa86237d998763c6766a368d7b22da032"><td class="mdescLeft">&#160;</td><td class="mdescRight">The infix binary <code>CONTAINS</code> operator.  <a href="#aa86237d998763c6766a368d7b22da032">More...</a><br /></td></tr>
 <tr class="separator:aa86237d998763c6766a368d7b22da032"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad40cf1e32c6a1c224a465565219a2551"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a5b153aef719b467f8fc012e6c272ef26">cypher_operator_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#ad40cf1e32c6a1c224a465565219a2551">CYPHER_OP_IS_NULL</a></td></tr>
-<tr class="memdesc:ad40cf1e32c6a1c224a465565219a2551"><td class="mdescLeft">&#160;</td><td class="mdescRight">The infix binary <code>IS NULL</code> operator.  <a href="#ad40cf1e32c6a1c224a465565219a2551">More...</a><br /></td></tr>
+<tr class="memdesc:ad40cf1e32c6a1c224a465565219a2551"><td class="mdescLeft">&#160;</td><td class="mdescRight">The postfix unary <code>IS NULL</code> operator.  <a href="#ad40cf1e32c6a1c224a465565219a2551">More...</a><br /></td></tr>
 <tr class="separator:ad40cf1e32c6a1c224a465565219a2551"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc6f9211489d2a41e68d089f60ac54cb"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a5b153aef719b467f8fc012e6c272ef26">cypher_operator_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#abc6f9211489d2a41e68d089f60ac54cb">CYPHER_OP_IS_NOT_NULL</a></td></tr>
-<tr class="memdesc:abc6f9211489d2a41e68d089f60ac54cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">The infix binary <code>IS NOT NULL</code> operator.  <a href="#abc6f9211489d2a41e68d089f60ac54cb">More...</a><br /></td></tr>
+<tr class="memdesc:abc6f9211489d2a41e68d089f60ac54cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">The postfix unary <code>IS NOT NULL</code> operator.  <a href="#abc6f9211489d2a41e68d089f60ac54cb">More...</a><br /></td></tr>
 <tr class="separator:abc6f9211489d2a41e68d089f60ac54cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a892582d135fd984eb2d3524a9bb9d81b"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="cypher-parser_8h.html#a5b153aef719b467f8fc012e6c272ef26">cypher_operator_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cypher-parser_8h.html#a892582d135fd984eb2d3524a9bb9d81b">CYPHER_OP_PROPERTY</a></td></tr>
 <tr class="memdesc:a892582d135fd984eb2d3524a9bb9d81b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The infix binary property lookup (<code>l.r</code>) operator.  <a href="#a892582d135fd984eb2d3524a9bb9d81b">More...</a><br /></td></tr>
@@ -4048,7 +4126,7 @@ Variables</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">[version]</td><td>A version node of type <code>CYPHER_AST_STRING</code>, or null. </td></tr>
     <tr><td class="paramname">[params]</td><td>Parameters for the option, all of type <code>CYPHER_AST_CYPHER_OPTION_PARAM</code>. </td></tr>
-    <tr><td class="paramname">[nparams]</td><td>The number of parameters (maybe zero). </td></tr>
+    <tr><td class="paramname">[nparams]</td><td>The number of parameters (may be zero). </td></tr>
     <tr><td class="paramname">[children]</td><td>The children of the node. </td></tr>
     <tr><td class="paramname">[nchildren]</td><td>The number of children. </td></tr>
     <tr><td class="paramname">[range]</td><td>The input range. </td></tr>
@@ -6286,7 +6364,7 @@ Variables</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A <code>CYPHER_AST_IDENTIFIER</code> node. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A <code>CYPHER_AST_EXPRESSION</code> node. </dd></dl>
 
 </div>
 </div>
@@ -6702,6 +6780,492 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The number of entries. </dd></dl>
+
+</div>
+</div>
+<a id="a04e0aec94e2e00c3e28449f1e397580b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04e0aec94e2e00c3e28449f1e397580b">&#9670;&nbsp;</a></span>cypher_ast_map_projection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_ast_map_projection </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td>
+          <td class="paramname"><em>expression</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *const *&#160;</td>
+          <td class="paramname"><em>selectors</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>nselectors</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> **&#160;</td>
+          <td class="paramname"><em>children</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>nchildren</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structcypher__input__range.html">cypher_input_range</a>&#160;</td>
+          <td class="paramname"><em>range</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Construct a <code>CYPHER_AST_MAP_PROJECTION</code> node. </p>
+<p>The node will also be an instance of <code>CYPHER_AST_EXPRESSION</code>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">[expression]</td><td>A <code>CYPHER_AST_EXPRESSION</code> node. </td></tr>
+    <tr><td class="paramname">[selectors]</td><td>Selectors for the projection, all of type <code>CYPHER_AST_MAP_PROJECTION_SELECTOR</code>. </td></tr>
+    <tr><td class="paramname">[nselectors]</td><td>The number of selectors (may be zero). </td></tr>
+    <tr><td class="paramname">[children]</td><td>The children of the node. </td></tr>
+    <tr><td class="paramname">[nchildren]</td><td>The number of children. </td></tr>
+    <tr><td class="paramname">[range]</td><td>The input range. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An AST node, or NULL if an error occurs (errno will be set). </dd></dl>
+
+</div>
+</div>
+<a id="a30c151c070975cf7e348775b3db2e7f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30c151c070975cf7e348775b3db2e7f0">&#9670;&nbsp;</a></span>cypher_ast_map_projection_all_properties()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_ast_map_projection_all_properties </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> **&#160;</td>
+          <td class="paramname"><em>children</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>nchildren</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structcypher__input__range.html">cypher_input_range</a>&#160;</td>
+          <td class="paramname"><em>range</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Construct a <code>CYPHER_AST_MAP_PROJECTION_ALL_PROPERTIES</code> node. </p>
+<p>The node will also be an instance of <code>CYPHER_AST_MAP_PROJECTION_SELECTOR</code>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">[children]</td><td>The children of the node. </td></tr>
+    <tr><td class="paramname">[nchildren]</td><td>The number of children. </td></tr>
+    <tr><td class="paramname">[range]</td><td>The input range. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An AST node, or NULL if an error occurs (errno will be set). </dd></dl>
+
+</div>
+</div>
+<a id="ae7b2162fbe832c53ee065e6bd8df9c2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7b2162fbe832c53ee065e6bd8df9c2b">&#9670;&nbsp;</a></span>cypher_ast_map_projection_get_expression()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_ast_map_projection_get_expression </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td>
+          <td class="paramname"><em>node</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the expression of a <code>CYPHER_AST_MAP_PROJECTION</code> node. </p>
+<p>If the node is not an instance of <code>CYPHER_AST_MAP_PROJECTION</code> then the result will be undefined.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">[node]</td><td>The AST node. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <code>CYPHER_AST_EXPRESSION</code> node. </dd></dl>
+
+</div>
+</div>
+<a id="a5152f23a5cc3bd6cfcd251353965a8d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5152f23a5cc3bd6cfcd251353965a8d8">&#9670;&nbsp;</a></span>cypher_ast_map_projection_get_selector()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_ast_map_projection_get_selector </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td>
+          <td class="paramname"><em>node</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get a selector from a <code>CYPHER_AST_MAP_PROJECTION</code> node. </p>
+<p>If the node is not an instance of <code>CYPHER_AST_MAP_PROJECTION</code> then the result will be undefined.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">[node]</td><td>The AST node. </td></tr>
+    <tr><td class="paramname">[index]</td><td>The index of the selector. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <code>CYPHER_AST_MAP_PROJECTION_SELECTOR</code> node, or null. </dd></dl>
+
+</div>
+</div>
+<a id="a64e3733fc158b9c023820a1a0655455f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a64e3733fc158b9c023820a1a0655455f">&#9670;&nbsp;</a></span>cypher_ast_map_projection_identifier()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_ast_map_projection_identifier </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td>
+          <td class="paramname"><em>identifier</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> **&#160;</td>
+          <td class="paramname"><em>children</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>nchildren</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structcypher__input__range.html">cypher_input_range</a>&#160;</td>
+          <td class="paramname"><em>range</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Construct a <code>CYPHER_AST_MAP_PROJECTION_IDENTIFIER</code> node. </p>
+<p>The node will also be an instance of <code>CYPHER_AST_MAP_PROJECTION_SELECTOR</code>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">[identifier]</td><td>A <code>CYPHER_AST_IDENTIFIER</code> node. </td></tr>
+    <tr><td class="paramname">[children]</td><td>The children of the node. </td></tr>
+    <tr><td class="paramname">[nchildren]</td><td>The number of children. </td></tr>
+    <tr><td class="paramname">[range]</td><td>The input range. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An AST node, or NULL if an error occurs (errno will be set). </dd></dl>
+
+</div>
+</div>
+<a id="a4fae855faa978c5f5b79d3a641f7725c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4fae855faa978c5f5b79d3a641f7725c">&#9670;&nbsp;</a></span>cypher_ast_map_projection_identifier_get_identifier()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_ast_map_projection_identifier_get_identifier </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td>
+          <td class="paramname"><em>node</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the identifier of a <code>CYPHER_AST_MAP_PROJECTION_IDENTIFIER</code> node. </p>
+<p>If the node is not an instance of <code>CYPHER_AST_MAP_PROJECTION_IDENTIFIER</code> then the result will be undefined.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">[node]</td><td>The AST node. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <code>CYPHER_AST_IDENTIFIER</code> node. </dd></dl>
+
+</div>
+</div>
+<a id="ae768c70883d1802118e8bc5f8248b869"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae768c70883d1802118e8bc5f8248b869">&#9670;&nbsp;</a></span>cypher_ast_map_projection_literal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_ast_map_projection_literal </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td>
+          <td class="paramname"><em>prop_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td>
+          <td class="paramname"><em>expression</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> **&#160;</td>
+          <td class="paramname"><em>children</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>nchildren</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structcypher__input__range.html">cypher_input_range</a>&#160;</td>
+          <td class="paramname"><em>range</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Construct a <code>CYPHER_AST_MAP_PROJECTION_LITERAL</code> node. </p>
+<p>The node will also be an instance of <code>CYPHER_AST_MAP_PROJECTION_SELECTOR</code>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">[prop_name]</td><td>A <code>CYPHER_AST_PROP_NAME</code> node. </td></tr>
+    <tr><td class="paramname">[expression]</td><td>A <code>CYPHER_AST_EXPRESSION</code> node. </td></tr>
+    <tr><td class="paramname">[children]</td><td>The children of the node. </td></tr>
+    <tr><td class="paramname">[nchildren]</td><td>The number of children. </td></tr>
+    <tr><td class="paramname">[range]</td><td>The input range. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An AST node, or NULL if an error occurs (errno will be set). </dd></dl>
+
+</div>
+</div>
+<a id="aeae171227c74bee568e3d20619115c03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeae171227c74bee568e3d20619115c03">&#9670;&nbsp;</a></span>cypher_ast_map_projection_literal_get_expression()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_ast_map_projection_literal_get_expression </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td>
+          <td class="paramname"><em>node</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the expression of a <code>CYPHER_AST_MAP_PROJECTION_LITERAL</code> node. </p>
+<p>If the node is not an instance of <code>CYPHER_AST_MAP_PROJECTION_LITERAL</code> then the result will be undefined.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">[node]</td><td>The AST node. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <code>CYPHER_AST_EXPRESSION</code> node. </dd></dl>
+
+</div>
+</div>
+<a id="a2c436004783a577eba6ae1694e8e2a01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c436004783a577eba6ae1694e8e2a01">&#9670;&nbsp;</a></span>cypher_ast_map_projection_literal_get_prop_name()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_ast_map_projection_literal_get_prop_name </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td>
+          <td class="paramname"><em>node</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the property name of a <code>CYPHER_AST_MAP_PROJECTION_LITERAL</code> node. </p>
+<p>If the node is not an instance of <code>CYPHER_AST_MAP_PROJECTION_LITERAL</code> then the result will be undefined.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">[node]</td><td>The AST node. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <code>CYPHER_AST_PROP_NAME</code> node. </dd></dl>
+
+</div>
+</div>
+<a id="aafe90556458f1b319e842d9f41b7d91e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aafe90556458f1b319e842d9f41b7d91e">&#9670;&nbsp;</a></span>cypher_ast_map_projection_nselectors()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int cypher_ast_map_projection_nselectors </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td>
+          <td class="paramname"><em>node</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the number of selectors in a <code>CYPHER_AST_MAP_PROJECTION</code> node. </p>
+<p>If the node is not an instance of <code>CYPHER_AST_MAP_PROJECTION</code> then the result will be undefined.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">[node]</td><td>The AST node. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The number of selectors. </dd></dl>
+
+</div>
+</div>
+<a id="af01289f725369c788d381a63af4ad8b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af01289f725369c788d381a63af4ad8b3">&#9670;&nbsp;</a></span>cypher_ast_map_projection_property()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_ast_map_projection_property </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td>
+          <td class="paramname"><em>prop_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> **&#160;</td>
+          <td class="paramname"><em>children</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>nchildren</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structcypher__input__range.html">cypher_input_range</a>&#160;</td>
+          <td class="paramname"><em>range</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Construct a <code>CYPHER_AST_MAP_PROJECTION_PROPERTY</code> node. </p>
+<p>The node will also be an instance of <code>CYPHER_AST_MAP_PROJECTION_SELECTOR</code>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">[prop_name]</td><td>A <code>CYPHER_AST_PROP_NAME</code> node. </td></tr>
+    <tr><td class="paramname">[children]</td><td>The children of the node. </td></tr>
+    <tr><td class="paramname">[nchildren]</td><td>The number of children. </td></tr>
+    <tr><td class="paramname">[range]</td><td>The input range. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An AST node, or NULL if an error occurs (errno will be set). </dd></dl>
+
+</div>
+</div>
+<a id="ab1c734e6f54c0c4955fa075d42a1ebf9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1c734e6f54c0c4955fa075d42a1ebf9">&#9670;&nbsp;</a></span>cypher_ast_map_projection_property_get_prop_name()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_ast_map_projection_property_get_prop_name </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td>
+          <td class="paramname"><em>node</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the property name of a <code>CYPHER_AST_MAP_PROJECTION_PROPERTY</code> node. </p>
+<p>If the node is not an instance of <code>CYPHER_AST_MAP_PROJECTION_PROPERTY</code> then the result will be undefined.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">[node]</td><td>The AST node. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <code>CYPHER_AST_PROP_NAME</code> node. </dd></dl>
 
 </div>
 </div>
@@ -8691,6 +9255,192 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An AST node, or NULL if an error occurs (errno will be set). </dd></dl>
+
+</div>
+</div>
+<a id="aec36a29fc93e7ca1eac31624e4a2e757"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec36a29fc93e7ca1eac31624e4a2e757">&#9670;&nbsp;</a></span>cypher_ast_pattern_comprehension()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_ast_pattern_comprehension </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td>
+          <td class="paramname"><em>identifier</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td>
+          <td class="paramname"><em>pattern</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td>
+          <td class="paramname"><em>predicate</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td>
+          <td class="paramname"><em>eval</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> **&#160;</td>
+          <td class="paramname"><em>children</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>nchildren</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structcypher__input__range.html">cypher_input_range</a>&#160;</td>
+          <td class="paramname"><em>range</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Construct a <code>CYPHER_AST_PATTERN_COMPREHENSION</code> node. </p>
+<p>The node will also be an instance of <code>CYPHER_AST_EXPRESSION</code>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">[identifier]</td><td>A <code>CYPHER_AST_IDENTIFIER</code> node, or null. </td></tr>
+    <tr><td class="paramname">[pattern]</td><td>A <code>CYPHER_AST_PATTERN</code> node. </td></tr>
+    <tr><td class="paramname">[predicate]</td><td>A <code>CYPHER_AST_EXPRESSION</code> node, or null. </td></tr>
+    <tr><td class="paramname">[eval]</td><td>A <code>CYPHER_AST_EXPRESSION</code> node. </td></tr>
+    <tr><td class="paramname">[children]</td><td>The children of the node. </td></tr>
+    <tr><td class="paramname">[nchildren]</td><td>The number of children. </td></tr>
+    <tr><td class="paramname">[range]</td><td>The input range. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An AST node, or NULL if an error occurs (errno will be set). </dd></dl>
+
+</div>
+</div>
+<a id="a3e253316f8046dd9e8d0a16d37284ed5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e253316f8046dd9e8d0a16d37284ed5">&#9670;&nbsp;</a></span>cypher_ast_pattern_comprehension_get_eval()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_ast_pattern_comprehension_get_eval </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td>
+          <td class="paramname"><em>node</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the evaluation from a <code>CYPHER_AST_PATTERN_COMPREHENSION</code> node. </p>
+<p>If the node is not an instance of <code>CYPHER_AST_PATTERN_COMPREHENSION</code> then the result will be undefined.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">[node]</td><td>The AST node. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <code>CYPHER_AST_EXPRESSION</code> node. </dd></dl>
+
+</div>
+</div>
+<a id="a20d96263f5863b7da51990e393d972e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20d96263f5863b7da51990e393d972e4">&#9670;&nbsp;</a></span>cypher_ast_pattern_comprehension_get_identifier()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_ast_pattern_comprehension_get_identifier </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td>
+          <td class="paramname"><em>node</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the identifier from a <code>CYPHER_AST_PATTERN_COMPREHENSION</code> node. </p>
+<p>If the node is not an instance of <code>CYPHER_AST_PATTERN_COMPREHENSION</code> then the result will be undefined.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">[node]</td><td>The AST node. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <code>CYPHER_AST_IDENTIFIER</code> node, or null. </dd></dl>
+
+</div>
+</div>
+<a id="a552212f04c87b758af25c3eefe890c8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a552212f04c87b758af25c3eefe890c8c">&#9670;&nbsp;</a></span>cypher_ast_pattern_comprehension_get_pattern()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_ast_pattern_comprehension_get_pattern </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td>
+          <td class="paramname"><em>node</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the expression from a <code>CYPHER_AST_PATTERN_COMPREHENSION</code> node. </p>
+<p>If the node is not an instance of <code>CYPHER_AST_PATTERN_COMPREHENSION</code> then the result will be undefined.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">[node]</td><td>The AST node. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <code>CYPHER_AST_PATTERN_PATH</code> node. </dd></dl>
+
+</div>
+</div>
+<a id="a6f45a2f66c12419a393a349e1beae86b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f45a2f66c12419a393a349e1beae86b">&#9670;&nbsp;</a></span>cypher_ast_pattern_comprehension_get_predicate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a>* cypher_ast_pattern_comprehension_get_predicate </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="cypher-parser_8h.html#abc3b8a1d6f53513a1908a095f5a30821">cypher_astnode_t</a> *&#160;</td>
+          <td class="paramname"><em>node</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the predicate from a <code>CYPHER_AST_PATTERN_COMPREHENSION</code> node. </p>
+<p>If the node is not an instance of <code>CYPHER_AST_PATTERN_COMPREHENSION</code> then the result will be undefined.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">[node]</td><td>The AST node. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <code>CYPHER_AST_EXPRESSION</code> node, or null. </dd></dl>
 
 </div>
 </div>
@@ -16553,6 +17303,102 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="afee9a53a0c8c2562214ad7444ad38640"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afee9a53a0c8c2562214ad7444ad38640">&#9670;&nbsp;</a></span>CYPHER_AST_MAP_PROJECTION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#a16f65198f3dc03adb7b197ed246040a3">cypher_astnode_type_t</a> CYPHER_AST_MAP_PROJECTION</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Type for an AST map projection operator node. </p>
+
+</div>
+</div>
+<a id="afbb81c724c67980337575c9cba18b8d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbb81c724c67980337575c9cba18b8d7">&#9670;&nbsp;</a></span>CYPHER_AST_MAP_PROJECTION_ALL_PROPERTIES</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#a16f65198f3dc03adb7b197ed246040a3">cypher_astnode_type_t</a> CYPHER_AST_MAP_PROJECTION_ALL_PROPERTIES</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Type for an AST map projection all properties entry node. </p>
+
+</div>
+</div>
+<a id="a12e7804a998ae65b53242b2354ab3f7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12e7804a998ae65b53242b2354ab3f7c">&#9670;&nbsp;</a></span>CYPHER_AST_MAP_PROJECTION_IDENTIFIER</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#a16f65198f3dc03adb7b197ed246040a3">cypher_astnode_type_t</a> CYPHER_AST_MAP_PROJECTION_IDENTIFIER</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Type for an AST map projection identifier entry node. </p>
+
+</div>
+</div>
+<a id="a6f427d50c21709be0c772712cb7a2158"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f427d50c21709be0c772712cb7a2158">&#9670;&nbsp;</a></span>CYPHER_AST_MAP_PROJECTION_LITERAL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#a16f65198f3dc03adb7b197ed246040a3">cypher_astnode_type_t</a> CYPHER_AST_MAP_PROJECTION_LITERAL</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Type for an AST map projection literal entry node. </p>
+
+</div>
+</div>
+<a id="a7db953833fa650490ec6dda7233236ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7db953833fa650490ec6dda7233236ab">&#9670;&nbsp;</a></span>CYPHER_AST_MAP_PROJECTION_PROPERTY</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#a16f65198f3dc03adb7b197ed246040a3">cypher_astnode_type_t</a> CYPHER_AST_MAP_PROJECTION_PROPERTY</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Type for an AST map projection property entry node. </p>
+
+</div>
+</div>
+<a id="ab676a95def3440d90d0bd80f21db4cc2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab676a95def3440d90d0bd80f21db4cc2">&#9670;&nbsp;</a></span>CYPHER_AST_MAP_PROJECTION_SELECTOR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#a16f65198f3dc03adb7b197ed246040a3">cypher_astnode_type_t</a> CYPHER_AST_MAP_PROJECTION_SELECTOR</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Type for an AST map projection selector node. </p>
+
+</div>
+</div>
 <a id="a5fb75563991088a075fed7a0ec865a12"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5fb75563991088a075fed7a0ec865a12">&#9670;&nbsp;</a></span>CYPHER_AST_MATCH</h2>
 
@@ -16822,6 +17668,22 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Type for an AST pattern node. </p>
+
+</div>
+</div>
+<a id="a03fd83e2bfee0b66508ef64578f5b310"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03fd83e2bfee0b66508ef64578f5b310">&#9670;&nbsp;</a></span>CYPHER_AST_PATTERN_COMPREHENSION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#a16f65198f3dc03adb7b197ed246040a3">cypher_astnode_type_t</a> CYPHER_AST_PATTERN_COMPREHENSION</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Type for an AST pattern comprehension node. </p>
 
 </div>
 </div>
@@ -17301,7 +18163,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Type for an AST subscript operator node. </p>
+<p>Type for an AST slice operator node. </p>
 
 </div>
 </div>
@@ -17609,6 +18471,22 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a2ff2fbfb306b41fa1d7b6ffadad99fc8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ff2fbfb306b41fa1d7b6ffadad99fc8">&#9670;&nbsp;</a></span>CYPHER_OP_ENDS_WITH</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#a5b153aef719b467f8fc012e6c272ef26">cypher_operator_t</a>* CYPHER_OP_ENDS_WITH</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The infix binary <code>ENDS WITH</code> operator. </p>
+
+</div>
+</div>
 <a id="a65228046e4407da20c0a18969d965d6b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a65228046e4407da20c0a18969d965d6b">&#9670;&nbsp;</a></span>CYPHER_OP_EQUAL</h2>
 
@@ -17685,7 +18563,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>The infix binary <code>IS NOT NULL</code> operator. </p>
+<p>The postfix unary <code>IS NOT NULL</code> operator. </p>
 
 </div>
 </div>
@@ -17701,7 +18579,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>The infix binary <code>IS NULL</code> operator. </p>
+<p>The postfix unary <code>IS NULL</code> operator. </p>
 
 </div>
 </div>
@@ -17750,6 +18628,22 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The n-ary <code>&lt;=</code> operator. </p>
+
+</div>
+</div>
+<a id="a59306341943376c220e2cba29be9589f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59306341943376c220e2cba29be9589f">&#9670;&nbsp;</a></span>CYPHER_OP_MAP_PROJECTION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="cypher-parser_8h.html#a5b153aef719b467f8fc012e6c272ef26">cypher_operator_t</a>* CYPHER_OP_MAP_PROJECTION</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The postfix binary map projection (<code>{exp}</code>) operator. </p>
 
 </div>
 </div>
