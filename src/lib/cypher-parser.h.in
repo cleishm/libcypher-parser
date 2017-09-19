@@ -1,6 +1,6 @@
 /* vi:set ts=4 sw=4 expandtab:
  *
- * src/lib/cypher-parser.h.  Generated from cypher-parser.h.in by configure.
+ * @configure_input@
  *
  * Copyright 2016, Chris Leishman (http://github.com/cleishm)
  *
@@ -61,16 +61,16 @@ extern "C" {
 /* Compile time version details.
  * For runtime version inspection, use libcypher_parser_version() instead.
  */
-#define CYPHER_PARSER_VERSION "0.5.5"
-#define CYPHER_PARSER_MAJOR_VERSION 0
-#define CYPHER_PARSER_MINOR_VERSION 5
-#define CYPHER_PARSER_PATCH_VERSION 5
-#define CYPHER_PARSER_DEVELOPMENT_VERSION ""
+#define CYPHER_PARSER_VERSION "@PACKAGE_VERSION@"
+#define CYPHER_PARSER_MAJOR_VERSION @PACKAGE_MAJOR_VERSION@
+#define CYPHER_PARSER_MINOR_VERSION @PACKAGE_MINOR_VERSION@
+#define CYPHER_PARSER_PATCH_VERSION @PACKAGE_PATCH_VERSION@
+#define CYPHER_PARSER_DEVELOPMENT_VERSION "@PACKAGE_DEVELOPMENT_VERSION@"
 
 #define CYPHER_PARSER_VERSION_NUMBER \
     ((CYPHER_PARSER_MAJOR_VERSION << 20) | \
     (CYPHER_PARSER_MINOR_VERSION << 12) | \
-    (CYPHER_PARSER_PATCH_VERSION << 4) | 1)
+    (CYPHER_PARSER_PATCH_VERSION << 4) | @PACKAGE_STATUS_VERSION@)
 
 /**
  * The version string for libcypher-parser.
