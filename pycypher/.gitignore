@@ -1,0 +1,4 @@
+/pycypher/bindings.so
+/build
+/pycypher/*.pyc
+/tests/*.pyc
