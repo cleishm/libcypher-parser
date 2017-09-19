@@ -14,13 +14,14 @@
 #
 dnl Process this file with autoconf to produce a configure script
 AC_PREREQ([2.69])
-AC_INIT([libcypher-parser],[0.5.4])
-AC_CONFIG_SRCDIR([src/lib/cypher-parser.h])
+AC_INIT([libcypher-parser],[0.5.5])
+AC_CONFIG_SRCDIR([src/lib/cypher-parser.h.in])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([foreign])
 AC_CONFIG_HEADER([config.h])
 AM_MAINTAINER_MODE([enable])
 
+DECLARE_VERSIONS
 WITH_LIBS
 
 GCC_CFLAGS="-fvisibility=hidden -pipe -Wall -W -Werror \
@@ -57,7 +58,7 @@ AC_CHECK_HEADERS([endian.h sys/endian.h libkern/OSByteOrder.h])
 AC_TYPE_SIZE_T
 AC_TYPE_SSIZE_T
 AC_FUNC_STRERROR_R
-MACRO_STATIC_ASSERT
+STATIC_ASSERT
 LT_LIB_M
 
 
@@ -113,6 +114,7 @@ AC_CONFIG_FILES([
     m4/Makefile \
     src/Makefile \
     src/bin/Makefile \
+    src/lib/cypher-parser.h \
     src/lib/Makefile \
     tests/Makefile
 ])

@@ -14,7 +14,7 @@
 #
 Summary: Parsing library for the Cypher query language
 Name: libcypher-parser
-Version: 0.5.4
+Version: 0.5.5
 Release: 1%{?dist}
 Group: System Environment/Libraries
 License: Apache-2.0
@@ -123,6 +123,8 @@ used to output the Abstract Syntax Tree (AST) of the parsed input.
 #------------------------------------------------------------------------------
 
 %changelog
+* Tue Sep 19 2017 Chris Leishman <chris@leishman.org> - 0.5.5-1
+- New upstream release
 * Thu Sep 07 2017 Chris Leishman <chris@leishman.org> - 0.5.4-1
 - New upstream release
 * Thu May 25 2017 Chris Leishman <chris@leishman.org> - 0.5.3-1

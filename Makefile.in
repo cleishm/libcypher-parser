@@ -134,11 +134,12 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_prog_doxygen.m4 \
 	$(top_srcdir)/m4/ax_pthread.m4 \
 	$(top_srcdir)/m4/ax_thread_local.m4 \
+	$(top_srcdir)/m4/declare_versions.m4 \
 	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \
 	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
-	$(top_srcdir)/m4/lt~obsolete.m4 \
-	$(top_srcdir)/m4/macro_static_assert.m4 \
-	$(top_srcdir)/m4/pkg.m4 $(top_srcdir)/m4/prog_cc_c11.m4 \
+	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/m4/pkg.m4 \
+	$(top_srcdir)/m4/prog_cc_c11.m4 \
+	$(top_srcdir)/m4/static_assert.m4 \
 	$(top_srcdir)/m4/with_libs.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
@@ -365,7 +366,12 @@ OTOOL = @OTOOL@
 OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
+PACKAGE_DEVELOPMENT_VERSION = @PACKAGE_DEVELOPMENT_VERSION@
+PACKAGE_MAJOR_VERSION = @PACKAGE_MAJOR_VERSION@
+PACKAGE_MINOR_VERSION = @PACKAGE_MINOR_VERSION@
 PACKAGE_NAME = @PACKAGE_NAME@
+PACKAGE_PATCH_VERSION = @PACKAGE_PATCH_VERSION@
+PACKAGE_STATUS_VERSION = @PACKAGE_STATUS_VERSION@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
