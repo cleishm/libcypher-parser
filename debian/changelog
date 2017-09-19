@@ -1,3 +1,10 @@
+libcypher-parser (0.5.5-1) unstable; urgency=medium
+
+  * New upstream release.
+    - Adds #define's for compile time version inspection. 
+
+ -- Chris Leishman <chris@leishman.org>  Tue, 19 Sep 2017 21:21:30 +0000
+
 libcypher-parser (0.5.4-1) unstable; urgency=medium
 
   * New upstream release.
