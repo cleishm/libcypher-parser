@@ -1,4 +1,4 @@
-AC_DEFUN([MACRO_STATIC_ASSERT],
+AC_DEFUN([STATIC_ASSERT],
   [AC_CACHE_CHECK([for static_assert],
     [neo4j_cv_macro_static_assert],
     [AC_COMPILE_IFELSE(
