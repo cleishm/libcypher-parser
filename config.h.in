@@ -76,8 +76,20 @@
 /* Define to the address where bug reports for this package should be sent. */
 #undef PACKAGE_BUGREPORT
 
+/* Define to the development version of this package */
+#undef PACKAGE_DEVELOPMENT_VERSION
+
+/* Define to the major version of this package */
+#undef PACKAGE_MAJOR_VERSION
+
+/* Define to the minor version of this package */
+#undef PACKAGE_MINOR_VERSION
+
 /* Define to the full name of this package. */
 #undef PACKAGE_NAME
+
+/* Define to the patch version of this package */
+#undef PACKAGE_PATCH_VERSION
 
 /* Define to the full name and version of this package. */
 #undef PACKAGE_STRING

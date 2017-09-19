@@ -94,11 +94,12 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_prog_doxygen.m4 \
 	$(top_srcdir)/m4/ax_pthread.m4 \
 	$(top_srcdir)/m4/ax_thread_local.m4 \
+	$(top_srcdir)/m4/declare_versions.m4 \
 	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \
 	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
-	$(top_srcdir)/m4/lt~obsolete.m4 \
-	$(top_srcdir)/m4/macro_static_assert.m4 \
-	$(top_srcdir)/m4/pkg.m4 $(top_srcdir)/m4/prog_cc_c11.m4 \
+	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/m4/pkg.m4 \
+	$(top_srcdir)/m4/prog_cc_c11.m4 \
+	$(top_srcdir)/m4/static_assert.m4 \
 	$(top_srcdir)/m4/with_libs.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
@@ -106,7 +107,7 @@ DIST_COMMON = $(srcdir)/Makefile.am $(include_HEADERS) \
 	$(am__DIST_COMMON)
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
-CONFIG_CLEAN_FILES =
+CONFIG_CLEAN_FILES = cypher-parser.h
 CONFIG_CLEAN_VPATH_FILES =
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
@@ -330,7 +331,8 @@ am__define_uniq_tagged_files = \
   done | $(am__uniquify_input)`
 ETAGS = etags
 CTAGS = ctags
-am__DIST_COMMON = $(srcdir)/Makefile.in $(top_srcdir)/depcomp
+am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/cypher-parser.h.in \
+	$(top_srcdir)/depcomp
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
@@ -412,7 +414,12 @@ OTOOL = @OTOOL@
 OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
+PACKAGE_DEVELOPMENT_VERSION = @PACKAGE_DEVELOPMENT_VERSION@
+PACKAGE_MAJOR_VERSION = @PACKAGE_MAJOR_VERSION@
+PACKAGE_MINOR_VERSION = @PACKAGE_MINOR_VERSION@
 PACKAGE_NAME = @PACKAGE_NAME@
+PACKAGE_PATCH_VERSION = @PACKAGE_PATCH_VERSION@
+PACKAGE_STATUS_VERSION = @PACKAGE_STATUS_VERSION@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
@@ -635,7 +642,7 @@ libcypher_parser_la_LIBADD = $(PTHREAD_LIBS) $(OPENSSL_LIBS) $(LIBM)
 #    increment age.
 # 4. If any interfaces have been removed or changed since the last public
 #    release, then set age to 0.
-libcypher_parser_la_LDFLAGS = -version-info 10:0:2
+libcypher_parser_la_LDFLAGS = -version-info 10:1:2
 EXTRA_DIST = parser_leg.c quick_parser_leg.c
 MAINTAINERCLEANFILES = parser_leg.c quick_parser_leg.c
 all: all-am
@@ -671,6 +678,8 @@ $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
+cypher-parser.h: $(top_builddir)/config.status $(srcdir)/cypher-parser.h.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 install-libLTLIBRARIES: $(lib_LTLIBRARIES)
 	@$(NORMAL_INSTALL)
