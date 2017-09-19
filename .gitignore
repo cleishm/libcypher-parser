@@ -37,6 +37,7 @@ TAGS
 /libcypher-parser-*.tar.gz
 /src/bin/cypher-lint
 /src/lib/*_leg.c
+/src/lib/cypher-parser.h
 /tests/check_libcypher-parser
 /tests/*.trs
 /tests/*.log
