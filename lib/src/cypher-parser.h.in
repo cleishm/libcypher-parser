@@ -874,6 +874,7 @@ const cypher_astnode_t *cypher_ast_create_node_prop_constraint_get_expression(
  * @param [node] The AST node.
  * @return `true` if the constraint is unique, and `false` otherwise.
  */
+ __cypherlang_getter
 bool cypher_ast_create_node_prop_constraint_is_unique(
         const cypher_astnode_t *node);
 
@@ -950,6 +951,7 @@ const cypher_astnode_t *cypher_ast_drop_node_prop_constraint_get_expression(
  * @param [node] The AST node.
  * @return `true` if the constraint is unique, and `false` otherwise.
  */
+ __cypherlang_getter
 bool cypher_ast_drop_node_prop_constraint_is_unique(
         const cypher_astnode_t *node);
 
@@ -1026,6 +1028,7 @@ const cypher_astnode_t *cypher_ast_create_rel_prop_constraint_get_expression(
  * @param [node] The AST node.
  * @return `true` if the constraint is unique, and `false` otherwise.
  */
+__cypherlang_getter
 bool cypher_ast_create_rel_prop_constraint_is_unique(
         const cypher_astnode_t *node);
 
@@ -1102,6 +1105,7 @@ const cypher_astnode_t *cypher_ast_drop_rel_prop_constraint_get_expression(
  * @param [node] The AST node.
  * @return `true` if the constraint is unique, and `false` otherwise.
  */
+__cypherlang_getter
 bool cypher_ast_drop_rel_prop_constraint_is_unique(
         const cypher_astnode_t *node);
 
@@ -1244,6 +1248,7 @@ cypher_astnode_t *cypher_ast_load_csv(bool with_headers,
  *         and `false` otherwise.
  */
 __cypherlang_pure
+__cypherlang_getter
 bool cypher_ast_load_csv_has_with_headers(const cypher_astnode_t *node);
 
 /**
@@ -1844,6 +1849,7 @@ cypher_astnode_t *cypher_ast_match(bool optional,
  *         and `false` otherwise.
  */
 __cypherlang_pure
+__cypherlang_getter
 bool cypher_ast_match_is_optional(const cypher_astnode_t *node);
 
 /**
@@ -2233,6 +2239,7 @@ cypher_astnode_t *cypher_ast_create(bool unique,
  * @return `true` if the `UNIQUE` option is enabled, and `false` otherwise.
  */
 __cypherlang_pure
+__cypherlang_getter
 bool cypher_ast_create_is_unique(const cypher_astnode_t *node);
 
 /**
@@ -2527,6 +2534,7 @@ cypher_astnode_t *cypher_ast_delete(bool detach,
  * @return `true` if `DETACH` is present, `false` otherwise.
  */
 __cypherlang_pure
+__cypherlang_getter
 bool cypher_ast_delete_has_detach(const cypher_astnode_t *node);
 
 /**
@@ -2808,6 +2816,7 @@ cypher_astnode_t *cypher_ast_with(bool distinct, bool include_existing,
  * @return `true` if `DISTINCT` is set, `false` otherwise.
  */
 __cypherlang_pure
+__cypherlang_getter
 bool cypher_ast_with_is_distinct(const cypher_astnode_t *node);
 
 /**
@@ -2820,6 +2829,7 @@ bool cypher_ast_with_is_distinct(const cypher_astnode_t *node);
  * @return `true` if including existing identifiers, `false` otherwise.
  */
 __cypherlang_pure
+__cypherlang_getter
 bool cypher_ast_with_has_include_existing(const cypher_astnode_t *node);
 
 /**
@@ -3078,6 +3088,7 @@ cypher_astnode_t *cypher_ast_return(bool distinct, bool include_existing,
  * @return `true` if `DISTINCT` is set, `false` otherwise.
  */
 __cypherlang_pure
+__cypherlang_getter
 bool cypher_ast_return_is_distinct(const cypher_astnode_t *node);
 
 /**
@@ -3090,6 +3101,7 @@ bool cypher_ast_return_is_distinct(const cypher_astnode_t *node);
  * @return `true` if including existing identifiers, `false` otherwise.
  */
 __cypherlang_pure
+__cypherlang_getter
 bool cypher_ast_return_has_include_existing(const cypher_astnode_t *node);
 
 /**
@@ -3287,6 +3299,7 @@ const cypher_astnode_t *cypher_ast_sort_item_get_expression(
  * @return `true` if the sort item is ascending, `false` otherwise.
  */
 __cypherlang_pure
+__cypherlang_getter
 bool cypher_ast_sort_item_is_ascending(const cypher_astnode_t *node);
 
 
@@ -3315,6 +3328,7 @@ cypher_astnode_t *cypher_ast_union(bool all, cypher_astnode_t **children,
  * @return `true` if `ALL` is specified, `false` otherwise.
  */
 __cypherlang_pure
+__cypherlang_getter
 bool cypher_ast_union_has_all(const cypher_astnode_t *node);
 
 
@@ -5054,6 +5068,7 @@ cypher_astnode_t *cypher_ast_shortest_path(bool single,
  * @return true if `shortestPath`, and false if `allShortestPaths`.
  */
 __cypherlang_pure
+__cypherlang_getter
 bool cypher_ast_shortest_path_is_single(const cypher_astnode_t *node);
 
 /**
