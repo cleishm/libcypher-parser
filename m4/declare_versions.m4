@@ -24,7 +24,7 @@ AC_DEFUN([DECLARE_VERSIONS],
     [Define to the development version of this package])
   AC_SUBST([PACKAGE_DEVELOPMENT_VERSION])
 
-  if [ "X$PACKAGE_DEVELOPMENT_VERSION" = "X" ]; then
+  if test "X$PACKAGE_DEVELOPMENT_VERSION" = "X"; then
     PACKAGE_STATUS_VERSION=0
   else
     PACKAGE_STATUS_VERSION=1
