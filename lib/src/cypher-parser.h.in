@@ -554,6 +554,7 @@ unsigned int cypher_ast_statement_noptions(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_STATEMENT_OPTION` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(noptions)
 const cypher_astnode_t *cypher_ast_statement_get_option(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -631,6 +632,7 @@ unsigned int cypher_ast_cypher_option_nparams(const cypher_astnode_t *node);
  *         is at the specified index.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nparams)
 const cypher_astnode_t *cypher_ast_cypher_option_get_param(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -1147,6 +1149,7 @@ unsigned int cypher_ast_query_noptions(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_QUERY_OPTION` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(noptions)
 const cypher_astnode_t *cypher_ast_query_get_option(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -1173,6 +1176,7 @@ unsigned int cypher_ast_query_nclauses(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_QUERY_OPTION` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nclauses)
 const cypher_astnode_t *cypher_ast_query_get_clause(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -1327,6 +1331,7 @@ unsigned int cypher_ast_start_npoints(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_QUERY_OPTION` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(npoints)
 const cypher_astnode_t *cypher_ast_start_get_point(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -1538,6 +1543,7 @@ unsigned int cypher_ast_node_id_lookup_nids(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_INTEGER` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nids)
 const cypher_astnode_t *cypher_ast_node_id_lookup_get_id(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -1768,6 +1774,7 @@ unsigned int cypher_ast_rel_id_lookup_nids(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_INTEGER` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nids)
 const cypher_astnode_t *cypher_ast_rel_id_lookup_get_id(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -1876,6 +1883,7 @@ unsigned int cypher_ast_match_nhints(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_MATCH_HINT` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nhints)
 const cypher_astnode_t *cypher_ast_match_get_hint(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -1997,6 +2005,7 @@ unsigned int cypher_ast_using_join_nidentifiers(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_IDENTIFIER` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nidentifiers)
 const cypher_astnode_t *cypher_ast_using_join_get_identifier(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -2102,6 +2111,7 @@ unsigned int cypher_ast_merge_nactions(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_MERGE_HINT` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nactions)
 const cypher_astnode_t *cypher_ast_merge_get_action(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -2146,6 +2156,7 @@ unsigned int cypher_ast_on_match_nitems(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_SET_ITEM` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nitems)
 const cypher_astnode_t *cypher_ast_on_match_get_item(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -2190,6 +2201,7 @@ unsigned int cypher_ast_on_create_nitems(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_SET_ITEM` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nitems)
 const cypher_astnode_t *cypher_ast_on_create_get_item(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -2278,6 +2290,7 @@ unsigned int cypher_ast_set_nitems(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_SET_ITEM` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nitems)
 const cypher_astnode_t *cypher_ast_set_get_item(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -2479,6 +2492,7 @@ unsigned int cypher_ast_set_labels_nlabels(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_LABEL` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nlabels)
 const cypher_astnode_t *cypher_ast_set_labels_get_label(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -2538,6 +2552,7 @@ unsigned int cypher_ast_delete_nexpressions(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_EXPRESSION` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nexpressions)
 const cypher_astnode_t *cypher_ast_delete_get_expression(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -2582,6 +2597,7 @@ unsigned int cypher_ast_remove_nitems(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_EXPRESSION` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nitems)
 const cypher_astnode_t *cypher_ast_remove_get_item(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -2642,6 +2658,7 @@ unsigned int cypher_ast_remove_labels_nlabels(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_LABEL` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nlabels)
 const cypher_astnode_t *cypher_ast_remove_labels_get_label(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -2748,6 +2765,7 @@ unsigned int cypher_ast_foreach_nclauses(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_CLAUSE` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nclauses)
 const cypher_astnode_t *cypher_ast_foreach_get_clause(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -2827,6 +2845,7 @@ unsigned int cypher_ast_with_nprojections(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_PROJECTION` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nprojections)
 const cypher_astnode_t *cypher_ast_with_get_projection(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -2991,6 +3010,7 @@ unsigned int cypher_ast_call_narguments(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_EXPRESSION` node.
  */
 __cypherlang_pure
+__cypherlang_list_getter(narguments)
 const cypher_astnode_t *cypher_ast_call_get_argument(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -3017,6 +3037,7 @@ unsigned int cypher_ast_call_nprojections(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_PROJECTION` node.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nprojections)
 const cypher_astnode_t *cypher_ast_call_get_projection(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -3094,6 +3115,7 @@ unsigned int cypher_ast_return_nprojections(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_PROJECTION` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nprojections)
 const cypher_astnode_t *cypher_ast_return_get_projection(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -3221,6 +3243,7 @@ unsigned int cypher_ast_order_by_nitems(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_SET_ITEM` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nitems)
 const cypher_astnode_t *cypher_ast_order_by_get_item(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -3448,6 +3471,7 @@ unsigned int cypher_ast_comparison_get_length(const cypher_astnode_t *node);
  *         the position is greater than the chain length.
  */
 __cypherlang_pure
+__cypherlang_list_getter(get_length)
 const cypher_operator_t *cypher_ast_comparison_get_operator(
         const cypher_astnode_t *node, unsigned int pos);
 
@@ -3463,6 +3487,7 @@ const cypher_operator_t *cypher_ast_comparison_get_operator(
  *         chain, or null if the position is greater than the chain length.
  */
 __cypherlang_pure
+__cypherlang_list_getter(get_length + 1)
 const cypher_astnode_t *cypher_ast_comparison_get_argument(
         const cypher_astnode_t *node, unsigned int pos);
 
@@ -3536,6 +3561,7 @@ unsigned int cypher_ast_apply_operator_narguments(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_EXPRESSION` node.
  */
 __cypherlang_pure
+__cypherlang_list_getter(narguments)
 const cypher_astnode_t *cypher_ast_apply_operator_get_argument(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -3798,6 +3824,7 @@ unsigned int cypher_ast_map_projection_nselectors(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_MAP_PROJECTION_SELECTOR` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nselectors)
 const cypher_astnode_t *cypher_ast_map_projection_get_selector(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -3983,6 +4010,7 @@ unsigned int cypher_ast_labels_operator_nlabels(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_LABEL` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nlabels)
 const cypher_astnode_t *cypher_ast_labels_operator_get_label(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -4415,6 +4443,7 @@ unsigned int cypher_ast_case_nalternatives(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_EXPRESSION` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nalternatives)
 const cypher_astnode_t *cypher_ast_case_get_predicate(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -4429,6 +4458,7 @@ const cypher_astnode_t *cypher_ast_case_get_predicate(
  * @return A `CYPHER_AST_EXPRESSION` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nalternatives)
 const cypher_astnode_t *cypher_ast_case_get_value(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -4554,6 +4584,7 @@ unsigned int cypher_ast_map_nentries(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_PROP_NAME` node.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nentries)
 const cypher_astnode_t *cypher_ast_map_get_key(const cypher_astnode_t *node,
         unsigned int index);
 
@@ -4568,6 +4599,7 @@ const cypher_astnode_t *cypher_ast_map_get_key(const cypher_astnode_t *node,
  * @return A `CYPHER_AST_EXPRESSION` node.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nentries)
 const cypher_astnode_t *cypher_ast_map_get_value(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -4943,6 +4975,7 @@ unsigned int cypher_ast_pattern_npaths(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_PATTERN_PATH` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(npaths)
 const cypher_astnode_t *cypher_ast_pattern_get_path(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -5080,6 +5113,7 @@ unsigned int cypher_ast_pattern_path_nelements(const cypher_astnode_t *node);
  *         number of elements..
  */
 __cypherlang_pure
+__cypherlang_list_getter(nelements)
 const cypher_astnode_t *cypher_ast_pattern_path_get_element(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -5141,6 +5175,7 @@ unsigned int cypher_ast_node_pattern_nlabels(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_LABEL` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nlabels)
 const cypher_astnode_t *cypher_ast_node_pattern_get_label(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -5234,6 +5269,7 @@ unsigned int cypher_ast_rel_pattern_nreltypes(const cypher_astnode_t *node);
  * @return A `CYPHER_AST_LABEL` node, or null.
  */
 __cypherlang_pure
+__cypherlang_list_getter(nreltypes)
 const cypher_astnode_t *cypher_ast_rel_pattern_get_reltype(
         const cypher_astnode_t *node, unsigned int index);
 
@@ -5367,6 +5403,7 @@ unsigned int cypher_ast_command_narguments(const cypher_astnode_t *node);
  *         specified index.
  */
 __cypherlang_pure
+__cypherlang_list_getter(narguments)
 const cypher_astnode_t *cypher_ast_command_get_argument(
         const cypher_astnode_t *node, unsigned int index);
 
