@@ -61,16 +61,16 @@ extern "C" {
 /* Compile time version details.
  * For runtime version inspection, use libcypher_parser_version() instead.
  */
-#define CYPHER_PARSER_VERSION "0.5.5"
+#define CYPHER_PARSER_VERSION "0.6.0"
 #define CYPHER_PARSER_MAJOR_VERSION 0
-#define CYPHER_PARSER_MINOR_VERSION 5
-#define CYPHER_PARSER_PATCH_VERSION 5
+#define CYPHER_PARSER_MINOR_VERSION 6
+#define CYPHER_PARSER_PATCH_VERSION 0
 #define CYPHER_PARSER_DEVELOPMENT_VERSION ""
 
 #define CYPHER_PARSER_VERSION_NUMBER \
     ((CYPHER_PARSER_MAJOR_VERSION << 20) | \
     (CYPHER_PARSER_MINOR_VERSION << 12) | \
-    (CYPHER_PARSER_PATCH_VERSION << 4) | 1)
+    (CYPHER_PARSER_PATCH_VERSION << 4) | 0)
 
 /**
  * The version string for libcypher-parser.
