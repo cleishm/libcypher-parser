@@ -2,3 +2,5 @@
 /build
 /pycypher/*.pyc
 /tests/*.pyc
+/dist/
+/pycypher.egg-info/
