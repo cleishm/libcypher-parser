@@ -128,7 +128,7 @@ class TestQuery(unittest.TestCase):
         self.assertEqual(len(query.get_options()), 1)
         option = query.get_options()[0]
         self.assertEqual(option.type, "CYPHER_AST_USING_PERIODIC_COMMIT")
-        self.assertIsNone(option.get_limit())
+        self.assertTrue(option.get_limit() is None)
 
         self.assertEqual(len(query.get_clauses()), 1)
 

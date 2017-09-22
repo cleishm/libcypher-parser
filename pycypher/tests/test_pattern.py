@@ -56,7 +56,7 @@ class TestPattern(unittest.TestCase):
         self.assertEqual(id.get_name(), "n")
 
         self.assertEqual(len(node.get_labels()), 0)
-        self.assertIsNone(node.get_properties())
+        self.assertTrue(node.get_properties() is None)
 
     def test_parse_labeled_node(self):
         result = pycypher.parse_query("MATCH (n:Foo) RETURN n;")
@@ -101,7 +101,7 @@ class TestPattern(unittest.TestCase):
         self.assertEqual(label.type, "CYPHER_AST_LABEL")
         self.assertEqual(label.get_name(), "Foo")
 
-        self.assertIsNone(node.get_properties())
+        self.assertTrue(node.get_properties() is None)
 
     def test_parse_multiple_labeled_node(self):
         result = pycypher.parse_query("MATCH (n:Foo:Bar) RETURN n;")
@@ -150,7 +150,7 @@ class TestPattern(unittest.TestCase):
         self.assertEqual(label.type, "CYPHER_AST_LABEL")
         self.assertEqual(label.get_name(), "Bar")
 
-        self.assertIsNone(node.get_properties())
+        self.assertTrue(node.get_properties() is None)
 
     def test_parse_node_with_map_props(self):
         result = pycypher.parse_query("MATCH (n:Person {name: 'Hunter'}) RETURN n;")
@@ -299,21 +299,21 @@ class TestPattern(unittest.TestCase):
         self.assertEqual(id.get_name(), "n")
 
         self.assertEqual(len(node.get_labels()), 0)
-        self.assertIsNone(node.get_properties())
+        self.assertTrue(node.get_properties() is None)
 
         rel = path.get_elements()[1]
         self.assertEqual(rel.type, "CYPHER_AST_REL_PATTERN")
 
         self.assertEqual(rel.get_direction(), "CYPHER_REL_OUTBOUND")
 
-        self.assertIsNone(rel.get_identifier())
+        self.assertTrue(rel.get_identifier() is None)
 
         self.assertEqual(len(rel.get_reltypes()), 1)
         reltype = rel.get_reltypes()[0]
         self.assertEqual(reltype.type, "CYPHER_AST_RELTYPE")
         self.assertEqual(reltype.get_name(), "Foo")
 
-        self.assertIsNone(rel.get_varlength())
+        self.assertTrue(rel.get_varlength() is None)
 
         node = path.get_elements()[2]
         self.assertEqual(node.type, "CYPHER_AST_NODE_PATTERN")
@@ -362,7 +362,7 @@ class TestPattern(unittest.TestCase):
         self.assertEqual(id.get_name(), "n")
 
         self.assertEqual(len(node.get_labels()), 0)
-        self.assertIsNone(node.get_properties())
+        self.assertTrue(node.get_properties() is None)
 
         rel = path.get_elements()[1]
         self.assertEqual(rel.type, "CYPHER_AST_REL_PATTERN")
@@ -380,8 +380,8 @@ class TestPattern(unittest.TestCase):
 
         range = rel.get_varlength()
         self.assertEqual(range.type, "CYPHER_AST_RANGE")
-        self.assertIsNone(range.get_start())
-        self.assertIsNone(range.get_end())
+        self.assertTrue(range.get_start() is None)
+        self.assertTrue(range.get_end() is None)
 
         node = path.get_elements()[2]
         self.assertEqual(node.type, "CYPHER_AST_NODE_PATTERN")
@@ -431,7 +431,7 @@ class TestPattern(unittest.TestCase):
         self.assertEqual(id.get_name(), "n")
 
         self.assertEqual(len(node.get_labels()), 0)
-        self.assertIsNone(node.get_properties())
+        self.assertTrue(node.get_properties() is None)
 
         rel = path.get_elements()[1]
         self.assertEqual(rel.type, "CYPHER_AST_REL_PATTERN")
@@ -452,7 +452,7 @@ class TestPattern(unittest.TestCase):
         start = range.get_start()
         self.assertEqual(start.type, "CYPHER_AST_INTEGER")
         self.assertEqual(start.get_valuestr(), "5")
-        self.assertIsNone(range.get_end())
+        self.assertTrue(range.get_end() is None)
 
         node = path.get_elements()[2]
         self.assertEqual(node.type, "CYPHER_AST_NODE_PATTERN")
@@ -502,7 +502,7 @@ class TestPattern(unittest.TestCase):
         self.assertEqual(id.get_name(), "n")
 
         self.assertEqual(len(node.get_labels()), 0)
-        self.assertIsNone(node.get_properties())
+        self.assertTrue(node.get_properties() is None)
 
         rel = path.get_elements()[1]
         self.assertEqual(rel.type, "CYPHER_AST_REL_PATTERN")
@@ -519,7 +519,7 @@ class TestPattern(unittest.TestCase):
         self.assertEqual(reltype.get_name(), "Foo")
 
         range = rel.get_varlength()
-        self.assertIsNone(range.get_start())
+        self.assertTrue(range.get_start() is None)
         self.assertEqual(range.type, "CYPHER_AST_RANGE")
         end = range.get_end()
         self.assertEqual(end.type, "CYPHER_AST_INTEGER")
@@ -573,7 +573,7 @@ class TestPattern(unittest.TestCase):
         self.assertEqual(id.get_name(), "n")
 
         self.assertEqual(len(node.get_labels()), 0)
-        self.assertIsNone(node.get_properties())
+        self.assertTrue(node.get_properties() is None)
 
         rel = path.get_elements()[1]
         self.assertEqual(rel.type, "CYPHER_AST_REL_PATTERN")
@@ -595,7 +595,7 @@ class TestPattern(unittest.TestCase):
         end = range.get_end()
         self.assertEqual(start.type, "CYPHER_AST_INTEGER")
         self.assertEqual(start.get_valuestr(), "7")
-        self.assertIs(start, end)
+        self.assertTrue(start is end)
 
         node = path.get_elements()[2]
         self.assertEqual(node.type, "CYPHER_AST_NODE_PATTERN")
@@ -644,21 +644,21 @@ class TestPattern(unittest.TestCase):
         self.assertEqual(id.get_name(), "n")
 
         self.assertEqual(len(node.get_labels()), 0)
-        self.assertIsNone(node.get_properties())
+        self.assertTrue(node.get_properties() is None)
 
         rel = ppath.get_elements()[1]
         self.assertEqual(rel.type, "CYPHER_AST_REL_PATTERN")
 
         self.assertEqual(rel.get_direction(), "CYPHER_REL_OUTBOUND")
 
-        self.assertIsNone(rel.get_identifier())
+        self.assertTrue(rel.get_identifier() is None)
 
         self.assertEqual(len(rel.get_reltypes()), 1)
         reltype = rel.get_reltypes()[0]
         self.assertEqual(reltype.type, "CYPHER_AST_RELTYPE")
         self.assertEqual(reltype.get_name(), "Foo")
 
-        self.assertIsNone(rel.get_varlength())
+        self.assertTrue(rel.get_varlength() is None)
 
         props = rel.get_properties()
         self.assertEqual(props.type, "CYPHER_AST_MAP")
@@ -722,21 +722,21 @@ class TestPattern(unittest.TestCase):
         self.assertEqual(id.get_name(), "n")
 
         self.assertEqual(len(node.get_labels()), 0)
-        self.assertIsNone(node.get_properties())
+        self.assertTrue(node.get_properties() is None)
 
         rel = ppath.get_elements()[1]
         self.assertEqual(rel.type, "CYPHER_AST_REL_PATTERN")
 
         self.assertEqual(rel.get_direction(), "CYPHER_REL_OUTBOUND")
 
-        self.assertIsNone(rel.get_identifier())
+        self.assertTrue(rel.get_identifier() is None)
 
         self.assertEqual(len(rel.get_reltypes()), 1)
         reltype = rel.get_reltypes()[0]
         self.assertEqual(reltype.type, "CYPHER_AST_RELTYPE")
         self.assertEqual(reltype.get_name(), "Foo")
 
-        self.assertIsNone(rel.get_varlength())
+        self.assertTrue(rel.get_varlength() is None)
 
         param = rel.get_properties()
         self.assertEqual(param.type, "CYPHER_AST_PARAMETER")
@@ -791,28 +791,28 @@ class TestPattern(unittest.TestCase):
         unnamed_path = path.get_path()
         self.assertEqual(unnamed_path.type, "CYPHER_AST_PATTERN_PATH")
         self.assertEqual(len(unnamed_path.get_elements()), 3)
-        self.assertIs(unnamed_path.get_elements()[0], node)
+        self.assertTrue(unnamed_path.get_elements()[0] is node)
 
         id = node.get_identifier()
         self.assertEqual(id.type, "CYPHER_AST_IDENTIFIER")
         self.assertEqual(id.get_name(), "n")
 
         self.assertEqual(len(node.get_labels()), 0)
-        self.assertIsNone(node.get_properties())
+        self.assertTrue(node.get_properties() is None)
 
         rel = path.get_elements()[1]
         self.assertEqual(rel.type, "CYPHER_AST_REL_PATTERN")
 
         self.assertEqual(rel.get_direction(), "CYPHER_REL_OUTBOUND")
 
-        self.assertIsNone(rel.get_identifier())
+        self.assertTrue(rel.get_identifier() is None)
 
         self.assertEqual(len(rel.get_reltypes()), 1)
         reltype = rel.get_reltypes()[0]
         self.assertEqual(reltype.type, "CYPHER_AST_RELTYPE")
         self.assertEqual(reltype.get_name(), "Foo")
 
-        self.assertIsNone(rel.get_varlength())
+        self.assertTrue(rel.get_varlength() is None)
 
         node = path.get_elements()[2]
         self.assertEqual(node.type, "CYPHER_AST_NODE_PATTERN")
@@ -864,14 +864,14 @@ class TestPattern(unittest.TestCase):
         spath = npath.get_path()
         self.assertEqual(spath.type, "CYPHER_AST_SHORTEST_PATH")
         self.assertEqual(len(spath.get_elements()), 3)
-        self.assertIs(spath.get_elements()[0], node)
+        self.assertTrue(spath.get_elements()[0] is node)
 
         self.assertTrue(spath.is_single())
 
         unnamed_path = spath.get_path()
         self.assertEqual(unnamed_path.type, "CYPHER_AST_PATTERN_PATH")
         self.assertEqual(len(unnamed_path.get_elements()), 3)
-        self.assertIs(unnamed_path.get_elements()[0], node)
+        self.assertTrue(unnamed_path.get_elements()[0] is node)
 
     def test_parse_all_shortest_paths(self):
         result = pycypher.parse_query("RETURN allShortestPaths((n)-[:Foo]->(m)) AS p;")
@@ -913,4 +913,4 @@ class TestPattern(unittest.TestCase):
         unnamed_path = spath.get_path()
         self.assertEqual(unnamed_path.type, "CYPHER_AST_PATTERN_PATH")
         self.assertEqual(len(unnamed_path.get_elements()), 3)
-        self.assertIs(unnamed_path.get_elements()[0], node)
+        self.assertTrue(unnamed_path.get_elements()[0] is node)

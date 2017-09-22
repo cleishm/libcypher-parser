@@ -68,10 +68,10 @@ class TestWith(unittest.TestCase):
         self.assertEqual(alias.type, "CYPHER_AST_IDENTIFIER")
         self.assertEqual(alias.get_name(), "y")
 
-        self.assertIsNone(clause.get_order_by())
-        self.assertIsNone(clause.get_skip())
-        self.assertIsNone(clause.get_limit())
-        self.assertIsNone(clause.get_predicate())
+        self.assertTrue(clause.get_order_by() is None)
+        self.assertTrue(clause.get_skip() is None)
+        self.assertTrue(clause.get_limit() is None)
+        self.assertTrue(clause.get_predicate() is None)
 
     def test_parse_distinct_with(self):
         result = pycypher.parse_query("WITH DISTINCT 1 AS x, 'bar' AS y RETURN x, y")
@@ -123,10 +123,10 @@ class TestWith(unittest.TestCase):
         self.assertEqual(alias.type, "CYPHER_AST_IDENTIFIER")
         self.assertEqual(alias.get_name(), "y")
 
-        self.assertIsNone(clause.get_order_by())
-        self.assertIsNone(clause.get_skip())
-        self.assertIsNone(clause.get_limit())
-        self.assertIsNone(clause.get_predicate())
+        self.assertTrue(clause.get_order_by() is None)
+        self.assertTrue(clause.get_skip() is None)
+        self.assertTrue(clause.get_limit() is None)
+        self.assertTrue(clause.get_predicate() is None)
 
     def test_parse_with_including_existing(self):
         result = pycypher.parse_query("WITH *, 1 AS x, 'bar' AS y RETURN x, y")
@@ -178,10 +178,10 @@ class TestWith(unittest.TestCase):
         self.assertEqual(alias.type, "CYPHER_AST_IDENTIFIER")
         self.assertEqual(alias.get_name(), "y")
 
-        self.assertIsNone(clause.get_order_by())
-        self.assertIsNone(clause.get_skip())
-        self.assertIsNone(clause.get_limit())
-        self.assertIsNone(clause.get_predicate())
+        self.assertTrue(clause.get_order_by() is None)
+        self.assertTrue(clause.get_skip() is None)
+        self.assertTrue(clause.get_limit() is None)
+        self.assertTrue(clause.get_predicate() is None)
 
     def test_parse_with_and_order_by(self):
         result = pycypher.parse_query("WITH 1 AS x, 'bar' AS y ORDER BY x DESC, y ASC, z.prop + 10")
@@ -263,9 +263,9 @@ class TestWith(unittest.TestCase):
         self.assertEqual(exp.type, "CYPHER_AST_BINARY_OPERATOR")
         self.assertTrue(item.is_ascending())
 
-        self.assertIsNone(clause.get_skip())
-        self.assertIsNone(clause.get_limit())
-        self.assertIsNone(clause.get_predicate())
+        self.assertTrue(clause.get_skip() is None)
+        self.assertTrue(clause.get_limit() is None)
+        self.assertTrue(clause.get_predicate() is None)
 
     def test_parse_with_and_skip(self):
         result = pycypher.parse_query("WITH *, 1 AS x, 'bar' AS y SKIP 10")
@@ -313,14 +313,14 @@ class TestWith(unittest.TestCase):
         self.assertEqual(alias.type, "CYPHER_AST_IDENTIFIER")
         self.assertEqual(alias.get_name(), "y")
 
-        self.assertIsNone(clause.get_order_by())
+        self.assertTrue(clause.get_order_by() is None)
 
         skip = clause.get_skip()
         self.assertEqual(skip.type, "CYPHER_AST_INTEGER")
         self.assertEqual(skip.get_valuestr(), "10")
 
-        self.assertIsNone(clause.get_limit())
-        self.assertIsNone(clause.get_predicate())
+        self.assertTrue(clause.get_limit() is None)
+        self.assertTrue(clause.get_predicate() is None)
 
     def test_parse_with_and_skip_limit(self):
         result = pycypher.parse_query("WITH *, 1 AS x, 'bar' AS y SKIP 10 LIMIT 5")
@@ -369,7 +369,7 @@ class TestWith(unittest.TestCase):
         self.assertEqual(alias.type, "CYPHER_AST_IDENTIFIER")
         self.assertEqual(alias.get_name(), "y")
 
-        self.assertIsNone(clause.get_order_by())
+        self.assertTrue(clause.get_order_by() is None)
 
         skip = clause.get_skip()
         self.assertEqual(skip.type, "CYPHER_AST_INTEGER")
@@ -379,7 +379,7 @@ class TestWith(unittest.TestCase):
         self.assertEqual(limit.type, "CYPHER_AST_INTEGER")
         self.assertEqual(limit.get_valuestr(), "5")
 
-        self.assertIsNone(clause.get_predicate())
+        self.assertTrue(clause.get_predicate() is None)
 
     def test_parse_with_and_predicate(self):
         result = pycypher.parse_query("WITH * WHERE n.foo > 10")
@@ -407,9 +407,9 @@ class TestWith(unittest.TestCase):
 
         self.assertEqual(len(clause.get_projections()), 0)
 
-        self.assertIsNone(clause.get_order_by())
-        self.assertIsNone(clause.get_skip())
-        self.assertIsNone(clause.get_limit())
+        self.assertTrue(clause.get_order_by() is None)
+        self.assertTrue(clause.get_skip() is None)
+        self.assertTrue(clause.get_limit() is None)
 
         pred = clause.get_predicate()
         self.assertEqual(pred.type, "CYPHER_AST_COMPARISON")

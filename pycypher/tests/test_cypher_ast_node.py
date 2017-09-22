@@ -80,10 +80,10 @@ class TestFindNodes(unittest.TestCase):
 
         prefix = list(ast.find_nodes(end=50))
         self.assertEqual(len(prefix), 9)
-        self.assertIn("CYPHER_AST_BLOCK_COMMENT", [n.type for n in prefix])
-        self.assertIn("CYPHER_AST_COMPARISON", [n.type for n in prefix])
-        self.assertNotIn("CYPHER_AST_RETURN", [n.type for n in prefix])
-        self.assertNotIn("CYPHER_AST_PROJECTION", [n.type for n in prefix])
+        self.assertTrue("CYPHER_AST_BLOCK_COMMENT" in [n.type for n in prefix])
+        self.assertTrue("CYPHER_AST_COMPARISON" in [n.type for n in prefix])
+        self.assertFalse("CYPHER_AST_RETURN" in [n.type for n in prefix])
+        self.assertFalse("CYPHER_AST_PROJECTION" in [n.type for n in prefix])
 
         suffix = list(ast.find_nodes(start=50))
         self.assertEqual(len(suffix), 3)

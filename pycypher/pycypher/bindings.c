@@ -17,9 +17,7 @@
 #include "operators.h"
 #include "props.h"
 
-PyObject *pycypher_error;
-
-static PyMethodDef methods[] = {
+static PyMethodDef pycypher_methods[] = {
     {
       "parse_query", pycypher_parse_query, METH_VARARGS,
       "Return a list of CypherAst instances corresponding to parsed query."
@@ -27,14 +25,46 @@ static PyMethodDef methods[] = {
     {NULL, NULL, 0, NULL}
 };
 
-PyMODINIT_FUNC initbindings(void) {
-  PyObject *m = Py_InitModule("pycypher.bindings", methods);
-  if (m == NULL)
-    return;
-  pycypher_error = PyErr_NewException("pycypher.bindings.Error", NULL, NULL);
-  Py_INCREF(pycypher_error);
-  PyModule_AddObject(m, "Error", pycypher_error);
-  pycypher_init_node_types();
-  pycypher_init_operators();
-  pycypher_init_props();
-}
+#if PY_MAJOR_VERSION >= 3
+
+  static int pycypher_traverse(PyObject *m, visitproc visit, void *arg) {
+    return 0;
+  }
+  static int pycypher_clear(PyObject *m) {
+    return 0;
+  }
+  static struct PyModuleDef pycypher_module = {
+    PyModuleDef_HEAD_INIT,
+    "pycypher.bindings",
+    NULL,
+    0,
+    pycypher_methods,
+    NULL,
+    pycypher_traverse,
+    pycypher_clear,
+    NULL
+  };
+  PyMODINIT_FUNC PyInit_bindings(void)
+  {
+    PyObject *module = PyModule_Create(&pycypher_module);
+    if (module == NULL)
+      return NULL;
+    pycypher_init_node_types();
+    pycypher_init_operators();
+    pycypher_init_props();
+    return module;
+  }
+
+#else
+
+  PyMODINIT_FUNC initbindings(void)
+  {
+    PyObject *module = Py_InitModule("pycypher.bindings", pycypher_methods);
+    if (module == NULL)
+      return;
+    pycypher_init_node_types();
+    pycypher_init_operators();
+    pycypher_init_props();
+  }
+
+#endif

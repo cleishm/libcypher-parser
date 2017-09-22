@@ -54,8 +54,8 @@ class TestListComprehensions(unittest.TestCase):
         self.assertEqual(node.type, "CYPHER_AST_IDENTIFIER")
         self.assertEqual(node.get_name(), "list")
 
-        self.assertIsNone(exp.get_predicate())
-        self.assertIsNone(exp.get_eval())
+        self.assertTrue(exp.get_predicate() is None)
+        self.assertTrue(exp.get_eval() is None)
 
     def test_parse_full_list_comprehension(self):
         result = pycypher.parse_query("RETURN [x in list WHERE x.foo < 10 | x.bar ];")
@@ -150,7 +150,7 @@ class TestListComprehensions(unittest.TestCase):
         pred = exp.get_predicate()
         self.assertEqual(pred.type, "CYPHER_AST_COMPARISON")
 
-        self.assertIsNone(exp.get_eval())
+        self.assertTrue(exp.get_eval() is None)
 
     def test_parse_extract(self):
         result = pycypher.parse_query("RETURN extract(x in list | x.bar);")
@@ -191,7 +191,7 @@ class TestListComprehensions(unittest.TestCase):
         self.assertEqual(node.type, "CYPHER_AST_IDENTIFIER")
         self.assertEqual(node.get_name(), "list")
 
-        self.assertIsNone(exp.get_predicate())
+        self.assertTrue(exp.get_predicate() is None)
 
         eval = exp.get_eval()
         self.assertEqual(eval.type, "CYPHER_AST_PROPERTY_OPERATOR")
@@ -240,7 +240,7 @@ class TestListComprehensions(unittest.TestCase):
         pred = exp.get_predicate()
         self.assertEqual(pred.type, "CYPHER_AST_COMPARISON")
 
-        self.assertIsNone(exp.get_eval())
+        self.assertTrue(exp.get_eval() is None)
 
     def test_parse_any(self):
         result = pycypher.parse_query("RETURN any(x in list WHERE x.foo < 10);")
@@ -286,7 +286,7 @@ class TestListComprehensions(unittest.TestCase):
         pred = exp.get_predicate()
         self.assertEqual(pred.type, "CYPHER_AST_COMPARISON")
 
-        self.assertIsNone(exp.get_eval())
+        self.assertTrue(exp.get_eval() is None)
 
     def test_parse_single(self):
         result = pycypher.parse_query("RETURN single(x in list WHERE x.foo < 10);")
@@ -332,7 +332,7 @@ class TestListComprehensions(unittest.TestCase):
         pred = exp.get_predicate()
         self.assertEqual(pred.type, "CYPHER_AST_COMPARISON")
 
-        self.assertIsNone(exp.get_eval())
+        self.assertTrue(exp.get_eval() is None)
 
     def test_parse_none(self):
         result = pycypher.parse_query("RETURN none(x in list WHERE x.foo < 10);")
@@ -378,5 +378,5 @@ class TestListComprehensions(unittest.TestCase):
         pred = exp.get_predicate()
         self.assertEqual(pred.type, "CYPHER_AST_COMPARISON")
 
-        self.assertIsNone(exp.get_eval())
+        self.assertTrue(exp.get_eval() is None)
 

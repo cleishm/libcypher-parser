@@ -127,7 +127,7 @@ class TestCase(unittest.TestCase):
         self.assertEqual(value.type, "CYPHER_AST_IDENTIFIER")
         self.assertEqual(value.get_name(), "z")
 
-        self.assertIsNone(exp.get_default())
+        self.assertTrue(exp.get_default() is None)
 
     def test_parse_generic_case(self):
         result = pycypher.parse_query("RETURN CASE WHEN x=1 THEN y WHEN x=2 THEN z ELSE d END AS r")
@@ -165,7 +165,7 @@ class TestCase(unittest.TestCase):
 
         self.assertEqual(len(exp.get_predicates()), 2)
 
-        self.assertIsNone(exp.get_expression())
+        self.assertTrue(exp.get_expression() is None)
 
         pred = exp.get_predicates()[0]
         self.assertEqual(pred.type, "CYPHER_AST_BINARY_OPERATOR")
@@ -226,7 +226,7 @@ class TestCase(unittest.TestCase):
 
         self.assertEqual(len(exp.get_predicates()), 2)
 
-        self.assertIsNone(exp.get_expression())
+        self.assertTrue(exp.get_expression() is None)
 
         pred = exp.get_predicates()[0]
         self.assertEqual(pred.type, "CYPHER_AST_BINARY_OPERATOR")
@@ -248,4 +248,4 @@ class TestCase(unittest.TestCase):
         self.assertEqual(value.type, "CYPHER_AST_IDENTIFIER")
         self.assertEqual(value.get_name(), "z")
 
-        self.assertIsNone(exp.get_default())
+        self.assertTrue(exp.get_default() is None)

@@ -68,7 +68,7 @@ class TestStatement(unittest.TestCase):
         self.assertTrue(option.instanceof("CYPHER_AST_STATEMENT_OPTION"))
         self.assertEqual(option.type, "CYPHER_AST_CYPHER_OPTION")
 
-        self.assertIsNone(option.get_version())
+        self.assertTrue(option.get_version() is None)
         self.assertEqual(len(option.get_params()), 0)
 
     def test_parse_statement_with_cypher_option_containing_version(self):
@@ -127,7 +127,7 @@ class TestStatement(unittest.TestCase):
         self.assertTrue(option.instanceof("CYPHER_AST_STATEMENT_OPTION"))
         self.assertEqual(option.type, "CYPHER_AST_CYPHER_OPTION")
 
-        self.assertIsNone(option.get_version())
+        self.assertTrue(option.get_version() is None)
 
         self.assertEqual(len(option.get_params()), 1)
         param = option.get_params()[0]

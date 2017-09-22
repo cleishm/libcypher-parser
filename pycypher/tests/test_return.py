@@ -64,9 +64,9 @@ class TestReturn(unittest.TestCase):
         self.assertEqual(alias.type, "CYPHER_AST_IDENTIFIER")
         self.assertEqual(alias.get_name(), "y")
 
-        self.assertIsNone(clause.get_order_by())
-        self.assertIsNone(clause.get_skip())
-        self.assertIsNone(clause.get_limit())
+        self.assertTrue(clause.get_order_by() is None)
+        self.assertTrue(clause.get_skip() is None)
+        self.assertTrue(clause.get_limit() is None)
 
     def test_parse_distinct_return(self):
         result = pycypher.parse_query("/* MATCH */ RETURN DISTINCT 1 AS x, 'bar' AS y")
@@ -114,9 +114,9 @@ class TestReturn(unittest.TestCase):
         self.assertEqual(alias.type, "CYPHER_AST_IDENTIFIER")
         self.assertEqual(alias.get_name(), "y")
 
-        self.assertIsNone(clause.get_order_by())
-        self.assertIsNone(clause.get_skip())
-        self.assertIsNone(clause.get_limit())
+        self.assertTrue(clause.get_order_by() is None)
+        self.assertTrue(clause.get_skip() is None)
+        self.assertTrue(clause.get_limit() is None)
 
     def test_parse_return_including_existing(self):
         result = pycypher.parse_query("/* MATCH */ RETURN *, 1 AS x, 'bar' AS y")
@@ -165,9 +165,9 @@ class TestReturn(unittest.TestCase):
         self.assertEqual(alias.type, "CYPHER_AST_IDENTIFIER")
         self.assertEqual(alias.get_name(), "y")
 
-        self.assertIsNone(clause.get_order_by())
-        self.assertIsNone(clause.get_skip())
-        self.assertIsNone(clause.get_limit())
+        self.assertTrue(clause.get_order_by() is None)
+        self.assertTrue(clause.get_skip() is None)
+        self.assertTrue(clause.get_limit() is None)
 
     def test_parse_return_and_order_by(self):
         result = pycypher.parse_query("RETURN 1 AS x, 'bar' AS y ORDER BY x DESC, y ASC, z.prop + 10")
@@ -249,8 +249,8 @@ class TestReturn(unittest.TestCase):
         self.assertEqual(exp.type, "CYPHER_AST_BINARY_OPERATOR")
         self.assertTrue(item.is_ascending())
 
-        self.assertIsNone(clause.get_skip())
-        self.assertIsNone(clause.get_limit())
+        self.assertTrue(clause.get_skip() is None)
+        self.assertTrue(clause.get_limit() is None)
 
     def test_parse_return_and_skip(self):
         result = pycypher.parse_query("RETURN *, 1 AS x, 'bar' AS y SKIP 10")
@@ -298,13 +298,13 @@ class TestReturn(unittest.TestCase):
         self.assertEqual(alias.type, "CYPHER_AST_IDENTIFIER")
         self.assertEqual(alias.get_name(), "y")
 
-        self.assertIsNone(clause.get_order_by())
+        self.assertTrue(clause.get_order_by() is None)
 
         skip = clause.get_skip()
         self.assertEqual(skip.type, "CYPHER_AST_INTEGER")
         self.assertEqual(skip.get_valuestr(), "10")
 
-        self.assertIsNone(clause.get_limit())
+        self.assertTrue(clause.get_limit() is None)
 
     def test_parse_return_and_skip_limit(self):
         result = pycypher.parse_query("RETURN *, 1 AS x, 'bar' AS y SKIP 10 LIMIT 5")
@@ -353,7 +353,7 @@ class TestReturn(unittest.TestCase):
         self.assertEqual(alias.type, "CYPHER_AST_IDENTIFIER")
         self.assertEqual(alias.get_name(), "y")
 
-        self.assertIsNone(clause.get_order_by())
+        self.assertTrue(clause.get_order_by() is None)
 
         skip = clause.get_skip()
         self.assertEqual(skip.type, "CYPHER_AST_INTEGER")

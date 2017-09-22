@@ -41,7 +41,7 @@ class TestStart(unittest.TestCase):
         start = query.get_clauses()[0]
         self.assertEqual(start.type, "CYPHER_AST_START")
 
-        self.assertIsNone(start.get_predicate())
+        self.assertTrue(start.get_predicate() is None)
 
         self.assertEqual(len(start.get_points()), 1)
         lookup = start.get_points()[0]
@@ -85,7 +85,7 @@ class TestStart(unittest.TestCase):
         start = query.get_clauses()[0]
         self.assertEqual(start.type, "CYPHER_AST_START")
 
-        self.assertIsNone(start.get_predicate())
+        self.assertTrue(start.get_predicate() is None)
 
         self.assertEqual(len(start.get_points()), 1)
         iquery = start.get_points()[0]
@@ -131,7 +131,7 @@ class TestStart(unittest.TestCase):
         start = query.get_clauses()[0]
         self.assertEqual(start.type, "CYPHER_AST_START")
 
-        self.assertIsNone(start.get_predicate())
+        self.assertTrue(start.get_predicate() is None)
 
         self.assertEqual(len(start.get_points()), 1)
         lookup = start.get_points()[0]
@@ -183,7 +183,7 @@ class TestStart(unittest.TestCase):
         start = query.get_clauses()[0]
         self.assertEqual(start.type, "CYPHER_AST_START")
 
-        self.assertIsNone(start.get_predicate())
+        self.assertTrue(start.get_predicate() is None)
 
         self.assertEqual(len(start.get_points()), 1)
         scan = start.get_points()[0]
@@ -216,7 +216,7 @@ class TestStart(unittest.TestCase):
         start = query.get_clauses()[0]
         self.assertEqual(start.type, "CYPHER_AST_START")
 
-        self.assertIsNone(start.get_predicate())
+        self.assertTrue(start.get_predicate() is None)
 
         self.assertEqual(len(start.get_points()), 1)
         lookup = start.get_points()[0]
@@ -260,7 +260,7 @@ class TestStart(unittest.TestCase):
         start = query.get_clauses()[0]
         self.assertEqual(start.type, "CYPHER_AST_START")
 
-        self.assertIsNone(start.get_predicate())
+        self.assertTrue(start.get_predicate() is None)
 
         self.assertEqual(len(start.get_points()), 1)
         iquery = start.get_points()[0]
@@ -306,7 +306,7 @@ class TestStart(unittest.TestCase):
         start = query.get_clauses()[0]
         self.assertEqual(start.type, "CYPHER_AST_START")
 
-        self.assertIsNone(start.get_predicate())
+        self.assertTrue(start.get_predicate() is None)
 
         self.assertEqual(len(start.get_points()), 1)
         lookup = start.get_points()[0]
@@ -358,7 +358,7 @@ class TestStart(unittest.TestCase):
         start = query.get_clauses()[0]
         self.assertEqual(start.type, "CYPHER_AST_START")
 
-        self.assertIsNone(start.get_predicate())
+        self.assertTrue(start.get_predicate() is None)
 
         self.assertEqual(len(start.get_points()), 1)
         scan = start.get_points()[0]

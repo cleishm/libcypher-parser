@@ -52,7 +52,7 @@ class TestPatternComprehension(unittest.TestCase):
         exp = proj.get_expression()
         self.assertEqual(exp.type, "CYPHER_AST_PATTERN_COMPREHENSION")
 
-        self.assertIsNone(exp.get_identifier())
+        self.assertTrue(exp.get_identifier() is None)
 
         path = exp.get_pattern()
         self.assertEqual(path.type, "CYPHER_AST_PATTERN_PATH")
@@ -73,7 +73,7 @@ class TestPatternComprehension(unittest.TestCase):
         self.assertEqual(id.type, "CYPHER_AST_IDENTIFIER")
         self.assertEqual(id.get_name(), "b")
 
-        self.assertIsNone(exp.get_predicate())
+        self.assertTrue(exp.get_predicate() is None)
 
         eval = exp.get_eval()
         self.assertEqual(eval.type, "CYPHER_AST_PROPERTY_OPERATOR")

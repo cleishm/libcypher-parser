@@ -16,7 +16,8 @@ import subprocess
 import os.path
 
 
-os.chdir(os.path.dirname(__file__))
+os.chdir(os.path.abspath(os.path.dirname(__file__)))
 
 subprocess.check_call(['./setup.py', 'build_ext', '-i'])
-subprocess.check_call(['python', '-m', 'unittest', 'discover'])
+subprocess.check_call(['pip', 'install', 'nose'])
+subprocess.check_call(['nosetests'])
