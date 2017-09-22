@@ -29,28 +29,37 @@ bindings = Extension(
 )
 
 description = u"""
-Python bindings for libcypher-parser that provide access to parsed AST.
+Python bindings for libcypher-parser.
 """.strip()
 
 setup(
     name=u'pycypher',
-    version='0.1.0',
+    version='0.0.4',
     description=description,
     long_description=description,
     license='Apache License 2.0',
-    url=u'https://github.com/google/timesketch/tree/master/contrib/libcypher-python',
-    maintainer=u'Timesketch development team',
-    maintainer_email=u'timesketch-dev@googlegroups.com',
+    url=u'https://github.com/cleishm/libcypher-parser/tree/master/pycypher',
+    maintainer=u'Chris Leishman (http://github.com/cleishm)',
+    maintainer_email=u'chris@leishman.org',
     classifiers=[
-        u'Development Status :: 1 - Planning',
+        u'Development Status :: 3 - Alpha',
         u'Intended Audience :: Developers',
-        u'Programming Language :: Python',
         u'Programming Language :: Python :: 2',
+        u'Programming Language :: Python :: 2.6',
+        u'Programming Language :: Python :: 2.7',
+        u'Programming Language :: Python :: 3',
+        u'Programming Language :: Python :: 3.3',
+        u'Programming Language :: Python :: 3.4',
+        u'Programming Language :: Python :: 3.5',
+        u'Programming Language :: Python :: 3.6',
+        u'Programming Language :: Python :: Implementation :: CPython',
         u'Programming Language :: C',
+        u'Operating System :: POSIX :: Linux',
+        u'Operating System :: MacOS :: MacOS X',
         u'Topic :: Software Development :: Libraries',
     ],
     ext_modules=[bindings],
-    packages=['pycypher'],
+    packages=['pycypher', 'pycypher.tests'],
     include_package_data=True,
     zip_safe=False,
     install_requires=[],

@@ -62,18 +62,18 @@ class TestFindNodes(unittest.TestCase):
         ast = self.result[0]
 
         start_clause, return_clause = ast.find_nodes(role="clause")
-        self.assertEqual(start_clause.role, "clause")
-        self.assertEqual(return_clause.role, "clause")
+        self.assertTrue("clause" in start_clause._roles)
+        self.assertTrue("clause" in return_clause._roles)
 
         body, = ast.find_nodes(role="body")
-        self.assertEqual(body.role, "body")
+        self.assertTrue("body" in body._roles)
 
         return_clause, = ast.find_nodes(role="clause", type="CYPHER_AST_RETURN")
-        self.assertEqual(return_clause.role, "clause")
+        self.assertTrue("clause" in return_clause._roles)
         self.assertEqual(return_clause.type, "CYPHER_AST_RETURN")
 
         predicate, = ast.find_nodes(role="predicate")
-        self.assertEqual(predicate.role, "predicate")
+        self.assertTrue("predicate" in predicate._roles)
 
     def test_find_by_range(self):
         ast = self.result[0]
@@ -163,7 +163,7 @@ class TestToJson(unittest.TestCase):
             "props": {},
             "start": 0,
             "end": 9,
-            "role": None,
+            "roles": [],
         })
 
         alias = ast.get_body().get_clauses()[0] \
@@ -175,5 +175,5 @@ class TestToJson(unittest.TestCase):
             "props": {"name": "1"},
             "start": 7,
             "end": 8,
-            "role": "alias",
+            "roles": ["alias"],
         })

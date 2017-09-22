@@ -81,6 +81,18 @@ pycypher_ast_list_prop_t;
 extern pycypher_ast_list_prop_t* pycypher_ast_list_props;
 extern size_t pycypher_ast_list_props_len;
 
+typedef const cypher_astnode_t* (*pycypher_ast_list_getter_t)(const cypher_astnode_t*, unsigned int);
+typedef struct {
+  cypher_astnode_type_t node_type;
+  const char* name;
+  const char* role;
+  pycypher_length_getter_t length_getter;
+  pycypher_ast_list_getter_t list_getter;
+}
+pycypher_ast_list_plus_one_prop_t;
+extern pycypher_ast_list_plus_one_prop_t* pycypher_ast_list_plus_one_props;
+extern size_t pycypher_ast_list_plus_one_props_len;
+
 typedef const cypher_astnode_t* (*pycypher_ast_getter_t)(const cypher_astnode_t*);
 typedef struct {
   cypher_astnode_type_t node_type;

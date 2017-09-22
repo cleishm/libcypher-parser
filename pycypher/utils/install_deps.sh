@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/bin/bash
 # Copyright 2017, Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,13 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+set -e -x
 
-import subprocess
-import os.path
+yum install -y autoconf automake libtool libtool-ltdl-devel check
 
-
-os.chdir(os.path.abspath(os.path.dirname(__file__)))
-
-subprocess.check_call(['./setup.py', 'build_ext', '-i'])
-subprocess.check_call(['pip', 'install', 'nose'])
-subprocess.check_call(['nosetests'])
+wget http://piumarta.com/software/peg/peg-0.1.18.tar.gz
+tar -xzf peg-0.1.18.tar.gz
+cd peg-0.1.18
+make
+make install

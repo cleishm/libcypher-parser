@@ -1,0 +1,27 @@
+notifications:
+  email: false
+
+env:
+  global:
+  - secure: LyHR6HZbttZP60FEPk95woZA3qxH26WG7wA4fm+dTh/+X92zr4YMiFdEXQJvu38sytIzLQkMefhBLNSl+nmfQah5dZDdgaFNAi6dUzprKQzRgWIgaCuW9EvFpAr0tQ8e60mVQ8+PFqiNMOzHASCT0DHcyIBCNG36/suxS1LetEPN8/0bhdSamKNQQn45ZSpOVK/oH/r0J+jUXzfCuyWcJIzUSw/qgDvkylVItF56GJDw9QWNloCLAGklQCrk+9s0VNk/5f0ASszaCSfltY9PDbWV10eLMn0QmIttkiXv55knhPOusDJDmRngppwk+jIMn7IwJp1fssoDUDMFPE9nL4mykoDAxOFhTANAjQt7Yw0lSC7tVxaKwUr1x/jboEwGC6kirEwyKtQVMmwTT2JiSGpVjyEZejMbi+AdTfJRwuNrTJnTRU3PqNsTIpyqhnEPNwKQu94572hXLWrBtvy8UhZX5p5C3p9Y9Q04z3ZAcOql7CDHFs2oWhyvUo8vxaCIwBrZQHMhK1bTrdkpr64aFoRZJPGNibaanVdvNy5ITT8gwzMaNGuqAC9lhbTOBHPKIFTPVHFaxwbQQu6VImhWv5joYBFl0OMte2hZn1YKCKmwJmoDfzGQXK77HyoYEzoTDqltkeCmPzQRFKk8emz4iaXRXSZC6KXT7QKZubEszWc=
+  - secure: RYI12Nc+mRsnJgnE1++AKUcOCPXtWxnnSBXi7kO2di4jZ6Jb4TR53eyCJ6gqqSgIKrnWL04V3py3AZO2V21Q453SdvSHx+A/L7GltzmVwszxlnyGhnPHd5y4q6FxbSbB+USzaxJMgunkm0vPoVWlBwliMg/YKzTdXUVzPV0/tlTMCpcuajqtJF4EvquUv2yQxnDdpHB8qBhHaN9RrgdQQRx/SjH2TF1iCK9LrGhLUuXgzYuIpiTFrwq/AXWO58AAPq8bfyxTunjNlg27IiyiLg6Fh8XLoC/IRQgyX+iK05ySOtgYc1CM+bFVxM+H2XbIfc4etryDRlv+DNJUR8BCd93T8hMPzwYXCWNQeBYqCtEyuEMi7fdh1dU0cwkTCV92j4dggmt5hK9DRA+3eNIt/se0yGT4Se21V0fZh7e+PsokAA+XaH2nZ5DHat/aQp5xM42F0z5an11JnlQWjLnTFKiCwo9d9tKld5F77Re9l0P4pKvrgIPLp5wyN0LBWxjzX8Dqo7aZzOWVkBrxx4M+obmyKDp2mf2xzEbjSdrgEowiQ/H2f1Ue0qXP9mUESkzSN/xB6l5I1/H9kif8h0uwJkxWZgwXa0S+lKYdUqdf8OR0f/XlMQu3EfLqBpSILfPpWlioHo0naRIzMkl2rHbCd45N0B8RxUlnBFddTNALx6A=
+
+matrix:
+  include:
+    - os: linux
+      sudo: required
+      language: python
+      python: 2.7
+      services:
+        - docker
+      script: pycypher/linux_build.sh
+    - os: osx
+      language: generic
+      script: pycypher/osx_build.sh
+
+deploy:
+  provider: script
+  script: pycypher/utils/upload_wheels.sh $PYPI_USER $PYPI_PASSWORD
+  skip_cleanup: true
+  on:
+    tags: true

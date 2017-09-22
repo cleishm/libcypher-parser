@@ -753,6 +753,7 @@ const cypher_astnode_t *cypher_ast_create_node_prop_index_get_label(
  * @return A `CYPHER_AST_PROP_NAME` node.
  */
 __cypherlang_pure
+__cypherlang_getter
 const cypher_astnode_t *cypher_ast_create_node_prop_index_get_prop_name(
         const cypher_astnode_t *node);
 
@@ -798,6 +799,7 @@ const cypher_astnode_t *cypher_ast_drop_node_prop_index_get_label(
  * @return A `CYPHER_AST_PROP_NAME` node.
  */
 __cypherlang_pure
+__cypherlang_getter
 const cypher_astnode_t *cypher_ast_drop_node_prop_index_get_prop_name(
         const cypher_astnode_t *node);
 
@@ -1289,6 +1291,7 @@ const cypher_astnode_t *cypher_ast_load_csv_get_identifier(
  * @return A `CYPHER_AST_STRING` node, or null.
  */
 __cypherlang_pure
+__cypherlang_getter
 const cypher_astnode_t *cypher_ast_load_csv_get_field_terminator(
         const cypher_astnode_t *node);
 
@@ -1400,6 +1403,7 @@ const cypher_astnode_t *cypher_ast_node_index_lookup_get_identifier(
  * @return A `CYPHER_AST_INDEX_NAME` node.
  */
 __cypherlang_pure
+__cypherlang_getter
 const cypher_astnode_t *cypher_ast_node_index_lookup_get_index_name(
         const cypher_astnode_t *node);
 
@@ -1413,6 +1417,7 @@ const cypher_astnode_t *cypher_ast_node_index_lookup_get_index_name(
  * @return A `CYPHER_AST_PROP_NAME` node.
  */
 __cypherlang_pure
+__cypherlang_getter
 const cypher_astnode_t *cypher_ast_node_index_lookup_get_prop_name(
         const cypher_astnode_t *node);
 
@@ -1474,6 +1479,7 @@ const cypher_astnode_t *cypher_ast_node_index_query_get_identifier(
  * @return A `CYPHER_AST_INDEX_NAME` node.
  */
 __cypherlang_pure
+__cypherlang_getter
 const cypher_astnode_t *cypher_ast_node_index_query_get_index_name(
         const cypher_astnode_t *node);
 
@@ -1630,6 +1636,7 @@ const cypher_astnode_t *cypher_ast_rel_index_lookup_get_identifier(
  * @return A `CYPHER_AST_INDEX_NAME` node.
  */
 __cypherlang_pure
+__cypherlang_getter
 const cypher_astnode_t *cypher_ast_rel_index_lookup_get_index_name(
         const cypher_astnode_t *node);
 
@@ -1643,6 +1650,7 @@ const cypher_astnode_t *cypher_ast_rel_index_lookup_get_index_name(
  * @return A `CYPHER_AST_PROP_NAME` node.
  */
 __cypherlang_pure
+__cypherlang_getter
 const cypher_astnode_t *cypher_ast_rel_index_lookup_get_prop_name(
         const cypher_astnode_t *node);
 
@@ -1704,6 +1712,7 @@ const cypher_astnode_t *cypher_ast_rel_index_query_get_identifier(
  * @return A `CYPHER_AST_INDEX_NAME` node.
  */
 __cypherlang_pure
+__cypherlang_getter
 const cypher_astnode_t *cypher_ast_rel_index_query_get_index_name(
         const cypher_astnode_t *node);
 
@@ -1965,6 +1974,7 @@ const cypher_astnode_t *cypher_ast_using_index_get_label(
  * @return A `CYPHER_AST_PROP_NAME` node.
  */
 __cypherlang_pure
+__cypherlang_getter
 const cypher_astnode_t *cypher_ast_using_index_get_prop_name(
         const cypher_astnode_t *node);
 
@@ -2091,6 +2101,7 @@ cypher_astnode_t *cypher_ast_merge(const cypher_astnode_t *path,
  * @return A `CYPHER_AST_PATTERN_PATH` node.
  */
 __cypherlang_pure
+__cypherlang_getter
 const cypher_astnode_t *cypher_ast_merge_get_pattern_path(
         const cypher_astnode_t *node);
 
@@ -2869,6 +2880,7 @@ const cypher_astnode_t *cypher_ast_with_get_projection(
  * @return A `CYPHER_AST_ORDER_BY` node, or null.
  */
 __cypherlang_pure
+__cypherlang_getter
 const cypher_astnode_t *cypher_ast_with_get_order_by(
         const cypher_astnode_t *node);
 
@@ -2994,6 +3006,7 @@ cypher_astnode_t *cypher_ast_call(const cypher_astnode_t *proc_name,
  * @return A `CYPHER_AST_PROC_NAME` node.
  */
 __cypherlang_pure
+__cypherlang_getter
 const cypher_astnode_t *cypher_ast_call_get_proc_name(
         const cypher_astnode_t *node);
 
@@ -3141,6 +3154,7 @@ const cypher_astnode_t *cypher_ast_return_get_projection(
  * @return A `CYPHER_AST_ORDER_BY` node, or null.
  */
 __cypherlang_pure
+__cypherlang_getter
 const cypher_astnode_t *cypher_ast_return_get_order_by(
         const cypher_astnode_t *node);
 
@@ -3424,6 +3438,7 @@ const cypher_operator_t *cypher_ast_binary_operator_get_operator(
  * @return The argument, of type `CYPHER_AST_EXPRESSION`.
  */
 __cypherlang_pure
+__cypherlang_getter
 const cypher_astnode_t *cypher_ast_binary_operator_get_argument1(
         const cypher_astnode_t *node);
 
@@ -3437,6 +3452,7 @@ const cypher_astnode_t *cypher_ast_binary_operator_get_argument1(
  * @return The argument, of type `CYPHER_AST_EXPRESSION`.
  */
 __cypherlang_pure
+__cypherlang_getter
 const cypher_astnode_t *cypher_ast_binary_operator_get_argument2(
         const cypher_astnode_t *node);
 
@@ -3536,6 +3552,7 @@ cypher_astnode_t *cypher_ast_apply_operator(const cypher_astnode_t *func_name,
  * @return A `CYPHER_AST_FUNCTION_NAME` node.
  */
 __cypherlang_pure
+__cypherlang_getter
 const cypher_astnode_t *cypher_ast_apply_operator_get_func_name(
         const cypher_astnode_t *node);
 
@@ -3608,6 +3625,7 @@ cypher_astnode_t *cypher_ast_apply_all_operator(
  * @return A `CYPHER_AST_FUNCTION_NAME` node.
  */
 __cypherlang_pure
+__cypherlang_getter
 const cypher_astnode_t *cypher_ast_apply_all_operator_get_func_name(
         const cypher_astnode_t *node);
 
@@ -3667,6 +3685,7 @@ const cypher_astnode_t *cypher_ast_property_operator_get_expression(
  * @return A `CYPHER_AST_PROP_NAME` node.
  */
 __cypherlang_pure
+__cypherlang_getter
 const cypher_astnode_t *cypher_ast_property_operator_get_prop_name(
         const cypher_astnode_t *node);
 
@@ -3871,6 +3890,7 @@ cypher_astnode_t *cypher_ast_map_projection_literal(
  * @return A `CYPHER_AST_PROP_NAME` node.
  */
 __cypherlang_pure
+__cypherlang_getter
 const cypher_astnode_t *cypher_ast_map_projection_literal_get_prop_name(
         const cypher_astnode_t *node);
 
@@ -3916,6 +3936,7 @@ cypher_astnode_t *cypher_ast_map_projection_property(
  * @return A `CYPHER_AST_PROP_NAME` node.
  */
 __cypherlang_pure
+__cypherlang_getter
 const cypher_astnode_t *cypher_ast_map_projection_property_get_prop_name(
         const cypher_astnode_t *node);
 

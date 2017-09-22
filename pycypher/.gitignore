@@ -1,6 +1,11 @@
-/pycypher/bindings.so
-/build
+__pycache__
 /pycypher/*.pyc
-/tests/*.pyc
+/pycypher/tests/*.pyc
+/pycypher/*.so
+/pycypher/node_types.c
+/pycypher/operators.c
+/pycypher/props.c
+/pycypher/getters.py
+/build
 /dist/
 /pycypher.egg-info/
