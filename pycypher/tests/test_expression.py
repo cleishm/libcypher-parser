@@ -419,7 +419,7 @@ class TestExpression(unittest.TestCase):
         self.assertEqual(node.get_name(), "bar")
 
         start = exp.get_start()
-        self.assertIsNone(start)
+        self.assertTrue(start is None)
         end = exp.get_end()
         self.assertEqual(end.type, "CYPHER_AST_BINARY_OPERATOR")
 
@@ -433,6 +433,6 @@ class TestExpression(unittest.TestCase):
         self.assertEqual(node.get_name(), "baz")
 
         start = exp.get_start()
-        self.assertIsNone(start)
+        self.assertTrue(start is None)
         end = exp.get_end()
-        self.assertIsNone(end)
+        self.assertTrue(end is None)

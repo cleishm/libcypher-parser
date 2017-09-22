@@ -54,7 +54,7 @@ class TestMatch(unittest.TestCase):
         self.assertEqual(len(pattern.get_paths()), 1)
 
         self.assertEqual(len(match.get_hints()), 0)
-        self.assertIsNone(match.get_predicate())
+        self.assertTrue(match.get_predicate() is None)
 
     def test_parse_simple_optional_match(self):
         result = pycypher.parse_query("OPTIONAL MATCH (n) RETURN n;")
@@ -88,7 +88,7 @@ class TestMatch(unittest.TestCase):
         self.assertEqual(len(pattern.get_paths()), 1)
 
         self.assertEqual(len(match.get_hints()), 0)
-        self.assertIsNone(match.get_predicate())
+        self.assertTrue(match.get_predicate() is None)
 
     def test_parse_match_with_predicate(self):
         result = pycypher.parse_query("MATCH (n) WHERE n:Foo RETURN n;")
@@ -196,7 +196,7 @@ class TestMatch(unittest.TestCase):
         self.assertEqual(prop_name.type, "CYPHER_AST_PROP_NAME")
         self.assertEqual(prop_name.get_value(), "bar")
 
-        self.assertIsNone(match.get_predicate())
+        self.assertTrue(match.get_predicate() is None)
 
     def test_parse_match_with_using_join_hint(self):
         result = pycypher.parse_query("MATCH (n), (m) USING JOIN ON n, m RETURN n;")
@@ -255,7 +255,7 @@ class TestMatch(unittest.TestCase):
         self.assertEqual(id.type, "CYPHER_AST_IDENTIFIER")
         self.assertEqual(id.get_name(), "m")
 
-        self.assertIsNone(match.get_predicate())
+        self.assertTrue(match.get_predicate() is None)
 
     def test_parse_match_with_using_scan_hint(self):
         result = pycypher.parse_query("MATCH (n:Foo) USING SCAN n:Foo RETURN n;")
@@ -306,5 +306,5 @@ class TestMatch(unittest.TestCase):
         self.assertEqual(label.type, "CYPHER_AST_LABEL")
         self.assertEqual(label.get_name(), "Foo")
 
-        self.assertIsNone(match.get_predicate())
+        self.assertTrue(match.get_predicate() is None)
 

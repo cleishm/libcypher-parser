@@ -25,12 +25,13 @@ AM_MAINTAINER_MODE([enable])
 DECLARE_VERSIONS
 WITH_LIBS
 
-GCC_CFLAGS="-fvisibility=hidden -pipe -Wall -W -Werror \
+GCC_CFLAGS="-lm -lm -lm -lm -lm -fvisibility=hidden -pipe -Wall -W -Werror \
     -Wno-unused-parameter -Wno-missing-field-initializers -Wpointer-arith \
     -Wstrict-prototypes -Wcast-qual -Wcast-align -Wno-error=unused-function \
     -Wno-error=unused-variable -Wno-error=deprecated-declarations"
 
-LT_INIT
+AC_PROG_LIBTOOL
+AC_SUBST(LIBTOOL_DEPS)
 AC_LANG([C])
 AC_PROG_CC
 PROG_CC_C11

@@ -57,7 +57,7 @@ class TestLoadCsv(unittest.TestCase):
         self.assertEqual(id.get_name(), "m")
 
         field_terminator = clause.get_field_terminator()
-        self.assertIsNone(field_terminator)
+        self.assertTrue(field_terminator is None)
 
     def test_parse_load_csv_with_headers(self):
         result = pycypher.parse_query("LOAD CSV WITH HEADERS FROM {source} AS m RETURN m;")
@@ -98,7 +98,7 @@ class TestLoadCsv(unittest.TestCase):
         self.assertEqual(id.get_name(), "m")
 
         field_terminator = clause.get_field_terminator()
-        self.assertIsNone(field_terminator)
+        self.assertTrue(field_terminator is None)
 
     def test_parse_load_csv_with_field_terminator(self):
         result = pycypher.parse_query("LOAD CSV FROM {source} AS m FIELDTERMINATOR '|' RETURN m;")
