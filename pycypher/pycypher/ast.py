@@ -24,7 +24,7 @@ class CypherAstNode(GettersMixin):
         self._indirect_props = []
         self._start = start
         self._end = end
-        self._role = None
+        self._roles = []
         self._init_props()
 
     def _init_props(self):
@@ -42,11 +42,11 @@ class CypherAstNode(GettersMixin):
     def _add_child_role(self, id, role):
         for child in self._children:
             if child.id == id:
-                child._role = role
+                child._roles.append(role)
                 return
         for d in self._all_descendants():
             if d.id == id:
-                d._role = role
+                d._roles.append(role)
                 self._indirect_props.append(role)
                 return
         raise ValueError('Child with id %d not found.' % id)
@@ -84,10 +84,6 @@ class CypherAstNode(GettersMixin):
     def end(self):
         return self._end
 
-    @property
-    def role(self):
-        return self._role
-
     def find_nodes(
         self, type=None, role=None, instanceof=None, start=None, end=None
     ):
@@ -100,7 +96,7 @@ class CypherAstNode(GettersMixin):
             if type is not None:
                 result = result and node.type == type
             if role is not None:
-                result = result and node.role == role
+                result = result and role in node._roles
             if instanceof is not None:
                 result = result and node.instanceof(instanceof)
             if start is not None:
@@ -131,5 +127,5 @@ class CypherAstNode(GettersMixin):
             "props": self._props,
             "start": self._start,
             "end": self._end,
-            "role": self._role,
+            "roles": self._roles,
         }

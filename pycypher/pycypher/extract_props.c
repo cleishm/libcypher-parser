@@ -82,6 +82,18 @@ PyObject* pycypher_extract_ast_list_prop(const cypher_astnode_t* src_ast, pycyph
   return result;
 }
 
+PyObject* pycypher_extract_ast_list_plus_one_prop(const cypher_astnode_t* src_ast, pycypher_ast_list_plus_one_prop_t* prop) {
+  int n = prop->length_getter(src_ast) + 1;
+  PyObject* result = PyList_New(n);
+  int i;
+  for(i=0; i<n; ++i)
+    // PyList_SetItem consumes a reference so no need to call Py_DECREF
+    PyList_SetItem(result, i, pycypher_astnode_to_python_dict(
+      prop->list_getter(src_ast, i), prop->role
+    ));
+  return result;
+}
+
 PyObject* pycypher_extract_ast_prop(const cypher_astnode_t* src_ast, pycypher_ast_prop_t* prop) {
   const cypher_astnode_t* src_prop = prop->getter(src_ast);
   if(!src_prop)
@@ -156,6 +168,17 @@ PyObject* pycypher_extract_props(const cypher_astnode_t* src_ast) {
       if(extracted_prop != Py_None)
         PyDict_SetItemString(
           result, pycypher_ast_list_props[i].name, extracted_prop
+        );
+      Py_DECREF(extracted_prop);
+    }
+  for(i=0; i<pycypher_ast_list_plus_one_props_len; ++i)
+    if(cypher_astnode_instanceof(src_ast, pycypher_ast_list_plus_one_props[i].node_type)) {
+      extracted_prop = pycypher_extract_ast_list_plus_one_prop(
+        src_ast, &pycypher_ast_list_plus_one_props[i]
+      );
+      if(extracted_prop != Py_None)
+        PyDict_SetItemString(
+          result, pycypher_ast_list_plus_one_props[i].name, extracted_prop
         );
       Py_DECREF(extracted_prop);
     }

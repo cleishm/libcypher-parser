@@ -591,7 +591,7 @@ class TestPattern(unittest.TestCase):
 
         range = rel.get_varlength()
         self.assertEqual(range.type, "CYPHER_AST_RANGE")
-        start = range.get_end()
+        start = range.get_start()
         end = range.get_end()
         self.assertEqual(start.type, "CYPHER_AST_INTEGER")
         self.assertEqual(start.get_valuestr(), "7")

@@ -25,7 +25,7 @@ AM_MAINTAINER_MODE([enable])
 DECLARE_VERSIONS
 WITH_LIBS
 
-GCC_CFLAGS="-lm -lm -lm -lm -lm -fvisibility=hidden -pipe -Wall -W -Werror \
+GCC_CFLAGS="-fvisibility=hidden -pipe -Wall -W -Werror \
     -Wno-unused-parameter -Wno-missing-field-initializers -Wpointer-arith \
     -Wstrict-prototypes -Wcast-qual -Wcast-align -Wno-error=unused-function \
     -Wno-error=unused-variable -Wno-error=deprecated-declarations"
