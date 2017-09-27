@@ -1,0 +1,226 @@
+# Developer guide
+Some familiarity with the
+[Python C API](https://docs.python.org/2/c-api/index.html) may be helpful.
+
+## Building
+
+##### linux_build.sh
+This is the preferred way. Requires docker to be available. Just run
+`./linux_build.sh`. It will first build a container image with dependencies
+and compile and install libcypher-parser into it. Then it will use this
+image to build and test pycypher. Afterwards, compiled wheels containing
+statically-linked copy of libcypher-parser will be available in `dist/`.
+
+##### local_tests.sh
+If for some reason using docker is not possible, this script can be used to build
+and test the bindings. First, compile libcypher-parser in the parent directory.
+After that, run `./local_tests.sh`. This script relies on
+`../src/lib/cypher-parser.h` and `../src/lib/.libs/libcypher-parser.so`
+to be present.
+
+##### osx_build.sh
+Unfortunately, this is only meant to be used in a CI build. If you want to test
+Mac OS X compatiblity locally, use `local_tests.sh`.
+
+## How generation works
+`generate.py` is a self-contained (no dependencies necessary) python script that
+parses `../src/lib/cypher-parser.h.in` and produces `pycypher/operators.c`,
+`pycypher/node_types.c`, `pycypher/props.c` and `pycypher/getters.py`.
+
+It uses regular expressions to look for annotated declarations in the code.
+
+## Annotations
+
+### types of ast nodes
+Declarations of the form
+```c
+CYPHER_NODE_TYPES_BEGIN
+...
+extern const cypher_astnode_type_t CYPHER_AST_{TYPE};
+...
+CYPHER_NODE_TYPES_END
+```
+will be available in the bindings. A `cypher_astnode_t` value will be
+translated to string of the form `'CYPHER_AST_{TYPE}'` on the Python side.
+
+*Example:*
+```c
+extern const cypher_astnode_type_t CYPHER_AST_STATEMENT;
+```
+```Python
+>>> from pycypher import parse_query
+>>> q, = parse_query("MATCH (a) RETURN (a)")
+>>> q.type
+'CYPHER_AST_STATEMENT'
+```
+`'CYPHER_AST_UNKNOWN'` will be returned for any `cypher_astnode_type_t` value
+that does not have a corresponding declaration between `CYPHER_NODE_TYPES_BEGIN`
+and `CYPHER_NODE_TYPES_END`.
+
+### operators
+Declarations of the form
+```c
+CYPHER_OPERATORS_BEGIN
+...
+extern const cypher_operator_t *CYPHER_OP_{TYPE};
+...
+CYPHER_OPERATORS_END
+```
+will be available in the bindings. A `cypher_operator_t *` value will be
+translated to string of the form `'CYPHER_OP_{TYPE}'` on the Python side.
+
+*Example:*
+```c
+extern const cypher_operator_t *CYPHER_OP_OR;
+```
+```Python
+>>> from pycypher import parse_query
+>>> q, = parse_query('MATCH (a) WHERE a.x OR a.y')
+>>> node, = q.find_nodes(type='CYPHER_AST_BINARY_OPERATOR')
+>>> node.get_operator()
+'CYPHER_OP_OR'
+```
+`'CYPHER_OP_UNKNOWN'` will be returned for any `cypher_operator_t *` value
+that does not have a corresponding declaration between `CYPHER_OPERATORS_BEGIN`
+and `CYPHER_OPERATORS_END`.
+
+### properties of ast nodes
+Function declarations of the form:
+```c
+__cypherlang_getter enum cypher_rel_direction cypher_ast_{type}_get_{prop}(const cypher_astnode_t * {_node});
+__cypherlang_getter const cypher_operator_t * cypher_ast_{type}_get_{prop}(const cypher_astnode_t * {_node});
+__cypherlang_getter bool cypher_ast_{type}_get_{prop}(const cypher_astnode_t * {_node});
+__cypherlang_getter bool cypher_ast_{type}_is_{prop}(const cypher_astnode_t * {_node});
+__cypherlang_getter bool cypher_ast_{type}_has_{prop}(const cypher_astnode_t * {_node});
+__cypherlang_getter const char * cypher_ast_{type}_get_{prop}(const cypher_astnode_t * {_node});
+__cypherlang_getter const cypher_astnode_t * cypher_ast_{type}_get_{prop}(const cypher_astnode_t * {_node});
+```
+
+are interpreted as getters for properties on ast nodes. On the Python side,
+they appear as getter methods (`get_{prop}()`, `is_{prop}()` or `has_{prop}()`) on
+the CypherAstNode class.
+
+*Example 1:*
+```c
+__cypherlang_getter
+const cypher_astnode_t *cypher_ast_statement_get_body(
+        const cypher_astnode_t *node);
+```
+```python
+>>> from pycypher import parse_query
+>>> q, = parse_query("MATCH (a) RETURN (a)")
+>>> q
+<CypherAstNode.CYPHER_AST_STATEMENT>
+>>> q.get_body()
+<CypherAstNode.CYPHER_AST_QUERY>
+```
+
+*Example 2:*
+```c
+__cypherlang_getter
+const char *cypher_ast_identifier_get_name(const cypher_astnode_t *node);
+```
+```python
+>>> from pycypher import parse_query
+>>> q, = parse_query("MATCH (a)")
+>>> match = q.get_body().get_clauses()[0]
+>>> node_pattern, = match.get_pattern().get_paths()[0].get_elements()
+>>> ident = node_pattern.get_identifier()
+>>> ident.get_name()
+'a'
+```
+
+*Example 3:*
+```c
+__cypherlang_getter
+bool cypher_ast_create_node_prop_constraint_is_unique(
+       const cypher_astnode_t *node);
+```
+```python
+>>> q1, q2 = parse_query("""
+  CREATE CONSTRAINT ON (f:Foo) ASSERT exists(f.bar);
+  CREATE CONSTRAINT ON (f:Foo) ASSERT f.bar IS UNIQUE;
+""")
+>>> q1.get_body().is_unique()
+False
+>>> q2.get_body().is_unique()
+True
+```
+
+### list-valued properties of ast nodes
+Function declarations of the form:
+```c
+__cypherlang_list_getter({length_getter})
+const cypher_operator_t * cypher_ast_{type}_get_{prop}(
+  const cypher_astnode_t * {_node}, unsigned int {_index});
+__cypherlang_list_getter({length_getter})
+const cypher_astnode_t * cypher_ast_{type}_get_{prop}(
+  const cypher_astnode_t * {_node}, unsigned int {_index});
+__cypherlang_list_getter({length_getter} + 1)
+const cypher_astnode_t * cypher_ast_{type}_get_{prop}(
+  const cypher_astnode_t * {_node}, unsigned int {_index});
+```
+
+are interpreted as getters for list-valued properties of ast nodes.
+`cypher_ast_{type}_{length_getter}` is used to determine length of
+the list. `cypher_ast_{type}_get_{prop}` is used to fetch elements to fill the
+list.
+
+Edge case: `__cypherlang_list_getter({length_getter} + 1)` syntax
+increases length of the list by one - it is necessary for
+`cypher_ast_comparison_get_argument` to be correctly exposed to Python
+as `get_arguments()`.
+
+On the Python side, they appear as getter methods `get_{prop}s()`
+on the CypherAstNode class.  These methods return a Python
+list.
+
+*Example 1:*
+```c
+unsigned int cypher_ast_query_nclauses(const cypher_astnode_t *node);
+
+__cypherlang_list_getter(nclauses)
+const cypher_astnode_t *cypher_ast_query_get_clause(
+        const cypher_astnode_t *node, unsigned int index);
+```
+```python
+>>> from pycypher import parse_query
+>>> q, = parse_query("MATCH (a) RETURN (a)")
+>>> body = q.get_body()
+>>> body.get_clauses()
+[<CypherAstNode.CYPHER_AST_MATCH>, <CypherAstNode.CYPHER_AST_RETURN>]
+```
+
+*Example 2:*
+```c
+unsigned int cypher_ast_comparison_get_length(const cypher_astnode_t *node);
+
+__cypherlang_list_getter(get_length)
+const cypher_operator_t *cypher_ast_comparison_get_operator(
+        const cypher_astnode_t *node, unsigned int pos);
+```
+```python
+>>> from pycypher import parse_query
+>>> q, = parse_query("MATCH (a) WHERE a.x < a.y <= a.z")
+>>> where = q.get_body().get_clauses()[0].get_predicate()
+>>> where.get_operators()
+['CYPHER_OP_LT', 'CYPHER_OP_LTE']
+```
+
+*Example 3:*
+```c
+unsigned int cypher_ast_comparison_get_length(const cypher_astnode_t *node);
+
+__cypherlang_list_getter(get_length + 1)
+const cypher_astnode_t *cypher_ast_comparison_get_argument(
+        const cypher_astnode_t *node, unsigned int pos);
+```
+```python
+>>> from pycypher import parse_query
+>>> q, = parse_query("MATCH (a) WHERE a.x < a.y <= a.z")
+>>> where = q.get_body().get_clauses()[0].get_predicate()
+>>> where.get_arguments()
+[<CypherAstNode.CYPHER_AST_PROPERTY_OPERATOR>,
+<CypherAstNode.CYPHER_AST_PROPERTY_OPERATOR>,
+<CypherAstNode.CYPHER_AST_PROPERTY_OPERATOR>,]
+```

@@ -32,13 +32,19 @@ description = u"""
 Python bindings for libcypher-parser.
 """.strip()
 
+long_description = u"""
+Homepage: https://github.com/cleishm/libcypher-parser/tree/master/pycypher
+""".strip()
+
 setup(
     name=u'pycypher',
     version='0.0.4',
     description=description,
-    long_description=description,
+    long_description=long_description,
     license='Apache License 2.0',
     url=u'https://github.com/cleishm/libcypher-parser/tree/master/pycypher',
+    author='Franciszek Piszcz, Google Inc.',
+    author_email='franek@google.com',
     maintainer=u'Chris Leishman (http://github.com/cleishm)',
     maintainer_email=u'chris@leishman.org',
     classifiers=[
