@@ -1,5 +1,6 @@
 //
 // Copyright 2011-2014 NimbusKit
+// Copied from https://github.com/NimbusKit/memorymapping/blob/master/src/fmemopen.c
 // Originally ported from https://github.com/ingenuitas/python-tesseract/blob/master/fmemopen.c
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
