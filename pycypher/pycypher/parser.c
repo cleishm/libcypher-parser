@@ -15,7 +15,7 @@
 #include "parser.h"
 
 #ifdef __APPLE__
-#include "fmemopen.c"
+#include "third_party/fmemopen.c"
 #endif
 
 const cypher_parse_result_t* pycypher_invoke_parser(const char* query) {
