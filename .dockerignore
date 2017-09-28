@@ -1,6 +1,10 @@
+**/.DS_Store/**/*
 **/.DS_Store
+**/.deps/**/*
 **/.deps
+**/.doc/**/*
 **/.doc
+**/.libs/**/*
 **/.libs
 **/*~
 **/*.1
@@ -15,6 +19,7 @@
 **/Makefile
 **/Makefile.in
 **/stamp-*
+**/TAGS/**/*
 **/TAGS
 INSTALL
 aclocal.m4
