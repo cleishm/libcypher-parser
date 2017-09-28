@@ -22,6 +22,29 @@ to be present.
 Unfortunately, this is only meant to be used in a CI build. If you want to test
 Mac OS X compatiblity locally, use `local_tests.sh`.
 
+## PyPI deployment
+Travis build is configured to deploy to PyPI whenever a git tag is pushed.
+It will first build the packages for Linux and Mac OS and run the tests.
+Packages will not be uploaded if the tests fail.
+
+The uploading code reads PyPI credentials from `$PYPI_USER` and `$PYPI_PASSWORD`
+environment variables.
+Package version is taken from `AC_INIT(...)` line in `configure.ac`.
+Additions after `~` sign are ignored, for example both
+`AC_INIT([libcypher-parser],[0.5.5~devel])` and `AC_INIT([libcypher-parser],[0.5.5])`
+will cause version of Python package to be `0.5.5`.
+Travis build number is used as a
+["build tag"](https://www.python.org/dev/peps/pep-0427/#file-name-convention)
+in uploaded wheels.
+
+Should anything go wrong, commiting a fix and pushing another git tag (tag name
+can be anything, it is only to trigger deploy in Travis) with the same version
+specified in `configure.ac` will upload new builds for this version so any
+subsequent downloads (even if users specify version explicitly) will use the new
+builds.
+PyPI will accept the upload even if package with this version already exists
+because the build tag will be different.
+
 ## How generation works
 `generate.py` is a self-contained (no dependencies necessary) python script that
 parses `../src/lib/cypher-parser.h.in` and produces `pycypher/operators.c`,

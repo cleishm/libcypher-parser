@@ -13,6 +13,7 @@
 
 from .bindings import parse_query as inner_parse_query
 from .ast import CypherAstNode
+from .version import __version__
 
 __ALL__ = ['parse_query', 'CypherAst']
 

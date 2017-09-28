@@ -6,6 +6,7 @@ __pycache__
 /pycypher/operators.c
 /pycypher/props.c
 /pycypher/getters.py
+/pycypher/version.py
 /build
 /dist/
 /pycypher.egg-info/

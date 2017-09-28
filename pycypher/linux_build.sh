@@ -19,6 +19,8 @@ cd ..
 docker build . -f pycypher/utils/pycypher_x86_64.dockerfile -t pycypher_x86_64
 docker build . -f pycypher/utils/pycypher_i686.dockerfile -t pycypher_i686
 
+rm -rf ./pycypher/dist
+
 # generate bindings
 ./pycypher/generate.py
 
@@ -52,11 +54,13 @@ fi
 
 # test
 docker run --rm \
+  -e 'TRAVIS' \
   -v `pwd`/pycypher/dist:/project/pycypher/dist \
   -v `pwd`/pycypher/utils:/project/pycypher/utils \
   quay.io/pypa/manylinux1_x86_64 \
   bash -c '/project/pycypher/utils/test_wheels.sh'
 docker run --rm \
+  -e 'TRAVIS' \
   -v `pwd`/pycypher/dist:/project/pycypher/dist \
   -v `pwd`/pycypher/utils:/project/pycypher/utils \
   quay.io/pypa/manylinux1_i686 \
