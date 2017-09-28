@@ -49,3 +49,7 @@ export CIBW_TEST_COMMAND='nosetests pycypher'
 cd pycypher
 pip install cibuildwheel==0.5.1
 cibuildwheel --output-dir dist
+
+# add build tag to wheels
+/Library/Frameworks/Python.framework/Versions/2.7/bin/python \
+  utils/add_build_tag_to_wheels.py dist $TRAVIS_BUILD_NUMBER

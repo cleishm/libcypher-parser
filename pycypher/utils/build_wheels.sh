@@ -14,6 +14,10 @@
 set -e -x
 
 cp -r /project/pycypher /pycypher
+rm -rf /pycypher/build
+rm -rf /pycypher/dist
+rm -rf /pycypher/*.pyc
+rm -rf /pycypher/*.so
 
 # Compile wheels
 for PYBIN in /opt/python/*/bin; do

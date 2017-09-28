@@ -32,6 +32,24 @@ docker run --rm \
   pycypher_i686 \
   linux32 bash -c '/project/pycypher/utils/build_wheels.sh'
 
+# if running on Travis CI, add a build tag to wheels so that it is possible
+# to re-run the build and it will upload wheels with new tag so that fixes
+# can be deployed to already-uploaded versions
+if [ "$TRAVIS" == "true" ] && [ "$CI" == "true" ]; then
+  docker run --rm \
+    -v `pwd`/pycypher:/project/pycypher \
+    pycypher_x86_64 \
+    /opt/python/cp27-cp27m/bin/python \
+      /project/pycypher/utils/add_build_tag_to_wheels.py \
+      /project/pycypher/dist $TRAVIS_BUILD_NUMBER
+  docker run --rm \
+    -v `pwd`/pycypher:/project/pycypher \
+    pycypher_i686 \
+    linux32 /opt/python/cp27-cp27m/bin/python \
+      /project/pycypher/utils/add_build_tag_to_wheels.py \
+      /project/pycypher/dist $TRAVIS_BUILD_NUMBER
+fi
+
 # test
 docker run --rm \
   -v `pwd`/pycypher/dist:/project/pycypher/dist \
