@@ -37,20 +37,27 @@ Travis build number is used as a
 ["build tag"](https://www.python.org/dev/peps/pep-0427/#file-name-convention)
 in uploaded wheels.
 
-Should anything go wrong, commiting a fix and pushing another git tag (tag name
-can be anything, it is only to trigger deploy in Travis) with the same version
-specified in `configure.ac` will upload new builds for this version so any
-subsequent downloads (even if users specify version explicitly) will use the new
-builds.
+Should anything go wrong, commiting a fix (or a revert)
+and pushing another git tag
+(tag name can be anything, it is only to trigger deploy in Travis)
+with the same version specified in `configure.ac`
+will upload new builds for this version.
+This way any subsequent downloads (even if users specify version explicitly)
+will use the new builds.
 PyPI will accept the upload even if package with this version already exists
-because the build tag will be different.
+because the build tag (= Travis build number) will be different.
+And [don't](
+  https://doughellmann.com/blog/2016/02/25/so-youve-released-a-broken-package-to-pypi-what-do-you-do-now/)
+remove files from PyPI.
 
 ## How generation works
 `generate.py` is a self-contained (no dependencies necessary) python script that
-parses `../src/lib/cypher-parser.h.in` and produces `pycypher/operators.c`,
-`pycypher/node_types.c`, `pycypher/props.c` and `pycypher/getters.py`.
+parses `../src/lib/cypher-parser.h.in` and `../configure.ac`.
+It produces `pycypher/operators.c`, `pycypher/node_types.c`, `pycypher/props.c`,
+`pycypher/getters.py` and `pycypher/version.py`.
 
-It uses regular expressions to look for annotated declarations in the code.
+It uses regular expressions to look for annotated declarations in the header
+file and for the `AC_INIT` in `configure.ac`.
 
 ## Annotations
 
