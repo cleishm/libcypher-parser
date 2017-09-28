@@ -159,6 +159,22 @@ position in the original query text.
 [<CypherAstNode.CYPHER_AST_IDENTIFIER>]
 ```
 
+## Handling parse errors
+Use `CypherAstNode.find_nodes(instanceof='CYPHER_AST_ERROR')` to find out
+if there are any parse errors in a query:
+```python
+>>> q, = pycypher.parse_query("MATCH (a) RETURN (*$@!)")
+>>> e, = q.find_nodes(instanceof="CYPHER_AST_ERROR")
+>>> e
+<CypherAstNode.CYPHER_AST_ERROR>
+>>> e.get_value()
+'RETURN (*$@!)'
+>>> e.start
+10
+>>> e.end
+23
+```
+
 ## Serializing to JSON
 `CypherAstNode.to_json()` returns a json-serializable nested representation
 made from Python dictionaries, lists and primitive types.
