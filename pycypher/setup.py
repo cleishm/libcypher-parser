@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+import os.path
+import re
 from setuptools import setup, Extension
 
 bindings = Extension(
@@ -36,9 +37,17 @@ long_description = u"""
 Homepage: https://github.com/cleishm/libcypher-parser/tree/master/pycypher
 """.strip()
 
+def read_version():
+    try:
+        v = open(os.path.join(os.path.dirname(__file__), 'pycypher/version.py'))
+        match = re.search(r'__version__ = ["\']([^"\']+)["\']', v.read())
+        return match.group(1)
+    except OSError:
+        raise UserWarning("Please run ./generate.py first!")
+
 setup(
     name=u'pycypher',
-    version='0.0.4',
+    version=read_version(),
     description=description,
     long_description=long_description,
     license='Apache License 2.0',
