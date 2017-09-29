@@ -25,11 +25,11 @@ rm -rf ./pycypher/dist
 ./pycypher/generate.py
 
 # build libcypher-parser and wheels
-docker run --rm \
+docker run --rm -it \
   -v `pwd`/pycypher:/project/pycypher \
   pycypher_x86_64 \
   bash -c '/project/pycypher/utils/build_wheels.sh'
-docker run --rm \
+docker run --rm -it \
   -v `pwd`/pycypher:/project/pycypher \
   pycypher_i686 \
   linux32 bash -c '/project/pycypher/utils/build_wheels.sh'
@@ -38,13 +38,13 @@ docker run --rm \
 # to re-run the build and it will upload wheels with new tag so that fixes
 # can be deployed to already-uploaded versions
 if [ "$TRAVIS" == "true" ] && [ "$CI" == "true" ]; then
-  docker run --rm \
+  docker run --rm -it \
     -v `pwd`/pycypher:/project/pycypher \
     pycypher_x86_64 \
     /opt/python/cp27-cp27m/bin/python \
       /project/pycypher/utils/add_build_tag_to_wheels.py \
       /project/pycypher/dist $TRAVIS_BUILD_NUMBER
-  docker run --rm \
+  docker run --rm -it \
     -v `pwd`/pycypher:/project/pycypher \
     pycypher_i686 \
     linux32 /opt/python/cp27-cp27m/bin/python \
@@ -53,13 +53,13 @@ if [ "$TRAVIS" == "true" ] && [ "$CI" == "true" ]; then
 fi
 
 # test
-docker run --rm \
+docker run --rm -it \
   -e 'TRAVIS' \
   -v `pwd`/pycypher/dist:/project/pycypher/dist \
   -v `pwd`/pycypher/utils:/project/pycypher/utils \
   quay.io/pypa/manylinux1_x86_64 \
   bash -c '/project/pycypher/utils/test_wheels.sh'
-docker run --rm \
+docker run --rm -it \
   -e 'TRAVIS' \
   -v `pwd`/pycypher/dist:/project/pycypher/dist \
   -v `pwd`/pycypher/utils:/project/pycypher/utils \
