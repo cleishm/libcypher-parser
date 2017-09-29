@@ -10,3 +10,6 @@ COPY m4/ /project/m4/
 
 COPY pycypher/utils/build_c_lib.sh /build_c_lib.sh
 RUN /build_c_lib.sh
+
+COPY pycypher/utils/ownership_fixing_wrapper.sh /ownership_fixing_wrapper.sh
+ENTRYPOINT ["bash", "/ownership_fixing_wrapper.sh"]
