@@ -21,14 +21,19 @@
 const cypher_parse_result_t* pycypher_invoke_parser(const char* query) {
   const cypher_parse_result_t* parse_result;
   cypher_parser_config_t* parser_config = cypher_parser_new_config();
-    /*TODO: check errors*/
+  if(parser_config == NULL)
+    return PyErr_SetFromErrno(PyExc_OSError);
   FILE *query_file = fmemopen((char*)query, strlen(query), "r");
-    /*TODO: check errors*/
+  if(query_file == NULL)
+    return PyErr_SetFromErrno(PyExc_OSError);
+
   parse_result = cypher_fparse(
     query_file, NULL, parser_config, /*flags*/0
   );
-  fclose(query_file);
+
   free(parser_config);
+  if(fclose(query_file) != 0)
+    return PyErr_SetFromErrno(PyExc_OSError);
   return parse_result;
 }
 
@@ -68,7 +73,7 @@ PyObject* pycypher_build_ast_children(PyObject* cls, const cypher_astnode_t* src
 
 PyObject* pycypher_build_ast(PyObject* cls, const cypher_astnode_t* src_ast) {
   PyObject* arglist = Py_BuildValue(
-    "(isOOOii)", src_ast,
+    "(isNNNii)", src_ast,
     pycypher_build_ast_type(src_ast),
     pycypher_build_ast_instanceof(src_ast),
     pycypher_build_ast_children(cls, src_ast),
@@ -101,13 +106,50 @@ PyObject* pycypher_build_ast_list(
   return result;
 }
 
+PyObject* pycypher_build_exn(PyObject* cls, const cypher_parse_error_t* err) {
+  PyObject* arglist = Py_BuildValue(
+    "(ssii)",
+    cypher_parse_error_message(err),
+    cypher_parse_error_context(err),
+    cypher_parse_error_position(err).offset,
+    cypher_parse_error_context_offset(err)
+  );
+  if(arglist == NULL)
+    return NULL;
+  PyObject* result = PyEval_CallObject(cls, arglist);
+  Py_DECREF(arglist);
+  return result;
+}
+
+PyObject* pycypher_build_exn_list(
+  PyObject* cls, const cypher_parse_result_t* parse_result
+) {
+  int nerrors = cypher_parse_result_nerrors(parse_result);
+  PyObject* result = PyList_New(nerrors);
+  int i;
+  for(i=0; i<nerrors; ++i) {
+    PyObject* exn = pycypher_build_exn(cls, cypher_parse_result_get_error(
+      parse_result, i
+    ));
+    if(exn == NULL)
+      return NULL;
+    // PyList_SetItem consumes a reference so no need to call Py_DECREF(exn)
+    PyList_SetItem(result, i, exn);
+  }
+  return result;
+}
+
 PyObject* pycypher_parse_query(PyObject* self, PyObject* args) {
   char* query;
-  PyObject* cls;
-  if (!PyArg_ParseTuple(args, "Os:parse", &cls, &query))
+  PyObject* ast_class;
+  PyObject* exn_class;
+  if (!PyArg_ParseTuple(args, "OOs:parse", &ast_class, &exn_class, &query))
     return NULL;
   const cypher_parse_result_t* parse_result = pycypher_invoke_parser(query);
-  PyObject* result = pycypher_build_ast_list(cls, parse_result);
+  if(parse_result == NULL)
+    return PyErr_SetFromErrno(PyExc_OSError);
+  PyObject* ast_list = pycypher_build_ast_list(ast_class, parse_result);
+  PyObject* exn_list = pycypher_build_exn_list(exn_class, parse_result);
   cypher_parse_result_free((cypher_parse_result_t*) parse_result);
-  return result;
+  return Py_BuildValue("(NN)", ast_list, exn_list);
 }

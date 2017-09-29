@@ -160,19 +160,50 @@ position in the original query text.
 ```
 
 ## Handling parse errors
-Use `CypherAstNode.find_nodes(instanceof='CYPHER_AST_ERROR')` to find out
-if there are any parse errors in a query:
+When there are any parse errors in a query, an exception
+`pycypher.CypherParseError` is raised. The exception has following attributes:
+* `message` - the error message
+* `context` - section of the input around where the error occurred, that is limited
+in length and suitable for presentation to a user.
+* `offset` - character offset of the error in the original query
+* `context_offset` - character offset of the error in the context
+* `all_errors` - list of `CypherParseError` objects - all errors that are
+in the query - there can be more than one error, this way all of them can
+be accessed. Note that the attributes `parse_result` and `all_errors` are
+available only on the first element of this list.
+* `parse_result` - this is what normally would be returned from `parse_query`,
+with the difference that some nodes in the AST will have type `CYPHER_AST_ERROR`.
+
 ```python
->>> q, = pycypher.parse_query("MATCH (a) RETURN (*$@!)")
->>> e, = q.find_nodes(instanceof="CYPHER_AST_ERROR")
->>> e
-<CypherAstNode.CYPHER_AST_ERROR>
->>> e.get_value()
-'RETURN (*$@!)'
->>> e.start
-10
->>> e.end
-23
+>>> from pycypher import parse_query, CypherParseError
+>>> parse_query("MATCH (a) RETURN (*$@!); RETURN 1;")
+Traceback (most recent call last):
+  File "<input>", line 1, in <module>
+    parse_query("MATCH (a) RETURN (*$@!); RETURN 1;")
+  File "/.../site-packages/pycypher/__init__.py", line 39, in parse_query
+    raise e
+CypherParseError: Invalid input '*': expected an identifier, a label, '{', a parameter, ')', NOT, '+', '-', TRUE, FALSE, NULL, "...string...", a float, an integer, '[', CASE, FILTER, EXTRACT, REDUCE, ALL, ANY, NONE, SINGLE, shortestPa
+th, allShortestPaths, '(' or a function name
+>>>
+>>> try:
+...   parse_query("MATCH (a) RETURN (*$@!); RETURN 1;")
+... except CypherParseError as exn:
+...   e = exn
+...
+>>> e.message
+'Invalid input \'*\': expected an identifier, a label, \'{\', a parameter, \')\', NOT, \'+\', \'-\', TRUE, FALSE, NULL, "...string...", a float, an integer, \'[\', CASE, FILTER, EXTRACT, REDUCE, ALL, ANY, NONE, SINGLE, shortestPath, a llShortestPaths, \'(\' or a function name'
+>>> e.context
+'MATCH (a) RETURN (*$@!);'
+>>> e.offset
+18
+>>> e.context_offset
+18
+>>> e.all_errors
+[CypherParseError('Invalid input \'*\': expected an identifier, a label, \'{\', a parameter, \')\', NOT, \'+\', \'-\', TRUE, FALSE, NULL, "...string...", a float, an integer, \'[\', CASE, FILTER, EXTRACT, REDUCE, ALL, ANY, NONE, SINGLE, shortestPath, allShortestPaths, \'(\' or a function name',)]
+>>> e.parse_result
+[<CypherAstNode.CYPHER_AST_STATEMENT>, <CypherAstNode.CYPHER_AST_STATEMENT>]
+>>> list(e.parse_result[0].find_nodes(type='CYPHER_AST_ERROR'))
+[<CypherAstNode.CYPHER_AST_ERROR>]
 ```
 
 ## Serializing to JSON

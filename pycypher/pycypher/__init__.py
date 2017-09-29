@@ -15,7 +15,27 @@ from .bindings import parse_query as inner_parse_query
 from .ast import CypherAstNode
 from .version import __version__
 
-__ALL__ = ['parse_query', 'CypherAst']
+
+__ALL__ = ['parse_query', 'CypherAstNode', 'CypherParseError']
+
+
+class CypherParseError(Exception):
+    def __init__(self, message, context, offset, context_offset):
+        super(CypherParseError, self).__init__(message)
+        self.message = message
+        self.context = context
+        self.offset = offset
+        self.context_offset = context_offset
+        self.all_errors = None
+        self.parse_result = None
+
 
 def parse_query(query):
-    return inner_parse_query(CypherAstNode, query)
+    result, errors = inner_parse_query(CypherAstNode, CypherParseError, query)
+    if errors:
+        e = errors[0]
+        e.all_errors = errors
+        e.parse_result = result
+        raise e
+    else:
+        return result
