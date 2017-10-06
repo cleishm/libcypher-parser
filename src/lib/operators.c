@@ -132,7 +132,7 @@ static const cypher_operator_t _CYPHER_OP_CONTAINS =
 const cypher_operator_t *CYPHER_OP_CONTAINS = &_CYPHER_OP_CONTAINS;
 // `l IS NULL`
 static const cypher_operator_t _CYPHER_OP_IS_NULL =
-    { .precedence = 1, .associativity = UNARY, .str = "IS NULL" };
+    { .precedence = 11, .associativity = UNARY, .str = "IS NULL" };
 const cypher_operator_t *CYPHER_OP_IS_NULL = &_CYPHER_OP_IS_NULL;
 // `l IS NOT NULL`
 static const cypher_operator_t _CYPHER_OP_IS_NOT_NULL =
