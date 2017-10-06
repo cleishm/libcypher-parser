@@ -484,7 +484,7 @@ static cypher_astnode_t *_skip(yycontext *yy);
     struct cypher_input_position position_offset; \
     offsets_t line_start_offsets; \
     blocks_t blocks; \
-    struct block *prev_block; \
+    struct block *prev_block; /* last "closed" block */ \
     struct cp_string_buffer string_buffer; \
     const cypher_operator_t *op; \
     operators_t operators; \
@@ -524,7 +524,7 @@ static int safe_yyparsefrom(yycontext *yy, yyrule rule);
 static unsigned int backtrack_lines(yycontext *yy, unsigned int pos);
 static struct cypher_input_position input_position(yycontext *yy,
         unsigned int pos);
-static void block_free(yycontext *yy, struct block *block);
+static void block_free(struct block *block);
 static cypher_astnode_t *add_terminal(yycontext *yy, cypher_astnode_t *node);
 static cypher_astnode_t *add_child(yycontext *yy, cypher_astnode_t *node);
 
@@ -688,7 +688,7 @@ int parse_each(yyrule rule, source_cb_t source, void *sourcedata,
 cleanup:
     errsv = errno;
     offsets_cleanup(&(yy.line_start_offsets));
-    block_free(&yy, top_block);
+    block_free(top_block);
     blocks_cleanup(&(yy.blocks));
     operators_cleanup(&(yy.operators));
     precedences_cleanup(&(yy.precedences));
@@ -766,9 +766,9 @@ failure:
     struct block *block;
     while ((block = blocks_pop(&(yy->blocks))) != NULL)
     {
-        block_free(yy, block);
+        block_free(block);
     }
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     operators_clear(&(yy->operators));
     precedences_clear(&(yy->precedences));
@@ -897,7 +897,7 @@ void block_start_action(yycontext *yy, char *text, int pos)
     {
         abort_parse(yy);
     }
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
 }
 
@@ -925,6 +925,7 @@ struct block *block_start(yycontext *yy, size_t offset,
 }
 
 
+// close a block (and move to yy->prev_block)
 void block_end_action(yycontext *yy, char *text, int pos)
 {
     assert(pos >= 0);
@@ -932,11 +933,12 @@ void block_end_action(yycontext *yy, char *text, int pos)
     struct block *block = block_end(yy, pos, position);
     assert(block != NULL);
     assert(yy->prev_block == NULL || astnodes_size(&(yy->prev_block->children)) == 0);
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = block;
 }
 
 
+// close a block, and start a new block with the same starting input position
 void block_replace_action(yycontext *yy, char *text, int pos)
 {
     assert(pos >= 0);
@@ -944,7 +946,7 @@ void block_replace_action(yycontext *yy, char *text, int pos)
     struct block *block = block_end(yy, pos, position);
     assert(block != NULL);
     assert(yy->prev_block == NULL || astnodes_size(&(yy->prev_block->children)) == 0);
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = block;
     if (block_start(yy, pos, block->range.start) == NULL)
     {
@@ -953,7 +955,7 @@ void block_replace_action(yycontext *yy, char *text, int pos)
 }
 
 
-// end a block, and move all the children to the parent
+// close a block, but move all the children to the parent
 void block_merge_action(yycontext *yy, char *text, int pos)
 {
     assert(pos >= 0);
@@ -961,7 +963,7 @@ void block_merge_action(yycontext *yy, char *text, int pos)
     struct block *block = block_end(yy, pos, position);
     assert(block != NULL);
     assert(yy->prev_block == NULL || astnodes_size(&(yy->prev_block->children)) == 0);
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = block;
 
     unsigned int nchildren = astnodes_size(&(block->children));
@@ -995,7 +997,7 @@ struct block *block_end(yycontext *yy, size_t offset,
 }
 
 
-void block_free(yycontext *yy, struct block *block)
+void block_free(struct block *block)
 {
     if (block == NULL)
     {
@@ -1115,7 +1117,7 @@ cypher_astnode_t *_statement(yycontext *yy, cypher_astnode_t *body)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1137,7 +1139,7 @@ cypher_astnode_t *_cypher_option(yycontext *yy, cypher_astnode_t *version)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1157,7 +1159,7 @@ cypher_astnode_t *_cypher_option_param(yycontext *yy, cypher_astnode_t *name,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1176,7 +1178,7 @@ cypher_astnode_t *_explain_option(yycontext *yy)
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1195,7 +1197,7 @@ cypher_astnode_t *_profile_option(yycontext *yy)
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1215,7 +1217,7 @@ cypher_astnode_t *_create_index(yycontext *yy, cypher_astnode_t *label,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1235,7 +1237,7 @@ cypher_astnode_t *_drop_index(yycontext *yy, cypher_astnode_t *label,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1257,7 +1259,7 @@ cypher_astnode_t *_create_node_prop_constraint(yycontext *yy,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1279,7 +1281,7 @@ cypher_astnode_t *_drop_node_prop_constraint(yycontext *yy,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1301,7 +1303,7 @@ cypher_astnode_t *_create_rel_prop_constraint(yycontext *yy,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1323,7 +1325,7 @@ cypher_astnode_t *_drop_rel_prop_constraint(yycontext *yy,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1355,7 +1357,7 @@ cypher_astnode_t *_query(yycontext *yy)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1374,7 +1376,7 @@ cypher_astnode_t *_using_periodic_commit(yycontext *yy, cypher_astnode_t *limit)
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1396,7 +1398,7 @@ cypher_astnode_t *_load_csv(yycontext *yy, bool with_headers,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1418,7 +1420,7 @@ cypher_astnode_t *_start_clause(yycontext *yy, cypher_astnode_t *predicate)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1439,7 +1441,7 @@ cypher_astnode_t *_node_index_lookup(yycontext *yy,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1460,7 +1462,7 @@ cypher_astnode_t *_node_index_query(yycontext *yy,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1482,7 +1484,7 @@ cypher_astnode_t *_node_id_lookup(yycontext *yy, cypher_astnode_t *identifier)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1501,7 +1503,7 @@ cypher_astnode_t *_all_nodes_scan(yycontext *yy, cypher_astnode_t *identifier)
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1522,7 +1524,7 @@ cypher_astnode_t *_rel_index_lookup(yycontext *yy,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1543,7 +1545,7 @@ cypher_astnode_t *_rel_index_query(yycontext *yy,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1565,7 +1567,7 @@ cypher_astnode_t *_rel_id_lookup(yycontext *yy, cypher_astnode_t *identifier)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1584,7 +1586,7 @@ cypher_astnode_t *_all_rels_scan(yycontext *yy, cypher_astnode_t *identifier)
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1607,7 +1609,7 @@ cypher_astnode_t *_match_clause(yycontext *yy, bool optional,
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1627,7 +1629,7 @@ cypher_astnode_t *_using_index(yycontext *yy, cypher_astnode_t *identifier,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1649,7 +1651,7 @@ cypher_astnode_t *_using_join(yycontext *yy)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1669,7 +1671,7 @@ cypher_astnode_t *_using_scan(yycontext *yy, cypher_astnode_t *identifier,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1691,7 +1693,7 @@ cypher_astnode_t *_merge_clause(yycontext *yy, cypher_astnode_t *pattern_part)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1713,7 +1715,7 @@ cypher_astnode_t *_on_match(yycontext *yy)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1735,7 +1737,7 @@ cypher_astnode_t *_on_create(yycontext *yy)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1755,7 +1757,7 @@ cypher_astnode_t *_create_clause(yycontext *yy, bool unique,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1777,7 +1779,7 @@ cypher_astnode_t *_set_clause(yycontext *yy)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1797,7 +1799,7 @@ cypher_astnode_t *_set_property(yycontext *yy, cypher_astnode_t *prop_name,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1817,7 +1819,7 @@ cypher_astnode_t *_set_all_properties(yycontext *yy,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1837,7 +1839,7 @@ cypher_astnode_t *_merge_properties(yycontext *yy,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1859,7 +1861,7 @@ cypher_astnode_t *_set_labels(yycontext *yy, cypher_astnode_t *identifier)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1881,7 +1883,7 @@ cypher_astnode_t *_delete(yycontext *yy, bool detach)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1903,7 +1905,7 @@ cypher_astnode_t *_remove_clause(yycontext *yy)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1922,7 +1924,7 @@ cypher_astnode_t *_remove_property(yycontext *yy, cypher_astnode_t *prop_name)
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1944,7 +1946,7 @@ cypher_astnode_t *_remove_labels(yycontext *yy, cypher_astnode_t *identifier)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1967,7 +1969,7 @@ cypher_astnode_t *_foreach_clause(yycontext *yy, cypher_astnode_t *identifier,
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -1993,7 +1995,7 @@ cypher_astnode_t *_with_clause(yycontext *yy, bool distinct,
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2013,7 +2015,7 @@ cypher_astnode_t *_unwind_clause(yycontext *yy, cypher_astnode_t *expression,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2045,7 +2047,7 @@ cypher_astnode_t *_call_clause(yycontext *yy, cypher_astnode_t *proc_name)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2069,7 +2071,7 @@ cypher_astnode_t *_return_clause(yycontext *yy, bool distinct,
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2089,7 +2091,7 @@ cypher_astnode_t *_projection(yycontext *yy, cypher_astnode_t *expression,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2111,7 +2113,7 @@ cypher_astnode_t *_order_by(yycontext *yy)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2131,7 +2133,7 @@ cypher_astnode_t *_sort_item(yycontext *yy, cypher_astnode_t *expression,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2150,7 +2152,7 @@ cypher_astnode_t *_union_clause(yycontext *yy, bool all)
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2170,7 +2172,7 @@ cypher_astnode_t *_unary_operator(yycontext *yy, const cypher_operator_t *op,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2190,7 +2192,7 @@ cypher_astnode_t *_binary_operator(yycontext *yy, const cypher_operator_t *op,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2221,7 +2223,7 @@ cypher_astnode_t *_comparison_operator(yycontext *yy)
     operators_npop(&(yy->operators), chain_length);
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2244,7 +2246,7 @@ cypher_astnode_t *_apply_operator(yycontext *yy, cypher_astnode_t *left,
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2264,7 +2266,7 @@ cypher_astnode_t *_apply_all_operator(yycontext *yy, cypher_astnode_t *left,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2284,7 +2286,7 @@ cypher_astnode_t *_subscript_operator(yycontext *yy,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2304,7 +2306,7 @@ cypher_astnode_t *_property_operator(yycontext *yy, cypher_astnode_t *map,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2324,7 +2326,7 @@ cypher_astnode_t *_slice_operator(yycontext *yy, cypher_astnode_t *expression,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2346,7 +2348,7 @@ cypher_astnode_t *_map_projection(yycontext *yy, cypher_astnode_t *expression)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2367,7 +2369,7 @@ cypher_astnode_t *_map_projection_literal(yycontext *yy,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2387,7 +2389,7 @@ cypher_astnode_t *_map_projection_property(yycontext *yy,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2407,7 +2409,7 @@ cypher_astnode_t *_map_projection_identifier(yycontext *yy,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2426,7 +2428,7 @@ cypher_astnode_t *_map_projection_all_properties(yycontext *yy)
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2448,7 +2450,7 @@ cypher_astnode_t *_labels_operator(yycontext *yy, cypher_astnode_t *left)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2470,7 +2472,7 @@ cypher_astnode_t *_list_comprehension(yycontext *yy,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2492,7 +2494,7 @@ cypher_astnode_t *_pattern_comprehension(yycontext *yy,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2515,7 +2517,7 @@ cypher_astnode_t *_case_expression(yycontext *yy, cypher_astnode_t *expression,
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2535,7 +2537,7 @@ cypher_astnode_t *_filter(yycontext *yy, cypher_astnode_t *identifier,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2555,7 +2557,7 @@ cypher_astnode_t *_extract(yycontext *yy, cypher_astnode_t *identifier,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2576,7 +2578,7 @@ cypher_astnode_t *_reduce(yycontext *yy, cypher_astnode_t *accumulator,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2596,7 +2598,7 @@ cypher_astnode_t *_all_predicate(yycontext *yy, cypher_astnode_t *identifier,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2616,7 +2618,7 @@ cypher_astnode_t *_any_predicate(yycontext *yy, cypher_astnode_t *identifier,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2636,7 +2638,7 @@ cypher_astnode_t *_single_predicate(yycontext *yy, cypher_astnode_t *identifier,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2656,7 +2658,7 @@ cypher_astnode_t *_none_predicate(yycontext *yy, cypher_astnode_t *identifier,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2678,7 +2680,7 @@ cypher_astnode_t *_collection_literal(yycontext *yy)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2701,7 +2703,7 @@ cypher_astnode_t *_map_literal(yycontext *yy)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2871,7 +2873,7 @@ cypher_astnode_t *_pattern(yycontext *yy)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2891,7 +2893,7 @@ cypher_astnode_t *_named_path(yycontext *yy,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2911,7 +2913,7 @@ cypher_astnode_t *_shortest_path(yycontext *yy, bool single,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2933,7 +2935,7 @@ cypher_astnode_t *_pattern_path(yycontext *yy)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2956,7 +2958,7 @@ cypher_astnode_t *_node_pattern(yycontext *yy, cypher_astnode_t *identifier,
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -2980,7 +2982,7 @@ cypher_astnode_t *_rel_pattern(yycontext *yy,
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -3000,7 +3002,7 @@ cypher_astnode_t *_range(yycontext *yy, cypher_astnode_t *start,
         abort_parse(yy);
     }
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -3024,7 +3026,7 @@ cypher_astnode_t *_command(yycontext *yy, cypher_astnode_t *name)
     }
     astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
@@ -3100,7 +3102,7 @@ cypher_astnode_t *add_terminal(yycontext *yy, cypher_astnode_t *node)
     assert(astnodes_size(&(yy->prev_block->children)) == 0 &&
             "terminal AST nodes should have no children created in the "
             "preceeding block");
-    block_free(yy, yy->prev_block);
+    block_free(yy->prev_block);
     yy->prev_block = NULL;
     return add_child(yy, node);
 }
