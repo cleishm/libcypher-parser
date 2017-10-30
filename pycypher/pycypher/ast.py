@@ -85,7 +85,7 @@ class CypherAstNode(GettersMixin):
         return self._end
 
     def find_nodes(
-        self, type=None, role=None, instanceof=None, start=None, end=None
+        self, instanceof=None, type=None, role=None, start=None, end=None
     ):
         """Return an iterable of nodes from subtree of this node (including it)
         matching the criteria given as keyword arguments. Return all nodes from
