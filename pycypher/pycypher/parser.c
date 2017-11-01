@@ -23,17 +23,12 @@ const cypher_parse_result_t* pycypher_invoke_parser(const char* query) {
   cypher_parser_config_t* parser_config = cypher_parser_new_config();
   if(parser_config == NULL)
     return PyErr_SetFromErrno(PyExc_OSError);
-  FILE *query_file = fmemopen((char*)query, strlen(query), "r");
-  if(query_file == NULL)
-    return PyErr_SetFromErrno(PyExc_OSError);
 
-  parse_result = cypher_fparse(
-    query_file, NULL, parser_config, /*flags*/0
+  parse_result = cypher_uparse(
+    query, strlen(query), NULL, parser_config, /*flags*/0
   );
 
   free(parser_config);
-  if(fclose(query_file) != 0)
-    return PyErr_SetFromErrno(PyExc_OSError);
   return parse_result;
 }
 
