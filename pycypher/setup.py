@@ -75,7 +75,6 @@ setup(
     ],
     ext_modules=[bindings],
     packages=['pycypher', 'pycypher.tests'],
-    data_files=[('', ['LICENSE'])],
     include_package_data=True,
     zip_safe=False,
     install_requires=[],
