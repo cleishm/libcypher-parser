@@ -13,5 +13,9 @@ RUN cd libcypher-parser \
   && make \
   && make install
 
-COPY pycypher/build_utils/ownership_fixing_wrapper.sh /ownership_fixing_wrapper.sh
+RUN echo 'fix_ownership() { \
+  user_and_group=$(stat -c "%u:%g" /project/pycypher) ; \
+  chown -R ${user_and_group} /project/pycypher ; \
+  } ; trap fix_ownership EXIT ; $@' > /ownership_fixing_wrapper.sh
+
 ENTRYPOINT ["bash", "/ownership_fixing_wrapper.sh"]
