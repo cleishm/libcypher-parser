@@ -16,26 +16,13 @@ set -e -x
 if [ "$TRAVIS" != "true" ] || [ "$CI" != "true" ]; then
   echo 'This script is not meant to run outside of Travis CI,'
   echo 'it requires sudo and installs some packages globally.'
-  echo 'Use ./local_tests.sh for compiling and testing the extension module on OS X.'
   exit 1
 fi
 
-if [ "$TRAVIS_OS_NAME" != "osx" ]; then
-  echo 'This script runs only on Mac OS X.'
-  exit 1
-fi
-
-# generate the bindings
-./pycypher/generate.py
-
-# build and test wheels
-export CIBW_PLATFORM=macos
-export CIBW_TEST_REQUIRES='nose==1.3.7'
-export CIBW_TEST_COMMAND='nosetests pycypher'
-cd pycypher
-pip install cibuildwheel==0.5.1
-cibuildwheel --output-dir dist
-
-# add build tag to wheels
-/Library/Frameworks/Python.framework/Versions/2.7/bin/python \
-  build_utils/add_build_tag_to_wheels.py dist $TRAVIS_BUILD_NUMBER
+# install peg / leg
+wget http://piumarta.com/software/peg/peg-0.1.18.tar.gz
+tar -xzf peg-0.1.18.tar.gz
+cd peg-0.1.18
+make
+sudo make install
+cd ..
