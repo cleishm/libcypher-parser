@@ -42,13 +42,13 @@ if [ "$TRAVIS" == "true" ] && [ "$CI" == "true" ]; then
     -v `pwd`/pycypher:/project/pycypher \
     pycypher_x86_64 \
     /opt/python/cp27-cp27m/bin/python \
-      /project/pycypher/build_utils/add_build_tag_to_wheels.py \
+      /add_build_tag_to_wheels.py \
       /project/pycypher/dist $TRAVIS_BUILD_NUMBER
   docker run --rm -it \
     -v `pwd`/pycypher:/project/pycypher \
     pycypher_i686 \
     linux32 /opt/python/cp27-cp27m/bin/python \
-      /project/pycypher/build_utils/add_build_tag_to_wheels.py \
+      /add_build_tag_to_wheels.py \
       /project/pycypher/dist $TRAVIS_BUILD_NUMBER
 fi
 

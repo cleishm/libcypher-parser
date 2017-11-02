@@ -13,6 +13,8 @@ RUN cd libcypher-parser \
   && make \
   && make install
 
+COPY ci/add_build_tag_to_wheels.py /
+
 RUN echo 'fix_ownership() { \
   user_and_group=$(stat -c "%u:%g" /project/pycypher) ; \
   chown -R ${user_and_group} /project/pycypher ; \
