@@ -30,8 +30,7 @@ GCC_CFLAGS="-fvisibility=hidden -pipe -Wall -W -Werror \
     -Wstrict-prototypes -Wcast-qual -Wcast-align -Wno-error=unused-function \
     -Wno-error=unused-variable -Wno-error=deprecated-declarations"
 
-AC_PROG_LIBTOOL
-AC_SUBST(LIBTOOL_DEPS)
+LT_INIT
 AC_LANG([C])
 AC_PROG_CC
 PROG_CC_C11
