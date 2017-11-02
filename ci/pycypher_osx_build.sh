@@ -34,7 +34,7 @@ make install
 cd ..
 
 # install libcypher-parser
-autoreconf -isvf
+./autogen.sh
 ./configure
 make
 make install
