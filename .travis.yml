@@ -27,7 +27,7 @@ matrix:
 
 deploy:
   provider: script
-  script: pycypher/build_utils/upload_wheels.sh $PYPI_USER $PYPI_PASSWORD
+  script: ci/pycypher_upload.sh $PYPI_USER $PYPI_PASSWORD
   skip_cleanup: true
   on:
     tags: true
