@@ -52,4 +52,4 @@ cibuildwheel --output-dir dist
 
 # add build tag to wheels
 /Library/Frameworks/Python.framework/Versions/2.7/bin/python \
-  utils/add_build_tag_to_wheels.py dist $TRAVIS_BUILD_NUMBER
+  build_utils/add_build_tag_to_wheels.py dist $TRAVIS_BUILD_NUMBER
