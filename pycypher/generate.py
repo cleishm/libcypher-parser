@@ -503,6 +503,12 @@ class Generator(object):
         with open(filename_configure_ac) as file_configure_ac:
             configure_ac = file_configure_ac.read()
 
+        filename_license = os.path.join(
+            THIS_DIR, '..', 'LICENSE'
+        )
+        with open(filename_license) as file_license:
+            license = file_license.read()
+
         os.chdir(os.path.join(THIS_DIR, 'pycypher'))
 
         operators_c = "\n".join(self.generate_operators_c(cypher_parser_h))
@@ -524,6 +530,9 @@ class Generator(object):
         version_py = "\n".join(self.generate_version_py(configure_ac))
         with open('version.py', 'w') as file_out:
             file_out.write(version_py)
+
+        with open('../LICENSE', 'w') as file_out:
+            file_out.write(license)
 
 
 if __name__ == "__main__":

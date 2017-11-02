@@ -10,3 +10,4 @@ __pycache__
 /build
 /dist/
 /pycypher.egg-info/
+/LICENSE
