@@ -36,6 +36,23 @@ cd pycypher
 pip install cibuildwheel==0.5.1
 cibuildwheel --output-dir dist
 
+ADD_BUILD_TAG_TO_WHEELS='
+import sys, os, os.path, subprocess
+from wheel.install import WheelFile
+
+os.chdir(sys.argv[1])
+build_tag = sys.argv[2]
+
+for wheel in os.listdir("."):
+    wheelfile = WheelFile(wheel)
+    wheeldict = wheelfile.parsed_filename.groupdict()
+    if wheeldict["build"] is not None:
+        continue
+    wheeldict["build"] = build_tag
+    new_wheel = "%(name)s-%(ver)s-%(build)s-%(pyver)s-%(abi)s-%(plat)s.whl" % wheeldict
+    subprocess.check_call(["mv", wheel, new_wheel])
+'
+
 # add build tag to wheels
 /Library/Frameworks/Python.framework/Versions/2.7/bin/python \
-  ../ci/add_build_tag_to_wheels.py dist $TRAVIS_BUILD_NUMBER
+  -c "$ADD_BUILD_TAG_TO_WHEELS" dist $TRAVIS_BUILD_NUMBER
