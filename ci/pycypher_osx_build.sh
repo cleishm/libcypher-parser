@@ -11,9 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-set -e -x
+set -e -u
 
-if [ "$TRAVIS" != "true" ] || [ "$CI" != "true" ]; then
+if [ "${TRAVIS:-false}" != "true" ] || [ "${CI:-false}" != "true" ]; then
   echo 'This script is not meant to run outside of Travis CI,'
   echo 'it requires sudo and installs some packages globally.'
   echo 'Use ./local_tests.sh for compiling and testing the extension module on OS X.'

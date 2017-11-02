@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-set -e -x
+set -e -u
 cd "$(dirname -- "$0")"
 cd ..
 
@@ -25,7 +25,7 @@ rm -rf ./pycypher/dist
 ./pycypher/generate.py
 
 BUILD_WHEELS='
-  set -e -x
+  set -e -u
 
   cp -r /project/pycypher /pycypher
   rm -rf /pycypher/build
@@ -75,7 +75,7 @@ for wheel in os.listdir("."):
 # if running on Travis CI, add a build tag to wheels so that it is possible
 # to re-run the build and it will upload wheels with new tag so that fixes
 # can be deployed to already-uploaded versions
-if [ "$TRAVIS" == "true" ] && [ "$CI" == "true" ]; then
+if [ "${TRAVIS:-false}" == "true" ] && [ "${CI:-false}" == "true" ]; then
   docker run --rm -it \
     -v `pwd`/pycypher:/project/pycypher \
     pycypher_x86_64 \
@@ -91,7 +91,7 @@ if [ "$TRAVIS" == "true" ] && [ "$CI" == "true" ]; then
 fi
 
 TEST_WHEELS='
-  set -e -x
+  set -e -u
 
   for PYBIN in /opt/python/*/bin/; do
     "${PYBIN}/pip" install nose
