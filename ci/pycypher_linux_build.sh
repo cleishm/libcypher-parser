@@ -24,15 +24,36 @@ rm -rf ./pycypher/dist
 # generate bindings
 ./pycypher/generate.py
 
+BUILD_WHEELS='
+  set -e -x
+
+  cp -r /project/pycypher /pycypher
+  rm -rf /pycypher/build
+  rm -rf /pycypher/dist
+  rm -rf /pycypher/*.pyc
+  rm -rf /pycypher/*.so
+
+  # Compile wheels
+  for PYBIN in /opt/python/*/bin; do
+    "${PYBIN}/pip" wheel /pycypher/ -w /wheelhouse/
+  done
+
+  # Bundle external shared libraries into the wheels
+  for whl in /wheelhouse/*.whl; do
+    auditwheel repair "$whl" -w /project/pycypher/dist/
+  done
+  chown -R $(stat -c "%u:%g" /project/pycypher) /project/pycypher
+'
+
 # build libcypher-parser and wheels
 docker run --rm -it \
   -v `pwd`/pycypher:/project/pycypher \
   pycypher_x86_64 \
-  bash -c '/project/pycypher/build_utils/build_wheels.sh'
+  bash -c "$BUILD_WHEELS"
 docker run --rm -it \
   -v `pwd`/pycypher:/project/pycypher \
   pycypher_i686 \
-  linux32 bash -c '/project/pycypher/build_utils/build_wheels.sh'
+  linux32 bash -c "$BUILD_WHEELS"
 
 # if running on Travis CI, add a build tag to wheels so that it is possible
 # to re-run the build and it will upload wheels with new tag so that fixes
@@ -52,16 +73,26 @@ if [ "$TRAVIS" == "true" ] && [ "$CI" == "true" ]; then
       /project/pycypher/dist $TRAVIS_BUILD_NUMBER
 fi
 
+TEST_WHEELS='
+  set -e -x
+
+  for PYBIN in /opt/python/*/bin/; do
+    "${PYBIN}/pip" install nose
+    "${PYBIN}/pip" install pycypher --no-index -f /project/pycypher/dist/
+    "${PYBIN}/nosetests" pycypher
+  done
+'
+
 # test
 docker run --rm -it \
   -e 'TRAVIS' \
   -v `pwd`/pycypher/dist:/project/pycypher/dist \
   -v `pwd`/pycypher/build_utils:/project/pycypher/build_utils \
   quay.io/pypa/manylinux1_x86_64 \
-  bash -c '/project/pycypher/build_utils/test_wheels.sh'
+  bash -c "$TEST_WHEELS"
 docker run --rm -it \
   -e 'TRAVIS' \
   -v `pwd`/pycypher/dist:/project/pycypher/dist \
   -v `pwd`/pycypher/build_utils:/project/pycypher/build_utils \
   quay.io/pypa/manylinux1_i686 \
-  linux32 bash -c '/project/pycypher/build_utils/test_wheels.sh'
+  linux32 bash -c "$TEST_WHEELS"
