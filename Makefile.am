@@ -23,6 +23,10 @@ docker-valgrind:
 		`docker build . -q -f build-aux/build.dockerfile` \
 		sh /$(PACKAGE)/build-aux/valgrind-package.sh /$(PACKAGE)/$(DIST_ARCHIVES) $(distdir)
 
+docker-pycypher:
+	$(MAKE) dist
+	ci/pycypher_linux_build.sh
+
 MAINTAINERCLEANFILES = \
 	build-aux/m4/libtool.m4 \
 	build-aux/m4/ltoptions.m4 \
