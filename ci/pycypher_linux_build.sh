@@ -55,6 +55,23 @@ docker run --rm -it \
   pycypher_i686 \
   linux32 bash -c "$BUILD_WHEELS"
 
+ADD_BUILD_TAG_TO_WHEELS='
+import sys, os, os.path, subprocess
+from wheel.install import WheelFile
+
+os.chdir(sys.argv[1])
+build_tag = sys.argv[2]
+
+for wheel in os.listdir("."):
+    wheelfile = WheelFile(wheel)
+    wheeldict = wheelfile.parsed_filename.groupdict()
+    if wheeldict["build"] is not None:
+        continue
+    wheeldict["build"] = build_tag
+    new_wheel = "%(name)s-%(ver)s-%(build)s-%(pyver)s-%(abi)s-%(plat)s.whl" % wheeldict
+    subprocess.check_call(["mv", wheel, new_wheel])
+'
+
 # if running on Travis CI, add a build tag to wheels so that it is possible
 # to re-run the build and it will upload wheels with new tag so that fixes
 # can be deployed to already-uploaded versions
@@ -63,13 +80,13 @@ if [ "$TRAVIS" == "true" ] && [ "$CI" == "true" ]; then
     -v `pwd`/pycypher:/project/pycypher \
     pycypher_x86_64 \
     /opt/python/cp27-cp27m/bin/python \
-      /add_build_tag_to_wheels.py \
+      -c "$ADD_BUILD_TAG_TO_WHEELS" \
       /project/pycypher/dist $TRAVIS_BUILD_NUMBER
   docker run --rm -it \
     -v `pwd`/pycypher:/project/pycypher \
     pycypher_i686 \
     linux32 /opt/python/cp27-cp27m/bin/python \
-      /add_build_tag_to_wheels.py \
+      -c "$ADD_BUILD_TAG_TO_WHEELS" \
       /project/pycypher/dist $TRAVIS_BUILD_NUMBER
 fi
 
