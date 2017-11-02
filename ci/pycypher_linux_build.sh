@@ -16,8 +16,8 @@ cd "$(dirname -- "$0")"
 cd ..
 
 # install dependencies
-docker build . -f pycypher/build_utils/pycypher_x86_64.dockerfile -t pycypher_x86_64
-docker build . -f pycypher/build_utils/pycypher_i686.dockerfile -t pycypher_i686
+docker build . -f ci/pycypher_x86_64.dockerfile -t pycypher_x86_64
+docker build . -f ci/pycypher_i686.dockerfile -t pycypher_i686
 
 rm -rf ./pycypher/dist
 
