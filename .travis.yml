@@ -14,14 +14,14 @@ matrix:
       python: 2.7
       services:
         - docker
-      script: pycypher/linux_build.sh
+      script: ci/pycypher_linux_build.sh
     - os: osx
       language: generic
-      script: pycypher/osx_build.sh
+      script: ci/pycypher_osx_build.sh
 
 deploy:
   provider: script
-  script: pycypher/utils/upload_wheels.sh $PYPI_USER $PYPI_PASSWORD
+  script: pycypher/build_utils/upload_wheels.sh $PYPI_USER $PYPI_PASSWORD
   skip_cleanup: true
   on:
     tags: true

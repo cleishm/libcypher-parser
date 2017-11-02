@@ -16,8 +16,8 @@ cd "$(dirname -- "$0")"
 cd ..
 
 # install dependencies
-docker build . -f pycypher/utils/pycypher_x86_64.dockerfile -t pycypher_x86_64
-docker build . -f pycypher/utils/pycypher_i686.dockerfile -t pycypher_i686
+docker build . -f pycypher/build_utils/pycypher_x86_64.dockerfile -t pycypher_x86_64
+docker build . -f pycypher/build_utils/pycypher_i686.dockerfile -t pycypher_i686
 
 rm -rf ./pycypher/dist
 
@@ -28,11 +28,11 @@ rm -rf ./pycypher/dist
 docker run --rm -it \
   -v `pwd`/pycypher:/project/pycypher \
   pycypher_x86_64 \
-  bash -c '/project/pycypher/utils/build_wheels.sh'
+  bash -c '/project/pycypher/build_utils/build_wheels.sh'
 docker run --rm -it \
   -v `pwd`/pycypher:/project/pycypher \
   pycypher_i686 \
-  linux32 bash -c '/project/pycypher/utils/build_wheels.sh'
+  linux32 bash -c '/project/pycypher/build_utils/build_wheels.sh'
 
 # if running on Travis CI, add a build tag to wheels so that it is possible
 # to re-run the build and it will upload wheels with new tag so that fixes
@@ -42,13 +42,13 @@ if [ "$TRAVIS" == "true" ] && [ "$CI" == "true" ]; then
     -v `pwd`/pycypher:/project/pycypher \
     pycypher_x86_64 \
     /opt/python/cp27-cp27m/bin/python \
-      /project/pycypher/utils/add_build_tag_to_wheels.py \
+      /project/pycypher/build_utils/add_build_tag_to_wheels.py \
       /project/pycypher/dist $TRAVIS_BUILD_NUMBER
   docker run --rm -it \
     -v `pwd`/pycypher:/project/pycypher \
     pycypher_i686 \
     linux32 /opt/python/cp27-cp27m/bin/python \
-      /project/pycypher/utils/add_build_tag_to_wheels.py \
+      /project/pycypher/build_utils/add_build_tag_to_wheels.py \
       /project/pycypher/dist $TRAVIS_BUILD_NUMBER
 fi
 
@@ -56,12 +56,12 @@ fi
 docker run --rm -it \
   -e 'TRAVIS' \
   -v `pwd`/pycypher/dist:/project/pycypher/dist \
-  -v `pwd`/pycypher/utils:/project/pycypher/utils \
+  -v `pwd`/pycypher/build_utils:/project/pycypher/build_utils \
   quay.io/pypa/manylinux1_x86_64 \
-  bash -c '/project/pycypher/utils/test_wheels.sh'
+  bash -c '/project/pycypher/build_utils/test_wheels.sh'
 docker run --rm -it \
   -e 'TRAVIS' \
   -v `pwd`/pycypher/dist:/project/pycypher/dist \
-  -v `pwd`/pycypher/utils:/project/pycypher/utils \
+  -v `pwd`/pycypher/build_utils:/project/pycypher/build_utils \
   quay.io/pypa/manylinux1_i686 \
-  linux32 bash -c '/project/pycypher/utils/test_wheels.sh'
+  linux32 bash -c '/project/pycypher/build_utils/test_wheels.sh'
