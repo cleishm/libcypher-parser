@@ -104,12 +104,10 @@ TEST_WHEELS='
 docker run --rm -it \
   -e 'TRAVIS' \
   -v `pwd`/pycypher/dist:/project/pycypher/dist \
-  -v `pwd`/pycypher/build_utils:/project/pycypher/build_utils \
   quay.io/pypa/manylinux1_x86_64 \
   bash -c "$TEST_WHEELS"
 docker run --rm -it \
   -e 'TRAVIS' \
   -v `pwd`/pycypher/dist:/project/pycypher/dist \
-  -v `pwd`/pycypher/build_utils:/project/pycypher/build_utils \
   quay.io/pypa/manylinux1_i686 \
   linux32 bash -c "$TEST_WHEELS"
