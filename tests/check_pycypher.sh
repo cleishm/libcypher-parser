@@ -14,6 +14,13 @@
 set -e -x
 cd "$(dirname -- "$0")"
 
+if [ ! -d ../pycypher/ ]; then
+    echo "<project-root>/pycypher/ directory not present, skipping related tests..."
+    exit 77
+fi
+
+cd ../pycypher
+
 export LD_LIBRARY_PATH=../src/lib/.libs/:$LD_LIBRARY_PATH
 export LIBRARY_PATH=../src/lib/.libs/:$LIBRARY_PATH
 export C_INCLUDE_PATH=../src/lib/:$C_INCLUDE_PATH

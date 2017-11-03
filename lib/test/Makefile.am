@@ -1,5 +1,6 @@
-TESTS = check_libcypher-parser
+TESTS = check_libcypher-parser check_pycypher.sh
 check_PROGRAMS = check_libcypher-parser
+dist_check_SCRIPTS = check_pycypher.sh
 check_libcypher_parser_SOURCES = \
 	${check_libcypher_parser_CHECKS} \
 	check_libcypher-parser.c \
