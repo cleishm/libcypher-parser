@@ -1,26 +1,33 @@
 # Developer guide
 Some familiarity with the
 [Python C API](https://docs.python.org/2/c-api/index.html) may be helpful.
+All file paths in this file are relative to libcypher-parser repository root.
 
 ## Building
 
-##### linux_build.sh
-This is the preferred way. Requires docker to be available. Just run
-`./linux_build.sh`. It will first build a container image with dependencies
-and compile and install libcypher-parser into it. Then it will use this
-image to build and test pycypher. Afterwards, compiled wheels containing
-statically-linked copy of libcypher-parser will be available in `dist/`.
+##### make docker-pycypher (aka ci/pycypher_linux_build.sh)
+This is the preferred way. Requires docker to be available.
+Builds packages for both 32-bit and 64-bit and for various Python versions.
+Run `./configure && make docker-pycypher` in project root.
+It will first build a container image and install libcypher-parser tarball into it.
+Then it will use this image to build pycypher and bundle libcypher-parser with it.
+Built packages will be tested on image that does not have libcypher-parser installed.
+Afterwards, compiled wheels containing statically-linked copy of
+libcypher-parser will be available in `pycypher/dist/`.
 
-##### local_tests.sh
-If for some reason using docker is not possible, this script can be used to build
-and test the bindings. First, compile libcypher-parser in the parent directory.
-After that, run `./local_tests.sh`. This script relies on
-`../src/lib/cypher-parser.h` and `../src/lib/.libs/libcypher-parser.so`
-to be present.
+##### tests/check_pycypher.sh
+This script is automatically executed when doing `make check`.
+If `pycypher/` directory does not exist the test is skipped.
+It relies on `src/lib/cypher-parser.h` and
+`src/lib/.libs/libcypher-parser.so`
+to be present. It builds python extension module in-place and tests it, it does
+not create distributable packages.
 
-##### osx_build.sh
-Unfortunately, this is only meant to be used in a CI build. If you want to test
-Mac OS X compatiblity locally, use `local_tests.sh`.
+##### ci/pycypher_osx_build.sh
+Unfortunately, this is only meant to be used in a CI build.
+Like `ci/pycypher_linux_build.sh`, builds packages for various versions of Python
+and bundles libcypher-parser with them.
+Afterwards runs tests against created wheels.
 
 ## PyPI deployment
 Travis build is configured to deploy to PyPI whenever a git tag is pushed.
@@ -51,10 +58,11 @@ And [don't](
 remove files from PyPI.
 
 ## How generation works
-`generate.py` is a self-contained (no dependencies necessary) python script that
-parses `../src/lib/cypher-parser.h.in` and `../configure.ac`.
-It produces `pycypher/operators.c`, `pycypher/node_types.c`, `pycypher/props.c`,
-`pycypher/getters.py` and `pycypher/version.py`.
+`pycypher/generate.py` is a self-contained (no dependencies necessary) python
+script that parses `src/lib/cypher-parser.h.in` and `configure.ac`.
+It produces `pycypher/pycypher/operators.c`, `pycypher/pycypher/node_types.c`,
+`pycypher/pycypher/props.c`, `pycypher/pycypher/getters.py`, `pycypher/pycypher/version.py`,
+`pycypher/LICENSE` and `pycypher/setup.cfg`.
 
 It uses regular expressions to look for annotated declarations in the header
 file and for the `AC_INIT` in `configure.ac`.

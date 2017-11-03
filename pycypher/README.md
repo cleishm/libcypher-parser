@@ -6,7 +6,7 @@ Python bindings for libcypher-parser.
 
 ### Getting started
 You don't need to have libcypher-parser installed to use it.
-The distribution contains a statically linked copy of libcypher-parser. You
+Packages on PyPI contain a bundled copy of libcypher-parser. You
 only need a CPython installation on a Linux or a Mac OS X system.
 
 ```console
