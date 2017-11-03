@@ -4,6 +4,7 @@ Some familiarity with the
 All file paths in this file are relative to libcypher-parser repository root.
 
 ## Building
+All of the following scripts invoke `pycypher/generate.py` as a first step.
 
 ##### make docker-pycypher (aka ci/pycypher_linux_build.sh)
 This is the preferred way. Requires docker to be available.
