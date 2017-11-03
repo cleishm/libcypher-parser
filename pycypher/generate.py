@@ -534,6 +534,9 @@ class Generator(object):
         with open('../LICENSE', 'w') as file_out:
             file_out.write(license)
 
+        with open('../setup.cfg', 'w') as file_out:
+            file_out.write('[metadata]\nlicense-file=LICENSE\n')
+
 
 if __name__ == "__main__":
     Generator().main()

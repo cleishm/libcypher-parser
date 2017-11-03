@@ -11,3 +11,4 @@ __pycache__
 /dist/
 /pycypher.egg-info/
 /LICENSE
+/setup.cfg
