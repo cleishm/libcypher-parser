@@ -16,7 +16,8 @@ dnl Process this file with autoconf to produce a configure script
 AC_PREREQ([2.69])
 AC_INIT([libcypher-parser],[0.6.1~devel])
 AC_CONFIG_SRCDIR([src/lib/cypher-parser.h.in])
-AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_AUX_DIR([build-aux])
+AC_CONFIG_MACRO_DIR([build-aux/m4])
 AM_INIT_AUTOMAKE([foreign])
 AC_CONFIG_HEADER([config.h])
 AM_MAINTAINER_MODE([enable])
@@ -111,7 +112,6 @@ AC_CONFIG_FILES([
     cypher-lint.1 \
     cypher-parser.pc \
     Makefile \
-    m4/Makefile \
     src/Makefile \
     src/bin/Makefile \
     src/lib/cypher-parser.h \
