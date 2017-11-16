@@ -27,18 +27,21 @@ EXTRA_DIST = \
 	README.md
 
 docker-check:
-	$(MAKE) dist
-	docker run --rm -v $(abs_builddir):/$(PACKAGE) -ti debian-unstable-dev \
-		sh -c 'tar xzmf /$(PACKAGE)/$(DIST_ARCHIVES) && cd $(distdir) && ./configure --enable-silent-rules && make check'
+	@$(MAKE) dist
+	@echo "Building docker image..."
+	@docker run -t --rm -v $(abs_builddir):/$(PACKAGE) \
+		`docker build . -q -f build-aux/build.dockerfile` \
+		sh /$(PACKAGE)/build-aux/check-package.sh /$(PACKAGE)/$(DIST_ARCHIVES) $(distdir)
 
 docker-valgrind:
-	$(MAKE) dist
-	docker run --rm -v $(abs_builddir):/$(PACKAGE) -ti debian-unstable-dev \
-		sh -c 'tar xzmf /$(PACKAGE)/$(DIST_ARCHIVES) && cd $(distdir) && ./configure --enable-silent-rules --disable-debug && make check && CK_FORK=no valgrind --leak-check=full --show-leak-kinds=all ./tests/check_$(PACKAGE)'
+	@$(MAKE) dist
+	@echo "Building docker image..."
+	@docker run --rm -t -v $(abs_builddir):/$(PACKAGE) \
+		`docker build . -q -f build-aux/build.dockerfile` \
+		sh /$(PACKAGE)/build-aux/valgrind-package.sh /$(PACKAGE)/$(DIST_ARCHIVES) $(distdir)
 
 clean-local:
 	rm -rf doc src/.doc
-
 
 MAINTAINERCLEANFILES = \
 	build-aux/m4/libtool.m4 \
