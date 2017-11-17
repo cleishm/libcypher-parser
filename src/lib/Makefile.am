@@ -163,5 +163,8 @@ else
 	$(error Cannot compile .leg source file, as the leg compiler was not found by the configure script: please install http://piumarta.com/software/peg/ and re-run the configure script)
 endif
 
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = cypher-parser.pc
+
 EXTRA_DIST = parser_leg.c quick_parser_leg.c
 MAINTAINERCLEANFILES = parser_leg.c quick_parser_leg.c

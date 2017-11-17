@@ -16,9 +16,6 @@ src/.doc/cypher-parser.h: src/lib/cypher-parser.h
 	@mkdir -p src/.doc
 	(cat "$<" && sed -ne "s/^.*@fn \(.*\)$$/\1;/p" < "$<") >> "$@"
 
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = cypher-parser.pc
-
 EXTRA_DIST = \
 	doxygen.cfg \
 	build-aux \

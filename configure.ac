@@ -110,12 +110,12 @@ AC_SUBST([REQUIRES], [`echo "$REQUIRES" | cut -c3-`])
 
 AC_CONFIG_FILES([
     cypher-lint.1 \
-    cypher-parser.pc \
     Makefile \
     src/Makefile \
     src/bin/Makefile \
-    src/lib/cypher-parser.h \
     src/lib/Makefile \
+    src/lib/cypher-parser.h \
+    src/lib/cypher-parser.pc \
     tests/Makefile
 ])
 AC_OUTPUT
