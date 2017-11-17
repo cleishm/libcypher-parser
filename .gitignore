@@ -1,6 +1,6 @@
 .DS_Store
+.build
 .deps
-.doc
 .libs
 *~
 *.1
@@ -33,7 +33,11 @@ TAGS
 /build-aux/m4/lt~obsolete.m4
 /configure
 /config.*
-/doc
+/doc/lib/html
+/doc/lib/latex
+/doc/lib/man
+/doc/lib/*.pdf
+/doc/lib/*.tag
 /libtool
 /libcypher-parser-*.tar.gz
 /src/bin/cypher-lint

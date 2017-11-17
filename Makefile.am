@@ -1,26 +1,12 @@
-include build-aux/aminclude.am
-
-SUBDIRS = src
+SUBDIRS = doc src
 ACLOCAL_AMFLAGS = -I build-aux/m4
-
-man1_MANS = cypher-lint.1
 
 if HAVE_CHECK
 SUBDIRS += tests
 endif
 
-doc: doxygen-doc
-
-doc/libcypher-parser.tag: src/.doc/cypher-parser.h
-src/.doc/cypher-parser.h: src/lib/cypher-parser.h
-	@mkdir -p src/.doc
-	(cat "$<" && sed -ne "s/^.*@fn \(.*\)$$/\1;/p" < "$<") >> "$@"
-
 EXTRA_DIST = \
-	doxygen.cfg \
-	build-aux \
 	LICENSE \
-	cypher-lint.1.in \
 	README.md
 
 docker-check:
@@ -36,9 +22,6 @@ docker-valgrind:
 	@docker run --rm -t -v $(abs_builddir):/$(PACKAGE) \
 		`docker build . -q -f build-aux/build.dockerfile` \
 		sh /$(PACKAGE)/build-aux/valgrind-package.sh /$(PACKAGE)/$(DIST_ARCHIVES) $(distdir)
-
-clean-local:
-	rm -rf doc src/.doc
 
 MAINTAINERCLEANFILES = \
 	build-aux/m4/libtool.m4 \

@@ -104,13 +104,16 @@ DX_RTF_FEATURE(OFF)
 DX_XML_FEATURE(OFF)
 DX_PDF_FEATURE(ON)
 DX_PS_FEATURE(OFF)
-DX_INIT_DOXYGEN(libcypher-parser, doxygen.cfg, doc)
+DX_INIT_DOXYGEN(libcypher-parser, doxygen.cfg, .)
 
 AC_SUBST([REQUIRES], [`echo "$REQUIRES" | cut -c3-`])
 
 AC_CONFIG_FILES([
-    cypher-lint.1 \
     Makefile \
+    doc/Makefile \
+    doc/bin/Makefile \
+    doc/lib/Makefile \
+    doc/bin/cypher-lint.1 \
     src/Makefile \
     src/bin/Makefile \
     src/lib/Makefile \
