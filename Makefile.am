@@ -2,7 +2,7 @@ SUBDIRS = doc src
 ACLOCAL_AMFLAGS = -I build-aux/m4
 
 if HAVE_CHECK
-SUBDIRS += tests
+SUBDIRS += test
 endif
 
 EXTRA_DIST = \

@@ -43,7 +43,7 @@ TAGS
 /src/bin/cypher-lint
 /src/lib/*_leg.c
 /src/lib/cypher-parser.h
-/tests/check_libcypher-parser
-/tests/*.trs
-/tests/*.log
-/tests/*_suite.c
+/test/lib/check_libcypher-parser
+/test/lib/*.trs
+/test/lib/*.log
+/test/lib/*_suite.c

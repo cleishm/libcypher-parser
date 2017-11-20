@@ -95,6 +95,10 @@ dnl Add GCC flags
 AS_IF([test "X$GCC" = "Xyes"], [CFLAGS="$CFLAGS $GCC_CFLAGS"])
 
 
+dnl Capture required dependencies for pkg-check
+AC_SUBST([REQUIRES], [`echo "$REQUIRES" | cut -c3-`])
+
+
 dnl Check for doxygen support
 DX_HTML_FEATURE(ON)
 DX_CHM_FEATURE(OFF)
@@ -106,7 +110,6 @@ DX_PDF_FEATURE(ON)
 DX_PS_FEATURE(OFF)
 DX_INIT_DOXYGEN(libcypher-parser, doxygen.cfg, .)
 
-AC_SUBST([REQUIRES], [`echo "$REQUIRES" | cut -c3-`])
 
 AC_CONFIG_FILES([
     Makefile \
@@ -119,6 +122,7 @@ AC_CONFIG_FILES([
     src/lib/Makefile \
     src/lib/cypher-parser.h \
     src/lib/cypher-parser.pc \
-    tests/Makefile
+    test/Makefile \
+    test/lib/Makefile
 ])
 AC_OUTPUT
