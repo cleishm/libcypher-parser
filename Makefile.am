@@ -1,8 +1,8 @@
-SUBDIRS = doc src
 ACLOCAL_AMFLAGS = -I build-aux/m4
+SUBDIRS = lib
 
-if HAVE_CHECK
-SUBDIRS += test
+if WANT_TOOLS
+SUBDIRS += linter
 endif
 
 EXTRA_DIST = \

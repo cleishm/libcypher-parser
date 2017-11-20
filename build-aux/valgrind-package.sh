@@ -12,6 +12,6 @@ set -x
 tar xzf $1
 cd $2
 ./configure --enable-silent-rules --disable-maintainer-mode --disable-dependency-tracking --disable-debug
-(cd src/lib && make all)
-(cd test/lib && make check_libcypher-parser)
-CK_FORK=no valgrind --leak-check=full --show-leak-kinds=all ./test/lib/check_libcypher-parser
+(cd lib/src && make all)
+(cd lib/test && make check_libcypher-parser)
+CK_FORK=no valgrind --leak-check=full --show-leak-kinds=all ./lib/test/check_libcypher-parser
