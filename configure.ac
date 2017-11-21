@@ -111,6 +111,13 @@ DX_PS_FEATURE(OFF)
 DX_INIT_DOXYGEN(libcypher-parser, doxygen.cfg, .)
 
 
+dnl Check if python bindings should be built
+AC_ARG_WITH([python],
+  AS_HELP_STRING([--with-python], [Build python bindings]))
+AM_CONDITIONAL([WANT_PYTHON], [test "X$with_python" = "Xyes"])
+AS_IF([test "X$with_python" = "Xyes"], [AM_PATH_PYTHON([2.7.0])])
+
+
 AC_CONFIG_FILES([
     Makefile \
     lib/Makefile \
@@ -123,5 +130,8 @@ AC_CONFIG_FILES([
     linter/doc/Makefile \
     linter/doc/cypher-lint.1 \
     linter/src/Makefile
+    pycypher/Makefile \
+    pycypher/src/Makefile \
+    pycypher/src/version.py \
 ])
 AC_OUTPUT

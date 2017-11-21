@@ -8,6 +8,7 @@
 *.o-*
 *.lo
 *.la
+*.pyc
 *.sig
 *.swp
 *.dSYM
@@ -47,3 +48,8 @@ TAGS
 /libtool
 /libcypher-parser-*.tar.gz
 /linter/src/cypher-lint
+/pycypher/src/getters.py
+/pycypher/src/node_types.c
+/pycypher/src/operators.c
+/pycypher/src/props.c
+/pycypher/src/version.py

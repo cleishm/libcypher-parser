@@ -19,12 +19,12 @@ from setuptools import setup, Extension
 bindings = Extension(
     'pycypher.bindings',
     sources=[
-        'pycypher/bindings.c',
-        'pycypher/node_types.c',
-        'pycypher/operators.c',
-        'pycypher/props.c',
-        'pycypher/extract_props.c',
-        'pycypher/parser.c',
+        'bindings.c',
+        'node_types.c',
+        'operators.c',
+        'props.c',
+        'extract_props.c',
+        'parser.c',
     ],
     libraries=['cypher-parser'],
 )
@@ -34,12 +34,12 @@ Python bindings for libcypher-parser.
 """.strip()
 
 long_description = u"""
-Homepage: https://github.com/cleishm/libcypher-parser/tree/master/pycypher
+Homepage: https://github.com/cleishm/libcypher-parser/tree/master
 """.strip()
 
 def read_version():
     try:
-        v = open(os.path.join(os.path.dirname(__file__), 'pycypher/version.py'))
+        v = open(os.path.join(os.path.dirname(__file__), 'version.py'))
         match = re.search(r'__version__ = ["\']([^"\']+)["\']', v.read())
         return match.group(1)
     except OSError:
@@ -51,7 +51,7 @@ setup(
     description=description,
     long_description=long_description,
     license='Apache License 2.0',
-    url=u'https://github.com/cleishm/libcypher-parser/tree/master/pycypher',
+    url=u'https://github.com/cleishm/libcypher-parser/tree/master',
     author='Franciszek Piszcz, Google Inc.',
     author_email='franek@google.com',
     maintainer=u'Chris Leishman (http://github.com/cleishm)',

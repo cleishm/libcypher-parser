@@ -14,11 +14,11 @@
  */
 #include "parser.h"
 
-const cypher_parse_result_t* pycypher_invoke_parser(const char* query) {
-  const cypher_parse_result_t* parse_result;
+cypher_parse_result_t* pycypher_invoke_parser(const char* query) {
+  cypher_parse_result_t* parse_result;
   cypher_parser_config_t* parser_config = cypher_parser_new_config();
   if(parser_config == NULL)
-    return PyErr_SetFromErrno(PyExc_OSError);
+    return (cypher_parse_result_t *)PyErr_SetFromErrno(PyExc_OSError);
 
   parse_result = cypher_uparse(
     query, strlen(query), NULL, parser_config, /*flags*/0
@@ -29,7 +29,7 @@ const cypher_parse_result_t* pycypher_invoke_parser(const char* query) {
 }
 
 const char* pycypher_build_ast_type(const cypher_astnode_t* src_ast) {
-  int i;
+  size_t i;
   for(i=0; i<pycypher_node_types_len; ++i)
     if(pycypher_node_types[i].node_type == cypher_astnode_type(src_ast))
       return pycypher_node_types[i].name;
@@ -38,7 +38,7 @@ const char* pycypher_build_ast_type(const cypher_astnode_t* src_ast) {
 
 PyObject* pycypher_build_ast_instanceof(const cypher_astnode_t* src_ast) {
   PyObject* result = PyList_New(0);
-  int i;
+  size_t i;
   for(i=0; i<pycypher_node_types_len; ++i)
     if(cypher_astnode_instanceof(src_ast, pycypher_node_types[i].node_type)) {
       PyObject* tmp = Py_BuildValue("s", pycypher_node_types[i].name);
@@ -136,7 +136,7 @@ PyObject* pycypher_parse_query(PyObject* self, PyObject* args) {
   PyObject* exn_class;
   if (!PyArg_ParseTuple(args, "OOs:parse", &ast_class, &exn_class, &query))
     return NULL;
-  const cypher_parse_result_t* parse_result = pycypher_invoke_parser(query);
+  cypher_parse_result_t* parse_result = pycypher_invoke_parser(query);
   if(parse_result == NULL)
     return PyErr_SetFromErrno(PyExc_OSError);
   PyObject* ast_list = pycypher_build_ast_list(ast_class, parse_result);
