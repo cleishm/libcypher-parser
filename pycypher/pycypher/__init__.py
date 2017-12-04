@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .bindings import parse_query as inner_parse_query
+from ._pycypher import parse_query as inner_parse_query
 from .ast import CypherAstNode
 from .version import __version__
 

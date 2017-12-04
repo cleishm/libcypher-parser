@@ -35,7 +35,7 @@ static PyMethodDef pycypher_methods[] = {
   }
   static struct PyModuleDef pycypher_module = {
     PyModuleDef_HEAD_INIT,
-    "pycypher.bindings",
+    "pycypher._pycypher",
     NULL,
     0,
     pycypher_methods,
@@ -44,7 +44,7 @@ static PyMethodDef pycypher_methods[] = {
     pycypher_clear,
     NULL
   };
-  PyMODINIT_FUNC PyInit_bindings(void)
+  PyMODINIT_FUNC PyInit__pycypher(void)
   {
     PyObject *module = PyModule_Create(&pycypher_module);
     if (module == NULL)
@@ -57,9 +57,9 @@ static PyMethodDef pycypher_methods[] = {
 
 #else
 
-  PyMODINIT_FUNC initbindings(void)
+  PyMODINIT_FUNC init_pycypher(void)
   {
-    PyObject *module = Py_InitModule("pycypher.bindings", pycypher_methods);
+    PyObject *module = Py_InitModule("pycypher._pycypher", pycypher_methods);
     if (module == NULL)
       return;
     pycypher_init_node_types();

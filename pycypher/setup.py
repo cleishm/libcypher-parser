@@ -16,8 +16,8 @@ import os.path
 import re
 from setuptools import setup, Extension
 
-bindings = Extension(
-    'pycypher.bindings',
+_pycypher = Extension(
+    'pycypher._pycypher',
     sources=[
         'pycypher/bindings.c',
         'pycypher/node_types.c',
@@ -73,7 +73,7 @@ setup(
         u'Operating System :: MacOS :: MacOS X',
         u'Topic :: Software Development :: Libraries',
     ],
-    ext_modules=[bindings],
+    ext_modules=[_pycypher],
     packages=['pycypher', 'pycypher.tests'],
     include_package_data=True,
     zip_safe=False,
