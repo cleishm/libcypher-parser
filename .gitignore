@@ -8,6 +8,7 @@
 *.o-*
 *.lo
 *.la
+*.pyc
 *.sig
 *.swp
 *.dSYM
@@ -39,6 +40,7 @@ TAGS
 /build-aux/m4/ltsugar.m4
 /build-aux/m4/ltversion.m4
 /build-aux/m4/lt~obsolete.m4
+/build-aux/py-compile
 /configure
 /config.*
 /lib/src/*_leg.c
@@ -47,3 +49,8 @@ TAGS
 /libtool
 /libcypher-parser-*.tar.gz
 /linter/src/cypher-lint
+/pycypher/src/getters.py
+/pycypher/src/node_types.c
+/pycypher/src/operators.c
+/pycypher/src/props.c
+/pycypher/src/version.py

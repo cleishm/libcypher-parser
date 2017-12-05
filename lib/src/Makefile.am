@@ -1,7 +1,9 @@
 lib_LTLIBRARIES = libcypher-parser.la
+# convenience library for static inclusion into language modules (e.g. python)
+noinst_LTLIBRARIES = libcp.la
 
 include_HEADERS = cypher-parser.h
-libcypher_parser_la_SOURCES = \
+libcp_la_SOURCES = \
 	ast.c \
 	ast.h \
 	astnode.h \
@@ -139,8 +141,10 @@ libcypher_parser_la_SOURCES = \
 	vector.c \
 	vector.h
 
-libcypher_parser_la_CFLAGS = $(PTHREAD_CFLAGS) $(OPENSSL_CFLAGS) -Wpedantic -Wvla
-libcypher_parser_la_LIBADD = $(PTHREAD_LIBS) $(OPENSSL_LIBS) $(LIBM)
+libcp_la_CFLAGS = $(PTHREAD_CFLAGS) -Wpedantic -Wvla
+
+libcypher_parser_la_SOURCES = # only the convenience library
+libcypher_parser_la_LIBADD = $(PTHREAD_LIBS) $(LIBM) libcp.la
 # Updating the version-info:
 # 1. If the library source code has changed at all since the last update, then
 #    increment revision (‘c:r:a’ becomes ‘c:r+1:a’).

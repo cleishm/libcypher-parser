@@ -15,7 +15,7 @@
 #include "extract_props.h"
 
 PyObject* pycypher_operator_to_python_string(const cypher_operator_t* op) {
-  int i;
+  unsigned int i;
   for(i=0; i<pycypher_operators_len; ++i)
     if(op == pycypher_operators[i].operator)
       return Py_BuildValue("s", pycypher_operators[i].name);
@@ -46,9 +46,9 @@ PyObject* pycypher_extract_operator_prop(const cypher_astnode_t* src_ast, pycyph
 }
 
 PyObject* pycypher_extract_operator_list_prop(const cypher_astnode_t* src_ast, pycypher_operator_list_prop_t* prop) {
-  int n = prop->length_getter(src_ast);
+  unsigned int n = prop->length_getter(src_ast);
   PyObject* result = PyList_New(n);
-  int i;
+  unsigned int i;
   for(i=0; i<n; ++i)
     // PyList_SetItem consumes a reference so no need to call Py_DECREF
     PyList_SetItem(result, i, pycypher_operator_to_python_string(
@@ -71,9 +71,9 @@ PyObject* pycypher_extract_string_prop(const cypher_astnode_t* src_ast, pycypher
 }
 
 PyObject* pycypher_extract_ast_list_prop(const cypher_astnode_t* src_ast, pycypher_ast_list_prop_t* prop) {
-  int n = prop->length_getter(src_ast);
+  unsigned int n = prop->length_getter(src_ast);
   PyObject* result = PyList_New(n);
-  int i;
+  unsigned int i;
   for(i=0; i<n; ++i)
     // PyList_SetItem consumes a reference so no need to call Py_DECREF
     PyList_SetItem(result, i, pycypher_astnode_to_python_dict(
@@ -83,9 +83,9 @@ PyObject* pycypher_extract_ast_list_prop(const cypher_astnode_t* src_ast, pycyph
 }
 
 PyObject* pycypher_extract_ast_list_plus_one_prop(const cypher_astnode_t* src_ast, pycypher_ast_list_plus_one_prop_t* prop) {
-  int n = prop->length_getter(src_ast) + 1;
+  unsigned int n = prop->length_getter(src_ast) + 1;
   PyObject* result = PyList_New(n);
-  int i;
+  unsigned int i;
   for(i=0; i<n; ++i)
     // PyList_SetItem consumes a reference so no need to call Py_DECREF
     PyList_SetItem(result, i, pycypher_astnode_to_python_dict(
@@ -104,7 +104,7 @@ PyObject* pycypher_extract_ast_prop(const cypher_astnode_t* src_ast, pycypher_as
 PyObject* pycypher_extract_props(const cypher_astnode_t* src_ast) {
   PyObject* result = PyDict_New();
   PyObject* extracted_prop;
-  int i;
+  unsigned int i;
   for(i=0; i<pycypher_direction_props_len; ++i)
     if(cypher_astnode_instanceof(src_ast, pycypher_direction_props[i].node_type)) {
       extracted_prop = pycypher_extract_direction_prop(

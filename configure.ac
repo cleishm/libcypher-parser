@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
 dnl Process this file with autoconf to produce a configure script
 AC_PREREQ([2.69])
 AC_INIT([libcypher-parser],[0.6.1~devel])
@@ -124,4 +125,31 @@ AC_CONFIG_FILES([
     linter/doc/cypher-lint.1 \
     linter/src/Makefile
 ])
+
+
+dnl --------------
+dnl Python support
+AC_SUBST([PACKAGE], [pycypher])
+
+
+dnl Check if python bindings should be built
+AC_ARG_WITH([python],
+  AS_HELP_STRING([--with-python], [Build python bindings]))
+AM_CONDITIONAL([WANT_PYTHON], [test "X$with_python" = "Xyes"])
+AS_IF([test "X$with_python" = "Xyes"],
+  [AM_PATH_PYTHON([2.7.0])
+  AC_SUBST([PYTHON_PREFIX], [`$PYTHON -c 'import sys; print sys.prefix'`])
+  AC_SUBST([PYTHON_CFLAGS], ["\"-I$PYTHON_PREFIX/include/python$PYTHON_VERSION\""])
+  AC_SUBST([PYTHON_LIBS], ["\"-L$PYTHON_PREFIX/lib\" -lpython$PYTHON_VERSION"])
+  ])
+
+
+AC_CONFIG_FILES([
+    pycypher/Makefile \
+    pycypher/src/Makefile \
+    pycypher/src/version.py \
+    pycypher/test/Makefile
+])
+
+
 AC_OUTPUT

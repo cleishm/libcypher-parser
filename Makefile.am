@@ -5,6 +5,10 @@ if WANT_TOOLS
 SUBDIRS += linter
 endif
 
+if WANT_PYTHON
+SUBDIRS += pycypher
+endif
+
 EXTRA_DIST = \
 	LICENSE \
 	README.md

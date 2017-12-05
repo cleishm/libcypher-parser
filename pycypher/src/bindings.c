@@ -25,6 +25,7 @@ static PyMethodDef pycypher_methods[] = {
     {NULL, NULL, 0, NULL}
 };
 
+#pragma GCC visibility push(default)
 #if PY_MAJOR_VERSION >= 3
 
   static int pycypher_traverse(PyObject *m, visitproc visit, void *arg) {
@@ -68,3 +69,4 @@ static PyMethodDef pycypher_methods[] = {
   }
 
 #endif
+#pragma GCC visibility pop
