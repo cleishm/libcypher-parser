@@ -61,10 +61,8 @@ check_libcypher-parser_suite.c: ${check_libcypher_parser_CHECKS}
 	echo "    return s;"; \
 	echo "}") > $@
 
-CLEANFILES = check_libcypher-parser_suite.c
-
 check_libcypher_parser_CFLAGS = @CHECK_CFLAGS@
 check_libcypher_parser_LDFLAGS = -static
 check_libcypher_parser_LDADD = ../src/libcypher-parser.la @CHECK_LIBS@
 
-MAINTAINERCLEANFILES = check_libcypher-parser_suite.c
+CLEANFILES = check_libcypher-parser_suite.c
