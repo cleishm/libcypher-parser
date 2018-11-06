@@ -25,10 +25,16 @@ AM_MAINTAINER_MODE([enable])
 DECLARE_VERSIONS
 WITH_LIBS
 
-GCC_CFLAGS="-fvisibility=hidden -pipe -Wall -W -Werror \
-    -Wno-unused-parameter -Wno-missing-field-initializers -Wpointer-arith \
-    -Wstrict-prototypes -Wcast-qual -Wcast-align -Wno-error=unused-function \
+GCC_CFLAGS="-fvisibility=hidden -pipe -Wall -W -Wno-unused-parameter \
+    -Wno-missing-field-initializers -Wpointer-arith -Wstrict-prototypes \
+    -Wcast-qual -Wcast-align -Wno-error=unused-function \
     -Wno-error=unused-variable -Wno-error=deprecated-declarations"
+
+AC_ARG_ENABLE([werror],
+  AS_HELP_STRING([--disable-werror],
+  [Do not make warnings into errors even if the compiler supports -Werror.]),
+  [werror_flag=$enableval], [werror_flag=yes])
+AS_IF([test "X$werror_flag" = "Xyes"], [GCC_CFLAGS="$GCC_CFLAGS -Werror"])
 
 LT_INIT
 AC_LANG([C])
