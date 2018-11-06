@@ -178,6 +178,10 @@ $ make clean check
 $ sudo make install
 ```
 
+If you encounter warnings or errors during the build, please report them at
+https://github.com/cleishm/libneo4j-client/issues. If you wish to proceed
+dispite warnings, please invoke configure with the `--disable-werror`.
+
 
 Support
 -------
