@@ -145,7 +145,10 @@ ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 
     if (node->nhints > 0)
     {
-        strncpy(str + n, ", hints=", (n < size)? size-n : 0);
+        if (n < size)
+        {
+          strncpy(str + n, ", hints=", size - n);
+        }
         if (size > 0)
         {
             str[size-1] = '\0';
