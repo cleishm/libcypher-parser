@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "../../config.h"
+#include "libconfig.h"
 #include "cypher-parser.h"
 #include "ast.h"
 #include "errors.h"
@@ -440,7 +440,7 @@ static cypher_astnode_t *_strbuf_function_name(yycontext *yy);
 static cypher_astnode_t *_strbuf_index_name(yycontext *yy);
 #define strbuf_proc_name() _strbuf_proc_name(yy)
 static cypher_astnode_t *_strbuf_proc_name(yycontext *yy);
-#define pattern(i) _pattern(yy)
+#define pattern() _pattern(yy)
 static cypher_astnode_t *_pattern(yycontext *yy);
 #define named_path(s, p) _named_path(yy, s, p)
 static cypher_astnode_t *_named_path(yycontext *yy,
@@ -448,7 +448,7 @@ static cypher_astnode_t *_named_path(yycontext *yy,
 #define shortest_path(s, p) _shortest_path(yy, s, p)
 static cypher_astnode_t *_shortest_path(yycontext *yy, bool single,
         cypher_astnode_t *path);
-#define pattern_path(i) _pattern_path(yy)
+#define pattern_path() _pattern_path(yy)
 static cypher_astnode_t *_pattern_path(yycontext *yy);
 #define node_pattern(i, p) _node_pattern(yy, i, p)
 static cypher_astnode_t *_node_pattern(yycontext *yy,
