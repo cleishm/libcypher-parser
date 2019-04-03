@@ -14,9 +14,10 @@
 #
 dnl Process this file with autoconf to produce a configure script
 AC_PREREQ([2.69])
-AC_INIT([libcypher-parser],[0.6.0])
-AC_CONFIG_SRCDIR([src/lib/cypher-parser.h.in])
-AC_CONFIG_MACRO_DIR([m4])
+AC_INIT([libcypher-parser],[0.6.1])
+AC_CONFIG_SRCDIR([lib/src/cypher-parser.h.in])
+AC_CONFIG_AUX_DIR([build-aux])
+AC_CONFIG_MACRO_DIR([build-aux/m4])
 AM_INIT_AUTOMAKE([foreign])
 AC_CONFIG_HEADER([config.h])
 AM_MAINTAINER_MODE([enable])
@@ -24,10 +25,16 @@ AM_MAINTAINER_MODE([enable])
 DECLARE_VERSIONS
 WITH_LIBS
 
-GCC_CFLAGS="-fvisibility=hidden -pipe -Wall -W -Werror \
-    -Wno-unused-parameter -Wno-missing-field-initializers -Wpointer-arith \
-    -Wstrict-prototypes -Wcast-qual -Wcast-align -Wno-error=unused-function \
+GCC_CFLAGS="-fvisibility=hidden -pipe -Wall -W -Wno-unused-parameter \
+    -Wno-missing-field-initializers -Wpointer-arith -Wstrict-prototypes \
+    -Wcast-qual -Wcast-align -Wno-error=unused-function \
     -Wno-error=unused-variable -Wno-error=deprecated-declarations"
+
+AC_ARG_ENABLE([werror],
+  AS_HELP_STRING([--disable-werror],
+  [Do not make warnings into errors even if the compiler supports -Werror.]),
+  [werror_flag=$enableval], [werror_flag=yes])
+AS_IF([test "X$werror_flag" = "Xyes"], [GCC_CFLAGS="$GCC_CFLAGS -Werror"])
 
 LT_INIT
 AC_LANG([C])
@@ -94,6 +101,10 @@ dnl Add GCC flags
 AS_IF([test "X$GCC" = "Xyes"], [CFLAGS="$CFLAGS $GCC_CFLAGS"])
 
 
+dnl Capture required dependencies for pkg-check
+AC_SUBST([REQUIRES], [`echo "$REQUIRES" | cut -c3-`])
+
+
 dnl Check for doxygen support
 DX_HTML_FEATURE(ON)
 DX_CHM_FEATURE(OFF)
@@ -103,19 +114,20 @@ DX_RTF_FEATURE(OFF)
 DX_XML_FEATURE(OFF)
 DX_PDF_FEATURE(ON)
 DX_PS_FEATURE(OFF)
-DX_INIT_DOXYGEN(libcypher-parser, doxygen.cfg, doc)
+DX_INIT_DOXYGEN(libcypher-parser, doxygen.cfg, .)
 
-AC_SUBST([REQUIRES], [`echo "$REQUIRES" | cut -c3-`])
 
 AC_CONFIG_FILES([
-    cypher-lint.1 \
-    cypher-parser.pc \
     Makefile \
-    m4/Makefile \
-    src/Makefile \
-    src/bin/Makefile \
-    src/lib/cypher-parser.h \
-    src/lib/Makefile \
-    tests/Makefile
+    lib/Makefile \
+    lib/cypher-parser.pc \
+    lib/doc/Makefile \
+    lib/src/Makefile \
+    lib/src/cypher-parser.h \
+    lib/test/Makefile \
+    linter/Makefile \
+    linter/doc/Makefile \
+    linter/doc/cypher-lint.1 \
+    linter/src/Makefile
 ])
 AC_OUTPUT

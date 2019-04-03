@@ -1,39 +1,31 @@
-include aminclude.am
+ACLOCAL_AMFLAGS = -I build-aux/m4
+SUBDIRS = lib
 
-SUBDIRS = m4 src .
-ACLOCAL_AMFLAGS = -I m4
-
-man1_MANS = cypher-lint.1
-
-if HAVE_CHECK
-SUBDIRS += tests
+if WANT_TOOLS
+SUBDIRS += linter
 endif
 
-doc: doxygen-doc
-
-doc/libcypher-parser.tag: src/.doc/cypher-parser.h
-src/.doc/cypher-parser.h: src/lib/cypher-parser.h
-	@mkdir -p src/.doc
-	(cat "$<" && sed -ne "s/^.*@fn \(.*\)$$/\1;/p" < "$<") >> "$@"
-
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = cypher-parser.pc
-
 EXTRA_DIST = \
-	doxygen.cfg \
 	LICENSE \
-	cypher-lint.1.in \
 	README.md
 
 docker-check:
-	$(MAKE) dist
-	docker run --rm -v $(abs_builddir):/$(PACKAGE) -ti debian-unstable-dev \
-		sh -c 'tar xzmf /$(PACKAGE)/$(DIST_ARCHIVES) && cd $(distdir) && ./configure --enable-silent-rules && make check'
+	@$(MAKE) dist
+	@echo "Building docker image..."
+	@docker run -t --rm -v $(abs_builddir):/$(PACKAGE) \
+		`docker build . -q -f build-aux/build.dockerfile` \
+		sh /$(PACKAGE)/build-aux/check-package.sh /$(PACKAGE)/$(DIST_ARCHIVES) $(distdir)
 
 docker-valgrind:
-	$(MAKE) dist
-	docker run --rm -v $(abs_builddir):/$(PACKAGE) -ti debian-unstable-dev \
-		sh -c 'tar xzmf /$(PACKAGE)/$(DIST_ARCHIVES) && cd $(distdir) && ./configure --enable-silent-rules --disable-debug && make check && CK_FORK=no valgrind --leak-check=full --show-leak-kinds=all ./tests/check_$(PACKAGE)'
+	@$(MAKE) dist
+	@echo "Building docker image..."
+	@docker run --rm -t -v $(abs_builddir):/$(PACKAGE) \
+		`docker build . -q -f build-aux/build.dockerfile` \
+		sh /$(PACKAGE)/build-aux/valgrind-package.sh /$(PACKAGE)/$(DIST_ARCHIVES) $(distdir)
 
-clean-local:
-	rm -rf doc src/.doc
+MAINTAINERCLEANFILES = \
+	build-aux/m4/libtool.m4 \
+	build-aux/m4/ltoptions.m4 \
+	build-aux/m4/ltsugar.m4 \
+	build-aux/m4/ltversion.m4 \
+	build-aux/m4/lt~obsolete.m4

@@ -1,3 +1,12 @@
+libcypher-parser (0.6.1-1) unstable; urgency=medium
+
+  * New upstream release.
+    - Adjust precedence of IS NULL
+    - Fix several build warnings
+    - Adjust precedence of regex and equals infix operator parsing
+
+ -- Chris Leishman <chris@leishman.org>  Wed, 03 Apr 2019 21:58:07 +0000
+
 libcypher-parser (0.6.0-1) unstable; urgency=medium
 
   * New upstream release.
