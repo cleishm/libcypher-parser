@@ -89,6 +89,15 @@ RETURN s.name ASS name;
 @23  122..132  > > error                >>ASS name;\n<<
 ```
 
+### Editor integration
+
+- Vim and NeoVim
+  - The [ALE] linting plugin provides support for `cypher-lint`, it just needs
+    to be available in your `$PATH`. ALE will provide instant feedback for
+    errors when editing `cypher` files.
+
+[ALE]: https://github.com/w0rp/ale
+
 
 libcypher-parser Usage
 ----------------------
@@ -177,6 +186,10 @@ $ ./configure
 $ make clean check
 $ sudo make install
 ```
+
+If you encounter warnings or errors during the build, please report them at
+https://github.com/cleishm/libneo4j-client/issues. If you wish to proceed
+dispite warnings, please invoke configure with the `--disable-werror`.
 
 
 Support
