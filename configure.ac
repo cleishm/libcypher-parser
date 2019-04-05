@@ -48,7 +48,7 @@ AC_ARG_VAR([LEG], [leg parser generator command])
 AC_CHECK_PROG([LEG], [leg], [leg])
 AM_CONDITIONAL([HAVE_LEG], [test -n "$LEG"])
 
-AS_IF([test -n "$LEG" -o -f ./src/lib/parser_leg.c], [],
+AS_IF([test -n "$LEG" -o -f ./lib/src/parser_leg.c], [],
   [AC_MSG_ERROR([leg is required: please install http://piumarta.com/software/peg/])])
 
 AC_C_CONST

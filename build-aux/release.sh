@@ -1,27 +1,28 @@
 #!/bin/bash
+# vi:ts=2 sw=2 et:
 
 set -eu
 
 if ! [ -d .git ]; then
-    echo "Must be run from the project root" >&2
-    exit 1
+  echo "Must be run from the project root" >&2
+  exit 1
 fi
 
 if [ `git symbolic-ref HEAD` != 'refs/heads/master' ]; then
-    echo "Must be run on the master branch" >&2
-    exit 1
+  echo "Must be run on the master branch" >&2
+  exit 1
 fi
 
 status=`git status --porcelain`
 if [ -n "$status" ]; then
-    echo "Working directory is not clean" >&2
-    exit 1
+  echo "Working directory is not clean" >&2
+  exit 1
 fi
 
 ac_init=`grep -E 'AC_INIT\(\[[_a-zA-Z-]*\],\[[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*~devel\]\)$' configure.ac`
 if [ `echo $ac_init | wc -l` != 1 ]; then
-    echo "Unrecognized or multiple AC_INIT entries in configure.ac" >&2
-    exit 1
+  echo "Unrecognized or multiple AC_INIT entries in configure.ac" >&2
+  exit 1
 fi
 
 PACKAGE=`echo $ac_init | sed -e 's/^.*AC_INIT(\[\(.*\)\],.*$/\1/'`
@@ -41,50 +42,43 @@ version_age=`echo $version_info | awk -F: '{ print $3 }'`
 echo
 echo "Current version-info: $version_info"
 echo
+
 while true; do
-    read -p "Has the library library source code has changed at all since the last update? [y/n]" yn
-    case $yn in
-        [Yy]*)
-            version_revision=`expr $version_revision + 1`
-            break;;
-        [Nn]*)
-            break;;
-        *)
-    esac
-done
-while true; do
-    read -p "Have any interfaces been added, removed, or changed since the last update? [y/n]" yn
-    case $yn in
-        [Yy]*)
-            version_current=`expr $version_current + 1`
-            version_revision=0
-            while true; do
-                read -p "Have any interfaces been added since the last public release? [y/n]" yn
-                case $yn in
-                    [Yy]*)
-                        version_age=`expr $version_age + 1`
-                        break;;
-                    [Nn]*)
-                        break;;
-                    *)
-                esac
-            done
-            while true; do
-                read -p "Have any interfaces been removed or changed since the last public release? [y/n]" yn
-                case $yn in
-                    [Yy]*)
-                        version_age=0
-                        break;;
-                    [Nn]*)
-                        break;;
-                    *)
-                esac
-            done
-            break;;
-        [Nn]*)
-            break;;
-        *)
-    esac
+  read -p "Has the library library source code has changed at all since the last update? [y/n]" yn
+  case $yn in
+  [Nn]*) break;;
+  [Yy]*)
+    version_revision=`expr $version_revision + 1`
+    while true; do
+      read -p "Have any interfaces been added, removed, or changed since the last update? [y/n]" yn
+      case $yn in
+      [Nn]*) break;;
+      [Yy]*)
+        version_current=`expr $version_current + 1`
+        version_revision=0
+        while true; do
+          read -p "Have any interfaces been added since the last public release? [y/n]" yn
+          case $yn in
+          [Nn]*) break;;
+          [Yy]*) version_age=`expr $version_age + 1`; break;;
+          *)
+          esac
+        done
+        while true; do
+          read -p "Have any interfaces been removed or changed since the last public release? [y/n]" yn
+          case $yn in
+          [Nn]*) break;;
+          [Yy]*) version_age=0; break;;
+          *)
+          esac
+        done
+        break;;
+      *)
+      esac
+    done
+    break;;
+  *)
+  esac
 done
 
 echo "Updating version-info in lib/src/Makefile.am"
@@ -95,16 +89,15 @@ echo "Version changes:"
 git diff
 echo
 while true; do
-    read -p "Commit? [y/n]" yn
-    case $yn in
-        [Yy]*)
-            break;;
-        [Nn]*)
-            exit;;
-        *)
-    esac
+  read -p "Commit? [y/n]" yn
+  case $yn in
+  [Nn]*) exit;;
+  [Yy]*) break;;
+  *)
+  esac
 done
 git commit -a -m "Bump version"
+git tag -s -m "Release $VERSION" v$VERSION
 
 echo
 echo "Building distribution"
