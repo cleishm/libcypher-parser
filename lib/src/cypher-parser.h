@@ -61,10 +61,10 @@ extern "C" {
 /* Compile time version details.
  * For runtime version inspection, use libcypher_parser_version() instead.
  */
-#define CYPHER_PARSER_VERSION "0.6.1"
+#define CYPHER_PARSER_VERSION "0.6.2"
 #define CYPHER_PARSER_MAJOR_VERSION 0
 #define CYPHER_PARSER_MINOR_VERSION 6
-#define CYPHER_PARSER_PATCH_VERSION 1
+#define CYPHER_PARSER_PATCH_VERSION 2
 #define CYPHER_PARSER_DEVELOPMENT_VERSION ""
 
 #define CYPHER_PARSER_VERSION_NUMBER \
