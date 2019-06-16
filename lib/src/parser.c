@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "libconfig.h"
+#include "../../config.h"
 #include "cypher-parser.h"
 #include "ast.h"
 #include "errors.h"

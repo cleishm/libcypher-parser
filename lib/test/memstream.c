@@ -48,10 +48,10 @@ static int memstream_close(void *cookie);
 static int memstream_ensure_capacity(memstream_t *ms, size_t size);
 
 
-static inline size_t min(size_t a, size_t b)
+/*static inline size_t min(size_t a, size_t b)
 {
     return (a <= b)? a : b;
-}
+}*/
 
 
 FILE *open_memstream(char **ptr, size_t *sizeloc)

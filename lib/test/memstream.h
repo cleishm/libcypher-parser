@@ -19,7 +19,7 @@
 
 #ifdef WIN32
 
-#include "..\..\Windows\Tests\fmem.h"
+#include <fmem.h>
 
 extern fmem fm;
 extern FILE* open_memstream(char** mem, size_t* size);

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "libconfig.h"
+#include "../../config.h"
 #include "ast.h"
 #include "astnode.h"
 #include "util.h"

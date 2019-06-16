@@ -28,6 +28,7 @@ TAGS
 /INSTALL
 /aclocal.m4
 /autom4te.cache
+/build
 /build-aux/compile
 /build-aux/config.*
 /build-aux/depcomp

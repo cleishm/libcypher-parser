@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "libconfig.h"
+#include "../../config.h"
 #include "parser_config.h"
 
 #define ANSI_COLOR_RESET "\x1b[0m"

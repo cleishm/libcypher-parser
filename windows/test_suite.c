@@ -14,8 +14,8 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-#include "../../config.h"
-#include "../../lib/src/cypher-parser.h"
+#include "../config.h"
+#include "../lib/src/cypher-parser.h"
 #include <check.h>
 #include <errno.h>
 #include <limits.h>
