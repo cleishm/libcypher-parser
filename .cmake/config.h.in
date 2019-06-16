@@ -1,126 +1,134 @@
-/* config.h.  Generated from config.h.in by configure.  */
-/* config.h.in.  Generated from configure.ac by autoheader.  */
+/* config.h.  Generated from config.h.in by cmake.  */
 
 /* Define to 1 if C supports variable-length arrays. */
-#define HAVE_C_VARARRAYS 1
+#cmakedefine HAVE_C_VARARRAYS @HAVE_C_VARARRAYS@
 
 /* Define to 1 if you have the declaration of `strerror_r', and to 0 if you
    don't. */
-#define HAVE_DECL_STRERROR_R 1
+#cmakedefine HAVE_DECL_STRERROR_R @HAVE_DECL_STRERROR_R@
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
-#define HAVE_DLFCN_H 1
+#cmakedefine HAVE_DLFCN_H @HAVE_DLFCN_H@
 
 /* Define to 1 if you have the <endian.h> header file. */
-/* #undef HAVE_ENDIAN_H */
+#cmakedefine HAVE_ENDIAN_H @HAVE_ENDIAN_H@
 
 /* Define to 1 if you have the <inttypes.h> header file. */
-#define HAVE_INTTYPES_H 1
+#cmakedefine HAVE_INTTYPES_H @HAVE_INTTYPES_H@
 
 /* Define to 1 if you have the <libkern/OSByteOrder.h> header file. */
-/* #undef HAVE_LIBKERN_OSBYTEORDER_H */
+#cmakedefine HAVE_LIBKERN_OSBYTEORDER_H @HAVE_LIBKERN_OSBYTEORDER_H@
 
 /* Define to 1 if you have the <memory.h> header file. */
-#define HAVE_MEMORY_H 1
+#cmakedefine HAVE_MEMORY_H @HAVE_MEMORY_H@
 
 /* Define to 1 if you have the `open_memstream' function. */
-/* #undef HAVE_OPEN_MEMSTREAM */
+#cmakedefine HAVE_OPEN_MEMSTREAM @HAVE_OPEN_MEMSTREAM@
 
 /* Define to 1 if you have pthreads. */
-/* #undef HAVE_PTHREADS */
+#cmakedefine HAVE_PTHREADS @HAVE_PTHREADS@
 
 /* Have PTHREAD_PRIO_INHERIT. */
 /* #undef HAVE_PTHREAD_PRIO_INHERIT */
 
 /* Define to 1 if stdbool.h conforms to C99. */
-#define HAVE_STDBOOL_H 1
+#cmakedefine HAVE_STDBOOL_H @HAVE_STDBOOL_H@
 
 /* Define to 1 if you have the <stdint.h> header file. */
-#define HAVE_STDINT_H 1
+#cmakedefine HAVE_STDINT_H @HAVE_STDINT_H@
 
 /* Define to 1 if you have the <stdlib.h> header file. */
-#define HAVE_STDLIB_H 1
+#cmakedefine HAVE_STDLIB_H @HAVE_STDLIB_H@
 
 /* Define to 1 if you have the `strerror_r' function. */
-#define HAVE_STRERROR_R 1
+#cmakedefine HAVE_STRERROR_R @HAVE_STRERROR_R@
 
 /* Define to 1 if you have the <strings.h> header file. */
-#define HAVE_STRINGS_H 1
+#cmakedefine HAVE_STRINGS_H @HAVE_STRINGS_H@
 
 /* Define to 1 if you have the <string.h> header file. */
-#define HAVE_STRING_H 1
+#cmakedefine HAVE_STRING_H @HAVE_STRING_H@
 
 /* Define to 1 if you have the <sys/endian.h> header file. */
-/* #undef HAVE_SYS_ENDIAN_H */
+#cmakedefine HAVE_SYS_ENDIAN_H @HAVE_SYS_ENDIAN_H@
 
 /* Define to 1 if you have the <sys/stat.h> header file. */
-#define HAVE_SYS_STAT_H 1
+#cmakedefine HAVE_SYS_STAT_H @HAVE_SYS_STAT_H@
 
 /* Define to 1 if you have the <sys/types.h> header file. */
-#define HAVE_SYS_TYPES_H 1
+#cmakedefine HAVE_SYS_TYPES_H @HAVE_SYS_TYPES_H@
 
 /* Define to 1 if you have the <unistd.h> header file. */
-#define HAVE_UNISTD_H 1
+#cmakedefine HAVE_UNISTD_H @HAVE_UNISTD_H@
 
 /* Define to 1 if the system has the type `_Bool'. */
-#define HAVE__BOOL 1
+#cmakedefine HAVE__BOOL @HAVE__BOOL@
 
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
    */
-#define LT_OBJDIR ".libs/"
+#cmakedefine LT_OBJDIR "@LT_OBJDIR@"
 
 /* Define to 1 to disable assertions. */
-/* #undef NDEBUG */
+#cmakedefine NDEBUG @NDEBUG@
 
 /* Name of package */
-#define PACKAGE "libcypher-parser"
+#cmakedefine PACKAGE "@PACKAGE@"
 
 /* Define to the address where bug reports for this package should be sent. */
-#define PACKAGE_BUGREPORT ""
+#cmakedefine PACKAGE_BUGREPORT "@PACKAGE_BUGREPORT@"
 
 /* Define to the development version of this package */
-#define PACKAGE_DEVELOPMENT_VERSION "devel"
+#cmakedefine PACKAGE_DEVELOPMENT_VERSION "@PACKAGE_DEVELOPMENT_VERSION@"
 
 /* Define to the major version of this package */
+#cmakedefine PACKAGE_MAJOR_VERSION @PACKAGE_MAJOR_VERSION@
+#ifndef PACKAGE_MAJOR_VERSION
 #define PACKAGE_MAJOR_VERSION 0
+#endif//PACKAGE_MAJOR_VERSION
 
 /* Define to the minor version of this package */
-#define PACKAGE_MINOR_VERSION 6
+#cmakedefine PACKAGE_MINOR_VERSION @PACKAGE_MINOR_VERSION@
+#ifndef PACKAGE_MINOR_VERSION
+#define PACKAGE_MINOR_VERSION 0
+#endif//PACKAGE_MINOR_VERSION
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME "libcypher-parser"
+#cmakedefine PACKAGE_NAME "@PACKAGE_NAME@"
 
 /* Define to the patch version of this package */
-#define PACKAGE_PATCH_VERSION 1
+#cmakedefine PACKAGE_PATCH_VERSION @PACKAGE_PATCH_VERSION@
+#ifndef PACKAGE_PATCH_VERSION
+#define PACKAGE_PATCH_VERSION 0
+#endif//PACKAGE_PATCH_VERSION
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libcypher-parser 1.9.9"
+#cmakedefine PACKAGE_STRING "@PACKAGE_STRING@"
 
 /* Define to the one symbol short name of this package. */
-#define PACKAGE_TARNAME "libcypher-parser"
+#cmakedefine PACKAGE_TARNAME "@PACKAGE_TARNAME@"
 
 /* Define to the home page for this package. */
-#define PACKAGE_URL ""
+#cmakedefine PACKAGE_URL "@PACKAGE_URL@"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.9.9"
+#cmakedefine PACKAGE_VERSION "@PACKAGE_VERSION@"
 
 /* Define to necessary symbol if this constant uses a non-standard name on
    your system. */
-/* #undef PTHREAD_CREATE_JOINABLE */
+#cmakedefine PTHREAD_CREATE_JOINABLE @PTHREAD_CREATE_JOINABLE@
 
 /* Define to 1 if you have the ANSI C header files. */
-#define STDC_HEADERS 1
+#cmakedefine STDC_HEADERS @STDC_HEADERS@
 
 /* Define to 1 if strerror_r returns char *. */
-/* #undef STRERROR_R_CHAR_P */
+#cmakedefine STRERROR_R_CHAR_P @STRERROR_R_CHAR_P@
 
 /* If the compiler supports a thread local storage class define it to that
    here */
 #define THREAD_LOCAL __thread
 
 /* Version number of package */
-#define VERSION "1.9.9"
+#cmakedefine VERSION "@VERSION@"
 
 /* Define to empty if `const' does not conform to ANSI C. */
 /* #undef const */
@@ -128,25 +136,30 @@
 /* Define to `__inline__' or `__inline' if that's what the C compiler
    calls it, or to nothing if 'inline' is not supported under any name.  */
 #ifndef __cplusplus
-/* #undef inline */
+#cmakedefine inline "@inline@"
 #endif
 
 /* Define to `unsigned int' if <sys/types.h> does not define. */
-/* #undef size_t */
+#cmakedefine size_t @size_t@
 
 /* Define to `int' if <sys/types.h> does not define. */
-/* #undef ssize_t */
+#cmakedefine ssize_t @ssize_t@
 
 /* Substitute for static_assert */
-#define static_assert(c,m) typedef void _no_static_assert
+#cmakedefine static_assert(c,m) @static_assert@
 
 /* Defines for Windows */
-#define ssize_t size_t
+#ifdef WIN32
+
 #define _CRT_SECURE_NO_WARNINGS 1
 #define sigjmp_buf jmp_buf
 #define sigsetjmp(x, y) setjmp(x)
 #define siglongjmp(x, y) longjmp(x, y)
 #define restrict
+#define random rand
+#define srandom srand
 
 #pragma warning(disable: 4068)
 #pragma warning(disable: 4090)
+
+#endif//WIN32
