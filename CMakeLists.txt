@@ -347,12 +347,9 @@ list (APPEND TESTS
     lib/test/check_unwind.c
     lib/test/check_util.c
     lib/test/check_with.c
+    lib/test/memstream.c
     compat/test_suite.c
 )
-
-if (NOT HAVE_OPEN_MEMSTREAM)
-  list (APPEND TESTS compat/memstream.c)
-endif ()
 
 add_executable (tests ${TESTS})
 target_link_libraries (tests libcypher-parser)
@@ -365,19 +362,14 @@ if (LEG_FOUND)
         COMMAND ${LEG_PROGRAMS} parser.leg > parser_leg.c)
 endif (LEG_FOUND)
 
-if (FMEM_FOUND)
-  target_include_directories (libcypher-parser PUBLIC ${FMEM_INCLUDE_DIRS})
-  target_link_libraries (libcypher-parser ${FMEM_LIBRARIES})
-endif (FMEM_FOUND)
+if (CHECK_FOUND AND FMEM_FOUND)
+  target_include_directories (tests PUBLIC ${FMEM_INCLUDE_DIRS} ${CHECK_INCLUDE_DIRS} ${CHECK_INCLUDE_DIRS}/..)
+  target_link_libraries (tests ${CHECK_LIBRARIES} ${FMEM_LIBRARIES})
+endif (CHECK_FOUND AND FMEM_FOUND)
 
 if (HAVE_PTHREADS)
   target_link_libraries (libcypher-parser ${CMAKE_THREAD_LIBS_INIT})
 endif (HAVE_PTHREADS)
-
-if (CHECK_FOUND)
-  target_include_directories (tests PUBLIC ${CHECK_INCLUDE_DIRS} ${CHECK_INCLUDE_DIRS}/..)
-  target_link_libraries (tests ${CHECK_LIBRARIES} ${FMEM_LIBRARIES})
-endif (CHECK_FOUND)
 
 install (TARGETS libcypher-parser tests
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

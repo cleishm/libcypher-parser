@@ -17,6 +17,10 @@
 #include "../../config.h"
 #include "memstream.h"
 
+#ifdef WIN32
+#include "../../compat/memstream.c"
+#else
+
 #ifndef HAVE_OPEN_MEMSTREAM
 
 #define MEMSTREAM_INITIAL_CAPACITY 4096
@@ -48,10 +52,10 @@ static int memstream_close(void *cookie);
 static int memstream_ensure_capacity(memstream_t *ms, size_t size);
 
 
-/*static inline size_t min(size_t a, size_t b)
+static inline size_t min(size_t a, size_t b)
 {
     return (a <= b)? a : b;
-}*/
+}
 
 
 FILE *open_memstream(char **ptr, size_t *sizeloc)
@@ -204,4 +208,5 @@ int memstream_ensure_capacity(memstream_t *ms, size_t size)
 }
 
 
+#endif
 #endif
