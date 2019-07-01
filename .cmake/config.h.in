@@ -151,13 +151,19 @@
 /* Defines for Windows */
 #ifdef WIN32
 
+#include <fcntl.h>
+
+#define pipe(fds) _pipe(fds, 256, O_TEXT)
+#define fdopen _fdopen
 #define _CRT_SECURE_NO_WARNINGS 1
 #define sigjmp_buf jmp_buf
 #define sigsetjmp(x, y) setjmp(x)
 #define siglongjmp(x, y) longjmp(x, y)
-#define restrict
+#define restrict __restrict
 #define random rand
 #define srandom srand
+
+extern char *strndup(char const *s, size_t n);
 
 #pragma warning(disable: 4068)
 #pragma warning(disable: 4090)

@@ -18,7 +18,17 @@
 #include "memstream.h"
 
 #ifdef WIN32
-#include "../../compat/memstream.c"
+
+#include <fmem.h>
+
+fmem fm;
+
+FILE* open_memstream(char** mem, size_t* size)
+{
+	fmem_init(&fm);
+	return fmem_open(&fm, "w+");
+}
+
 #else
 
 #ifndef HAVE_OPEN_MEMSTREAM

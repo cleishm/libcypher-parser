@@ -165,8 +165,8 @@ static inline void *mdup(const void *src, size_t n)
  * @return The number of characters written to the buffer, or -1 if an
  *         error occurs (errno will be set).
  */
-ssize_t snprintf_realloc(char ** buf, size_t *bufcap,
-        const char * format, ...) __cypherlang_format(3, 4);
+ssize_t snprintf_realloc(char ** restrict buf, size_t *bufcap,
+        const char * restrict format, ...) __cypherlang_format(3, 4);
 
 /**
  * Obtain a line of context around a specified point in a buffer.
