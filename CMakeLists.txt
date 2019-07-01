@@ -133,6 +133,7 @@ foreach (KEYWORD "inline" "__inline__" "__inline")
   endif (NOT DEFINED C_INLINE)
 endforeach (KEYWORD)
 
+set (configure_input config.h)
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/.cmake/config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/config.h)
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/lib/src/cypher-parser.h.in ${CMAKE_CURRENT_SOURCE_DIR}/lib/src/cypher-parser.h)
 

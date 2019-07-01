@@ -1,4 +1,4 @@
-/* config.h.  Generated from config.h.in by cmake.  */
+/* @configure_input@.  Generated from config.h.in by cmake.  */
 
 /* Define to 1 if C supports variable-length arrays. */
 #cmakedefine HAVE_C_VARARRAYS @HAVE_C_VARARRAYS@
