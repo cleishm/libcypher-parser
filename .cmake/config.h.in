@@ -151,6 +151,7 @@
 /* Defines for Windows */
 #ifdef WIN32
 
+#include <io.h>
 #include <fcntl.h>
 
 #define pipe(fds) _pipe(fds, 256, O_TEXT)
@@ -162,10 +163,12 @@
 #define restrict __restrict
 #define random rand
 #define srandom srand
+#define fileno _fileno
 
 extern char *strndup(char const *s, size_t n);
 
 #pragma warning(disable: 4068)
 #pragma warning(disable: 4090)
+#pragma warning(disable: 4996)
 
 #endif//WIN32

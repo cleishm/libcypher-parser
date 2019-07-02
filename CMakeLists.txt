@@ -68,6 +68,7 @@ endif (CC_HAVE_VISIBILITY)
 find_package (check)
 find_package (fmem)
 find_package (leg)
+find_package (getopt)
 
 list (APPEND CMAKE_REQUIRED_DEFINITIONS
   -D_GNU_SOURCE
@@ -100,6 +101,10 @@ configure_file (${CMAKE_CURRENT_SOURCE_DIR}/.cmake/check_libcypher-parser_suite.
 add_executable (tests ${TESTS})
 target_link_libraries (tests libcypher-parser)
 
+list (APPEND LINTER "linter/src/cypher-lint.c")
+add_executable (cypher-linter ${LINTER})
+target_link_libraries (cypher-linter libcypher-parser)
+
 if (LEG_FOUND)
     add_custom_command (
         TARGET libcypher-parser
@@ -117,6 +122,11 @@ if (CHECK_FOUND AND FMEM_FOUND)
   target_include_directories (tests PUBLIC ${FMEM_INCLUDE_DIRS} ${CHECK_INCLUDE_DIRS} ${CHECK_INCLUDE_DIRS}/..)
   target_link_libraries (tests ${CHECK_LIBRARIES} ${FMEM_LIBRARIES})
 endif (CHECK_FOUND AND FMEM_FOUND)
+
+if (GETOPT_FOUND)
+  target_include_directories (cypher-linter PUBLIC ${GETOPT_INCLUDE_DIRS} "lib/src/")
+  target_link_libraries (cypher-linter ${GETOPT_LIBRARIES})
+endif (GETOPT_FOUND)
 
 if (HAVE_PTHREADS)
   target_link_libraries (libcypher-parser ${CMAKE_THREAD_LIBS_INIT})
