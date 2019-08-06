@@ -40,7 +40,7 @@ set (CYPHER_PARSER_MINOR_VERSION "${PACKAGE_MINOR_VERSION}")
 set (CYPHER_PARSER_PATCH_VERSION "${PACKAGE_PATCH_VERSION}")
 set (CYPHER_PARSER_DEVELOPMENT_VERSION "${PACKAGE_DEVELOPMENT_VERSION}")
 
-set (configure_input config.h)
+set (configure_input "config.h - Generated from config.h.in by cmake.")
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/.cmake/config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/config.h)
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/lib/src/cypher-parser.h.in ${CMAKE_CURRENT_SOURCE_DIR}/lib/src/cypher-parser.h)
 
