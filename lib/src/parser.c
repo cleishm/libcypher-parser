@@ -314,9 +314,9 @@ static cypher_astnode_t *_with_clause(yycontext *yy, bool distinct,
 #define unwind_clause(e, i) _unwind_clause(yy, e, i)
 static cypher_astnode_t *_unwind_clause(yycontext *yy,
         cypher_astnode_t *expression, cypher_astnode_t *identifier);
-#define call_clause(p) _call_clause(yy, p)
+#define call_clause(p, w) _call_clause(yy, p, w)
 static cypher_astnode_t *_call_clause(yycontext *yy,
-        cypher_astnode_t *proc_name);
+        cypher_astnode_t *proc_name, cypher_astnode_t *predicate);
 #define return_clause(d, a, o, s, l) _return_clause(yy, d, a, o, s, l)
 static cypher_astnode_t *_return_clause(yycontext *yy, bool distinct,
         bool include_existing, cypher_astnode_t *order_by,
@@ -2021,7 +2021,8 @@ cypher_astnode_t *_unwind_clause(yycontext *yy, cypher_astnode_t *expression,
 }
 
 
-cypher_astnode_t *_call_clause(yycontext *yy, cypher_astnode_t *proc_name)
+cypher_astnode_t *_call_clause(yycontext *yy, cypher_astnode_t *proc_name,
+        cypher_astnode_t *predicate)
 {
     assert(yy->prev_block != NULL &&
             "An AST node can only be created immediately after a `>` in the grammar");
@@ -2037,7 +2038,7 @@ cypher_astnode_t *_call_clause(yycontext *yy, cypher_astnode_t *proc_name)
     }
 
     cypher_astnode_t *node = cypher_ast_call(proc_name,
-            seq, nargs, seq + nargs, nseq - nargs,
+            seq, nargs, seq + nargs, nseq - nargs, predicate,
             astnodes_elements(&(yy->prev_block->children)),
             astnodes_size(&(yy->prev_block->children)),
             yy->prev_block->range);
