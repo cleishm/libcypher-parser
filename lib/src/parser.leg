@@ -85,8 +85,12 @@ schema-command =
     (SEMICOLON | EOF)
 
 create-index =
-    < CREATE-INDEX-ON l:label LEFT-PAREN - p:prop-name RIGHT-PAREN >
-                                       { $$ = create_index(l, p); }
+    < CREATE-INDEX-ON l:label LEFT-PAREN - p:prop-name
+                                       { sequence_add(p); }
+      ( COMMA - p:prop-name
+                                       { sequence_add(p); }
+      )* RIGHT-PAREN >
+                                       { $$ = create_index(l); }
     -
 
 create-constraint =

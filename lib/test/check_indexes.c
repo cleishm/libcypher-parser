@@ -70,19 +70,56 @@ START_TEST (parse_create_node_prop_index)
     ck_assert_ptr_eq(cypher_ast_statement_get_option(ast, 0), NULL);
 
     const cypher_astnode_t *body = cypher_ast_statement_get_body(ast);
-    ck_assert_int_eq(cypher_astnode_type(body), CYPHER_AST_CREATE_NODE_PROP_INDEX);
+    ck_assert_int_eq(cypher_astnode_type(body), CYPHER_AST_CREATE_NODE_PROPS_INDEX);
     ck_assert_int_eq(cypher_astnode_range(body).start.offset, 0);
     ck_assert_int_eq(cypher_astnode_range(body).end.offset, 25);
 
     const cypher_astnode_t *label =
-            cypher_ast_create_node_prop_index_get_label(body);
+            cypher_ast_create_node_props_index_get_label(body);
     ck_assert_int_eq(cypher_astnode_type(label), CYPHER_AST_LABEL);
     ck_assert_str_eq(cypher_ast_label_get_name(label), "Foo");
 
+    ck_assert_int_eq(cypher_ast_create_node_props_index_nprops(body), 1);
     const cypher_astnode_t *prop_name =
-            cypher_ast_create_node_prop_index_get_prop_name(body);
+            cypher_ast_create_node_props_index_get_prop_name(body, 0);
     ck_assert_int_eq(cypher_astnode_type(prop_name), CYPHER_AST_PROP_NAME);
     ck_assert_str_eq(cypher_ast_prop_name_get_value(prop_name), "bar");
+}
+END_TEST
+
+
+START_TEST (parse_create_node_props_index)
+{
+    struct cypher_input_position last = cypher_input_position_zero;
+    result = cypher_parse("CREATE INDEX ON :Foo(bar, baz);", &last, NULL, 0);
+    ck_assert_ptr_ne(result, NULL);
+    ck_assert_int_eq(last.offset, 31);
+
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
+    fflush(memstream);
+    const char *expected = "\n"
+"@0   0..31  statement       body=@1\n"
+"@1   0..30  > CREATE INDEX  ON=:@2(@3, @4)\n"
+"@2  16..20  > > label       :`Foo`\n"
+"@3  21..24  > > prop name   `bar`\n"
+"@4  26..29  > > prop name   `baz`\n";
+    ck_assert_str_eq(memstream_buffer, expected);
+
+    ck_assert_int_eq(cypher_parse_result_ndirectives(result), 1);
+    const cypher_astnode_t *ast = cypher_parse_result_get_directive(result, 0);
+    ck_assert_int_eq(cypher_astnode_type(ast), CYPHER_AST_STATEMENT);
+
+    const cypher_astnode_t *body = cypher_ast_statement_get_body(ast);
+    ck_assert_int_eq(cypher_astnode_type(body), CYPHER_AST_CREATE_NODE_PROPS_INDEX);
+
+    ck_assert_int_eq(cypher_ast_create_node_props_index_nprops(body), 2);
+    const cypher_astnode_t *prop_name =
+            cypher_ast_create_node_props_index_get_prop_name(body, 0);
+    ck_assert_int_eq(cypher_astnode_type(prop_name), CYPHER_AST_PROP_NAME);
+    ck_assert_str_eq(cypher_ast_prop_name_get_value(prop_name), "bar");
+    prop_name = cypher_ast_create_node_props_index_get_prop_name(body, 1);
+    ck_assert_int_eq(cypher_astnode_type(prop_name), CYPHER_AST_PROP_NAME);
+    ck_assert_str_eq(cypher_ast_prop_name_get_value(prop_name), "baz");
 }
 END_TEST
 
@@ -137,6 +174,7 @@ TCase* indexes_tcase(void)
     TCase *tc = tcase_create("indexes");
     tcase_add_checked_fixture(tc, setup, teardown);
     tcase_add_test(tc, parse_create_node_prop_index);
+    tcase_add_test(tc, parse_create_node_props_index);
     tcase_add_test(tc, parse_drop_node_prop_index);
     return tc;
 }
