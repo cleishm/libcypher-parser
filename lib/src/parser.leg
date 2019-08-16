@@ -109,8 +109,12 @@ create-constraint =
       ) -
 
 drop-index =
-    < DROP-INDEX-ON l:label LEFT-PAREN - p:prop-name RIGHT-PAREN >
-                                       { $$ = drop_index(l, p); }
+    < DROP-INDEX-ON l:label LEFT-PAREN - p:prop-name
+                                       { sequence_add(p); }
+      ( COMMA - p:prop-name
+                                       { sequence_add(p); }
+      )* RIGHT-PAREN >
+                                       { $$ = drop_index(l); }
     -
 
 drop-constraint =

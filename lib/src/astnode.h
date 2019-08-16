@@ -80,7 +80,7 @@ extern const struct cypher_astnode_vt cypher_explain_option_astnode_vt;
 extern const struct cypher_astnode_vt cypher_profile_option_astnode_vt;
 extern const struct cypher_astnode_vt cypher_schema_command_astnode_vt;
 extern const struct cypher_astnode_vt cypher_create_node_props_index_astnode_vt;
-extern const struct cypher_astnode_vt cypher_drop_node_prop_index_astnode_vt;
+extern const struct cypher_astnode_vt cypher_drop_node_props_index_astnode_vt;
 extern const struct cypher_astnode_vt
         cypher_create_node_prop_constraint_astnode_vt;
 extern const struct cypher_astnode_vt
