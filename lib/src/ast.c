@@ -31,8 +31,8 @@ struct cypher_astnode_vts
     const struct cypher_astnode_vt *explain_option;
     const struct cypher_astnode_vt *profile_option;
     const struct cypher_astnode_vt *schema_command;
-    const struct cypher_astnode_vt *create_node_prop_index;
-    const struct cypher_astnode_vt *drop_node_prop_index;
+    const struct cypher_astnode_vt *create_node_props_index;
+    const struct cypher_astnode_vt *drop_node_props_index;
     const struct cypher_astnode_vt *create_node_prop_constraint;
     const struct cypher_astnode_vt *drop_node_prop_constraint;
     const struct cypher_astnode_vt *create_rel_prop_constraint;
@@ -147,8 +147,8 @@ static const struct cypher_astnode_vts cypher_astnode_vts =
     .explain_option = &cypher_explain_option_astnode_vt,
     .profile_option = &cypher_profile_option_astnode_vt,
     .schema_command = &cypher_schema_command_astnode_vt,
-    .create_node_prop_index = &cypher_create_node_prop_index_astnode_vt,
-    .drop_node_prop_index = &cypher_drop_node_prop_index_astnode_vt,
+    .create_node_props_index = &cypher_create_node_props_index_astnode_vt,
+    .drop_node_props_index = &cypher_drop_node_props_index_astnode_vt,
     .create_node_prop_constraint =
            &cypher_create_node_prop_constraint_astnode_vt,
     .drop_node_prop_constraint = &cypher_drop_node_prop_constraint_astnode_vt,
@@ -269,10 +269,10 @@ const uint8_t CYPHER_AST_CYPHER_OPTION_PARAM = VT_OFFSET(cypher_option_param);
 const uint8_t CYPHER_AST_EXPLAIN_OPTION = VT_OFFSET(explain_option);
 const uint8_t CYPHER_AST_PROFILE_OPTION = VT_OFFSET(profile_option);
 const uint8_t CYPHER_AST_SCHEMA_COMMAND = VT_OFFSET(schema_command);
-const uint8_t CYPHER_AST_CREATE_NODE_PROP_INDEX =
-        VT_OFFSET(create_node_prop_index);
-const uint8_t CYPHER_AST_DROP_NODE_PROP_INDEX =
-        VT_OFFSET(drop_node_prop_index);
+const uint8_t CYPHER_AST_CREATE_NODE_PROPS_INDEX =
+        VT_OFFSET(create_node_props_index);
+const uint8_t CYPHER_AST_DROP_NODE_PROPS_INDEX =
+        VT_OFFSET(drop_node_props_index);
 const uint8_t CYPHER_AST_CREATE_NODE_PROP_CONSTRAINT =
         VT_OFFSET(create_node_prop_constraint);
 const uint8_t CYPHER_AST_DROP_NODE_PROP_CONSTRAINT =
