@@ -47,17 +47,17 @@ static void teardown(void)
 START_TEST (parse_simple_call)
 {
     struct cypher_input_position last = cypher_input_position_zero;
-    result = cypher_parse("CALL foo.bar.baz();", &last, NULL, 0);
+    result = cypher_parse("CALL foo. bar.baz();", &last, NULL, 0);
     ck_assert_ptr_ne(result, NULL);
-    ck_assert_int_eq(last.offset, 19);
+    ck_assert_int_eq(last.offset, 20);
 
     ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
-"@0  0..19  statement        body=@1\n"
-"@1  0..19  > query          clauses=[@2]\n"
-"@2  0..18  > > CALL         name=@3\n"
-"@3  5..16  > > > proc name  `foo.bar.baz`\n";
+"@0  0..20  statement        body=@1\n"
+"@1  0..20  > query          clauses=[@2]\n"
+"@2  0..19  > > CALL         name=@3\n"
+"@3  5..17  > > > proc name  `foo.bar.baz`\n";
     ck_assert_str_eq(memstream_buffer, expected);
 
     const cypher_astnode_t *ast = cypher_parse_result_get_directive(result, 0);
