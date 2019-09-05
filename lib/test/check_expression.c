@@ -441,6 +441,57 @@ START_TEST (parse_apply)
 END_TEST
 
 
+START_TEST (parse_namespaced_apply)
+{
+    struct cypher_input_position last = cypher_input_position_zero;
+    result = cypher_parse("RETURN fuz .foo(bar, baz);", &last, NULL, 0);
+    ck_assert_ptr_ne(result, NULL);
+    ck_assert_int_eq(last.offset, 26);
+
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
+    fflush(memstream);
+    const char *expected = "\n"
+"@0   0..26  statement                body=@1\n"
+"@1   0..26  > query                  clauses=[@2]\n"
+"@2   0..25  > > RETURN               projections=[@3]\n"
+"@3   7..25  > > > projection         expression=@4, alias=@8\n"
+"@4   7..25  > > > > apply            @5(@6, @7)\n"
+"@5   7..15  > > > > > function name  `fuz.foo`\n"
+"@6  16..19  > > > > > identifier     `bar`\n"
+"@7  21..24  > > > > > identifier     `baz`\n"
+"@8   7..25  > > > > identifier       `fuz .foo(bar, baz)`\n";
+    ck_assert_str_eq(memstream_buffer, expected);
+
+    const cypher_astnode_t *ast = cypher_parse_result_get_directive(result, 0);
+    const cypher_astnode_t *query = cypher_ast_statement_get_body(ast);
+    const cypher_astnode_t *clause = cypher_ast_query_get_clause(query, 0);
+    ck_assert_int_eq(cypher_astnode_type(clause), CYPHER_AST_RETURN);
+
+    ck_assert_int_eq(cypher_ast_return_nprojections(clause), 1);
+
+    const cypher_astnode_t *proj = cypher_ast_return_get_projection(clause, 0);
+    ck_assert_int_eq(cypher_astnode_type(proj), CYPHER_AST_PROJECTION);
+    const cypher_astnode_t *exp = cypher_ast_projection_get_expression(proj);
+    ck_assert_int_eq(cypher_astnode_type(exp), CYPHER_AST_APPLY_OPERATOR);
+
+    const cypher_astnode_t *func_name =
+            cypher_ast_apply_operator_get_func_name(exp);
+    ck_assert_int_eq(cypher_astnode_type(func_name), CYPHER_AST_FUNCTION_NAME);
+    ck_assert_str_eq(cypher_ast_function_name_get_value(func_name), "fuz.foo");
+
+    ck_assert(!cypher_ast_apply_operator_get_distinct(exp));
+    ck_assert_int_eq(cypher_ast_apply_operator_narguments(exp), 2);
+    const cypher_astnode_t *arg = cypher_ast_apply_operator_get_argument(exp, 0);
+    ck_assert_int_eq(cypher_astnode_type(arg), CYPHER_AST_IDENTIFIER);
+    ck_assert_str_eq(cypher_ast_identifier_get_name(arg), "bar");
+    arg = cypher_ast_apply_operator_get_argument(exp, 1);
+    ck_assert_int_eq(cypher_astnode_type(arg), CYPHER_AST_IDENTIFIER);
+    ck_assert_str_eq(cypher_ast_identifier_get_name(arg), "baz");
+    ck_assert_ptr_eq(cypher_ast_apply_operator_get_argument(exp, 2), NULL);
+}
+END_TEST
+
+
 START_TEST (parse_subscript)
 {
     struct cypher_input_position last = cypher_input_position_zero;
@@ -653,6 +704,7 @@ TCase* expression_tcase(void)
     tcase_add_test(tc, parse_unary_and_binary_operators);
     tcase_add_test(tc, parse_comparison_operators);
     tcase_add_test(tc, parse_apply);
+    tcase_add_test(tc, parse_namespaced_apply);
     tcase_add_test(tc, parse_subscript);
     tcase_add_test(tc, parse_slice);
     tcase_add_test(tc, parse_subscript_list_with_in_operator);

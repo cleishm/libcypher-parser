@@ -680,7 +680,9 @@ prop-name = <                          { strbuf_reset(); }
     -
 
 function-name = <                      { strbuf_reset(); }
-    symbolic-name ~{ERR("a function name")}
+    ( (symbolic-name - DOT -           { strbuf_append(".", 1); }
+      )* symbolic-name
+    ) ~{ERR("a function name")}
     >                                  { $$ = strbuf_function_name(); }
     -
 
@@ -690,7 +692,7 @@ index-name = <                         { strbuf_reset(); }
     -
 
 proc-name = <                          { strbuf_reset(); }
-    ( (symbolic-name DOT               { strbuf_append(".", 1); }
+    ( (symbolic-name - DOT -           { strbuf_append(".", 1); }
       )* symbolic-name
     ) ~{ERR("a procedure name")}
     >                                  { $$ = strbuf_proc_name(); }
