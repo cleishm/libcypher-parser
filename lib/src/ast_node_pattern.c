@@ -86,8 +86,17 @@ const cypher_astnode_t *cypher_ast_node_pattern_get_identifier(
 }
 
 
-unsigned int cypher_ast_node_pattern_nlabels(const cypher_astnode_t *astnode)
-{
+void cypher_ast_node_pattern_set_identifier(const cypher_astnode_t *astnode,
+        const cypher_astnode_t *identifier) {
+    REQUIRE_TYPE(astnode, CYPHER_AST_NODE_PATTERN, NULL);
+    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
+    struct node_pattern *node = container_of(astnode, struct node_pattern, _astnode);
+    assert(node->identifier == NULL && identifier != NULL);
+    node->identifier = identifier;
+}
+
+
+unsigned int cypher_ast_node_pattern_nlabels(const cypher_astnode_t *astnode) {
     REQUIRE_TYPE(astnode, CYPHER_AST_NODE_PATTERN, 0);
     struct node_pattern *node =
             container_of(astnode, struct node_pattern, _astnode);
