@@ -93,22 +93,35 @@ enum cypher_rel_direction cypher_ast_rel_pattern_get_direction(
 
 
 const cypher_astnode_t *cypher_ast_rel_pattern_get_identifier(
-	const cypher_astnode_t *astnode) {
-	REQUIRE_TYPE(astnode, CYPHER_AST_REL_PATTERN, NULL);
-	struct rel_pattern *node =
-		container_of(astnode, struct rel_pattern, _astnode);
-	return node->identifier;
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REL_PATTERN, NULL);
+    struct rel_pattern *node =
+            container_of(astnode, struct rel_pattern, _astnode);
+    return node->identifier;
 }
 
 
-void cypher_ast_rel_pattern_set_identifier(
-	const cypher_astnode_t *astnode, const cypher_astnode_t *identifier) {
-	REQUIRE_TYPE(astnode, CYPHER_AST_REL_PATTERN, NULL);
-	REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
-	struct rel_pattern *node =
-		container_of(astnode, struct rel_pattern, _astnode);
-	assert(node->identifier == NULL && identifier != NULL);
-	node->identifier = identifier;
+void cypher_ast_rel_pattern_set_identifier(cypher_astnode_t *astnode,
+        cypher_astnode_t *identifier)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_REL_PATTERN, NULL);
+    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
+    struct rel_pattern *node =
+        container_of(astnode, struct rel_pattern, _astnode);
+    assert(node->identifier == NULL && identifier != NULL);
+    node->identifier = identifier;
+    unsigned int n = astnode->nchildren;
+    if(n == 0)
+    {
+        astnode->children = malloc(sizeof(cypher_astnode_t *));
+    }
+    else
+    {
+        astnode->children =
+            realloc(astnode->children, (n + 1) * sizeof(cypher_astnode_t *));
+    }
+    astnode->children[astnode->nchildren++] = identifier;
 }
 
 
