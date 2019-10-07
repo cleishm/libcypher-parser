@@ -18,6 +18,7 @@
 #define CYPHER_PARSER_ASTNODE_H
 
 #include "cypher-parser.h"
+#include "annotation.h"
 #include "ast.h"
 #include "util.h"
 
@@ -39,6 +40,7 @@ struct cypher_astnode
     unsigned int nchildren;
     struct cypher_input_range range;
     unsigned int ordinal;
+    struct cypher_astnode_annotation *annotations;
 };
 
 

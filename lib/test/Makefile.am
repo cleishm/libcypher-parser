@@ -8,6 +8,7 @@ check_libcypher_parser_SOURCES = \
 	memstream.h
 
 check_libcypher_parser_CHECKS = \
+	check_annotation.c \
 	check_call.c \
 	check_case.c \
 	check_command.c \
