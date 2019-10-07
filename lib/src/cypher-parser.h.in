@@ -5403,6 +5403,93 @@ int cypher_ast_fprint(const cypher_astnode_t *ast, FILE *stream,
 
 /*
  * =====================================
+ * abstract syntax tree annotations
+ * =====================================
+ */
+
+/**
+ * A context for AST annotations.
+ */
+typedef struct cypher_ast_annotation_context cypher_ast_annotation_context_t;
+
+/**
+ * Create a new AST annotation context.
+ *
+ * @return An annotation context, or NULL if an error occurs
+ *         (errno will be set).
+ */
+cypher_ast_annotation_context_t *cypher_ast_annotation_context(void);
+
+/**
+ * An annotation release handler.
+ */
+typedef void (*cypher_ast_annotation_context_release_handler_t)(
+        void *userdata, const cypher_astnode_t *node, void *annotation);
+
+/**
+ * Set a handler to be invoked when an annotation is released.
+ *
+ * Attached annotations will be released when either the astnode or the
+ * annotation context is released.
+ *
+ * @param [context] The AST annotation context.
+ * @param [handler] The handler function, which may be NULL.
+ * @param [userdata] A pointer that will be provided to the handler.
+ */
+void cypher_ast_annotation_context_set_release_handler(
+        cypher_ast_annotation_context_t *context,
+        cypher_ast_annotation_context_release_handler_t handler,
+        void *userdata);
+
+/**
+ * Release an AST annotation context.
+ *
+ * If set, the annotation release handler will be invoked for all
+ * annotations set within this context.
+ *
+ * @param [context] The AST annotation context.
+ */
+void cypher_ast_annotation_context_free(
+        cypher_ast_annotation_context_t *context);
+
+/**
+ * Attach an annotation to an AST node.
+ *
+ * @param [context] The annotation context.
+ * @param [node] The AST node.
+ * @param [annotation] The annotation to attach.
+ * @param [previous_annotation] A pointer to a pointer, which will be
+ *        set to the address of the previous annotation, if any, or NULL.
+ * @return 0 on success, or -1 if an error occurs (errno will be set).
+ */
+int cypher_astnode_attach_annotation(cypher_ast_annotation_context_t *context,
+        const cypher_astnode_t *node, void *annotation,
+        void **previous_annotation);
+
+/**
+ * Remove an annotation from an AST node.
+ *
+ * @param [context] The annotation context.
+ * @param [node] The AST node.
+ * @return The removed annotation, or NULL.
+ */
+void *cypher_astnode_remove_annotation(cypher_ast_annotation_context_t *context,
+        const cypher_astnode_t *node);
+
+/**
+ * Get an annotation from an AST node.
+ *
+ * @param [context] The annotation context.
+ * @param [node] The AST node.
+ * @return The attached annotation, or NULL.
+ */
+void *cypher_astnode_get_annotation(
+        const cypher_ast_annotation_context_t *context,
+        const cypher_astnode_t *node);
+
+
+/*
+ * =====================================
  * parser
  * =====================================
  */
@@ -5785,7 +5872,7 @@ __cypherlang_pure
 unsigned int cypher_parse_result_nroots(const cypher_parse_result_t *result);
 
 /**
- * Get a root AST nodes from a parse result.
+ * Get a root AST node from a parse result.
  *
  * @param [result] The parse result.
  * @param [index] The node index.

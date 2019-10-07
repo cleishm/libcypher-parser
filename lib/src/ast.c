@@ -462,6 +462,12 @@ void cypher_ast_free(cypher_astnode_t *ast)
     {
         return;
     }
+
+    while (ast->annotations != NULL)
+    {
+        cp_release_annotation(ast->annotations);
+    }
+
     assert(ast->type < _MAX_VT_OFF);
     const struct cypher_astnode_vt *vt = VT_PTR(ast->type);
     vt->free(ast);

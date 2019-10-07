@@ -2,6 +2,8 @@ lib_LTLIBRARIES = libcypher-parser.la
 
 include_HEADERS = cypher-parser.h
 libcypher_parser_la_SOURCES = \
+	annotation.c \
+	annotation.h \
 	ast.c \
 	ast.h \
 	astnode.h \
