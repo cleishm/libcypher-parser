@@ -42,6 +42,10 @@ cypher_ast_annotation_context_t *cypher_ast_annotation_context(void)
 {
     cypher_ast_annotation_context_t *context =
             malloc(sizeof(cypher_ast_annotation_context_t));
+    if (context == NULL)
+    {
+        return NULL;
+    }
     memset(context, 0, sizeof(cypher_ast_annotation_context_t));
     return context;
 }
