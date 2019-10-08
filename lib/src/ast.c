@@ -632,9 +632,9 @@ static int _cypher_ast_fprint(const cypher_astnode_t *ast, FILE *stream,
     }
 
 #ifdef WIN32
-	const char* format = "%s%*Iu..%-*Iu%s  %s";
+    const char* format = "%s%*Iu..%-*Iu%s  %s";
 #else
-	const char* format = "%s%*zu..%-*zu%s  %s";
+    const char* format = "%s%*zu..%-*zu%s  %s";
 #endif
     if (fprintf(stream, format,
                 colorization->ast_range[0],
