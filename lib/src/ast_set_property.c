@@ -46,8 +46,9 @@ cypher_astnode_t *cypher_ast_set_property(const cypher_astnode_t *property,
         const cypher_astnode_t *expression, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE_TYPE(property, CYPHER_AST_PROPERTY_OPERATOR, NULL);
-    REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD(children, nchildren, property,
+            CYPHER_AST_PROPERTY_OPERATOR, NULL);
+    REQUIRE_CHILD(children, nchildren, expression, CYPHER_AST_EXPRESSION, NULL);
 
     struct set_property *node = calloc(1, sizeof(struct set_property));
     if (node == NULL)

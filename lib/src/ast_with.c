@@ -56,10 +56,14 @@ cypher_astnode_t *cypher_ast_with(bool distinct, bool include_existing,
         struct cypher_input_range range)
 {
     REQUIRE(include_existing || nprojections > 0, NULL);
-    REQUIRE_TYPE_ALL(projections, nprojections, CYPHER_AST_PROJECTION, NULL);
-    REQUIRE_TYPE_OPTIONAL(order_by, CYPHER_AST_ORDER_BY, NULL);
-    REQUIRE_TYPE_OPTIONAL(skip, CYPHER_AST_EXPRESSION, NULL);
-    REQUIRE_TYPE_OPTIONAL(limit, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, projections, nprojections,
+            CYPHER_AST_PROJECTION, NULL);
+    REQUIRE_CHILD_OPTIONAL(children, nchildren, order_by,
+            CYPHER_AST_ORDER_BY, NULL);
+    REQUIRE_CHILD_OPTIONAL(children, nchildren, skip,
+            CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD_OPTIONAL(children, nchildren, limit,
+            CYPHER_AST_EXPRESSION, NULL);
 
     struct with_clause *node = calloc(1, sizeof(struct with_clause) +
             nprojections * sizeof(cypher_astnode_t *));

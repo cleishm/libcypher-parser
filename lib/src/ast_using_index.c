@@ -49,9 +49,9 @@ cypher_astnode_t *cypher_ast_using_index(const cypher_astnode_t *identifier,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
-    REQUIRE_TYPE(label, CYPHER_AST_LABEL, NULL);
-    REQUIRE_TYPE(prop_name, CYPHER_AST_PROP_NAME, NULL);
+    REQUIRE_CHILD(children, nchildren, identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_CHILD(children, nchildren, label, CYPHER_AST_LABEL, NULL);
+    REQUIRE_CHILD(children, nchildren, prop_name, CYPHER_AST_PROP_NAME, NULL);
 
     struct using_index *node = calloc(1, sizeof(struct using_index));
     if (node == NULL)

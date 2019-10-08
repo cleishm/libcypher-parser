@@ -48,8 +48,9 @@ cypher_astnode_t *cypher_ast_merge(const cypher_astnode_t *path,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE_TYPE(path, CYPHER_AST_PATTERN_PATH, NULL);
-    REQUIRE_TYPE_ALL(actions, nactions, CYPHER_AST_MERGE_ACTION, NULL);
+    REQUIRE_CHILD(children, nchildren, path, CYPHER_AST_PATTERN_PATH, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, actions, nactions,
+            CYPHER_AST_MERGE_ACTION, NULL);
 
     struct merge *node = calloc(1, sizeof(struct merge) +
             nactions * sizeof(cypher_astnode_t *));

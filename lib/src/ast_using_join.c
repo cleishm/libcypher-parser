@@ -49,7 +49,8 @@ cypher_astnode_t *cypher_ast_using_join(
         struct cypher_input_range range)
 {
     REQUIRE(nidentifiers > 0, NULL);
-    REQUIRE_TYPE_ALL(identifiers, nidentifiers, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, identifiers, nidentifiers,
+            CYPHER_AST_IDENTIFIER, NULL);
 
     struct using_join *node = calloc(1, sizeof(struct using_join) +
             nidentifiers * sizeof(cypher_astnode_t *));

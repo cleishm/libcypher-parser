@@ -42,7 +42,8 @@ cypher_astnode_t *cypher_ast_pattern(cypher_astnode_t * const *paths,
         unsigned int nchildren, struct cypher_input_range range)
 {
     REQUIRE(npaths > 0, NULL);
-    REQUIRE_TYPE_ALL(paths, npaths, CYPHER_AST_PATTERN_PATH, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, paths, npaths,
+            CYPHER_AST_PATTERN_PATH, NULL);
 
     struct pattern *node = calloc(1, sizeof(struct pattern) +
             npaths * sizeof(cypher_astnode_t *));

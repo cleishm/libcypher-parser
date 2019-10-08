@@ -49,7 +49,8 @@ cypher_astnode_t *cypher_ast_delete(bool detach,
         struct cypher_input_range range)
 {
     REQUIRE(nexpressions > 0, NULL);
-    REQUIRE_TYPE_ALL(expressions, nexpressions, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, expressions, nexpressions,
+            CYPHER_AST_EXPRESSION, NULL);
 
     struct delete_clause *node = calloc(1, sizeof(struct delete_clause) +
             nexpressions * sizeof(cypher_astnode_t *));

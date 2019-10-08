@@ -53,9 +53,13 @@ cypher_astnode_t *cypher_ast_call(const cypher_astnode_t *proc_name,
         const cypher_astnode_t *predicate, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE_TYPE(proc_name, CYPHER_AST_PROC_NAME, NULL);
-    REQUIRE_TYPE_ALL(args, nargs, CYPHER_AST_EXPRESSION, NULL);
-    REQUIRE_TYPE_ALL(projections, nprojections, CYPHER_AST_PROJECTION, NULL);
+    REQUIRE_CHILD(children, nchildren, proc_name, CYPHER_AST_PROC_NAME, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, args, nargs,
+            CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, projections, nprojections,
+            CYPHER_AST_PROJECTION, NULL);
+    REQUIRE_CHILD_OPTIONAL(children, nchildren, predicate,
+            CYPHER_AST_EXPRESSION, NULL);
 
     struct call_clause *node = calloc(1, sizeof(struct call_clause));
     if (node == NULL)

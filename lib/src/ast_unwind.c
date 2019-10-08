@@ -47,8 +47,8 @@ cypher_astnode_t *cypher_ast_unwind(const cypher_astnode_t *expression,
         const cypher_astnode_t *alias, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
-    REQUIRE_TYPE(alias, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_CHILD(children, nchildren, expression, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD(children, nchildren, alias, CYPHER_AST_IDENTIFIER, NULL);
 
     struct unwind *node = calloc(1, sizeof(struct unwind));
     if (node == NULL)

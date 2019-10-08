@@ -48,7 +48,7 @@ cypher_astnode_t *cypher_ast_unary_operator(const cypher_operator_t *op,
         unsigned int nchildren, struct cypher_input_range range)
 {
     REQUIRE(op != NULL, NULL);
-    REQUIRE_TYPE(arg, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD(children, nchildren, arg, CYPHER_AST_EXPRESSION, NULL);
 
     struct unary_operator *node = calloc(1, sizeof(struct unary_operator));
     if (node == NULL)

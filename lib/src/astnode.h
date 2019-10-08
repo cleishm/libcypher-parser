@@ -73,6 +73,50 @@ ssize_t snprint_sequence(char *str, size_t size,
         } \
     } while(0)
 
+#define REQUIRE_CONTAINS(collection, size, val, res) \
+    do { \
+        REQUIRE((size > 0) && (collection != NULL), res); \
+        unsigned int i = 0; \
+        while (i < size && collection[i] != val) \
+            i++; \
+        REQUIRE(i < size, res); \
+    } while(0)
+
+#define REQUIRE_CONTAINS_OPTIONAL(collection, size, val, res) \
+    do { \
+        if (val != NULL) { \
+            REQUIRE_CONTAINS(collection, size, val, res); \
+        } \
+    } while(0)
+
+#define REQUIRE_CONTAINS_ALL(collection, size, vals, nvals, res) \
+    do { \
+        REQUIRE(size >= nvals, res); \
+        unsigned int j = size; \
+        while (j < size) { \
+            REQUIRE_CONTAINS(collection, size, vals[j], res); \
+        } \
+    } while(0)
+
+#define REQUIRE_CHILD(collection, size, val, type, res) \
+    do { \
+        REQUIRE_TYPE(val, type, res); \
+        REQUIRE_CONTAINS(collection, size, val, res); \
+    } while (0)
+
+#define REQUIRE_CHILD_OPTIONAL(collection, size, val, type, res) \
+    do { \
+        if (val != NULL) { \
+            REQUIRE_CHILD(collection, size, val, type, res); \
+        } \
+    } while (0)
+
+#define REQUIRE_CHILD_ALL(collection, size, vals, nvals, type, res) \
+    do { \
+        REQUIRE_TYPE_ALL(vals, nvals, type, res); \
+        REQUIRE_CONTAINS_ALL(collection, size, vals, nvals, res); \
+    } while (0)
+
 
 extern const struct cypher_astnode_vt cypher_statement_astnode_vt;
 extern const struct cypher_astnode_vt cypher_statement_option_astnode_vt;

@@ -50,10 +50,12 @@ cypher_astnode_t *cypher_ast_pattern_comprehension(
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE_TYPE_OPTIONAL(identifier, CYPHER_AST_IDENTIFIER, NULL);
-    REQUIRE_TYPE(pattern, CYPHER_AST_PATTERN_PATH, NULL);
-    REQUIRE_TYPE_OPTIONAL(predicate, CYPHER_AST_EXPRESSION, NULL);
-    REQUIRE_TYPE(eval, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD_OPTIONAL(children, nchildren, identifier,
+            CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_CHILD(children, nchildren, pattern, CYPHER_AST_PATTERN_PATH, NULL);
+    REQUIRE_CHILD_OPTIONAL(children, nchildren, predicate,
+            CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD(children, nchildren, eval, CYPHER_AST_EXPRESSION, NULL);
 
     struct pattern_comprehension *node =
             calloc(1, sizeof(struct pattern_comprehension));

@@ -47,7 +47,8 @@ cypher_astnode_t *cypher_ast_collection(
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE_TYPE_ALL(elements, nelements, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, elements, nelements,
+            CYPHER_AST_EXPRESSION, NULL);
 
     struct collection *node = calloc(1, sizeof(struct collection) +
             nelements * sizeof(cypher_astnode_t *));

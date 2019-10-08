@@ -52,10 +52,10 @@ cypher_astnode_t *cypher_ast_reduce(const cypher_astnode_t *accumulator,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE_TYPE(accumulator, CYPHER_AST_IDENTIFIER, NULL);
-    REQUIRE_TYPE(init, CYPHER_AST_EXPRESSION, NULL);
-    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
-    REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD(children, nchildren, accumulator, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_CHILD(children, nchildren, init, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD(children, nchildren, identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_CHILD(children, nchildren, expression, CYPHER_AST_EXPRESSION, NULL);
 
     struct reduce *node = calloc(1, sizeof(struct reduce));
     if (node == NULL)

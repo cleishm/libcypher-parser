@@ -48,9 +48,10 @@ cypher_astnode_t *cypher_ast_remove_labels(const cypher_astnode_t *identifier,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_CHILD(children, nchildren, identifier, CYPHER_AST_IDENTIFIER, NULL);
     REQUIRE(nlabels > 0, NULL);
-    REQUIRE_TYPE_ALL(labels, nlabels, CYPHER_AST_LABEL, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, labels, nlabels,
+            CYPHER_AST_LABEL, NULL);
 
     struct remove_labels *node = calloc(1, sizeof(struct remove_labels) +
             nlabels * sizeof(cypher_astnode_t *));

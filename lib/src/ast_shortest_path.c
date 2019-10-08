@@ -53,7 +53,7 @@ cypher_astnode_t *cypher_ast_shortest_path(bool single,
         const cypher_astnode_t *path, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE_TYPE(path, CYPHER_AST_PATTERN_PATH, NULL);
+    REQUIRE_CHILD(children, nchildren, path, CYPHER_AST_PATTERN_PATH, NULL);
 
     struct shortest_path *node = calloc(1, sizeof(struct shortest_path));
     if (node == NULL)

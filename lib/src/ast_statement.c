@@ -42,9 +42,11 @@ cypher_astnode_t *cypher_ast_statement(cypher_astnode_t * const *options,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE_TYPE_ALL(options, noptions, CYPHER_AST_STATEMENT_OPTION, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, options, noptions,
+            CYPHER_AST_STATEMENT_OPTION, NULL);
     REQUIRE(cypher_astnode_instanceof(body, CYPHER_AST_QUERY) ||
             cypher_astnode_instanceof(body, CYPHER_AST_SCHEMA_COMMAND), NULL);
+    REQUIRE_CONTAINS(children, nchildren, body, NULL);
 
     struct statement *node = calloc(1, sizeof(struct statement) +
             noptions * sizeof(cypher_astnode_t *));

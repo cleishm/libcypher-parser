@@ -49,9 +49,10 @@ cypher_astnode_t *cypher_ast_load_csv(bool with_headers,
         const cypher_astnode_t *field_terminator, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE_TYPE(url, CYPHER_AST_EXPRESSION, NULL);
-    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
-    REQUIRE_TYPE_OPTIONAL(field_terminator, CYPHER_AST_STRING, NULL);
+    REQUIRE_CHILD(children, nchildren, url, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD(children, nchildren, identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_CHILD_OPTIONAL(children, nchildren, field_terminator,
+            CYPHER_AST_STRING, NULL);
 
     struct loadcsv *node = calloc(1, sizeof(struct loadcsv));
     if (node == NULL)

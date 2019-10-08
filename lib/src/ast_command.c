@@ -43,8 +43,9 @@ cypher_astnode_t *cypher_ast_command(const cypher_astnode_t *name,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE_TYPE(name, CYPHER_AST_STRING, NULL);
-    REQUIRE_TYPE_ALL(args, nargs, CYPHER_AST_STRING, NULL);
+    REQUIRE_CHILD(children, nchildren, name, CYPHER_AST_STRING, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, args, nargs,
+            CYPHER_AST_STRING, NULL);
 
     struct command *node = calloc(1, sizeof(struct command) +
             nargs * sizeof(cypher_astnode_t *));

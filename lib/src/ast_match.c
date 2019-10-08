@@ -51,9 +51,11 @@ cypher_astnode_t *cypher_ast_match(bool optional,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE_TYPE(pattern, CYPHER_AST_PATTERN, NULL);
-    REQUIRE_TYPE_ALL(hints, nhints, CYPHER_AST_MATCH_HINT, NULL);
-    REQUIRE_TYPE_OPTIONAL(predicate, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD(children, nchildren, pattern, CYPHER_AST_PATTERN, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, hints, nhints,
+            CYPHER_AST_MATCH_HINT, NULL);
+    REQUIRE_CHILD_OPTIONAL(children, nchildren, predicate,
+            CYPHER_AST_EXPRESSION, NULL);
 
     struct match *node = calloc(1, sizeof(struct match) +
             nhints * sizeof(cypher_astnode_t *));

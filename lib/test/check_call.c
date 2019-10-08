@@ -211,6 +211,9 @@ START_TEST (parse_call_with_blank_projection)
 
     ck_assert_int_eq(cypher_ast_call_narguments(clause), 2);
     ck_assert_int_eq(cypher_ast_call_nprojections(clause), 0);
+
+    const cypher_astnode_t *pred = cypher_ast_call_get_predicate(clause);
+    ck_assert_ptr_eq(pred, NULL);
 }
 END_TEST
 

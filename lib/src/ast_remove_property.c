@@ -45,7 +45,8 @@ cypher_astnode_t *cypher_ast_remove_property(const cypher_astnode_t *property,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE_TYPE(property, CYPHER_AST_PROPERTY_OPERATOR, NULL);
+    REQUIRE_CHILD(children, nchildren, property,
+            CYPHER_AST_PROPERTY_OPERATOR, NULL);
 
     struct remove_property *node = calloc(1, sizeof(struct remove_property));
     if (node == NULL)

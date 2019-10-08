@@ -45,7 +45,7 @@ cypher_astnode_t *cypher_ast_all_rels_scan(const cypher_astnode_t *identifier,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_CHILD(children, nchildren, identifier, CYPHER_AST_IDENTIFIER, NULL);
 
     struct all_rels_scan *node = calloc(1, sizeof(struct all_rels_scan));
     if (node == NULL)

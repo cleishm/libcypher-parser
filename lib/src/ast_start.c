@@ -49,8 +49,10 @@ cypher_astnode_t *cypher_ast_start(cypher_astnode_t * const *points,
         struct cypher_input_range range)
 {
     REQUIRE(npoints > 0, NULL);
-    REQUIRE_TYPE_ALL(points, npoints, CYPHER_AST_START_POINT, NULL);
-    REQUIRE_TYPE_OPTIONAL(predicate, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, points, npoints,
+            CYPHER_AST_START_POINT, NULL);
+    REQUIRE_CHILD_OPTIONAL(children, nchildren, predicate,
+            CYPHER_AST_EXPRESSION, NULL);
 
     struct start *node = calloc(1, sizeof(struct start) +
             npoints * sizeof(cypher_astnode_t *));

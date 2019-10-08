@@ -49,8 +49,10 @@ cypher_astnode_t *cypher_ast_cypher_option(const cypher_astnode_t *version,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE_TYPE_OPTIONAL(version, CYPHER_AST_STRING, NULL);
-    REQUIRE_TYPE_ALL(params, nparams, CYPHER_AST_CYPHER_OPTION_PARAM, NULL);
+    REQUIRE_CHILD_OPTIONAL(children, nchildren, version,
+            CYPHER_AST_STRING, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, params, nparams,
+            CYPHER_AST_CYPHER_OPTION_PARAM, NULL);
 
     struct cypher_option *node = calloc(1, sizeof(struct cypher_option) +
             nparams * sizeof(cypher_astnode_t *));

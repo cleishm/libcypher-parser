@@ -50,8 +50,8 @@ cypher_astnode_t *cypher_ast_binary_operator(const cypher_operator_t *op,
         struct cypher_input_range range)
 {
     REQUIRE(op != NULL, NULL);
-    REQUIRE_TYPE(arg1, CYPHER_AST_EXPRESSION, NULL);
-    REQUIRE_TYPE(arg2, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD(children, nchildren, arg1, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD(children, nchildren, arg2, CYPHER_AST_EXPRESSION, NULL);
 
     struct binary_operator *node = calloc(1, sizeof(struct binary_operator));
     if (node == NULL)

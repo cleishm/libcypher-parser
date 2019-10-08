@@ -48,7 +48,8 @@ cypher_astnode_t *cypher_ast_apply_all_operator(
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE_TYPE(func_name, CYPHER_AST_FUNCTION_NAME, NULL);
+    REQUIRE_CHILD(children, nchildren, func_name,
+            CYPHER_AST_FUNCTION_NAME, NULL);
 
     struct apply_all_operator *node =
             calloc(1, sizeof(struct apply_all_operator));

@@ -42,7 +42,8 @@ cypher_astnode_t *cypher_ast_order_by(cypher_astnode_t * const *items,
         unsigned int nchildren, struct cypher_input_range range)
 {
     REQUIRE(nitems > 0, NULL);
-    REQUIRE_TYPE_ALL(items, nitems, CYPHER_AST_SORT_ITEM, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, items, nitems,
+            CYPHER_AST_SORT_ITEM, NULL);
 
     struct order_by *node = calloc(1, sizeof(struct order_by) +
             nitems * sizeof(cypher_astnode_t *));

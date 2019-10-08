@@ -47,7 +47,8 @@ cypher_astnode_t *cypher_ast_set(cypher_astnode_t * const *items,
         unsigned int nchildren, struct cypher_input_range range)
 {
     REQUIRE(nitems > 0, NULL);
-    REQUIRE_TYPE_ALL(items, nitems, CYPHER_AST_SET_ITEM, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, items, nitems,
+            CYPHER_AST_SET_ITEM, NULL);
 
     struct set *node = calloc(1, sizeof(struct set) +
             nitems * sizeof(cypher_astnode_t *));

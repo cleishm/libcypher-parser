@@ -47,7 +47,8 @@ cypher_astnode_t *cypher_ast_remove(cypher_astnode_t * const *items,
         unsigned int nchildren, struct cypher_input_range range)
 {
     REQUIRE(nitems > 0, NULL);
-    REQUIRE_TYPE_ALL(items, nitems, CYPHER_AST_REMOVE_ITEM, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, items, nitems,
+            CYPHER_AST_REMOVE_ITEM, NULL);
 
     struct remove *node = calloc(1, sizeof(struct remove) +
             nitems * sizeof(cypher_astnode_t *));

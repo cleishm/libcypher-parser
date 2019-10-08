@@ -48,10 +48,11 @@ cypher_astnode_t *cypher_ast_node_index_query(
         const cypher_astnode_t *query, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
-    REQUIRE_TYPE(index_name, CYPHER_AST_INDEX_NAME, NULL);
+    REQUIRE_CHILD(children, nchildren, identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_CHILD(children, nchildren, index_name, CYPHER_AST_INDEX_NAME, NULL);
     REQUIRE(cypher_astnode_instanceof(query, CYPHER_AST_STRING) ||
             cypher_astnode_instanceof(query, CYPHER_AST_PARAMETER), NULL);
+    REQUIRE_CONTAINS(children, nchildren, query, NULL);
 
     struct node_index_query *node = calloc(1, sizeof(struct node_index_query));
     if (node == NULL)

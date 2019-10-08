@@ -46,7 +46,7 @@ cypher_astnode_t *cypher_ast_create(bool unique,
         const cypher_astnode_t *pattern, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE_TYPE(pattern, CYPHER_AST_PATTERN, NULL);
+    REQUIRE_CHILD(children, nchildren, pattern, CYPHER_AST_PATTERN, NULL);
 
     struct create *node = calloc(1, sizeof(struct create));
     if (node == NULL)

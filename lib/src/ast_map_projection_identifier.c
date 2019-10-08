@@ -46,7 +46,7 @@ cypher_astnode_t *cypher_ast_map_projection_identifier(
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_CHILD(children, nchildren, identifier, CYPHER_AST_IDENTIFIER, NULL);
 
     struct map_projection_identifier *node =
             calloc(1, sizeof(struct map_projection_identifier));

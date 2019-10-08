@@ -41,8 +41,9 @@ cypher_astnode_t *cypher_ast_projection(const cypher_astnode_t *expression,
         const cypher_astnode_t *alias, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
-    REQUIRE_TYPE_OPTIONAL(alias, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_CHILD(children, nchildren, expression, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD_OPTIONAL(children, nchildren, alias,
+            CYPHER_AST_IDENTIFIER, NULL);
 
     struct projection *node = calloc(1, sizeof(struct projection));
     if (node == NULL)

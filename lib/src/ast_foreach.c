@@ -49,10 +49,11 @@ cypher_astnode_t *cypher_ast_foreach(const cypher_astnode_t *identifier,
         unsigned int nclauses, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
-    REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD(children, nchildren, identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_CHILD(children, nchildren, expression, CYPHER_AST_EXPRESSION, NULL);
     REQUIRE(nclauses > 0, NULL);
-    REQUIRE_TYPE_ALL(clauses, nclauses, CYPHER_AST_QUERY_CLAUSE, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, clauses, nclauses,
+            CYPHER_AST_QUERY_CLAUSE, NULL);
 
     struct foreach_clause *node = calloc(1, sizeof(struct foreach_clause) +
             nclauses * sizeof(cypher_astnode_t *));

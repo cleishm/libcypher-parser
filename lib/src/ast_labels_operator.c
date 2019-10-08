@@ -49,9 +49,10 @@ cypher_astnode_t *cypher_ast_labels_operator(const cypher_astnode_t *expression,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD(children, nchildren, expression, CYPHER_AST_EXPRESSION, NULL);
     REQUIRE(nlabels > 0, NULL);
-    REQUIRE_TYPE_ALL(labels, nlabels, CYPHER_AST_LABEL, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, labels, nlabels,
+            CYPHER_AST_LABEL, NULL);
 
     struct labels_operator *node = calloc(1, sizeof(struct labels_operator) +
             nlabels * sizeof(cypher_astnode_t *));

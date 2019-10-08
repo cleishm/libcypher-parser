@@ -48,9 +48,9 @@ cypher_astnode_t *cypher_ast_node_id_lookup(const cypher_astnode_t *identifier,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_CHILD(children, nchildren, identifier, CYPHER_AST_IDENTIFIER, NULL);
     REQUIRE(nids > 0, NULL);
-    REQUIRE_TYPE_ALL(ids, nids, CYPHER_AST_INTEGER, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, ids, nids, CYPHER_AST_INTEGER, NULL);
 
     struct node_id_lookup *node = calloc(1, sizeof(struct node_id_lookup) +
             nids * sizeof(cypher_astnode_t *));

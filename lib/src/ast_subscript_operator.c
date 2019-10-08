@@ -48,8 +48,8 @@ cypher_astnode_t *cypher_ast_subscript_operator(
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
-    REQUIRE_TYPE(subscript, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD(children, nchildren, expression, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD(children, nchildren, subscript, CYPHER_AST_EXPRESSION, NULL);
 
     struct subscript_operator *node =
             calloc(1, sizeof(struct subscript_operator));

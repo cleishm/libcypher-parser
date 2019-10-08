@@ -49,9 +49,11 @@ cypher_astnode_t *cypher_ast_slice_operator(const cypher_astnode_t *expression,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
-    REQUIRE_TYPE_OPTIONAL(start, CYPHER_AST_EXPRESSION, NULL);
-    REQUIRE_TYPE_OPTIONAL(end, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD(children, nchildren, expression, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD_OPTIONAL(children, nchildren, start,
+            CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD_OPTIONAL(children, nchildren, end,
+            CYPHER_AST_EXPRESSION, NULL);
 
     struct slice_operator *node = calloc(1, sizeof(struct slice_operator));
     if (node == NULL)

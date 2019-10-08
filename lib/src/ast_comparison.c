@@ -52,7 +52,8 @@ cypher_astnode_t *cypher_ast_comparison(unsigned int length,
 {
     REQUIRE(length > 0, NULL);
     REQUIRE(ops != NULL, NULL);
-    REQUIRE_TYPE_ALL(args, length+1, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, args, length+1,
+            CYPHER_AST_EXPRESSION, NULL);
 
     struct comparison *node = calloc(1, sizeof(struct comparison) +
             (length + 1) * sizeof(cypher_astnode_t *));

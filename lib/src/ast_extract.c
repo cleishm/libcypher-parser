@@ -63,9 +63,10 @@ cypher_astnode_t *cypher_ast_extract(const cypher_astnode_t *identifier,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
-    REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
-    REQUIRE_TYPE_OPTIONAL(eval, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD(children, nchildren, identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_CHILD(children, nchildren, expression, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD_OPTIONAL(children, nchildren, eval,
+            CYPHER_AST_EXPRESSION, NULL);
 
     struct extract *node = calloc(1, sizeof(struct extract));
     if (node == NULL)

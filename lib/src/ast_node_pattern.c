@@ -44,11 +44,13 @@ cypher_astnode_t *cypher_ast_node_pattern(const cypher_astnode_t *identifier,
         const cypher_astnode_t *properties, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE_TYPE_OPTIONAL(identifier, CYPHER_AST_IDENTIFIER, NULL);
-    REQUIRE_TYPE_ALL(labels, nlabels, CYPHER_AST_LABEL, NULL);
+    REQUIRE_CHILD_OPTIONAL(children, nchildren, identifier,
+            CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, labels, nlabels, CYPHER_AST_LABEL, NULL);
     REQUIRE(properties == NULL ||
             cypher_astnode_instanceof(properties, CYPHER_AST_MAP) ||
             cypher_astnode_instanceof(properties, CYPHER_AST_PARAMETER), NULL);
+    REQUIRE_CONTAINS_OPTIONAL(children, nchildren, properties, NULL);
 
     struct node_pattern *node = calloc(1, sizeof(struct node_pattern) +
             nlabels * sizeof(cypher_astnode_t *));

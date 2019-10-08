@@ -50,9 +50,9 @@ cypher_astnode_t *cypher_ast_create_rel_prop_constraint(
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE_TYPE(identifier, CYPHER_AST_IDENTIFIER, NULL);
-    REQUIRE_TYPE(reltype, CYPHER_AST_RELTYPE, NULL);
-    REQUIRE_TYPE(expression, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD(children, nchildren, identifier, CYPHER_AST_IDENTIFIER, NULL);
+    REQUIRE_CHILD(children, nchildren, reltype, CYPHER_AST_RELTYPE, NULL);
+    REQUIRE_CHILD(children, nchildren, expression, CYPHER_AST_EXPRESSION, NULL);
 
     struct constraint *node = calloc(1, sizeof(struct constraint));
     if (node == NULL)

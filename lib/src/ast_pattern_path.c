@@ -73,8 +73,9 @@ cypher_astnode_t *cypher_ast_pattern_path(cypher_astnode_t * const *elements,
     REQUIRE(elements != NULL, NULL);
     for (unsigned int i = 0; i < nelements; ++i)
     {
-        REQUIRE_TYPE(elements[i], (i%2 == 0)? CYPHER_AST_NODE_PATTERN :
-                CYPHER_AST_REL_PATTERN, NULL);
+        REQUIRE_CHILD(children, nchildren, elements[i],
+                (i%2 == 0)? CYPHER_AST_NODE_PATTERN : CYPHER_AST_REL_PATTERN,
+                NULL);
     }
 
     struct pattern_path *node = calloc(1, sizeof(struct pattern_path) +

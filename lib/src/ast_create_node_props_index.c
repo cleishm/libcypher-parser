@@ -48,9 +48,10 @@ cypher_astnode_t *cypher_ast_create_node_props_index(
         unsigned int nprops, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE_TYPE(label, CYPHER_AST_LABEL, NULL);
+    REQUIRE_CHILD(children, nchildren, label, CYPHER_AST_LABEL, NULL);
     REQUIRE(nprops > 0, NULL);
-    REQUIRE_TYPE_ALL(prop_names, nprops, CYPHER_AST_PROP_NAME, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, prop_names, nprops,
+            CYPHER_AST_PROP_NAME, NULL);
 
     struct create_index *node = calloc(1, sizeof(struct create_index) +
             nprops * sizeof(cypher_astnode_t *));

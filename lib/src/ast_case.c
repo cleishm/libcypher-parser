@@ -50,9 +50,12 @@ cypher_astnode_t *cypher_ast_case(const cypher_astnode_t *expression,
         const cypher_astnode_t *deflt, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE_TYPE_OPTIONAL(expression, CYPHER_AST_EXPRESSION, NULL);
-    REQUIRE_TYPE_ALL(alternatives, nalternatives, CYPHER_AST_EXPRESSION, NULL);
-    REQUIRE_TYPE_OPTIONAL(deflt, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD_OPTIONAL(children, nchildren, expression,
+            CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, alternatives, nalternatives,
+            CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD_OPTIONAL(children, nchildren, deflt,
+            CYPHER_AST_EXPRESSION, NULL);
 
     struct case_expression *node = calloc(1, sizeof(struct case_expression) +
             nalternatives * 2 * sizeof(cypher_astnode_t *));

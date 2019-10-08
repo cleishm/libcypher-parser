@@ -46,7 +46,7 @@ cypher_astnode_t *cypher_ast_using_periodic_commit(
         const cypher_astnode_t *limit, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE_TYPE_OPTIONAL(limit, CYPHER_AST_INTEGER, NULL);
+    REQUIRE_CHILD_OPTIONAL(children, nchildren, limit, CYPHER_AST_INTEGER, NULL);
 
     struct using_periodic_commit *node =
             calloc(1, sizeof(struct using_periodic_commit));

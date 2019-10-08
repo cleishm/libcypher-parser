@@ -50,8 +50,10 @@ cypher_astnode_t *cypher_ast_apply_operator(const cypher_astnode_t *func_name,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
 {
-    REQUIRE_TYPE(func_name, CYPHER_AST_FUNCTION_NAME, NULL);
-    REQUIRE_TYPE_ALL(args, nargs, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD(children, nchildren, func_name,
+            CYPHER_AST_FUNCTION_NAME, NULL);
+    REQUIRE_CHILD_ALL(children, nchildren, args, nargs,
+            CYPHER_AST_EXPRESSION, NULL);
 
     struct apply_operator *node = calloc(1, sizeof(struct apply_operator) +
             nargs * sizeof(cypher_astnode_t *));
