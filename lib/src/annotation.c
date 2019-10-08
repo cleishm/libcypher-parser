@@ -40,14 +40,7 @@ static void detach_annotation_from_context(
 
 cypher_ast_annotation_context_t *cypher_ast_annotation_context(void)
 {
-    cypher_ast_annotation_context_t *context =
-            malloc(sizeof(cypher_ast_annotation_context_t));
-    if (context == NULL)
-    {
-        return NULL;
-    }
-    memset(context, 0, sizeof(cypher_ast_annotation_context_t));
-    return context;
+    return calloc(1, sizeof(cypher_ast_annotation_context_t));
 }
 
 
