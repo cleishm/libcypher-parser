@@ -27,8 +27,8 @@ struct call_clause
     const cypher_astnode_t **args;
     unsigned int nargs;
     const cypher_astnode_t *predicate;
-    const cypher_astnode_t **projections;
     unsigned int nprojections;
+    const cypher_astnode_t *projections[];
 };
 
 
@@ -61,7 +61,8 @@ cypher_astnode_t *cypher_ast_call(const cypher_astnode_t *proc_name,
     REQUIRE_CHILD_OPTIONAL(children, nchildren, predicate,
             CYPHER_AST_EXPRESSION, NULL);
 
-    struct call_clause *node = calloc(1, sizeof(struct call_clause));
+    struct call_clause *node = calloc(1, sizeof(struct call_clause) +
+            nprojections * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
@@ -82,16 +83,9 @@ cypher_astnode_t *cypher_ast_call(const cypher_astnode_t *proc_name,
         node->nargs = nargs;
     }
     node->predicate = predicate;
-    if (nprojections > 0)
-    {
-        node->projections = mdup(projections,
-                nprojections * sizeof(cypher_astnode_t *));
-        if (node->projections == NULL)
-        {
-            goto cleanup;
-        }
-        node->nprojections = nprojections;
-    }
+    memcpy(node->projections, projections,
+            nprojections * sizeof(cypher_astnode_t *));
+    node->nprojections = nprojections;
     return &(node->_astnode);
 
     int errsv;
@@ -107,7 +101,6 @@ void call_free(cypher_astnode_t *self)
 {
     struct call_clause *node = container_of(self, struct call_clause, _astnode);
     free(node->args);
-    free(node->projections);
     cypher_astnode_free(self);
 }
 
