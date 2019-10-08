@@ -1167,18 +1167,8 @@ cypher_astnode_t *_explain_option(yycontext *yy)
 {
     assert(yy->prev_block != NULL &&
             "An AST node can only be created immediately after a `>` in the grammar");
-    cypher_astnode_t *node = cypher_ast_explain_option(
-            astnodes_elements(&(yy->prev_block->children)),
-            astnodes_size(&(yy->prev_block->children)),
-            yy->prev_block->range);
-    if (node == NULL)
-    {
-        abort_parse(yy);
-    }
-    astnodes_clear(&(yy->prev_block->children));
-    block_free(yy->prev_block);
-    yy->prev_block = NULL;
-    return add_child(yy, node);
+    struct cypher_input_range range = yy->prev_block->range;
+    return add_terminal(yy, cypher_ast_explain_option(range));
 }
 
 
@@ -1186,18 +1176,8 @@ cypher_astnode_t *_profile_option(yycontext *yy)
 {
     assert(yy->prev_block != NULL &&
             "An AST node can only be created immediately after a `>` in the grammar");
-    cypher_astnode_t *node = cypher_ast_profile_option(
-            astnodes_elements(&(yy->prev_block->children)),
-            astnodes_size(&(yy->prev_block->children)),
-            yy->prev_block->range);
-    if (node == NULL)
-    {
-        abort_parse(yy);
-    }
-    astnodes_clear(&(yy->prev_block->children));
-    block_free(yy->prev_block);
-    yy->prev_block = NULL;
-    return add_child(yy, node);
+    struct cypher_input_range range = yy->prev_block->range;
+    return add_terminal(yy, cypher_ast_profile_option(range));
 }
 
 

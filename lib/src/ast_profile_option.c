@@ -41,8 +41,7 @@ const struct cypher_astnode_vt cypher_profile_option_astnode_vt =
       .free = cypher_astnode_free };
 
 
-cypher_astnode_t *cypher_ast_profile_option(cypher_astnode_t **children,
-        unsigned int nchildren, struct cypher_input_range range)
+cypher_astnode_t *cypher_ast_profile_option(struct cypher_input_range range)
 {
     struct profile_option *node = calloc(1, sizeof(struct profile_option));
     if (node == NULL)
@@ -50,7 +49,7 @@ cypher_astnode_t *cypher_ast_profile_option(cypher_astnode_t **children,
         return NULL;
     }
     if (cypher_astnode_init(&(node->_astnode), CYPHER_AST_PROFILE_OPTION,
-            children, nchildren, range))
+            NULL, 0, range))
     {
         free(node);
         return NULL;
