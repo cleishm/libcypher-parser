@@ -41,7 +41,7 @@ const struct cypher_astnode_vt cypher_drop_node_props_index_astnode_vt =
       .nparents = 1,
       .name = "DROP INDEX",
       .detailstr = detailstr,
-      .free = cypher_astnode_free,
+      .release = cypher_astnode_release,
       .clone = clone };
 
 

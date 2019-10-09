@@ -39,7 +39,7 @@ const struct cypher_astnode_vt cypher_map_projection_property_astnode_vt =
       .nparents = 1,
       .name = "property projection",
       .detailstr = detailstr,
-      .free = cypher_astnode_free,
+      .release = cypher_astnode_release,
       .clone = clone };
 
 

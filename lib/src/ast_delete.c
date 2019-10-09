@@ -41,7 +41,7 @@ const struct cypher_astnode_vt cypher_delete_astnode_vt =
       .nparents = 1,
       .name = "DELETE",
       .detailstr = detailstr,
-      .free = cypher_astnode_free,
+      .release = cypher_astnode_release,
       .clone = clone };
 
 

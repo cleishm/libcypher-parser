@@ -34,7 +34,7 @@ struct call_clause
 
 static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void call_free(cypher_astnode_t *self);
+static void call_release(cypher_astnode_t *self);
 
 
 static const struct cypher_astnode_vt *parents[] =
@@ -45,7 +45,7 @@ const struct cypher_astnode_vt cypher_call_astnode_vt =
       .nparents = 1,
       .name = "CALL",
       .detailstr = detailstr,
-      .free = call_free,
+      .release = call_release,
       .clone = clone };
 
 
@@ -99,11 +99,11 @@ cleanup:
 }
 
 
-void call_free(cypher_astnode_t *self)
+void call_release(cypher_astnode_t *self)
 {
     struct call_clause *node = container_of(self, struct call_clause, _astnode);
     free(node->args);
-    cypher_astnode_free(self);
+    cypher_astnode_release(self);
 }
 
 

@@ -42,7 +42,7 @@ const struct cypher_astnode_vt cypher_create_rel_prop_constraint_astnode_vt =
       .nparents = 1,
       .name = "create rel prop constraint",
       .detailstr = detailstr,
-      .free = cypher_astnode_free,
+      .release = cypher_astnode_release,
       .clone = clone };
 
 

@@ -30,7 +30,7 @@ struct cypher_astnode_vt
     unsigned int nparents;
     const char *name;
     ssize_t (*detailstr)(const cypher_astnode_t *self, char *str, size_t size);
-    void (*free)(cypher_astnode_t *self);
+    void (*release)(cypher_astnode_t *self);
     cypher_astnode_t *(*clone)(const cypher_astnode_t *self);
 };
 
@@ -50,7 +50,7 @@ int cypher_astnode_init(cypher_astnode_t *node, cypher_astnode_type_t type,
         cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
 
-void cypher_astnode_free(cypher_astnode_t *node);
+void cypher_astnode_release(cypher_astnode_t *node);
 
 ssize_t cypher_astnode_detailstr(const cypher_astnode_t *node, char *str,
         size_t size);

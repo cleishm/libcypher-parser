@@ -26,5 +26,5 @@ const struct cypher_astnode_vt cypher_boolean_astnode_vt =
       .nparents = 1,
       .name = NULL,
       .detailstr = NULL,
-      .free = NULL,
+      .release = NULL,
       .clone = NULL };

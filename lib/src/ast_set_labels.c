@@ -41,7 +41,7 @@ const struct cypher_astnode_vt cypher_set_labels_astnode_vt =
       .nparents = 1,
       .name = "set labels",
       .detailstr = detailstr,
-      .free = cypher_astnode_free,
+      .release = cypher_astnode_release,
       .clone = clone };
 
 

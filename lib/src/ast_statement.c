@@ -35,7 +35,7 @@ static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 const struct cypher_astnode_vt cypher_statement_astnode_vt =
     { .name = "statement",
       .detailstr = detailstr,
-      .free = cypher_astnode_free,
+      .release = cypher_astnode_release,
       .clone = clone };
 
 

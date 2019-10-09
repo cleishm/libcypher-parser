@@ -484,9 +484,18 @@ void cypher_ast_free(cypher_astnode_t *ast)
         cp_release_annotation(ast->annotations);
     }
 
+    cypher_astnode_t **children = ast->children;
+    unsigned int nchildren = ast->nchildren;
+
     assert(ast->type < _MAX_VT_OFF);
     const struct cypher_astnode_vt *vt = VT_PTR(ast->type);
-    vt->free(ast);
+    vt->release(ast);
+
+    for (unsigned int i = nchildren; i-- > 0; )
+    {
+        cypher_ast_free(children[i]);
+    }
+    free(children);
 }
 
 
@@ -844,13 +853,8 @@ int cypher_astnode_init(cypher_astnode_t *node,
 }
 
 
-void cypher_astnode_free(cypher_astnode_t *node)
+void cypher_astnode_release(cypher_astnode_t *node)
 {
-    for (unsigned int i = node->nchildren; i-- > 0; )
-    {
-        cypher_ast_free(node->children[i]);
-    }
-    free(node->children);
     free(node);
 }
 

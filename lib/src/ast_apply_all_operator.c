@@ -41,7 +41,7 @@ const struct cypher_astnode_vt cypher_apply_all_operator_astnode_vt =
       .nparents = 1,
       .name = "apply all",
       .detailstr = detailstr,
-      .free = cypher_astnode_free,
+      .release = cypher_astnode_release,
       .clone = clone };
 
 

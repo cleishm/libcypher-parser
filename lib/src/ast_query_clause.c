@@ -19,4 +19,4 @@
 
 
 const struct cypher_astnode_vt cypher_query_clause_astnode_vt =
-    { .name = NULL, .detailstr = NULL, .free = NULL, .clone = NULL };
+    { .name = NULL, .detailstr = NULL, .release = NULL, .clone = NULL };

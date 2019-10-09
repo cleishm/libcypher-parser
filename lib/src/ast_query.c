@@ -32,13 +32,13 @@ struct query
 
 static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void query_free(cypher_astnode_t *self);
+static void query_release(cypher_astnode_t *self);
 
 
 const struct cypher_astnode_vt cypher_query_astnode_vt =
     { .name = "query",
       .detailstr = detailstr,
-      .free = query_free,
+      .release = query_release,
       .clone = clone };
 
 
@@ -128,11 +128,11 @@ cypher_astnode_t *clone(const cypher_astnode_t *self)
 }
 
 
-void query_free(cypher_astnode_t *self)
+void query_release(cypher_astnode_t *self)
 {
     struct query *node = container_of(self, struct query, _astnode);
     free(node->options);
-    cypher_astnode_free(self);
+    cypher_astnode_release(self);
 }
 
 

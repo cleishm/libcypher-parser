@@ -20,4 +20,4 @@
 
 
 const struct cypher_astnode_vt cypher_schema_command_astnode_vt =
-    { .name = NULL, .detailstr = NULL, .free = NULL, .clone = NULL };
+    { .name = NULL, .detailstr = NULL, .release = NULL, .clone = NULL };

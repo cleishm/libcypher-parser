@@ -32,7 +32,7 @@ struct comparison
 
 static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void comparison_free(cypher_astnode_t *self);
+static void comparison_release(cypher_astnode_t *self);
 
 
 static const struct cypher_astnode_vt *parents[] =
@@ -43,7 +43,7 @@ const struct cypher_astnode_vt cypher_comparison_astnode_vt =
       .nparents = 1,
       .name = "comparison",
       .detailstr = detailstr,
-      .free = comparison_free,
+      .release = comparison_release,
       .clone = clone };
 
 
@@ -88,11 +88,11 @@ cleanup:
 }
 
 
-void comparison_free(cypher_astnode_t *self)
+void comparison_release(cypher_astnode_t *self)
 {
     struct comparison *node = container_of(self, struct comparison, _astnode);
     free(node->ops);
-    cypher_astnode_free(self);
+    cypher_astnode_release(self);
 }
 
 

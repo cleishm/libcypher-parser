@@ -19,4 +19,4 @@
 
 
 const struct cypher_astnode_vt cypher_merge_action_astnode_vt =
-    { .name = NULL, .detailstr = NULL, .free = NULL, .clone = NULL };
+    { .name = NULL, .detailstr = NULL, .release = NULL, .clone = NULL };

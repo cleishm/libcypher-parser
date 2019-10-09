@@ -50,7 +50,7 @@ const struct cypher_astnode_vt cypher_filter_astnode_vt =
       .nparents = 1,
       .name = "filter",
       .detailstr = detailstr,
-      .free = cypher_astnode_free,
+      .release = cypher_astnode_release,
       .clone = clone };
 
 static const struct cypher_list_comprehension_astnode_vt lc_vt =

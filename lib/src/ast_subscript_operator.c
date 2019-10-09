@@ -41,7 +41,7 @@ const struct cypher_astnode_vt cypher_subscript_operator_astnode_vt =
       .nparents = 1,
       .name = "subscript",
       .detailstr = detailstr,
-      .free = cypher_astnode_free,
+      .release = cypher_astnode_release,
       .clone = clone };
 
 

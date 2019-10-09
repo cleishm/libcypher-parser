@@ -42,7 +42,7 @@ const struct cypher_astnode_vt cypher_load_csv_astnode_vt =
       .nparents = 1,
       .name = "LOAD CSV",
       .detailstr = detailstr,
-      .free = cypher_astnode_free,
+      .release = cypher_astnode_release,
       .clone = clone };
 
 
