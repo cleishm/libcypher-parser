@@ -29,6 +29,7 @@ struct start
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -40,7 +41,8 @@ const struct cypher_astnode_vt cypher_start_astnode_vt =
       .nparents = 1,
       .name = "START",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_start(cypher_astnode_t * const *points,
@@ -76,6 +78,40 @@ cleanup:
     free(node);
     errno = errsv;
     return NULL;
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_START, NULL);
+    struct start *node = container_of(self, struct start, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+
+    cypher_astnode_t **points = calloc(node->npoints,
+            sizeof(cypher_astnode_t *));
+    if (points == NULL)
+    {
+        return NULL;
+    }
+    for (unsigned int i = 0; i < node->npoints; ++i)
+    {
+        points[i] = children[child_index(self, node->points[i])];
+    }
+    cypher_astnode_t *predicate = (node->predicate != NULL) ? NULL :
+            children[child_index(self, node->predicate)];
+
+    cypher_astnode_t *clone = cypher_ast_start(points, node->npoints,
+            predicate, children, self->nchildren, self->range);
+    int errsv = errno;
+    free(children);
+    free(points);
+    errno = errsv;
+    return clone;
 }
 
 

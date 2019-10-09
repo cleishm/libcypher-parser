@@ -44,6 +44,7 @@ struct pattern_path
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 static unsigned int nelements(const cypher_pattern_path_astnode_t *self);
 static const cypher_astnode_t *get_element(
@@ -58,7 +59,8 @@ const struct cypher_astnode_vt cypher_pattern_path_astnode_vt =
       .nparents = 1,
       .name = "pattern path",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 static const struct cypher_pattern_path_astnode_vt pp_vt =
     { .nelements = nelements,
@@ -99,6 +101,40 @@ cleanup:
     free(node);
     errno = errsv;
     return NULL;
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_PATTERN_PATH, NULL);
+    const cypher_pattern_path_astnode_t *ppnode =
+            container_of(self, cypher_pattern_path_astnode_t, _astnode);
+    const struct pattern_path *node =
+            container_of(ppnode, struct pattern_path, _pattern_path_astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+    cypher_astnode_t **elements =
+            calloc(node->nelements, sizeof(cypher_astnode_t *));
+    if (elements == NULL)
+    {
+        return NULL;
+    }
+    for (unsigned int i = 0; i < node->nelements; ++i)
+    {
+        elements[i] = children[child_index(self, node->elements[i])];
+    }
+
+    cypher_astnode_t *clone = cypher_ast_pattern_path(elements, node->nelements,
+            children, self->nchildren, self->range);
+    int errsv = errno;
+    free(children);
+    free(elements);
+    errno = errsv;
+    return clone;
 }
 
 

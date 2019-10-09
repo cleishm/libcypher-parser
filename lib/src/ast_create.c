@@ -28,6 +28,7 @@ struct create
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -39,7 +40,8 @@ const struct cypher_astnode_vt cypher_create_astnode_vt =
       .nparents = 1,
       .name = "CREATE",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_create(bool unique,
@@ -62,6 +64,27 @@ cypher_astnode_t *cypher_ast_create(bool unique,
     node->unique = unique;
     node->pattern = pattern;
     return &(node->_astnode);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_CREATE, NULL);
+    struct create *node = container_of(self, struct create, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+    cypher_astnode_t *pattern = children[child_index(self, node->pattern)];
+
+    cypher_astnode_t *clone = cypher_ast_create(node->unique, pattern,
+            children, self->nchildren, self->range);
+    int errsv = errno;
+    free(children);
+    errno = errsv;
+    return clone;
 }
 
 

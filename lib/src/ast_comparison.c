@@ -30,6 +30,7 @@ struct comparison
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 static void comparison_free(cypher_astnode_t *self);
 
@@ -42,7 +43,8 @@ const struct cypher_astnode_vt cypher_comparison_astnode_vt =
       .nparents = 1,
       .name = "comparison",
       .detailstr = detailstr,
-      .free = comparison_free };
+      .free = comparison_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_comparison(unsigned int length,
@@ -91,6 +93,37 @@ void comparison_free(cypher_astnode_t *self)
     struct comparison *node = container_of(self, struct comparison, _astnode);
     free(node->ops);
     cypher_astnode_free(self);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_COMPARISON, NULL);
+    struct comparison *node = container_of(self, struct comparison, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+    cypher_astnode_t **args = calloc(node->length + 1,
+            sizeof(cypher_astnode_t *));
+    if (args == NULL)
+    {
+        return NULL;
+    }
+    for (unsigned int i = 0; i < node->length + 1; ++i)
+    {
+        args[i] = children[child_index(self, node->args[i])];
+    }
+
+    cypher_astnode_t *clone = cypher_ast_comparison(node->length, node->ops,
+            args, children, self->nchildren, self->range);
+    int errsv = errno;
+    free(children);
+    free(args);
+    errno = errsv;
+    return clone;
 }
 
 

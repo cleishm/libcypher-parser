@@ -27,13 +27,15 @@ struct reltype
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
 const struct cypher_astnode_vt cypher_reltype_astnode_vt =
     { .name = "rel type",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_reltype(const char *s, size_t n,
@@ -53,6 +55,14 @@ cypher_astnode_t *cypher_ast_reltype(const char *s, size_t n,
     memcpy(node->p, s, n);
     node->p[n] = '\0';
     return &(node->_astnode);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_RELTYPE, NULL);
+    struct reltype *node = container_of(self, struct reltype, _astnode);
+    return cypher_ast_reltype(node->p, strlen(node->p), self->range);
 }
 
 

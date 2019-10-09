@@ -27,6 +27,7 @@ struct profile_option
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -38,7 +39,8 @@ const struct cypher_astnode_vt cypher_profile_option_astnode_vt =
       .nparents = 1,
       .name = "PROFILE",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_profile_option(struct cypher_input_range range)
@@ -55,6 +57,13 @@ cypher_astnode_t *cypher_ast_profile_option(struct cypher_input_range range)
         return NULL;
     }
     return &(node->_astnode);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_PROFILE_OPTION, NULL);
+    return cypher_ast_profile_option(self->range);
 }
 
 

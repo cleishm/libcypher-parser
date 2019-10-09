@@ -29,13 +29,15 @@ struct command
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
 const struct cypher_astnode_vt cypher_command_astnode_vt =
     { .name = "command",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_command(const cypher_astnode_t *name,
@@ -69,6 +71,37 @@ cleanup:
     free(node);
     errno = errsv;
     return NULL;
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_COMMAND, NULL);
+    struct command *node = container_of(self, struct command, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+    cypher_astnode_t *name = children[child_index(self, node->name)];
+    cypher_astnode_t **args = calloc(node->nargs, sizeof(cypher_astnode_t *));
+    if (args == NULL)
+    {
+        return NULL;
+    }
+    for (unsigned int i = 0; i < node->nargs; ++i)
+    {
+        args[i] = children[child_index(self, node->args[i])];
+    }
+
+    cypher_astnode_t *clone = cypher_ast_command(name, args, node->nargs,
+            children, self->nchildren, self->range);
+    int errsv = errno;
+    free(children);
+    free(args);
+    errno = errsv;
+    return clone;
 }
 
 

@@ -29,6 +29,7 @@ struct delete_clause
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -40,7 +41,8 @@ const struct cypher_astnode_vt cypher_delete_astnode_vt =
       .nparents = 1,
       .name = "DELETE",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_delete(bool detach,
@@ -75,6 +77,38 @@ cleanup:
     free(node);
     errno = errsv;
     return NULL;
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_DELETE, NULL);
+    struct delete_clause *node =
+            container_of(self, struct delete_clause, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+    cypher_astnode_t **expressions = calloc(node->nexpressions,
+            sizeof(cypher_astnode_t *));
+    if (expressions == NULL)
+    {
+        return NULL;
+    }
+    for (unsigned int i = 0; i < node->nexpressions; ++i)
+    {
+        expressions[i] = children[child_index(self, node->expressions[i])];
+    }
+
+    cypher_astnode_t *clone = cypher_ast_delete(node->detach, expressions,
+            node->nexpressions, children, self->nchildren, self->range);
+    int errsv = errno;
+    free(children);
+    free(expressions);
+    errno = errsv;
+    return clone;
 }
 
 

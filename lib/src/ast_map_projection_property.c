@@ -27,6 +27,7 @@ struct map_projection_property
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -38,7 +39,8 @@ const struct cypher_astnode_vt cypher_map_projection_property_astnode_vt =
       .nparents = 1,
       .name = "property projection",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_map_projection_property(
@@ -62,6 +64,28 @@ cypher_astnode_t *cypher_ast_map_projection_property(
     }
     node->prop_name = prop_name;
     return &(node->_astnode);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_MAP_PROJECTION_PROPERTY, NULL);
+    struct map_projection_property *node =
+            container_of(self, struct map_projection_property, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+    cypher_astnode_t *prop_name = children[child_index(self, node->prop_name)];
+
+    cypher_astnode_t *clone = cypher_ast_map_projection_property(prop_name,
+            children, self->nchildren, self->range);
+    int errsv = errno;
+    free(children);
+    errno = errsv;
+    return clone;
 }
 
 

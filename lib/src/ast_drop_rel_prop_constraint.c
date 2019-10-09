@@ -30,6 +30,7 @@ struct constraint
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -41,7 +42,8 @@ const struct cypher_astnode_vt cypher_drop_rel_prop_constraint_astnode_vt =
       .nparents = 1,
       .name = "drop rel prop constraint",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_drop_rel_prop_constraint(
@@ -70,6 +72,30 @@ cypher_astnode_t *cypher_ast_drop_rel_prop_constraint(
     node->expression = expression;
     node->unique = unique;
     return &(node->_astnode);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_DROP_REL_PROP_CONSTRAINT, NULL);
+    struct constraint *node = container_of(self, struct constraint, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+    cypher_astnode_t *identifier = children[child_index(self, node->identifier)];
+    cypher_astnode_t *reltype = children[child_index(self, node->reltype)];
+    cypher_astnode_t *expression = children[child_index(self, node->expression)];
+
+    cypher_astnode_t *clone = cypher_ast_drop_node_prop_constraint(identifier,
+            reltype, expression, node->unique, children, self->nchildren,
+            self->range);
+    int errsv = errno;
+    free(children);
+    errno = errsv;
+    return clone;
 }
 
 

@@ -29,6 +29,7 @@ struct subscript_operator
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -40,7 +41,8 @@ const struct cypher_astnode_vt cypher_subscript_operator_astnode_vt =
       .nparents = 1,
       .name = "subscript",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_subscript_operator(
@@ -66,6 +68,29 @@ cypher_astnode_t *cypher_ast_subscript_operator(
     node->expression = expression;
     node->subscript = subscript;
     return &(node->_astnode);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_SUBSCRIPT_OPERATOR, NULL);
+    struct subscript_operator *node =
+            container_of(self, struct subscript_operator, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+    cypher_astnode_t *expression = children[child_index(self, node->expression)];
+    cypher_astnode_t *subscript = children[child_index(self, node->subscript)];
+
+    cypher_astnode_t *clone = cypher_ast_subscript_operator(expression,
+            subscript, children, self->nchildren, self->range);
+    int errsv = errno;
+    free(children);
+    errno = errsv;
+    return clone;
 }
 
 

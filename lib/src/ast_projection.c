@@ -28,13 +28,15 @@ struct projection
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
 const struct cypher_astnode_vt cypher_projection_astnode_vt =
     { .name = "projection",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_projection(const cypher_astnode_t *expression,
@@ -59,6 +61,30 @@ cypher_astnode_t *cypher_ast_projection(const cypher_astnode_t *expression,
     node->expression = expression;
     node->alias = alias;
     return &(node->_astnode);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_PROJECTION, NULL);
+    struct projection *node = container_of(self, struct projection, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+
+    cypher_astnode_t *expression = children[child_index(self, node->expression)];
+    cypher_astnode_t *alias = (node->alias == NULL) ? NULL :
+            children[child_index(self, node->alias)];
+
+    cypher_astnode_t *clone = cypher_ast_projection(expression, alias,
+            children, self->nchildren, self->range);
+    int errsv = errno;
+    free(children);
+    errno = errsv;
+    return clone;
 }
 
 

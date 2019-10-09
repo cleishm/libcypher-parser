@@ -5374,6 +5374,15 @@ const char *cypher_ast_error_get_value(const cypher_astnode_t *node);
 void cypher_ast_free(cypher_astnode_t *ast);
 
 
+/**
+ * Clone an entire AST tree.
+ *
+ * @param [ast] The root of the AST tree.
+ * @return A clone of the tree.
+ */
+cypher_astnode_t *cypher_ast_clone(const cypher_astnode_t *ast);
+
+
 #define CYPHER_AST_RENDER_DEFAULT 0
 
 /**

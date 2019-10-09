@@ -30,6 +30,7 @@ struct none
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 static const cypher_astnode_t *get_identifier(
         const cypher_list_comprehension_astnode_t *self);
@@ -49,7 +50,8 @@ const struct cypher_astnode_vt cypher_none_astnode_vt =
       .nparents = 1,
       .name = "none",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 static const struct cypher_list_comprehension_astnode_vt lc_vt =
     { .get_identifier = get_identifier,
@@ -65,6 +67,7 @@ cypher_astnode_t *cypher_ast_none(const cypher_astnode_t *identifier,
 {
     REQUIRE_CHILD(children, nchildren, identifier, CYPHER_AST_IDENTIFIER, NULL);
     REQUIRE_CHILD(children, nchildren, expression, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD_OPTIONAL(children, nchildren, predicate, CYPHER_AST_EXPRESSION, NULL);
 
     struct none *node = calloc(1, sizeof(struct none));
     if (node == NULL)
@@ -81,6 +84,33 @@ cypher_astnode_t *cypher_ast_none(const cypher_astnode_t *identifier,
     node->expression = expression;
     node->predicate = predicate;
     return &(node->_list_comprehension_astnode._astnode);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_NONE, NULL);
+    const cypher_list_comprehension_astnode_t *lcnode =
+            container_of(self, cypher_list_comprehension_astnode_t, _astnode);
+    struct none *node =
+            container_of(lcnode, struct none, _list_comprehension_astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+    cypher_astnode_t *identifier = children[child_index(self, node->identifier)];
+    cypher_astnode_t *expression = children[child_index(self, node->expression)];
+    cypher_astnode_t *predicate = (node->predicate != NULL) ? NULL :
+            children[child_index(self, node->predicate)];
+
+    cypher_astnode_t *clone = cypher_ast_none(identifier, expression,
+            predicate, children, self->nchildren, self->range);
+    int errsv = errno;
+    free(children);
+    errno = errsv;
+    return clone;
 }
 
 

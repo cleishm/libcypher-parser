@@ -30,6 +30,7 @@ struct loadcsv
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -41,7 +42,8 @@ const struct cypher_astnode_vt cypher_load_csv_astnode_vt =
       .nparents = 1,
       .name = "LOAD CSV",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_load_csv(bool with_headers,
@@ -70,6 +72,31 @@ cypher_astnode_t *cypher_ast_load_csv(bool with_headers,
     node->identifier = identifier;
     node->field_terminator = field_terminator;
     return &(node->_astnode);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_LOAD_CSV, false);
+    struct loadcsv *node = container_of(self, struct loadcsv, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+    cypher_astnode_t *url = children[child_index(self, node->url)];
+    cypher_astnode_t *identifier = children[child_index(self, node->identifier)];
+    cypher_astnode_t *field_terminator = (node->field_terminator == NULL) ? NULL :
+        children[child_index(self, node->field_terminator)];
+
+    cypher_astnode_t *clone = cypher_ast_load_csv(node->with_headers, url,
+            identifier, field_terminator, children, self->nchildren,
+            self->range);
+    int errsv = errno;
+    free(children);
+    errno = errsv;
+    return clone;
 }
 
 

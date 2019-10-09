@@ -30,6 +30,7 @@ struct binary_operator
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -41,7 +42,8 @@ const struct cypher_astnode_vt cypher_binary_operator_astnode_vt =
       .nparents = 1,
       .name = "binary operator",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_binary_operator(const cypher_operator_t *op,
@@ -68,6 +70,29 @@ cypher_astnode_t *cypher_ast_binary_operator(const cypher_operator_t *op,
     node->arg1 = arg1;
     node->arg2 = arg2;
     return &(node->_astnode);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_BINARY_OPERATOR, NULL);
+    struct binary_operator *node =
+        container_of(self, struct binary_operator, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+    cypher_astnode_t *arg1 = children[child_index(self, node->arg1)];
+    cypher_astnode_t *arg2 = children[child_index(self, node->arg2)];
+
+    cypher_astnode_t *clone = cypher_ast_binary_operator(node->op, arg1, arg2,
+            children, self->nchildren, self->range);
+    int errsv = errno;
+    free(children);
+    errno = errsv;
+    return clone;
 }
 
 

@@ -27,6 +27,7 @@ struct parameter
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -38,7 +39,8 @@ const struct cypher_astnode_vt cypher_parameter_astnode_vt =
       .nparents = 1,
       .name = "parameter",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_parameter(const char *s, size_t n,
@@ -58,6 +60,14 @@ cypher_astnode_t *cypher_ast_parameter(const char *s, size_t n,
     memcpy(node->p, s, n);
     node->p[n] = '\0';
     return &(node->_astnode);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_PARAMETER, NULL);
+    struct parameter *node = container_of(self, struct parameter, _astnode);
+    return cypher_ast_parameter(node->p, strlen(node->p), self->range);
 }
 
 

@@ -30,6 +30,7 @@ struct using_index
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -41,7 +42,8 @@ const struct cypher_astnode_vt cypher_using_index_astnode_vt =
       .nparents = 1,
       .name = "USING INDEX",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_using_index(const cypher_astnode_t *identifier,
@@ -68,6 +70,30 @@ cypher_astnode_t *cypher_ast_using_index(const cypher_astnode_t *identifier,
     node->label = label;
     node->prop_name = prop_name;
     return &(node->_astnode);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_USING_INDEX, NULL);
+    struct using_index *node = container_of(self,
+            struct using_index, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+    cypher_astnode_t *identifier = children[child_index(self, node->identifier)];
+    cypher_astnode_t *label = children[child_index(self, node->label)];
+    cypher_astnode_t *prop_name = children[child_index(self, node->prop_name)];
+
+    cypher_astnode_t *clone = cypher_ast_using_index(identifier, label,
+            prop_name, children, self->nchildren, self->range);
+    int errsv = errno;
+    free(children);
+    errno = errsv;
+    return clone;
 }
 
 

@@ -29,13 +29,15 @@ struct range
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
 const struct cypher_astnode_vt cypher_range_astnode_vt =
     { .name = "range",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_range(const cypher_astnode_t *start,
@@ -59,6 +61,31 @@ cypher_astnode_t *cypher_ast_range(const cypher_astnode_t *start,
     node->start = start;
     node->end = end;
     return &(node->_astnode);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_RANGE, NULL);
+    struct range *node = container_of(self, struct range, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+
+    cypher_astnode_t *start = (node->start == NULL) ? NULL :
+            children[child_index(self, node->start)];
+    cypher_astnode_t *end = (node->end == NULL) ? NULL :
+            children[child_index(self, node->end)];
+
+    cypher_astnode_t *clone = cypher_ast_range(start, end, children,
+            self->nchildren, self->range);
+    int errsv = errno;
+    free(children);
+    errno = errsv;
+    return clone;
 }
 
 

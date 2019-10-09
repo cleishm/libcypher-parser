@@ -27,6 +27,7 @@ struct all_rels_scan
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -38,7 +39,8 @@ const struct cypher_astnode_vt cypher_all_rels_scan_astnode_vt =
       .nparents = 1,
       .name = "all rels scan",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_all_rels_scan(const cypher_astnode_t *identifier,
@@ -60,6 +62,28 @@ cypher_astnode_t *cypher_ast_all_rels_scan(const cypher_astnode_t *identifier,
     }
     node->identifier = identifier;
     return &(node->_astnode);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_ALL_RELS_SCAN, NULL);
+    struct all_rels_scan *node =
+            container_of(self, struct all_rels_scan, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+    cypher_astnode_t *identifier = children[child_index(self, node->identifier)];
+
+    cypher_astnode_t *clone = cypher_ast_all_rels_scan(identifier, children,
+            self->nchildren, self->range);
+    int errsv = errno;
+    free(children);
+    errno = errsv;
+    return clone;
 }
 
 

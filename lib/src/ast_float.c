@@ -27,6 +27,7 @@ struct flt
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -38,7 +39,8 @@ const struct cypher_astnode_vt cypher_float_astnode_vt =
       .nparents = 1,
       .name = "float",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_float(const char *s, size_t n,
@@ -58,6 +60,14 @@ cypher_astnode_t *cypher_ast_float(const char *s, size_t n,
     memcpy(node->p, s, n);
     node->p[n] = '\0';
     return &(node->_astnode);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_FLOAT, NULL);
+    struct flt *node = container_of(self, struct flt, _astnode);
+    return cypher_ast_float(node->p, strlen(node->p), self->range);
 }
 
 

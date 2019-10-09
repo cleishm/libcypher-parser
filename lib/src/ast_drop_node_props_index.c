@@ -29,6 +29,7 @@ struct drop_index
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -40,7 +41,8 @@ const struct cypher_astnode_vt cypher_drop_node_props_index_astnode_vt =
       .nparents = 1,
       .name = "DROP INDEX",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_drop_node_props_index(
@@ -75,6 +77,39 @@ cleanup:
     free(node);
     errno = errsv;
     return NULL;
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_DROP_NODE_PROPS_INDEX, NULL);
+    struct drop_index *node =
+            container_of(self, struct drop_index, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+    cypher_astnode_t *label = children[child_index(self, node->label)];
+    cypher_astnode_t **prop_names = calloc(node->nprops,
+            sizeof(cypher_astnode_t *));
+    if (prop_names == NULL)
+    {
+        return NULL;
+    }
+    for (unsigned int i = 0; i < node->nprops; ++i)
+    {
+        prop_names[i] = children[child_index(self, node->prop_names[i])];
+    }
+
+    cypher_astnode_t *clone = cypher_ast_drop_node_props_index(label,
+            prop_names, node->nprops, children, self->nchildren, self->range);
+    int errsv = errno;
+    free(children);
+    free(prop_names);
+    errno = errsv;
+    return clone;
 }
 
 

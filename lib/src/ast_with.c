@@ -34,6 +34,7 @@ struct with_clause
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -45,7 +46,8 @@ const struct cypher_astnode_vt cypher_with_astnode_vt =
       .nparents = 1,
       .name = "WITH",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_with(bool distinct, bool include_existing,
@@ -93,6 +95,47 @@ cleanup:
     free(node);
     errno = errsv;
     return NULL;
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_WITH, NULL);
+    struct with_clause *node = container_of(self, struct with_clause, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+    cypher_astnode_t **projections = calloc(node->nprojections,
+            sizeof(cypher_astnode_t *));
+    if (projections == NULL)
+    {
+        return NULL;
+    }
+    for (unsigned int i = 0; i < node->nprojections; ++i)
+    {
+        projections[i] = children[child_index(self, node->projections[i])];
+    }
+    cypher_astnode_t *order_by = (node->order_by == NULL) ? NULL :
+            children[child_index(self, node->order_by)];
+    cypher_astnode_t *skip = (node->skip != NULL) ? NULL :
+            children[child_index(self, node->skip)];
+    cypher_astnode_t *limit = (node->limit != NULL) ? NULL :
+            children[child_index(self, node->limit)];
+    cypher_astnode_t *predicate = (node->predicate == NULL) ? NULL :
+            children[child_index(self, node->predicate)];
+
+    cypher_astnode_t *clone = cypher_ast_with(node->distinct,
+            node->include_existing, projections, node->nprojections,
+            order_by, skip, limit, predicate, children, self->nchildren,
+            self->range);
+    int errsv = errno;
+    free(children);
+    free(projections);
+    errno = errsv;
+    return clone;
 }
 
 

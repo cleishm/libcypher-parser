@@ -27,6 +27,7 @@ struct comment
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -38,7 +39,8 @@ const struct cypher_astnode_vt cypher_block_comment_astnode_vt =
       .nparents = 1,
       .name = "block_comment",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_block_comment(const char *s, size_t n,
@@ -58,6 +60,14 @@ cypher_astnode_t *cypher_ast_block_comment(const char *s, size_t n,
     memcpy(node->p, s, n);
     node->p[n] = '\0';
     return &(node->_astnode);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_BLOCK_COMMENT, NULL);
+    struct comment *node = container_of(self, struct comment, _astnode);
+    return cypher_ast_block_comment(node->p, strlen(node->p), self->range);
 }
 
 

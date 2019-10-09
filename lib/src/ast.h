@@ -29,5 +29,8 @@ int cypher_ast_fprintv(cypher_astnode_t * const *asts, unsigned int n,
 
 void cypher_ast_vfree(cypher_astnode_t * const *ast, unsigned int n);
 
+cypher_astnode_t **cypher_ast_vclone(cypher_astnode_t * const *ast,
+        unsigned int n);
+
 
 #endif/*CYPHER_PARSER_AST_H*/

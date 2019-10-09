@@ -29,6 +29,7 @@ struct rel_index_query
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -40,7 +41,8 @@ const struct cypher_astnode_vt cypher_rel_index_query_astnode_vt =
       .nparents = 1,
       .name = "rel index query",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_rel_index_query(
@@ -69,6 +71,31 @@ cypher_astnode_t *cypher_ast_rel_index_query(
     node->index_name = index_name;
     node->query = query;
     return &(node->_astnode);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_REL_INDEX_QUERY, NULL);
+    struct rel_index_query *node =
+            container_of(self, struct rel_index_query, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+
+    cypher_astnode_t *identifier = children[child_index(self, node->identifier)];
+    cypher_astnode_t *index_name = children[child_index(self, node->index_name)];
+    cypher_astnode_t *query = children[child_index(self, node->query)];
+
+    cypher_astnode_t *clone = cypher_ast_rel_index_query(identifier,
+            index_name, query, children, self->nchildren, self->range);
+    int errsv = errno;
+    free(children);
+    errno = errsv;
+    return clone;
 }
 
 

@@ -29,6 +29,7 @@ struct unwind
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -40,7 +41,8 @@ const struct cypher_astnode_vt cypher_unwind_astnode_vt =
       .nparents = 1,
       .name = "UNWIND",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_unwind(const cypher_astnode_t *expression,
@@ -64,6 +66,28 @@ cypher_astnode_t *cypher_ast_unwind(const cypher_astnode_t *expression,
     node->expression = expression;
     node->alias = alias;
     return &(node->_astnode);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_UNWIND, NULL);
+    struct unwind *node = container_of(self, struct unwind, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+    cypher_astnode_t *expression = children[child_index(self, node->expression)];
+    cypher_astnode_t *alias = children[child_index(self, node->alias)];
+
+    cypher_astnode_t *clone = cypher_ast_unwind(expression, alias, children,
+            self->nchildren, self->range);
+    int errsv = errno;
+    free(children);
+    errno = errsv;
+    return clone;
 }
 
 

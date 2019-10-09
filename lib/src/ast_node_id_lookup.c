@@ -29,6 +29,7 @@ struct node_id_lookup
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -40,7 +41,8 @@ const struct cypher_astnode_vt cypher_node_id_lookup_astnode_vt =
       .nparents = 1,
       .name = "node id lookup",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_node_id_lookup(const cypher_astnode_t *identifier,
@@ -74,6 +76,38 @@ cleanup:
     free(node);
     errno = errsv;
     return NULL;
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_NODE_ID_LOOKUP, NULL);
+    struct node_id_lookup *node =
+            container_of(self, struct node_id_lookup, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+    cypher_astnode_t *identifier = children[child_index(self, node->identifier)];
+    cypher_astnode_t **ids = calloc(node->nids, sizeof(cypher_astnode_t *));
+    if (ids == NULL)
+    {
+        return NULL;
+    }
+    for (unsigned int i = 0; i < node->nids; ++i)
+    {
+        ids[i] = children[child_index(self, node->ids[i])];
+    }
+
+    cypher_astnode_t *clone = cypher_ast_node_id_lookup(identifier, ids,
+            node->nids, children, self->nchildren, self->range);
+    int errsv = errno;
+    free(children);
+    free(ids);
+    errno = errsv;
+    return clone;
 }
 
 

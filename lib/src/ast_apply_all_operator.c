@@ -29,6 +29,7 @@ struct apply_all_operator
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -40,7 +41,8 @@ const struct cypher_astnode_vt cypher_apply_all_operator_astnode_vt =
       .nparents = 1,
       .name = "apply all",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_apply_all_operator(
@@ -72,6 +74,28 @@ cleanup:
     free(node);
     errno = errsv;
     return NULL;
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_APPLY_ALL_OPERATOR, NULL);
+    struct apply_all_operator *node =
+        container_of(self, struct apply_all_operator, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+    cypher_astnode_t *func_name = children[child_index(self, node->func_name)];
+
+    cypher_astnode_t *clone = cypher_ast_apply_all_operator(func_name,
+            node->distinct, children, self->nchildren, self->range);
+    int errsv = errno;
+    free(children);
+    errno = errsv;
+    return clone;
 }
 
 

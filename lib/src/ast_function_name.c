@@ -27,13 +27,15 @@ struct function_name
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
 const struct cypher_astnode_vt cypher_function_name_astnode_vt =
     { .name = "function name",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_function_name(const char *s, size_t n,
@@ -53,6 +55,15 @@ cypher_astnode_t *cypher_ast_function_name(const char *s, size_t n,
     memcpy(node->p, s, n);
     node->p[n] = '\0';
     return &(node->_astnode);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_FUNCTION_NAME, NULL);
+    struct function_name *node =
+            container_of(self, struct function_name, _astnode);
+    return cypher_ast_function_name(node->p, strlen(node->p), self->range);
 }
 
 

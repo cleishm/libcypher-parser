@@ -27,6 +27,7 @@ struct null_literal
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -38,7 +39,8 @@ const struct cypher_astnode_vt cypher_null_astnode_vt =
       .nparents = 1,
       .name = "NULL",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_null(struct cypher_input_range range)
@@ -55,6 +57,13 @@ cypher_astnode_t *cypher_ast_null(struct cypher_input_range range)
         return NULL;
     }
     return &(node->_astnode);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_NULL, NULL);
+    return cypher_ast_null(self->range);
 }
 
 

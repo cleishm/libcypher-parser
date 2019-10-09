@@ -30,6 +30,7 @@ struct query
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 static void query_free(cypher_astnode_t *self);
 
@@ -37,7 +38,8 @@ static void query_free(cypher_astnode_t *self);
 const struct cypher_astnode_vt cypher_query_astnode_vt =
     { .name = "query",
       .detailstr = detailstr,
-      .free = query_free };
+      .free = query_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_query(cypher_astnode_t * const *options,
@@ -81,6 +83,48 @@ cleanup:
     free(node);
     errno = errsv;
     return NULL;
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_QUERY, NULL);
+    struct query *node = container_of(self, struct query, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+    cypher_astnode_t **options =
+            calloc(node->noptions, sizeof(cypher_astnode_t *));
+    if (options == NULL)
+    {
+        return NULL;
+    }
+    for (unsigned int i = 0; i < node->noptions; ++i)
+    {
+        options[i] = children[child_index(self, node->options[i])];
+    }
+    cypher_astnode_t **clauses =
+            calloc(node->nclauses, sizeof(cypher_astnode_t *));
+    if (clauses == NULL)
+    {
+        return NULL;
+    }
+    for (unsigned int i = 0; i < node->nclauses; ++i)
+    {
+        clauses[i] = children[child_index(self, node->clauses[i])];
+    }
+
+    cypher_astnode_t *clone = cypher_ast_query(options, node->noptions,
+            clauses, node->nclauses, children, self->nchildren, self->range);
+    int errsv = errno;
+    free(children);
+    free(options);
+    free(clauses);
+    errno = errsv;
+    return clone;
 }
 
 

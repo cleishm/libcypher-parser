@@ -32,6 +32,7 @@ struct reduce
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -43,7 +44,8 @@ const struct cypher_astnode_vt cypher_reduce_astnode_vt =
       .nparents = 1,
       .name = "reduce",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_reduce(const cypher_astnode_t *accumulator,
@@ -56,6 +58,7 @@ cypher_astnode_t *cypher_ast_reduce(const cypher_astnode_t *accumulator,
     REQUIRE_CHILD(children, nchildren, init, CYPHER_AST_EXPRESSION, NULL);
     REQUIRE_CHILD(children, nchildren, identifier, CYPHER_AST_IDENTIFIER, NULL);
     REQUIRE_CHILD(children, nchildren, expression, CYPHER_AST_EXPRESSION, NULL);
+    REQUIRE_CHILD_OPTIONAL(children, nchildren, eval, CYPHER_AST_EXPRESSION, NULL);
 
     struct reduce *node = calloc(1, sizeof(struct reduce));
     if (node == NULL)
@@ -74,6 +77,33 @@ cypher_astnode_t *cypher_ast_reduce(const cypher_astnode_t *accumulator,
     node->expression = expression;
     node->eval = eval;
     return &(node->_astnode);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_REDUCE, NULL);
+    struct reduce *node = container_of(self, struct reduce, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+
+    cypher_astnode_t *accumulator = children[child_index(self, node->accumulator)];
+    cypher_astnode_t *init = children[child_index(self, node->init)];
+    cypher_astnode_t *identifier = children[child_index(self, node->identifier)];
+    cypher_astnode_t *expression = children[child_index(self, node->expression)];
+    cypher_astnode_t *eval = (node->eval == NULL) ? NULL :
+            children[child_index(self, node->eval)];
+
+    cypher_astnode_t *clone = cypher_ast_reduce(accumulator, init, identifier,
+            expression, eval, children, self->nchildren, self->range);
+    int errsv = errno;
+    free(children);
+    errno = errsv;
+    return clone;
 }
 
 

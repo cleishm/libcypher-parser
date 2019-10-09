@@ -32,13 +32,15 @@ struct rel_pattern
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
 const struct cypher_astnode_vt cypher_rel_pattern_astnode_vt =
     { .name = "rel pattern",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_rel_pattern(enum cypher_rel_direction direction,
@@ -83,6 +85,44 @@ cleanup:
     free(node);
     errno = errsv;
     return NULL;
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_REL_PATTERN, NULL);
+    struct rel_pattern *node = container_of(self, struct rel_pattern, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+    cypher_astnode_t *identifier = (node->identifier == NULL) ? NULL :
+            children[child_index(self, node->identifier)];
+    cypher_astnode_t **reltypes =
+            calloc(node->nreltypes, sizeof(cypher_astnode_t *));
+    if (reltypes == NULL)
+    {
+        return NULL;
+    }
+    for (unsigned int i = 0; i < node->nreltypes; ++i)
+    {
+        reltypes[i] = children[child_index(self, node->reltypes[i])];
+    }
+    cypher_astnode_t *properties = (node->properties == NULL) ? NULL :
+            children[child_index(self, node->properties)];
+    cypher_astnode_t *varlength = (node->varlength == NULL) ? NULL :
+            children[child_index(self, node->varlength)];
+
+    cypher_astnode_t *clone = cypher_ast_rel_pattern(node->direction,
+            identifier, reltypes, node->nreltypes, properties, varlength,
+            children, self->nchildren, self->range);
+    int errsv = errno;
+    free(children);
+    free(reltypes);
+    errno = errsv;
+    return clone;
 }
 
 

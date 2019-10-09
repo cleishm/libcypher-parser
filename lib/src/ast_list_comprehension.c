@@ -48,6 +48,7 @@ struct list_comprehension
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 static const cypher_astnode_t *get_identifier(
         const cypher_list_comprehension_astnode_t *self);
@@ -67,7 +68,8 @@ const struct cypher_astnode_vt cypher_list_comprehension_astnode_vt =
       .nparents = 1,
       .name = "list comprehension",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 static const struct cypher_list_comprehension_astnode_vt lc_vt =
     { .get_identifier = get_identifier,
@@ -113,6 +115,36 @@ cleanup:
     free(node);
     errno = errsv;
     return NULL;
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_LIST_COMPREHENSION, NULL);
+    const cypher_list_comprehension_astnode_t *lcnode =
+            container_of(self, cypher_list_comprehension_astnode_t, _astnode);
+    struct list_comprehension *node =
+        container_of(lcnode, struct list_comprehension, _list_comprehension_astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+    cypher_astnode_t *identifier = children[child_index(self, node->identifier)];
+    cypher_astnode_t *expression = children[child_index(self, node->expression)];
+    cypher_astnode_t *predicate = (node->predicate == NULL) ? NULL :
+        children[child_index(self, node->predicate)];
+    cypher_astnode_t *eval = (node->eval == NULL) ? NULL :
+        children[child_index(self, node->eval)];
+
+    cypher_astnode_t *clone = cypher_ast_list_comprehension(identifier,
+            expression, predicate, eval, children, self->nchildren,
+            self->range);
+    int errsv = errno;
+    free(children);
+    errno = errsv;
+    return clone;
 }
 
 

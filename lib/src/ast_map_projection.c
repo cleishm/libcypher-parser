@@ -30,6 +30,7 @@ struct map_projection
 };
 
 
+static cypher_astnode_t *clone(const cypher_astnode_t *self);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -41,7 +42,8 @@ const struct cypher_astnode_vt cypher_map_projection_astnode_vt =
       .nparents = 1,
       .name = "map projection",
       .detailstr = detailstr,
-      .free = cypher_astnode_free };
+      .free = cypher_astnode_free,
+      .clone = clone };
 
 
 cypher_astnode_t *cypher_ast_map_projection(
@@ -68,6 +70,40 @@ cypher_astnode_t *cypher_ast_map_projection(
     memcpy(node->selectors, selectors, nselectors * sizeof(cypher_astnode_t *));
     node->nselectors = nselectors;
     return &(node->_astnode);
+}
+
+
+cypher_astnode_t *clone(const cypher_astnode_t *self)
+{
+    REQUIRE_TYPE(self, CYPHER_AST_MAP_PROJECTION, NULL);
+    struct map_projection *node =
+            container_of(self, struct map_projection, _astnode);
+
+    cypher_astnode_t **children = clone_children(self);
+    if (children == NULL)
+    {
+        return NULL;
+    }
+    cypher_astnode_t *expression = children[child_index(self, node->expression)];
+    cypher_astnode_t **selectors = calloc(node->nselectors,
+            sizeof(cypher_astnode_t *));
+    if (selectors == NULL)
+    {
+        return NULL;
+    }
+    for (unsigned int i = 0; i < node->nselectors; ++i)
+    {
+        selectors[i] = children[child_index(self, node->selectors[i])];
+    }
+
+    cypher_astnode_t *clone = cypher_ast_map_projection(expression,
+            selectors, node->nselectors, children, self->nchildren,
+            self->range);
+    int errsv = errno;
+    free(children);
+    free(selectors);
+    errno = errsv;
+    return clone;
 }
 
 
