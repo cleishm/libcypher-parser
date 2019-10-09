@@ -5375,6 +5375,17 @@ void cypher_ast_free(cypher_astnode_t *ast);
 
 
 /**
+ * Release a single AST node.
+ *
+ * WARNING: this method will _not_ release the children of the node, which
+ * must then be separately released. Prefer cypher_ast_free() instead.
+ *
+ * @param [ast] The AST node to release.
+ */
+void cypher_astnode_free(cypher_astnode_t *astnode);
+
+
+/**
  * Clone an entire AST tree.
  *
  * @param [ast] The root of the AST tree.

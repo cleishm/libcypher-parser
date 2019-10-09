@@ -499,6 +499,28 @@ void cypher_ast_free(cypher_astnode_t *ast)
 }
 
 
+void cypher_astnode_free(cypher_astnode_t *ast)
+{
+    if (ast == NULL)
+    {
+        return;
+    }
+
+    while (ast->annotations != NULL)
+    {
+        cp_release_annotation(ast->annotations);
+    }
+
+    cypher_astnode_t **children = ast->children;
+
+    assert(ast->type < _MAX_VT_OFF);
+    const struct cypher_astnode_vt *vt = VT_PTR(ast->type);
+    vt->release(ast);
+
+    free(children);
+}
+
+
 cypher_astnode_t *cypher_ast_clone(const cypher_astnode_t *ast)
 {
     if (ast == NULL)
