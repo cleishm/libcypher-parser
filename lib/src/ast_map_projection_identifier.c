@@ -27,7 +27,8 @@ struct map_projection_identifier
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -67,25 +68,17 @@ cypher_astnode_t *cypher_ast_map_projection_identifier(
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_MAP_PROJECTION_IDENTIFIER, NULL);
     struct map_projection_identifier *node =
             container_of(self, struct map_projection_identifier, _astnode);
 
-    cypher_astnode_t **children = clone_children(self);
-    if (children == NULL)
-    {
-        return NULL;
-    }
     cypher_astnode_t *identifier = children[child_index(self, node->identifier)];
 
-    cypher_astnode_t *clone = cypher_ast_map_projection_identifier(identifier,
-            children, self->nchildren, self->range);
-    int errsv = errno;
-    free(children);
-    errno = errsv;
-    return clone;
+    return cypher_ast_map_projection_identifier(identifier, children,
+            self->nchildren, self->range);
 }
 
 

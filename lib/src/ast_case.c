@@ -31,7 +31,8 @@ struct case_expression
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -86,17 +87,13 @@ cleanup:
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_CASE, NULL);
     struct case_expression *node =
             container_of(self, struct case_expression, _astnode);
 
-    cypher_astnode_t **children = clone_children(self);
-    if (children == NULL)
-    {
-        return NULL;
-    }
     cypher_astnode_t *expression = (node->expression == NULL) ? NULL :
             children[child_index(self, node->expression)];
     cypher_astnode_t **alternatives = calloc(node->nalternatives,
@@ -115,7 +112,6 @@ cypher_astnode_t *clone(const cypher_astnode_t *self)
     cypher_astnode_t *clone = cypher_ast_case(expression, alternatives,
             node->nalternatives, deflt, children, self->nchildren, self->range);
     int errsv = errno;
-    free(children);
     free(alternatives);
     errno = errsv;
     return clone;

@@ -29,7 +29,8 @@ struct unary_operator
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -69,25 +70,17 @@ cypher_astnode_t *cypher_ast_unary_operator(const cypher_operator_t *op,
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_UNARY_OPERATOR, NULL);
     struct unary_operator *node =
             container_of(self, struct unary_operator, _astnode);
 
-    cypher_astnode_t **children = clone_children(self);
-    if (children == NULL)
-    {
-        return NULL;
-    }
     cypher_astnode_t *arg = children[child_index(self, node->arg)];
 
-    cypher_astnode_t *clone = cypher_ast_unary_operator(node->op, arg,
-            children, self->nchildren, self->range);
-    int errsv = errno;
-    free(children);
-    errno = errsv;
-    return clone;
+    return cypher_ast_unary_operator(node->op, arg, children, self->nchildren,
+            self->range);
 }
 
 

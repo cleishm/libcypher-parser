@@ -28,7 +28,8 @@ struct using_periodic_commit
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -67,26 +68,18 @@ cypher_astnode_t *cypher_ast_using_periodic_commit(
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_USING_PERIODIC_COMMIT, NULL);
     struct using_periodic_commit *node =
             container_of(self, struct using_periodic_commit, _astnode);
 
-    cypher_astnode_t **children = clone_children(self);
-    if (children == NULL)
-    {
-        return NULL;
-    }
     cypher_astnode_t *limit = (node->limit == NULL) ? NULL :
             children[child_index(self, node->limit)];
 
-    cypher_astnode_t *clone = cypher_ast_using_periodic_commit(limit,
-            children, self->nchildren, self->range);
-    int errsv = errno;
-    free(children);
-    errno = errsv;
-    return clone;
+    return cypher_ast_using_periodic_commit(limit, children, self->nchildren,
+            self->range);
 }
 
 

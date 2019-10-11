@@ -28,7 +28,8 @@ struct shortest_path
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 static unsigned int nelements(const cypher_pattern_path_astnode_t *self);
 static const cypher_astnode_t *get_element(
@@ -74,7 +75,8 @@ cypher_astnode_t *cypher_ast_shortest_path(bool single,
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_SHORTEST_PATH, NULL);
     const cypher_pattern_path_astnode_t *ppnode =
@@ -82,19 +84,10 @@ cypher_astnode_t *clone(const cypher_astnode_t *self)
     struct shortest_path *node =
             container_of(ppnode, struct shortest_path, _pattern_path_astnode);
 
-    cypher_astnode_t **children = clone_children(self);
-    if (children == NULL)
-    {
-        return NULL;
-    }
     cypher_astnode_t *path = children[child_index(self, node->path)];
 
-    cypher_astnode_t *clone = cypher_ast_shortest_path(node->single, path,
-            children, self->nchildren, self->range);
-    int errsv = errno;
-    free(children);
-    errno = errsv;
-    return clone;
+    return cypher_ast_shortest_path(node->single, path, children,
+            self->nchildren, self->range);
 }
 
 

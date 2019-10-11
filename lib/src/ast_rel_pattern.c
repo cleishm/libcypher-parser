@@ -32,7 +32,8 @@ struct rel_pattern
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -88,16 +89,12 @@ cleanup:
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_REL_PATTERN, NULL);
     struct rel_pattern *node = container_of(self, struct rel_pattern, _astnode);
 
-    cypher_astnode_t **children = clone_children(self);
-    if (children == NULL)
-    {
-        return NULL;
-    }
     cypher_astnode_t *identifier = (node->identifier == NULL) ? NULL :
             children[child_index(self, node->identifier)];
     cypher_astnode_t **reltypes =
@@ -119,7 +116,6 @@ cypher_astnode_t *clone(const cypher_astnode_t *self)
             identifier, reltypes, node->nreltypes, properties, varlength,
             children, self->nchildren, self->range);
     int errsv = errno;
-    free(children);
     free(reltypes);
     errno = errsv;
     return clone;

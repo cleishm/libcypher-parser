@@ -30,7 +30,8 @@ struct pattern_comprehension
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -81,17 +82,13 @@ cypher_astnode_t *cypher_ast_pattern_comprehension(
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_PATTERN_COMPREHENSION, NULL);
     struct pattern_comprehension *node = container_of(self,
             struct pattern_comprehension, _astnode);
 
-    cypher_astnode_t **children = clone_children(self);
-    if (children == NULL)
-    {
-        return NULL;
-    }
     cypher_astnode_t *identifier = (node->identifier == NULL) ? NULL :
             children[child_index(self, node->identifier)];
     cypher_astnode_t *pattern = children[child_index(self, node->pattern)];
@@ -99,12 +96,8 @@ cypher_astnode_t *clone(const cypher_astnode_t *self)
             children[child_index(self, node->predicate)];
     cypher_astnode_t *eval = children[child_index(self, node->eval)];
 
-    cypher_astnode_t *clone = cypher_ast_pattern_comprehension(identifier,
-            pattern, predicate, eval, children, self->nchildren, self->range);
-    int errsv = errno;
-    free(children);
-    errno = errsv;
-    return clone;
+    return cypher_ast_pattern_comprehension(identifier, pattern, predicate,
+            eval, children, self->nchildren, self->range);
 }
 
 

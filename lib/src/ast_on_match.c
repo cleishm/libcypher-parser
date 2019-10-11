@@ -28,7 +28,8 @@ struct on_match
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -76,16 +77,12 @@ cleanup:
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_ON_MATCH, NULL);
     struct on_match *node = container_of(self, struct on_match, _astnode);
 
-    cypher_astnode_t **children = clone_children(self);
-    if (children == NULL)
-    {
-        return NULL;
-    }
     cypher_astnode_t **items = calloc(node->nitems,
             sizeof(cypher_astnode_t *));
     if (items == NULL)
@@ -100,7 +97,6 @@ cypher_astnode_t *clone(const cypher_astnode_t *self)
     cypher_astnode_t *clone = cypher_ast_on_match(items, node->nitems,
             children, self->nchildren, self->range);
     int errsv = errno;
-    free(children);
     free(items);
     errno = errsv;
     return clone;

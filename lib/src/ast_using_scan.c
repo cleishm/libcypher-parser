@@ -29,7 +29,8 @@ struct using_scan
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -69,26 +70,18 @@ cypher_astnode_t *cypher_ast_using_scan(const cypher_astnode_t *identifier,
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_USING_SCAN, NULL);
     struct using_scan *node = container_of(self,
             struct using_scan, _astnode);
 
-    cypher_astnode_t **children = clone_children(self);
-    if (children == NULL)
-    {
-        return NULL;
-    }
     cypher_astnode_t *identifier = children[child_index(self, node->identifier)];
     cypher_astnode_t *label = children[child_index(self, node->label)];
 
-    cypher_astnode_t *clone = cypher_ast_using_scan(identifier, label,
-            children, self->nchildren, self->range);
-    int errsv = errno;
-    free(children);
-    errno = errsv;
-    return clone;
+    return cypher_ast_using_scan(identifier, label, children, self->nchildren,
+            self->range);
 }
 
 

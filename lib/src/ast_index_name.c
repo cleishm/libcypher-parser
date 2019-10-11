@@ -27,7 +27,8 @@ struct index_name
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -58,7 +59,8 @@ cypher_astnode_t *cypher_ast_index_name(const char *s, size_t n,
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_INDEX_NAME, NULL);
     struct index_name *node = container_of(self, struct index_name, _astnode);

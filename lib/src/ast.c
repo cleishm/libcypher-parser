@@ -459,6 +459,11 @@ void cypher_ast_vfree(cypher_astnode_t * const *ast, unsigned int n)
 cypher_astnode_t **cypher_ast_vclone(cypher_astnode_t * const *ast,
         unsigned int n)
 {
+    if (n == 0)
+    {
+        return NULL;
+    }
+
     cypher_astnode_t **clones = calloc(n, sizeof(cypher_astnode_t *));
     if (clones == NULL)
     {
@@ -467,8 +472,20 @@ cypher_astnode_t **cypher_ast_vclone(cypher_astnode_t * const *ast,
     for (unsigned int i = 0; i < n; ++i)
     {
         clones[i] = cypher_ast_clone(ast[i]);
+        if (clones[i] == NULL)
+        {
+            goto failure;
+        }
     }
     return clones;
+
+    int errsv;
+failure:
+    errsv = errno;
+    cypher_ast_vfree(clones, n);
+    free(clones);
+    errno = errsv;
+    return NULL;
 }
 
 
@@ -491,10 +508,7 @@ void cypher_ast_free(cypher_astnode_t *ast)
     const struct cypher_astnode_vt *vt = VT_PTR(ast->type);
     vt->release(ast);
 
-    for (unsigned int i = nchildren; i-- > 0; )
-    {
-        cypher_ast_free(children[i]);
-    }
+    cypher_ast_vfree(children, nchildren);
     free(children);
 }
 
@@ -528,9 +542,32 @@ cypher_astnode_t *cypher_ast_clone(const cypher_astnode_t *ast)
         return NULL;
     }
 
+    cypher_astnode_t **children = NULL;
+    if (ast->nchildren != 0)
+    {
+        children = cypher_ast_vclone(ast->children, ast->nchildren);
+        if (children == NULL)
+        {
+            return NULL;
+        }
+    }
+
     assert(ast->type < _MAX_VT_OFF);
     const struct cypher_astnode_vt *vt = VT_PTR(ast->type);
-    return vt->clone(ast);
+    cypher_astnode_t *clone = vt->clone(ast, children);
+    if (clone == NULL)
+    {
+        goto failure;
+    }
+    return clone;
+
+    int errsv;
+failure:
+    errsv = errno;
+    cypher_ast_vfree(children, ast->nchildren);
+    free(children);
+    errno = errsv;
+    return NULL;
 }
 
 

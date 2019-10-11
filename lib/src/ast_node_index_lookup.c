@@ -30,7 +30,8 @@ struct node_index_lookup
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -78,29 +79,20 @@ cypher_astnode_t *cypher_ast_node_index_lookup(
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_NODE_INDEX_LOOKUP, NULL);
     struct node_index_lookup *node =
             container_of(self, struct node_index_lookup, _astnode);
 
-    cypher_astnode_t **children = clone_children(self);
-    if (children == NULL)
-    {
-        return NULL;
-    }
     cypher_astnode_t *identifier = children[child_index(self, node->identifier)];
     cypher_astnode_t *index_name = children[child_index(self, node->index_name)];
     cypher_astnode_t *prop_name = children[child_index(self, node->prop_name)];
     cypher_astnode_t *lookup = children[child_index(self, node->lookup)];
 
-    cypher_astnode_t *clone = cypher_ast_node_index_lookup(identifier,
-            index_name, prop_name, lookup, children, self->nchildren,
-            self->range);
-    int errsv = errno;
-    free(children);
-    errno = errsv;
-    return clone;
+    return cypher_ast_node_index_lookup(identifier, index_name, prop_name,
+            lookup, children, self->nchildren, self->range);
 }
 
 

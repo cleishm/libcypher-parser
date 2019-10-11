@@ -30,7 +30,8 @@ struct constraint
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -75,27 +76,18 @@ cypher_astnode_t *cypher_ast_create_rel_prop_constraint(
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_CREATE_REL_PROP_CONSTRAINT, NULL);
     struct constraint *node = container_of(self, struct constraint, _astnode);
 
-    cypher_astnode_t **children = clone_children(self);
-    if (children == NULL)
-    {
-        return NULL;
-    }
     cypher_astnode_t *identifier = children[child_index(self, node->identifier)];
     cypher_astnode_t *reltype = children[child_index(self, node->reltype)];
     cypher_astnode_t *expression = children[child_index(self, node->expression)];
 
-    cypher_astnode_t *clone = cypher_ast_create_rel_prop_constraint(
-            identifier, reltype, expression, node->unique, children,
-            self->nchildren, self->range);
-    int errsv = errno;
-    free(children);
-    errno = errsv;
-    return clone;
+    return cypher_ast_create_rel_prop_constraint(identifier, reltype,
+            expression, node->unique, children, self->nchildren, self->range);
 }
 
 

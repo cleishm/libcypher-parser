@@ -27,7 +27,8 @@ struct parameter
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -63,7 +64,8 @@ cypher_astnode_t *cypher_ast_parameter(const char *s, size_t n,
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_PARAMETER, NULL);
     struct parameter *node = container_of(self, struct parameter, _astnode);

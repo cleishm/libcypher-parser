@@ -29,7 +29,8 @@ struct using_join
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -79,16 +80,12 @@ cleanup:
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_USING_JOIN, NULL);
     struct using_join *node = container_of(self, struct using_join, _astnode);
 
-    cypher_astnode_t **children = clone_children(self);
-    if (children == NULL)
-    {
-        return NULL;
-    }
     cypher_astnode_t **identifiers = calloc(node->nidentifiers,
             sizeof(cypher_astnode_t *));
     if (identifiers == NULL)
@@ -103,7 +100,7 @@ cypher_astnode_t *clone(const cypher_astnode_t *self)
     cypher_astnode_t *clone = cypher_ast_using_join(identifiers,
             node->nidentifiers, children, self->nchildren, self->range);
     int errsv = errno;
-    free(children);
+    free(identifiers);
     errno = errsv;
     return clone;
 }

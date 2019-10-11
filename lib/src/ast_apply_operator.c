@@ -31,7 +31,8 @@ struct apply_operator
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -84,17 +85,13 @@ cleanup:
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_APPLY_OPERATOR, NULL);
     struct apply_operator *node =
         container_of(self, struct apply_operator, _astnode);
 
-    cypher_astnode_t **children = clone_children(self);
-    if (children == NULL)
-    {
-        return NULL;
-    }
     cypher_astnode_t *func_name = children[child_index(self, node->func_name)];
     cypher_astnode_t **args = calloc(node->nargs, sizeof(cypher_astnode_t *));
     if (args == NULL)
@@ -110,7 +107,6 @@ cypher_astnode_t *clone(const cypher_astnode_t *self)
             node->distinct, args, node->nargs, children, self->nchildren,
             self->range);
     int errsv = errno;
-    free(children);
     free(args);
     errno = errsv;
     return clone;

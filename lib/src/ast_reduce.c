@@ -32,7 +32,8 @@ struct reduce
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -80,16 +81,11 @@ cypher_astnode_t *cypher_ast_reduce(const cypher_astnode_t *accumulator,
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_REDUCE, NULL);
     struct reduce *node = container_of(self, struct reduce, _astnode);
-
-    cypher_astnode_t **children = clone_children(self);
-    if (children == NULL)
-    {
-        return NULL;
-    }
 
     cypher_astnode_t *accumulator = children[child_index(self, node->accumulator)];
     cypher_astnode_t *init = children[child_index(self, node->init)];
@@ -98,12 +94,8 @@ cypher_astnode_t *clone(const cypher_astnode_t *self)
     cypher_astnode_t *eval = (node->eval == NULL) ? NULL :
             children[child_index(self, node->eval)];
 
-    cypher_astnode_t *clone = cypher_ast_reduce(accumulator, init, identifier,
-            expression, eval, children, self->nchildren, self->range);
-    int errsv = errno;
-    free(children);
-    errno = errsv;
-    return clone;
+    return cypher_ast_reduce(accumulator, init, identifier, expression, eval,
+            children, self->nchildren, self->range);
 }
 
 

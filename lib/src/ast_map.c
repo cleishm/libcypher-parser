@@ -28,7 +28,8 @@ struct map
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -114,16 +115,12 @@ cypher_astnode_t *cypher_ast_pair_map(cypher_astnode_t * const *pairs,
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_MAP, NULL);
     struct map *node = container_of(self, struct map, _astnode);
 
-    cypher_astnode_t **children = clone_children(self);
-    if (children == NULL)
-    {
-        return NULL;
-    }
     cypher_astnode_t **pairs = calloc(node->nentries,
             sizeof(cypher_astnode_t *));
     if (pairs == NULL)
@@ -138,7 +135,6 @@ cypher_astnode_t *clone(const cypher_astnode_t *self)
     cypher_astnode_t *clone = cypher_ast_pair_map(pairs, node->nentries,
             children, self->nchildren, self->range);
     int errsv = errno;
-    free(children);
     free(pairs);
     errno = errsv;
     return clone;

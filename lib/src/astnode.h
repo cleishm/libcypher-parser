@@ -21,6 +21,7 @@
 #include "annotation.h"
 #include "ast.h"
 #include "util.h"
+#include <assert.h>
 #include <limits.h>
 
 
@@ -31,7 +32,8 @@ struct cypher_astnode_vt
     const char *name;
     ssize_t (*detailstr)(const cypher_astnode_t *self, char *str, size_t size);
     void (*release)(cypher_astnode_t *self);
-    cypher_astnode_t *(*clone)(const cypher_astnode_t *self);
+    cypher_astnode_t *(*clone)(const cypher_astnode_t *self,
+            cypher_astnode_t **children);
 };
 
 
@@ -119,10 +121,6 @@ ssize_t snprint_sequence(char *str, size_t size,
         REQUIRE_CONTAINS_ALL(collection, size, vals, nvals, res); \
     } while (0)
 
-static inline cypher_astnode_t **clone_children(const cypher_astnode_t *node)
-{
-    return cypher_ast_vclone(node->children, node->nchildren);
-}
 
 static inline int child_index(const cypher_astnode_t *node,
         const cypher_astnode_t *child)
@@ -130,7 +128,8 @@ static inline int child_index(const cypher_astnode_t *node,
     unsigned int i = 0;
     while (i < node->nchildren && node->children[i] != child)
         ;
-    return (i < node->nchildren) ? i : UINT_MAX;
+    assert(i < node->nchildren);
+    return i;
 }
 
 

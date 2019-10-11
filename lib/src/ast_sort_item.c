@@ -28,7 +28,8 @@ struct sort_item
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -62,24 +63,16 @@ cypher_astnode_t *cypher_ast_sort_item(const cypher_astnode_t *expression,
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_SORT_ITEM, NULL);
     struct sort_item *node = container_of(self, struct sort_item, _astnode);
 
-    cypher_astnode_t **children = clone_children(self);
-    if (children == NULL)
-    {
-        return NULL;
-    }
     cypher_astnode_t *expression = children[child_index(self, node->expression)];
 
-    cypher_astnode_t *clone = cypher_ast_sort_item(expression, node->ascending,
-            children, self->nchildren, self->range);
-    int errsv = errno;
-    free(children);
-    errno = errsv;
-    return clone;
+    return cypher_ast_sort_item(expression, node->ascending, children,
+            self->nchildren, self->range);
 }
 
 

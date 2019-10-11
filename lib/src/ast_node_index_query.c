@@ -29,7 +29,8 @@ struct node_index_query
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -74,27 +75,19 @@ cypher_astnode_t *cypher_ast_node_index_query(
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_NODE_INDEX_QUERY, NULL);
     struct node_index_query *node =
             container_of(self, struct node_index_query, _astnode);
 
-    cypher_astnode_t **children = clone_children(self);
-    if (children == NULL)
-    {
-        return NULL;
-    }
     cypher_astnode_t *identifier = children[child_index(self, node->identifier)];
     cypher_astnode_t *index_name = children[child_index(self, node->index_name)];
     cypher_astnode_t *query = children[child_index(self, node->query)];
 
-    cypher_astnode_t *clone = cypher_ast_node_index_query(identifier,
-            index_name, query, children, self->nchildren, self->range);
-    int errsv = errno;
-    free(children);
-    errno = errsv;
-    return clone;
+    return cypher_ast_node_index_query(identifier, index_name, query, children,
+            self->nchildren, self->range);
 }
 
 

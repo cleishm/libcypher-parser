@@ -27,7 +27,8 @@ struct remove_property
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -66,25 +67,17 @@ cypher_astnode_t *cypher_ast_remove_property(const cypher_astnode_t *property,
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_REMOVE_PROPERTY, NULL);
     struct remove_property *node =
             container_of(self, struct remove_property, _astnode);
 
-    cypher_astnode_t **children = clone_children(self);
-    if (children == NULL)
-    {
-        return NULL;
-    }
     cypher_astnode_t *property = children[child_index(self, node->property)];
 
-    cypher_astnode_t *clone = cypher_ast_remove_property(property, children,
-            self->nchildren, self->range);
-    int errsv = errno;
-    free(children);
-    errno = errsv;
-    return clone;
+    return cypher_ast_remove_property(property, children, self->nchildren,
+            self->range);
 }
 
 

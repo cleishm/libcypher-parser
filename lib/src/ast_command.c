@@ -29,7 +29,8 @@ struct command
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -74,16 +75,12 @@ cleanup:
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_COMMAND, NULL);
     struct command *node = container_of(self, struct command, _astnode);
 
-    cypher_astnode_t **children = clone_children(self);
-    if (children == NULL)
-    {
-        return NULL;
-    }
     cypher_astnode_t *name = children[child_index(self, node->name)];
     cypher_astnode_t **args = calloc(node->nargs, sizeof(cypher_astnode_t *));
     if (args == NULL)
@@ -98,7 +95,6 @@ cypher_astnode_t *clone(const cypher_astnode_t *self)
     cypher_astnode_t *clone = cypher_ast_command(name, args, node->nargs,
             children, self->nchildren, self->range);
     int errsv = errno;
-    free(children);
     free(args);
     errno = errsv;
     return clone;

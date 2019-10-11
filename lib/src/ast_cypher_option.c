@@ -30,7 +30,8 @@ struct cypher_option
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -82,17 +83,13 @@ cleanup:
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_CYPHER_OPTION, NULL);
     struct cypher_option *node = container_of(self,
             struct cypher_option, _astnode);
 
-    cypher_astnode_t **children = clone_children(self);
-    if (children == NULL)
-    {
-        return NULL;
-    }
     cypher_astnode_t *version = (node->version == NULL) ? NULL :
             children[child_index(self, node->version)];
     cypher_astnode_t **params = calloc(node->nparams,
@@ -109,7 +106,6 @@ cypher_astnode_t *clone(const cypher_astnode_t *self)
     cypher_astnode_t *clone = cypher_ast_cypher_option(version,
             params, node->nparams, children, self->nchildren, self->range);
     int errsv = errno;
-    free(children);
     free(params);
     errno = errsv;
     return clone;

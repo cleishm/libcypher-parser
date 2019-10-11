@@ -29,7 +29,8 @@ struct delete_clause
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -80,17 +81,13 @@ cleanup:
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_DELETE, NULL);
     struct delete_clause *node =
             container_of(self, struct delete_clause, _astnode);
 
-    cypher_astnode_t **children = clone_children(self);
-    if (children == NULL)
-    {
-        return NULL;
-    }
     cypher_astnode_t **expressions = calloc(node->nexpressions,
             sizeof(cypher_astnode_t *));
     if (expressions == NULL)
@@ -105,7 +102,6 @@ cypher_astnode_t *clone(const cypher_astnode_t *self)
     cypher_astnode_t *clone = cypher_ast_delete(node->detach, expressions,
             node->nexpressions, children, self->nchildren, self->range);
     int errsv = errno;
-    free(children);
     free(expressions);
     errno = errsv;
     return clone;

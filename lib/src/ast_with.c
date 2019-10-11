@@ -34,7 +34,8 @@ struct with_clause
 };
 
 
-static cypher_astnode_t *clone(const cypher_astnode_t *self);
+static cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 
@@ -98,16 +99,12 @@ cleanup:
 }
 
 
-cypher_astnode_t *clone(const cypher_astnode_t *self)
+cypher_astnode_t *clone(const cypher_astnode_t *self,
+        cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_WITH, NULL);
     struct with_clause *node = container_of(self, struct with_clause, _astnode);
 
-    cypher_astnode_t **children = clone_children(self);
-    if (children == NULL)
-    {
-        return NULL;
-    }
     cypher_astnode_t **projections = calloc(node->nprojections,
             sizeof(cypher_astnode_t *));
     if (projections == NULL)
@@ -132,7 +129,6 @@ cypher_astnode_t *clone(const cypher_astnode_t *self)
             order_by, skip, limit, predicate, children, self->nchildren,
             self->range);
     int errsv = errno;
-    free(children);
     free(projections);
     errno = errsv;
     return clone;
