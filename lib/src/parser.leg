@@ -71,7 +71,17 @@ cypher-version = <
 cypher-param = < n:cypher-param-name - EQUAL - v:cypher-param-val >
                                        { $$ = cypher_option_param(n, v); }
 cypher-param-name = < [a-zA-Z0-9_]+ >  { $$ = block_string(); }
-cypher-param-val = < (!WS .)+ >        { $$ = block_string(); }
+cypher-param-val = p:cypher-param-value        { $$ = p; }
+
+cypher-param-value =  
+      true-literal
+    | false-literal
+    | null-literal
+    | string-literal
+    | float-literal
+    | integer-literal
+    | collection-literal
+    | map-literal
 
 profile-option = < PROFILE >           { $$ = profile_option(); }
 explain-option = < EXPLAIN >           { $$ = explain_option(); }
