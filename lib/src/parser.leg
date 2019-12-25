@@ -54,7 +54,7 @@ __statement =
 # Statement parsing
 #----------------------------------------------------
 
-cypher-statement = < statement-option* - (b:query | b:schema-command) >
+cypher-statement = < statement-option* - (b:query | b:schema-command | b:named-path-predicate) >
                                        { $$ = statement(b); }
 statement-option =
     ( o:cypher-option | o:profile-option | o:explain-option )
@@ -83,6 +83,9 @@ schema-command =
     | drop-constraint
     ) ~{ERR("a schema command")}
     (SEMICOLON | EOF)
+
+named-path-predicate = 
+    < PATHPATTERN i:identifier EQUAL - p:pattern-path (WHERE e:expression | e:_null_) > { $$ = query(); }
 
 create-index =
     < CREATE-INDEX-ON l:label LEFT-PAREN - p:prop-name
@@ -726,7 +729,7 @@ shortest-path-pattern =
 
 pattern-path =
     < n:node-pattern                   { sequence_add(n); }
-    ( - r:relationship-pattern - n:node-pattern
+    ( -( r:relationship-pattern | r:path-pattern ) - n:node-pattern
                                        { sequence_add(r); sequence_add(n); }
     )* >                               { $$ = pattern_path(); }
 
@@ -736,7 +739,7 @@ pattern-expression =
 
 pattern-expression-path =
     < n:node-pattern                   { sequence_add(n); }
-    ( - r:relationship-pattern - n:node-pattern
+    ( - ( r:relationship-pattern | r:path-pattern ) - n:node-pattern
                                        { sequence_add(r); sequence_add(n); }
     )+ >                               { $$ = pattern_path(); }
 
@@ -745,6 +748,71 @@ node-pattern = < LEFT-PAREN -
     ( n:label                          { sequence_add(n); }
     )* (p:pattern-properties | p:_null_)
     RIGHT-PAREN >                      { $$ = node_pattern(i, p); }
+
+path-pattern = 
+    < ( LEFT-ARROW-HEAD - DASH - DIV - path-expression - DIV - DASH
+          ( - RIGHT-ARROW-HEAD >       { $$ = path_pattern(BIDIRECTIONAL); }
+          | _empty_ >                  { $$ = path_pattern(INBOUND); }
+          )
+      | DASH - DIV - path-expression - DIV - DASH 
+          ( - RIGHT-ARROW-HEAD >       { $$ = path_pattern(OUTBOUND); }
+          | _empty_ >                  { $$ = path_pattern(BIDIRECTIONAL); }
+          )
+      )
+
+path-expression =
+    < ( p:path-repetition              { sequence_add(p); }
+        ( - PIPE - p:path-repetition   { sequence_add(p); }
+        )*
+    )* >
+    -
+
+path-repetition =
+    p:path-direction - (                 { $$ = p; }
+      (MULT - (range-detail)? ) | PLUS | QUESTIONMARK
+    )?
+    -
+
+path-direction =
+    < ( LEFT-ARROW-HEAD - p:path-base
+        ( - RIGHT-ARROW-HEAD >           #{ $$ = path_base(BIDIRECTIONAL); }
+        | _empty_ >                      #{ $$ = path_base(INBOUND); }
+        )
+      | p:path-base 
+        ( - RIGHT-ARROW-HEAD >           #{ $$ = path_base(OUTBOUND); }
+        | _empty_ >                      #{ $$ = path_base(BIDIRECTIONAL); }
+        )
+      )
+
+path-base = 
+    ( p:path-edge
+    | p:path-any
+    | p:path-node
+    | p:path-reference
+    | p:path-group
+    )                                  { $$ = p; }
+    -
+
+path-edge = 
+     < l:label >                       #{ sequence_add(l); }
+
+path-any = 
+    < DASH >
+
+path-node = 
+    < LEFT-PAREN -
+    ( n:label                          { sequence_add(n); }
+    )* ( p:pattern-properties | p:_null_ )
+    RIGHT-PAREN >                      { $$ = node_pattern(NULL, p); }
+
+path-reference = 
+    '~' - symbolic-name
+
+path-group = 
+    < LEFT-SQ-PAREN - path-expression ( p:pattern-properties | p:_null_ ) - RIGHT-SQ-PAREN >
+
+range-detail = 
+    < ( s:integer-literal | s:parameter | s:_null_ ) - ELLIPSIS - ( q:integer-literal | q:parameter | q:_null_ ) >
 
 relationship-pattern =
       < ( LEFT-ARROW-HEAD - DASH -
@@ -937,6 +1005,7 @@ IS-NULL = ([Ii][Ss] WB - [Nn][Uu][Ll][Ll] WB) ~{ERR("IS NULL")}
 IS-NOT-NULL = ([Ii][Ss] WB - [Nn][Oo][Tt] WB - [Nn][Uu][Ll][Ll] WB) ~{ERR("IS NOT NULL")}
 DOT = '.' ~{ERR("'.'")}
 DOT-STAR = ('.' - '*') ~{ERR("'.*'")}
+QUESTIONMARK = '?' ~{ERR("'?'")}
 
 COLON = ':' ~{ERR("':'")}
 SEMICOLON = ';' ~{ERR("';'")}
@@ -995,6 +1064,7 @@ WITH = [Ww]([Ii][Tt][Hh] WB -) ~{ERR("WITH")}
 CALL = [Cc]([Aa][Ll][Ll] WB -) ~{ERR("CALL")}
 RETURN = [Rr]([Ee][Tt][Uu][Rr][Nn] WB -) ~{ERR("RETURN")}
 UNION = [Uu]([Nn][Ii][Oo][Nn] WB -) ~{ERR("UNION")}
+PATHPATTERN = [Pp]([Aa][Tt][Hh] WB - [Pp][Aa][Tt][Tt][Ee][Rr][Nn] WB -) ~{ERR("PATH PATTERN")}
 
 node = ([Nn][Oo][Dd][Ee] WB -) ~{ERR("node")}
 relationship = ([Rr][Ee][Ll][Aa][Tt][Ii][Oo][Nn][Ss][Hh][Ii][Pp] WB -)

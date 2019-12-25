@@ -336,6 +336,8 @@ extern const cypher_astnode_type_t CYPHER_AST_PATTERN_PATH;
 extern const cypher_astnode_type_t CYPHER_AST_NODE_PATTERN;
 /** Type for an AST relationship pattern node. */
 extern const cypher_astnode_type_t CYPHER_AST_REL_PATTERN;
+/** Type for an AST path pattern node. */
+extern const cypher_astnode_type_t CYPHER_AST_PATH_PATTERN;
 /** Type for an AST range node. */
 extern const cypher_astnode_type_t CYPHER_AST_RANGE;
 /** Type for an AST command node. */
@@ -4967,7 +4969,7 @@ const cypher_astnode_t *cypher_ast_shortest_path_get_path(
  * Construct a `CYPHER_AST_PATTERN_PATH` node.
  *
  * @param [elements] The elements in the pattern, which must be of alternating
- *         types `CYPHER_AST_NODE_PATTERN` and `CYPHER_AST_REL_PATTERN`.
+ *         types `CYPHER_AST_NODE_PATTERN` and (`CYPHER_AST_REL_PATTERN` or 'CYPHER_AST_PATH_PATTERN').
  * @param [nelements] The number of elements in the path, which must be odd.
  * @param [children] The children of the node.
  * @param [nchildren] The number of children.
@@ -4999,9 +5001,9 @@ unsigned int cypher_ast_pattern_path_nelements(const cypher_astnode_t *node);
  *
  * @param [node] The AST node.
  * @param [index] The index of the element.
- * @return Either a `CYPHER_AST_NODE_PATTERN` node or a
+ * @return Either a `CYPHER_AST_NODE_PATTERN` node, 'CYPHER_AST_PATH_PATTERN' node or a
  *         `CYPHER_AST_REL_PATTERN` node, depending on whether the index
- *         is even or odd respectively, or null if the index is larger than the
+ *         is even or odd, or null if the index is larger than the
  *         number of elements..
  */
 __cypherlang_pure
@@ -5184,6 +5186,44 @@ __cypherlang_pure
 const cypher_astnode_t *cypher_ast_rel_pattern_get_properties(
         const cypher_astnode_t *node);
 
+/**
+ * Construct a `CYPHER_AST_PATH_PATTERN` node.
+ *
+ * @param [direction] The direction of the pattern.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+__cypherlang_must_check
+cypher_astnode_t *cypher_ast_path_pattern(const cypher_astnode_t *identifier,
+        enum cypher_rel_direction direction, cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range);
+
+/**
+ * Get the identifier of a `CYPHER_AST_PATH_PATTERN` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_PATH_PATTERN` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_IDENTIFIER` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_path_pattern_get_identifier(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the direction of a `CYPHER_AST_PATH_PATTERN` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_PATH_PATTERN` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return The direction of the relationship.
+ */
+__cypherlang_pure
+enum cypher_rel_direction cypher_ast_path_pattern_get_direction(
+        const cypher_astnode_t *node);
 
 /**
  * Construct a `CYPHER_AST_RANGE` node.
