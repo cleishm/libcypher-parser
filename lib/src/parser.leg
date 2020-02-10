@@ -23,7 +23,7 @@
 # previous block, should have an associated set of rules delimited by `<` and
 # `>`.
 
-__entry_points = directive | statement
+__entry_points = directive | statement | params
 
 
 directive = - _directive
@@ -49,10 +49,26 @@ __statement =
     | d:cypher-statement               { yy->result = d; }
     )
 
+params = - _params
+_params = 
+    ( __params                          {finished(yy); } 
+    | _error_ (EOF | skip-to-params) _params
+    )
+__params =
+    ( EOF                               { yy->result = NULL; } 
+    | SEMICOLON                         { yy->result = NULL; }
+    | d:cypher-params                   { yy->result = d; }
+    )
 
 #----------------------------------------------------
 # Statement parsing
 #----------------------------------------------------
+
+cypher-params = < statement-option* - (q:query-string) >
+                                        { $$ = statement(q); }
+
+query-string =                        { strbuf_reset(); }
+   (<.*> {strbuf_append_block();})          { $$ = strbuf_string(); }
 
 cypher-statement = < statement-option* - (b:query | b:schema-command) >
                                        { $$ = statement(b); }
@@ -1092,6 +1108,14 @@ resync-statement =
     | CYPHER
     | PROFILE
     | EXPLAIN
+
+skip-to-params = < . (!(
+      EOF
+    | SEMICOLON
+    | (WS | comment) resync-params
+    ) .)* >                            { $$ = skip(); }
+
+resync-params = CYPHER
 
 skip-to-clause = < . (!(
       EOF

@@ -148,7 +148,7 @@ START_TEST (parse_statement_with_cypher_option_containing_version)
 END_TEST
 
 
-START_TEST (parse_statment_params_types)
+START_TEST (parse_statement_params_types)
 {
     result = cypher_parse("CYPHER int_val=1 float_val=2.3 true_val=true false_val=false null_val=NULL string_val='str' arr_val=[1,2,3] map_val={ int_val:1, float_val:2.3} RETURN 1", NULL, NULL, 0);
 
@@ -282,6 +282,75 @@ START_TEST (parse_statment_params_types)
     value = cypher_ast_cypher_option_param_get_value(param);
     ck_assert_int_eq(cypher_astnode_type(value), CYPHER_AST_MAP);
     ck_assert_str_eq(cypher_ast_string_get_value(name), "map_val");
+}
+END_TEST
+
+START_TEST (parse_params_only)
+{
+    result = cypher_parse("CYPHER param1=1 param2='str' MATCH (n) WHERE n.x = $param1 and n.y = $param2 RETURN n", NULL, NULL, CYPHER_PARSE_ONLY_PARAMETERS);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
+    fflush(memstream);
+    const char *expected = "\n"
+"@0   0..85  statement             options=[@1], body=@8\n"
+"@1   0..29  > CYPHER              params=[@2, @5]\n"
+"@2   7..16  > > cypher parameter  @3 = @4\n"
+"@3   7..13  > > > string          \"param1\"\n"
+"@4  14..15  > > > integer         1\n"
+"@5  16..29  > > cypher parameter  @6 = @7\n"
+"@6  16..22  > > > string          \"param2\"\n"
+"@7  23..28  > > > string          \"str\"\n"
+"@8  29..85  > string              \"MATCH (n) WHERE n.x = $param1 and n.y = $param2 RETURN n\"\n";
+    ck_assert_str_eq(memstream_buffer, expected);
+    ck_assert_int_eq(cypher_parse_result_ndirectives(result), 1);
+    const cypher_astnode_t *ast = cypher_parse_result_get_directive(result, 0);
+    ck_assert_int_eq(cypher_astnode_type(ast), CYPHER_AST_STATEMENT);
+
+    ck_assert_int_eq(cypher_ast_statement_noptions(ast), 1);
+    const cypher_astnode_t *option = cypher_ast_statement_get_option(ast, 0);
+    ck_assert(cypher_astnode_instanceof(option, CYPHER_AST_STATEMENT_OPTION));
+    ck_assert_int_eq(cypher_astnode_type(option), CYPHER_AST_CYPHER_OPTION);
+
+    ck_assert_int_eq(cypher_ast_cypher_option_nparams(option), 2);
+
+    const cypher_astnode_t *param =
+            cypher_ast_cypher_option_get_param(option, 0);
+    ck_assert_int_eq(cypher_astnode_type(param),
+            CYPHER_AST_CYPHER_OPTION_PARAM);
+
+    const cypher_astnode_t *name =
+            cypher_ast_cypher_option_param_get_name(param);
+    ck_assert_int_eq(cypher_astnode_type(name), CYPHER_AST_STRING);
+    const cypher_astnode_t *value = 
+            cypher_ast_cypher_option_param_get_value(param);
+    ck_assert_int_eq(cypher_astnode_type(value), CYPHER_AST_INTEGER);
+    ck_assert_str_eq(cypher_ast_string_get_value(name), "param1");
+    ck_assert_str_eq(cypher_ast_integer_get_valuestr(value), "1");
+
+    param = cypher_ast_cypher_option_get_param(option, 1);
+    ck_assert_int_eq(cypher_astnode_type(param),CYPHER_AST_CYPHER_OPTION_PARAM);
+    name = cypher_ast_cypher_option_param_get_name(param);
+    ck_assert_int_eq(cypher_astnode_type(name), CYPHER_AST_STRING);
+    value = cypher_ast_cypher_option_param_get_value(param);
+    ck_assert_int_eq(cypher_astnode_type(value), CYPHER_AST_STRING);
+    ck_assert_str_eq(cypher_ast_string_get_value(name), "param2");
+    ck_assert_str_eq(cypher_ast_string_get_value(value), "str");
+}
+END_TEST
+
+START_TEST (parse_params_only_without_params)
+{
+    result = cypher_parse("MATCH (n) WHERE n.x = $param1 and n.y = $param2 RETURN n", NULL, NULL, CYPHER_PARSE_ONLY_PARAMETERS);
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
+    fflush(memstream);
+    const char *expected = "\n"
+"@0  0..56  statement  body=@1\n"
+"@1  0..56  > string   \"MATCH (n) WHERE n.x = $param1 and n.y = $param2 RETURN n\"\n";
+    ck_assert_str_eq(memstream_buffer, expected);
+    ck_assert_int_eq(cypher_parse_result_ndirectives(result), 1);
+    const cypher_astnode_t *ast = cypher_parse_result_get_directive(result, 0);
+    ck_assert_int_eq(cypher_astnode_type(ast), CYPHER_AST_STATEMENT);
+
+    ck_assert_int_eq(cypher_ast_statement_noptions(ast), 0);
 }
 END_TEST
 
@@ -508,5 +577,8 @@ TCase* statement_tcase(void)
     tcase_add_test(tc, parse_statement_with_explain_option);
     tcase_add_test(tc, parse_statement_with_profile_option);
     tcase_add_test(tc, parse_statement_with_multiple_options);
+    tcase_add_test(tc, parse_statement_params_types);
+    tcase_add_test(tc, parse_params_only);
+    tcase_add_test(tc, parse_params_only_without_params);
     return tc;
 }
