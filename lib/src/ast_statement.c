@@ -48,7 +48,8 @@ cypher_astnode_t *cypher_ast_statement(cypher_astnode_t * const *options,
     REQUIRE_CHILD_ALL(children, nchildren, options, noptions,
             CYPHER_AST_STATEMENT_OPTION, NULL);
     REQUIRE(cypher_astnode_instanceof(body, CYPHER_AST_QUERY) ||
-            cypher_astnode_instanceof(body, CYPHER_AST_SCHEMA_COMMAND), NULL);
+            cypher_astnode_instanceof(body, CYPHER_AST_SCHEMA_COMMAND) ||
+            cypher_astnode_instanceof(body, CYPHER_AST_STRING), NULL);
     REQUIRE_CONTAINS(children, nchildren, body, NULL);
 
     struct statement *node = calloc(1, sizeof(struct statement) +

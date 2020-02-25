@@ -5596,6 +5596,7 @@ typedef int (*cypher_parser_segment_callback_t)(void *userdata,
 #define CYPHER_PARSE_DEFAULT 0
 #define CYPHER_PARSE_SINGLE (1<<0)
 #define CYPHER_PARSE_ONLY_STATEMENTS (1<<1)
+#define CYPHER_PARSE_ONLY_PARAMETERS (1<<2)
 
 
 /**
