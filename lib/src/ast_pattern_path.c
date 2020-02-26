@@ -198,8 +198,17 @@ ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
         }
         else
         {
-            r = snprintf(str+n, (n < size)? size-n : 0, "-[@%u]-",
+            if (node->elements[i]->type == CYPHER_AST_REL_PATTERN)
+            {
+                r = snprintf(str+n, (n < size)? size-n : 0, "-[@%u]-",
                     node->elements[i]->ordinal);
+            }
+            else
+            {
+                r = snprintf(str+n, (n < size)? size-n : 0, "-/@%u/-",
+                    node->elements[i]->ordinal);
+            }
+            
         }
         if (r < 0)
         {
