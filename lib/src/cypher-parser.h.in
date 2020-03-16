@@ -5189,14 +5189,18 @@ const cypher_astnode_t *cypher_ast_rel_pattern_get_properties(
 /**
  * Construct a `CYPHER_AST_PATH_PATTERN` node.
  *
+ * @param [identifier] Path pattern identifier.
  * @param [direction] The direction of the pattern.
+ * @param [elements] The elements of the path pattern.
+ * @param [nelements] Number of elements in path pattern.
  * @param [children] The children of the node.
  * @param [nchildren] The number of children.
  * @return An AST node, or NULL if an error occurs (errno will be set).
  */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_path_pattern(const cypher_astnode_t *identifier,
-        enum cypher_rel_direction direction, cypher_astnode_t **children, unsigned int nchildren,
+        enum cypher_rel_direction direction, cypher_astnode_t * const *elements,
+        unsigned int nelements, cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
 
 /**
@@ -5224,6 +5228,30 @@ const cypher_astnode_t *cypher_ast_path_pattern_get_identifier(
 __cypherlang_pure
 enum cypher_rel_direction cypher_ast_path_pattern_get_direction(
         const cypher_astnode_t *node);
+/**
+ * Get the amount of elements in 'CYPHER_AST_PATH_PATTERN' node.
+ * 
+ * If the node is not an instance of `CYPHER_AST_PATH_PATTERN` then the result
+ * will be undefined.
+ * 
+ * @param [astnode] The AST node.
+ * @return The amount of elements.
+*/
+unsigned int cypher_ast_path_pattern_nelements(const cypher_astnode_t *astnode);
+
+/**
+ * Get the element of 'CYPHER_AST_PATH_PATTERN' node.
+ * 
+ * If the node is not an instance of `CYPHER_AST_PATH_PATTERN` then the result
+ * will be undefined.
+ * 
+ * @param [astnode] The AST node.
+ * @param [index] Index of desired element.
+ * 
+ * @return A 'CYPHER_AST_PATH_BASE' node which will be part of the path pattern.
+*/
+const cypher_astnode_t *cypher_ast_path_pattern_get_element(
+        const cypher_astnode_t *astnode, unsigned int index);
 
 /**
  * Construct a `CYPHER_AST_RANGE` node.

@@ -2980,8 +2980,8 @@ cypher_astnode_t *_path_pattern(yycontext *yy,
     assert(yy->prev_block != NULL &&
             "An AST node can only be created immediately after a `>` in the grammar");
     cypher_astnode_t *node = cypher_ast_path_pattern(identifier, direction, 
-            //astnodes_elements(&(yy->prev_block->sequence)),
-            //astnodes_size(&(yy->prev_block->sequence)),
+            astnodes_elements(&(yy->prev_block->sequence)),
+            astnodes_size(&(yy->prev_block->sequence)),
             astnodes_elements(&(yy->prev_block->children)),
             astnodes_size(&(yy->prev_block->children)),
             yy->prev_block->range);
@@ -2989,7 +2989,7 @@ cypher_astnode_t *_path_pattern(yycontext *yy,
     {
         abort_parse(yy);
     }
-    //astnodes_clear(&(yy->prev_block->sequence));
+    astnodes_clear(&(yy->prev_block->sequence));
     astnodes_clear(&(yy->prev_block->children));
     block_free(yy->prev_block);
     yy->prev_block = NULL;

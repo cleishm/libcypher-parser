@@ -85,7 +85,8 @@ schema-command =
     (SEMICOLON | EOF)
 
 named-path-predicate = 
-    < PATHPATTERN i:identifier EQUAL - p:pattern-path (WHERE e:expression | e:_null_) > { $$ = query(); }
+    < PATHPATTERN i:identifier EQUAL - p:pattern-path       { sequence_add(p); }
+    (WHERE e:expression | e:_null_) > { $$ = query(); }
 
 create-index =
     < CREATE-INDEX-ON l:label LEFT-PAREN - p:prop-name
@@ -749,7 +750,7 @@ node-pattern = < LEFT-PAREN -
     )* (p:pattern-properties | p:_null_)
     RIGHT-PAREN >                      { $$ = node_pattern(i, p); }
 
-path-pattern = 
+path-pattern =
     < ( LEFT-ARROW-HEAD - DASH - DIV - path-expression - DIV - DASH
           ( - RIGHT-ARROW-HEAD >       { $$ = path_pattern(BIDIRECTIONAL); }
           | _empty_ >                  { $$ = path_pattern(INBOUND); }
@@ -761,58 +762,53 @@ path-pattern =
       )
 
 path-expression =
-    < ( p:path-repetition              { sequence_add(p); }
+    < < ( p:path-repetition            { sequence_add(p); }
         ( - PIPE - p:path-repetition   { sequence_add(p); }
-        )*
-    )* >
+        )* >                           { $$ = path_expression_single(); }
+    )* >                               { }
     -
 
 path-repetition =
-    p:path-direction - (                 { $$ = p; }
-      (MULT - (range-detail)? ) | PLUS | QUESTIONMARK
+    p:path-direction - (               { sequence_add(p); }
+        rel-varlength
+        | PLUS
+        | QUESTIONMARK
     )?
     -
 
 path-direction =
-    < ( LEFT-ARROW-HEAD - p:path-base
+    < ( LEFT-ARROW-HEAD - p:path-base   { sequence_add(p); }
         ( - RIGHT-ARROW-HEAD >           #{ $$ = path_base(BIDIRECTIONAL); }
         | _empty_ >                      #{ $$ = path_base(INBOUND); }
         )
-      | p:path-base 
+      | p:path-base                     { sequence_add(p); }
         ( - RIGHT-ARROW-HEAD >           #{ $$ = path_base(OUTBOUND); }
         | _empty_ >                      #{ $$ = path_base(BIDIRECTIONAL); }
         )
       )
 
-path-base = 
-    ( p:path-edge
-    | p:path-any
-    | p:path-node
-    | p:path-reference
-    | p:path-group
-    )                                  { $$ = p; }
+path-base =
+    l:label                        { $$ = l; }
+    | path-any
+    | p:path-node                       { $$ = p; }
+    | p:path-reference                  { $$ = p; }
+    | p:path-group                      { $$ = p; }
     -
 
-path-edge = 
-     < l:label >                       #{ sequence_add(l); }
-
-path-any = 
+path-any =
     < DASH >
 
-path-node = 
+path-node =
     < LEFT-PAREN -
     ( n:label                          { sequence_add(n); }
     )* ( p:pattern-properties | p:_null_ )
     RIGHT-PAREN >                      { $$ = node_pattern(NULL, p); }
 
-path-reference = 
-    '~' - symbolic-name
+path-reference =
+    '~' - identifier
 
-path-group = 
-    < LEFT-SQ-PAREN - path-expression ( p:pattern-properties | p:_null_ ) - RIGHT-SQ-PAREN >
-
-range-detail = 
-    < ( s:integer-literal | s:parameter | s:_null_ ) - ELLIPSIS - ( q:integer-literal | q:parameter | q:_null_ ) >
+path-group =
+    < LEFT-SQ-PAREN - p:path-expression ( p:pattern-properties | p:_null_ ) - RIGHT-SQ-PAREN >
 
 relationship-pattern =
       < ( LEFT-ARROW-HEAD - DASH -
