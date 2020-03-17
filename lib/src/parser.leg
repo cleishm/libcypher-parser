@@ -762,14 +762,14 @@ path-pattern =
       )
 
 path-expression =
-    < < ( p:path-repetition            { sequence_add(p); }
-        ( - PIPE - p:path-repetition   { sequence_add(p); }
-        )* >                           { $$ = path_expression_single(); }
-    )* >                               { }
+    < < ( p:path-repetition            #{ sequence_add(p); }
+        ( - PIPE - p:path-repetition   #{ sequence_add(p); }
+        )* >                           #{ $$ = path_expression_single(); }
+    )* >                               #{ }
     -
 
 path-repetition =
-    p:path-direction - (               { sequence_add(p); }
+    p:path-direction - (               #{ sequence_add(p); }
         rel-varlength
         | PLUS
         | QUESTIONMARK
@@ -777,11 +777,11 @@ path-repetition =
     -
 
 path-direction =
-    < ( LEFT-ARROW-HEAD - p:path-base   { sequence_add(p); }
+    < ( LEFT-ARROW-HEAD - p:path-base   #{ sequence_add(p); }
         ( - RIGHT-ARROW-HEAD >           #{ $$ = path_base(BIDIRECTIONAL); }
         | _empty_ >                      #{ $$ = path_base(INBOUND); }
         )
-      | p:path-base                     { sequence_add(p); }
+      | p:path-base                     #{ sequence_add(p); }
         ( - RIGHT-ARROW-HEAD >           #{ $$ = path_base(OUTBOUND); }
         | _empty_ >                      #{ $$ = path_base(BIDIRECTIONAL); }
         )
