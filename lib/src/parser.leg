@@ -761,20 +761,26 @@ path-pattern =
           )
       )
 
-path-expression =
-    < < ( p:path-repetition            #{ sequence_add(p); }
-        ( - PIPE - p:path-repetition   #{ sequence_add(p); }
-        )* >                           #{ $$ = path_expression_single(); }
-    )* >                               #{ }
-    -
 
-path-repetition =
-    p:path-direction - (               #{ sequence_add(p); }
-        rel-varlength
-        | PLUS
-        | QUESTIONMARK
-    )?
-    -
+path-expression =
+    path-alternative
+    (- path-alternative
+    )*
+
+path-alternative =
+    < p:path-repetition                 { sequence_add(p); }
+    (- PIPE - p:path-repetition         { sequence_add(p); }
+    )* >                                { path_pattern_alternative(); }
+
+path-repetition = l:label               { $$ = l; }
+
+# path-repetition =
+#    p:path-direction - (               #{ sequence_add(p); }
+#        rel-varlength
+#        | PLUS
+#        | QUESTIONMARK
+#    )?
+#    -
 
 path-direction =
     < ( LEFT-ARROW-HEAD - p:path-base   #{ sequence_add(p); }
