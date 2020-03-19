@@ -751,13 +751,13 @@ node-pattern = < LEFT-PAREN -
     RIGHT-PAREN >                      { $$ = node_pattern(i, p); }
 
 path-pattern =
-    < ( LEFT-ARROW-HEAD - DASH - DIV - path-expression - DIV - DASH
-          ( - RIGHT-ARROW-HEAD >       { $$ = path_pattern(BIDIRECTIONAL); }
-          | _empty_ >                  { $$ = path_pattern(INBOUND); }
+    < ( LEFT-ARROW-HEAD - DASH - DIV - e:path-expression - DIV - DASH
+          ( - RIGHT-ARROW-HEAD >       { $$ = path_pattern(e, BIDIRECTIONAL); }
+          | _empty_ >                  { $$ = path_pattern(e, INBOUND); }
           )
-      | DASH - DIV - path-expression - DIV - DASH 
-          ( - RIGHT-ARROW-HEAD >       { $$ = path_pattern(OUTBOUND); }
-          | _empty_ >                  { $$ = path_pattern(BIDIRECTIONAL); }
+      | DASH - DIV - e:path-expression - DIV - DASH 
+          ( - RIGHT-ARROW-HEAD >       { $$ = path_pattern(e, OUTBOUND); }
+          | _empty_ >                  { $$ = path_pattern(e, BIDIRECTIONAL); }
           )
       )
 
@@ -772,7 +772,10 @@ path-alternative =
     (- PIPE - p:path-repetition         { sequence_add(p); }
     )* >                                { $$ = path_pattern_alternative(); }
 
-path-repetition = l:label               { $$ = l; }
+path-repetition = 
+    p:label                             { $$ = p; }
+    | p:path-node                       { $$ = p; }
+    | path-any
 
 # path-repetition =
 #    p:path-direction - (               #{ sequence_add(p); }
