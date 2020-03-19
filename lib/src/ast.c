@@ -126,6 +126,7 @@ struct cypher_astnode_vts
     const struct cypher_astnode_vt *node_pattern;
     const struct cypher_astnode_vt *rel_pattern;
     const struct cypher_astnode_vt *path_pattern;
+    const struct cypher_astnode_vt *path_pattern_expression;
     const struct cypher_astnode_vt *path_pattern_alternative;
     const struct cypher_astnode_vt *range;
     const struct cypher_astnode_vt *command;
@@ -245,7 +246,8 @@ static const struct cypher_astnode_vts cypher_astnode_vts =
     .node_pattern = &cypher_node_pattern_astnode_vt,
     .rel_pattern = &cypher_rel_pattern_astnode_vt,
     .path_pattern = &cypher_path_pattern_astnode_vt,
-    .path_pattern_alternative = &cypher_path_pattern_astnode_alternative_vt,
+    .path_pattern_expression = &cypher_path_pattern_expression_astnode_vt,
+    .path_pattern_alternative = &cypher_path_pattern_alternative_astnode_vt,
     .range = &cypher_range_astnode_vt,
     .command = &cypher_command_astnode_vt,
     .line_comment = &cypher_line_comment_astnode_vt,
@@ -374,6 +376,7 @@ const uint8_t CYPHER_AST_PATTERN_PATH = VT_OFFSET(pattern_path);
 const uint8_t CYPHER_AST_NODE_PATTERN = VT_OFFSET(node_pattern);
 const uint8_t CYPHER_AST_REL_PATTERN = VT_OFFSET(rel_pattern);
 const uint8_t CYPHER_AST_PATH_PATTERN = VT_OFFSET(path_pattern);
+const uint8_t CYPHER_AST_PATH_PATTERN_EXPRESSION = VT_OFFSET(path_pattern_expression);
 const uint8_t CYPHER_AST_PATH_PATTERN_ALTERNATIVE = VT_OFFSET(path_pattern_alternative);
 const uint8_t CYPHER_AST_RANGE = VT_OFFSET(range);
 const uint8_t CYPHER_AST_COMMAND = VT_OFFSET(command);

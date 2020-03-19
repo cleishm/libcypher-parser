@@ -763,14 +763,14 @@ path-pattern =
 
 
 path-expression =
-    path-alternative
-    (- path-alternative
-    )*
+    < p:path-alternative                { sequence_add(p); }
+    (- p:path-alternative               { sequence_add(p); }
+    )* >                                { $$ = path_pattern_expression(); }
 
 path-alternative =
     < p:path-repetition                 { sequence_add(p); }
     (- PIPE - p:path-repetition         { sequence_add(p); }
-    )* >                                { path_pattern_alternative(); }
+    )* >                                { $$ = path_pattern_alternative(); }
 
 path-repetition = l:label               { $$ = l; }
 
