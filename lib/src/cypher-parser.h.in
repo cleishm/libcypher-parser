@@ -342,6 +342,8 @@ extern const cypher_astnode_type_t CYPHER_AST_PATH_PATTERN;
 extern const cypher_astnode_type_t CYPHER_AST_PATH_PATTERN_EXPRESSION;
 /** Type for an AST path pattern alternative node. */
 extern const cypher_astnode_type_t CYPHER_AST_PATH_PATTERN_ALTERNATIVE;
+/** Type for an AST path pattern base node. */
+extern const cypher_astnode_type_t CYPHER_AST_PATH_PATTERN_BASE;
 /** Type for an AST range node. */
 extern const cypher_astnode_type_t CYPHER_AST_RANGE;
 /** Type for an AST command node. */
@@ -5211,6 +5213,10 @@ cypher_astnode_t *cypher_ast_path_pattern_expression(cypher_astnode_t * const *e
 cypher_astnode_t *cypher_ast_path_pattern_alternative(cypher_astnode_t * const *elements,
         unsigned int nelements, cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
+
+cypher_astnode_t *cypher_ast_path_pattern_base(enum cypher_rel_direction direction, const cypher_astnode_t *varlength,
+        const cypher_astnode_t *path_base, cypher_astnode_t **children,
+        unsigned int nchildren, struct cypher_input_range range);
 
 /**
  * Get the expression of a `CYPHER_AST_PATH_PATTERN` node.

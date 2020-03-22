@@ -761,7 +761,6 @@ path-pattern =
           )
       )
 
-
 path-expression =
     < p:path-alternative                { sequence_add(p); }
     (- p:path-alternative               { sequence_add(p); }
@@ -772,37 +771,32 @@ path-alternative =
     (- PIPE - p:path-repetition         { sequence_add(p); }
     )* >                                { $$ = path_pattern_alternative(); }
 
-path-repetition = 
-    p:label                             { $$ = p; }
-    | p:path-node                       { $$ = p; }
-    | path-any
+path-repetition =
+   < ( LEFT-ARROW-HEAD - p:path-base
+       ( - RIGHT-ARROW-HEAD
+         - (l:rel-varlength | l:_null_) >  { $$ = path_pattern_base(BIDIRECTIONAL, l, p); }
+       | _empty_
+         - (l:rel-varlength | l:_null_) >  { $$ = path_pattern_base(INBOUND, l, p); }
+       )
+     | p:path-base
+       ( - RIGHT-ARROW-HEAD
+         - (l:rel-varlength | l:_null_) >  { $$ = path_pattern_base(OUTBOUND, NULL, p); }
+       | _empty_
+         - (l:rel-varlength | l:_null_) >  { $$ = path_pattern_base(BIDIRECTIONAL, NULL, p); }
+       )
+     )
 
-# path-repetition =
-#    p:path-direction - (               #{ sequence_add(p); }
-#        rel-varlength
-#        | PLUS
-#        | QUESTIONMARK
-#    )?
+# TODO: make ast nodes for label, path-group, ..., path-reference
+path-base =
+    l:label                             { $$ = l; }
+    | p:path-group                      { $$ = p; }
+#    | path-any                          {  }
+#    | p:path-node                       { $$ = p; }
+#    | p:path-reference                  { $$ = p; }
 #    -
 
-path-direction =
-    < ( LEFT-ARROW-HEAD - p:path-base   #{ sequence_add(p); }
-        ( - RIGHT-ARROW-HEAD >           #{ $$ = path_base(BIDIRECTIONAL); }
-        | _empty_ >                      #{ $$ = path_base(INBOUND); }
-        )
-      | p:path-base                     #{ sequence_add(p); }
-        ( - RIGHT-ARROW-HEAD >           #{ $$ = path_base(OUTBOUND); }
-        | _empty_ >                      #{ $$ = path_base(BIDIRECTIONAL); }
-        )
-      )
-
-path-base =
-    l:label                        { $$ = l; }
-    | path-any
-    | p:path-node                       { $$ = p; }
-    | p:path-reference                  { $$ = p; }
-    | p:path-group                      { $$ = p; }
-    -
+path-group =
+    LEFT-SQ-PAREN - p:path-expression - RIGHT-SQ-PAREN {$$ = p}
 
 path-any =
     < DASH >
@@ -815,9 +809,6 @@ path-node =
 
 path-reference =
     '~' - identifier
-
-path-group =
-    < LEFT-SQ-PAREN - p:path-expression ( p:pattern-properties | p:_null_ ) - RIGHT-SQ-PAREN >
 
 relationship-pattern =
       < ( LEFT-ARROW-HEAD - DASH -
