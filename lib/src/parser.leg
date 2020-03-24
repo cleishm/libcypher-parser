@@ -84,9 +84,10 @@ schema-command =
     ) ~{ERR("a schema command")}
     (SEMICOLON | EOF)
 
-named-path-predicate = 
-    < PATHPATTERN i:identifier EQUAL - p:pattern-path       { sequence_add(p); }
-    (WHERE e:expression | e:_null_) > { $$ = query(); }
+named-path-predicate =
+    < PATHPATTERN i:identifier EQUAL - p:pattern-path -
+    (WHERE e:expression | e:_null_) 
+    >                                   { $$ = named_path_predicate(i, p, e); }
 
 create-index =
     < CREATE-INDEX-ON l:label LEFT-PAREN - p:prop-name
@@ -780,9 +781,9 @@ path-repetition =
        )
      | p:path-base
        ( - RIGHT-ARROW-HEAD
-         - (l:rel-varlength | l:_null_) >  { $$ = path_pattern_base(OUTBOUND, NULL, p); }
+         - (l:rel-varlength | l:_null_) >  { $$ = path_pattern_base(OUTBOUND, l, p); }
        | _empty_
-         - (l:rel-varlength | l:_null_) >  { $$ = path_pattern_base(BIDIRECTIONAL, NULL, p); }
+         - (l:rel-varlength | l:_null_) >  { $$ = path_pattern_base(BIDIRECTIONAL, l, p); }
        )
      )
 

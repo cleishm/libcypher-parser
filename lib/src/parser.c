@@ -440,9 +440,11 @@ static cypher_astnode_t *_strbuf_index_name(yycontext *yy);
 static cypher_astnode_t *_strbuf_proc_name(yycontext *yy);
 #define pattern() _pattern(yy)
 static cypher_astnode_t *_pattern(yycontext *yy);
-#define named_path(s, p) _named_path(yy, s, p)
+#define named_path(s, p) _named_path(yy, s, p, NULL)
+#define named_path_predicate(s, p, e) _named_path(yy, s, p, e)
 static cypher_astnode_t *_named_path(yycontext *yy,
-        cypher_astnode_t *identifier, cypher_astnode_t *path);
+        cypher_astnode_t *identifier, cypher_astnode_t *path,
+        cypher_astnode_t *condition);
 #define shortest_path(s, p) _shortest_path(yy, s, p)
 static cypher_astnode_t *_shortest_path(yycontext *yy, bool single,
         cypher_astnode_t *path);
@@ -2874,11 +2876,12 @@ cypher_astnode_t *_pattern(yycontext *yy)
 
 
 cypher_astnode_t *_named_path(yycontext *yy,
-        cypher_astnode_t *identifier, cypher_astnode_t *path)
+        cypher_astnode_t *identifier, cypher_astnode_t *path,
+        cypher_astnode_t *condition)
 {
     assert(yy->prev_block != NULL &&
             "An AST node can only be created immediately after a `>` in the grammar");
-    cypher_astnode_t *node = cypher_ast_named_path(identifier, path,
+    cypher_astnode_t *node = cypher_ast_named_path(identifier, path, condition,
             astnodes_elements(&(yy->prev_block->children)),
             astnodes_size(&(yy->prev_block->children)),
             yy->prev_block->range);

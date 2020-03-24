@@ -4890,6 +4890,7 @@ const cypher_astnode_t *cypher_ast_pattern_get_path(
  *
  * @param [identifier] A `CYPHER_AST_IDENTIFIER` node.
  * @param [path] A `CYPHER_AST_PATTERN_PATH` node.
+ * @param [condition] A `CYPHER_AST_EXPRESSION` node.
  * @param [children] The children of the node.
  * @param [nchildren] The number of children.
  * @param [range] The input range.
@@ -4897,8 +4898,8 @@ const cypher_astnode_t *cypher_ast_pattern_get_path(
  */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_named_path(const cypher_astnode_t *identifier,
-        const cypher_astnode_t *path, cypher_astnode_t **children,
-        unsigned int nchildren, struct cypher_input_range range);
+        const cypher_astnode_t *path, const cypher_astnode_t *condition,
+        cypher_astnode_t **children, unsigned int nchildren, struct cypher_input_range range);
 
 /**
  * Get the identifier from a `CYPHER_AST_NAMED_PATH` node.
@@ -4926,6 +4927,8 @@ __cypherlang_pure
 const cypher_astnode_t *cypher_ast_named_path_get_path(
         const cypher_astnode_t *node);
 
+const cypher_astnode_t *cypher_ast_named_path_get_condition(
+        const cypher_astnode_t *node);
 
 /**
  * Construct a `CYPHER_AST_SHORTEST_PATH` node.
