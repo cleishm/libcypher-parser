@@ -45,6 +45,23 @@ cleanup:
     return NULL;
 }
 
+enum cypher_rel_direction cypher_ast_path_pattern_base_get_direction(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_PATH_PATTERN_BASE, NULL);
+    struct path_pattern_base *node =
+            container_of(astnode, struct path_pattern_base, _astnode);
+    return node->direction;
+}
+
+const cypher_astnode_t *cypher_ast_path_pattern_base_get_child(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_PATH_PATTERN_BASE, NULL);
+    struct path_pattern_base *node =
+            container_of(astnode, struct path_pattern_base, _astnode);
+    return node->path_base;
+}
 
 cypher_astnode_t *clone(const cypher_astnode_t *self,
                         cypher_astnode_t **children)

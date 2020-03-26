@@ -46,6 +46,22 @@ cleanup:
     return NULL;
 }
 
+unsigned int cypher_ast_path_pattern_alternative_get_nelements(const cypher_astnode_t *astnode) {
+    REQUIRE_TYPE(astnode, CYPHER_AST_PATH_PATTERN_ALTERNATIVE, NULL);
+    struct path_pattern_alternative *node =
+            container_of(astnode, struct path_pattern_alternative, _astnode);
+    return node->nelements;
+}
+
+const cypher_astnode_t *cypher_ast_path_pattern_alternative_get_element(
+        const cypher_astnode_t *astnode, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_PATH_PATTERN_ALTERNATIVE, NULL);
+    struct path_pattern_alternative *node =
+            container_of(astnode, struct path_pattern_alternative, _astnode);
+    return node->elements[index];
+}
+
 cypher_astnode_t *clone(const cypher_astnode_t *self, cypher_astnode_t **children)
 {
     /**REQUIRE_TYPE(self, CYPHER_AST_PATH_PATTERN, NULL);*/

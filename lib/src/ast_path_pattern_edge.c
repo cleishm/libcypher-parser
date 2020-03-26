@@ -43,6 +43,14 @@ cleanup:
     return NULL;
 }
 
+const cypher_astnode_t *cypher_ast_path_pattern_edge_get_reltype(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_PATH_PATTERN_EDGE, NULL);
+    struct path_pattern_edge *node =
+            container_of(astnode, struct path_pattern_edge, _astnode);
+    return node->reltype;
+}
 
 cypher_astnode_t *clone(const cypher_astnode_t *self,
         cypher_astnode_t **children)
