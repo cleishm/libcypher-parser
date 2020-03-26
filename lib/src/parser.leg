@@ -789,12 +789,15 @@ path-repetition =
 
 # TODO: make ast nodes for label, path-group, ..., path-reference
 path-base =
-    l:label                             { $$ = l; }
-    | p:path-group                      { $$ = p; }
+    e:path-edge                          { $$ = e; }
+    | p:path-group                       { $$ = p; }
 #    | path-any                          {  }
 #    | p:path-node                       { $$ = p; }
 #    | p:path-reference                  { $$ = p; }
 #    -
+
+path-edge =
+    < r:rel-type >                       { $$ = path_pattern_edge(r); }
 
 path-group =
     LEFT-SQ-PAREN - p:path-expression - RIGHT-SQ-PAREN {$$ = p}
