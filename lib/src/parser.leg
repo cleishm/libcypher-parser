@@ -791,9 +791,9 @@ path-repetition =
 path-base =
     e:path-edge                          { $$ = e; }
     | p:path-group                       { $$ = p; }
+    | p:path-reference                   { $$ = p; }
 #    | path-any                          {  }
 #    | p:path-node                       { $$ = p; }
-#    | p:path-reference                  { $$ = p; }
 #    -
 
 path-edge =
@@ -812,7 +812,7 @@ path-node =
     RIGHT-PAREN >                      { $$ = node_pattern(NULL, p); }
 
 path-reference =
-    '~' - identifier
+    < '~' - i:identifier >               { path_pattern_reference(i); }
 
 relationship-pattern =
       < ( LEFT-ARROW-HEAD - DASH -
