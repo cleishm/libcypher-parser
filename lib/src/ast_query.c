@@ -51,8 +51,11 @@ cypher_astnode_t *cypher_ast_query(cypher_astnode_t * const *options,
     REQUIRE_CHILD_ALL(children, nchildren, options, noptions,
             CYPHER_AST_QUERY_OPTION, NULL);
     REQUIRE(nclauses > 0, NULL);
-    REQUIRE_CHILD_ALL(children, nchildren, clauses, nclauses,
-            CYPHER_AST_QUERY_CLAUSE, NULL);
+    for (unsigned int i = 0; i < nclauses; ++i)
+    {
+        REQUIRE(cypher_astnode_instanceof(clauses[i], CYPHER_AST_QUERY_CLAUSE) ||
+                cypher_astnode_instanceof(clauses[i], CYPHER_AST_NAMED_PATH), NULL);
+    }
 
     struct query *node = calloc(1, sizeof(struct query) +
             nclauses * sizeof(cypher_astnode_t *));

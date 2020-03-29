@@ -54,7 +54,7 @@ __statement =
 # Statement parsing
 #----------------------------------------------------
 
-cypher-statement = < statement-option* - (b:query | b:schema-command | b:named-path-predicate) >
+cypher-statement = < statement-option* - (b:query | b:schema-command) >
                                        { $$ = statement(b); }
 statement-option =
     ( o:cypher-option | o:profile-option | o:explain-option )
@@ -84,7 +84,7 @@ schema-command =
     ) ~{ERR("a schema command")}
     (SEMICOLON | EOF)
 
-named-path-predicate =
+named-path-clause =
     < PATHPATTERN i:identifier EQUAL - p:pattern-path -
     (WHERE e:expression | e:_null_) 
     >                                   { $$ = named_path_predicate(i, p, e); }
@@ -171,6 +171,7 @@ clause =
     | loadcsv-clause
     | start-clause
     | union-clause
+    | named-path-clause
     ) ~{ERR("a clause")}
 
 loadcsv-clause =
@@ -800,7 +801,7 @@ path-edge =
     < r:rel-type >                       { $$ = path_pattern_edge(r); }
 
 path-group =
-    LEFT-SQ-PAREN - p:path-expression - RIGHT-SQ-PAREN {$$ = p}
+    LEFT-SQ-PAREN - p:path-expression - RIGHT-SQ-PAREN { $$ = p; }
 
 path-any =
     < DASH >
