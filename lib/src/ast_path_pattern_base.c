@@ -84,15 +84,46 @@ cypher_astnode_t *clone(const cypher_astnode_t *self,
 }
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size) {
-    const struct path_pattern_base *base = (const struct path_pattern_base *) self;
-    const char *dir = (base->direction == CYPHER_REL_OUTBOUND) ? "outbound" :
-            (base->direction == CYPHER_REL_INBOUND ? "inbound" : "bidirectional");
+    struct path_pattern_base *node = container_of(self, struct path_pattern_base, _astnode);
+    
+    size_t n = 0;
+    ssize_t r = snprintf(str, size, "%s",
+            (node->direction == CYPHER_REL_INBOUND)? "<" : "");
+    if (r < 0)
+    {
+        return -1;
+    }
+    n += r;
 
-    const char *child = NULL;
-
-    if (base->path_base->type == CYPHER_AST_LABEL) {
-        child = "label";
+    if (node->path_base != NULL)
+    {
+        r = snprintf(str+n, (n < size)? size-n : 0, "@%u",
+                node->path_base->ordinal);
+        if (r < 0)
+        {
+            return -1;
+        }
+        n += r;
     }
 
-    return snprintf(str, size, "dir: %s, child: %s", dir, child);
+    r = snprintf(str+n, (n < size)? size-n : 0, "%s",
+            (node->direction == CYPHER_REL_OUTBOUND)? ">" : "");
+
+    if (r < 0)
+    {
+        return -1;
+    }
+    n += r;
+
+    if (node->varlength != NULL)
+    {
+        r = snprintf(str+n, (n < size)? size-n : 0, " range = @%u",
+                node->varlength->ordinal);
+        if (r < 0)
+        {
+            return -1;
+        }
+        n += r;
+    }
+    return n;
 }

@@ -84,6 +84,29 @@ cypher_astnode_t *clone(const cypher_astnode_t *self, cypher_astnode_t **childre
 }
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size) {
-    const struct path_pattern_alternative *alt = (const struct path_pattern_alternative *) self;
-    return snprintf(str, size, "Alt, elems: %ld", alt->nelements);
+    struct path_pattern_alternative *node = container_of(self, struct path_pattern_alternative, _astnode);
+    
+    size_t n = 0;
+    for (unsigned int i = 0; i < node->nelements; ++i)
+    {
+        ssize_t r;
+        if (i < node->nelements - 1)
+        {
+            r = snprintf(str+n, (n < size)? size-n : 0, "@%u | ",
+                        node->elements[i]->ordinal);
+        }
+        else
+        {
+            r = snprintf(str+n, (n < size)? size-n : 0, "@%u",
+                        node->elements[i]->ordinal);
+        }
+        
+        if (r < 0)
+        {
+            return -1;
+        }
+        n += r;
+    }
+    
+    return n;
 }

@@ -4,6 +4,7 @@ struct path_pattern_expression
 {
     cypher_astnode_t _astnode;
     size_t nelements;
+    const cypher_astnode_t *properties;
     const cypher_astnode_t *elements[];
 };
 
@@ -13,12 +14,13 @@ static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 
 const struct cypher_astnode_vt cypher_path_pattern_expression_astnode_vt =
     {
-      .name = "expression",
+      .name = "path expression",
       .detailstr = detailstr,
       .release = cypher_astnode_release,
       .clone = clone };
 
-cypher_astnode_t *cypher_ast_path_pattern_expression(cypher_astnode_t * const *elements, unsigned int nelements,
+cypher_astnode_t *cypher_ast_path_pattern_expression(const cypher_astnode_t *properties,
+        cypher_astnode_t * const *elements, unsigned int nelements,
         cypher_astnode_t **children, unsigned int nchildren, struct cypher_input_range range)
 {
     struct path_pattern_expression *node = calloc(1, sizeof(struct path_pattern_expression) +
@@ -35,6 +37,7 @@ cypher_astnode_t *cypher_ast_path_pattern_expression(cypher_astnode_t * const *e
     }
 
     memcpy(node->elements, elements, nelements * sizeof(cypher_astnode_t *));
+    node->properties = properties;
     node->nelements = nelements;
     return &(node->_astnode);
 
@@ -62,6 +65,15 @@ const cypher_astnode_t *cypher_ast_path_pattern_expression_get_element(
     return node->elements[index];
 }
 
+const cypher_astnode_t *cypher_ast_path_pattern_get_properties(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_PATH_PATTERN_EXPRESSION, NULL);
+    struct path_pattern_expression *node =
+            container_of(astnode, struct path_pattern_expression, _astnode);
+    return node->properties;
+}
+
 cypher_astnode_t *clone(const cypher_astnode_t *self, cypher_astnode_t **children)
 {
     struct path_pattern_expression *node = container_of(self, struct path_pattern_expression, _astnode);
@@ -77,12 +89,41 @@ cypher_astnode_t *clone(const cypher_astnode_t *self, cypher_astnode_t **childre
         elements[i] = children[child_index(self, node->elements[i])];
     }
 
-    cypher_astnode_t *clone = cypher_ast_path_pattern_expression(elements, node->nelements, children, self->nchildren,
+    cypher_astnode_t *properties = (node->properties == NULL) ? NULL :
+        children[child_index(self, node->properties)];
+
+    cypher_astnode_t *clone = cypher_ast_path_pattern_expression(properties, elements, node->nelements, children, self->nchildren,
                                                       self->range);
     return clone;
 }
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size) {
-    const struct path_pattern_expression *expression = (const struct path_pattern_expression *) self;
-    return snprintf(str, size, "Expression, elems: %ld", expression->nelements);
+    struct path_pattern_expression *node = container_of(self, struct path_pattern_expression, _astnode);
+    
+    size_t n = 0;
+    ssize_t r;
+    for (unsigned int i = 0; i < node->nelements; ++i)
+    {
+        r = snprintf(str+n, (n < size)? size-n : 0, "@%u ",
+                    node->elements[i]->ordinal);
+        if (r < 0)
+        {
+            return -1;
+        }
+        n += r;
+    }
+
+    if (node->properties != NULL)
+    {
+        r = snprintf(str+n, (n < size)? size-n : 0, "{%u}",
+                node->properties->ordinal);
+        
+        if (r < 0)
+        {
+            return -1;
+        }
+        n += r;
+    }
+
+    return n;
 }

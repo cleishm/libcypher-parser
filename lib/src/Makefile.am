@@ -67,6 +67,7 @@ libcypher_parser_la_SOURCES = \
 	ast_order_by.c \
 	ast_parameter.c \
     ast_path_pattern.c \
+    ast_path_pattern_any.c \
     ast_path_pattern_expression.c \
     ast_path_pattern_alternative.c \
     ast_path_pattern_base.c \

@@ -238,6 +238,7 @@ extern const struct cypher_astnode_vt cypher_named_path_astnode_vt;
 extern const struct cypher_astnode_vt cypher_shortest_path_astnode_vt;
 extern const struct cypher_astnode_vt cypher_node_pattern_astnode_vt;
 extern const struct cypher_astnode_vt cypher_rel_pattern_astnode_vt;
+extern const struct cypher_astnode_vt cypher_path_pattern_any_astnode_vt;
 extern const struct cypher_astnode_vt cypher_path_pattern_astnode_vt;
 extern const struct cypher_astnode_vt cypher_path_pattern_expression_astnode_vt;
 extern const struct cypher_astnode_vt cypher_path_pattern_alternative_astnode_vt;

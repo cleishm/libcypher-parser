@@ -70,5 +70,6 @@ cypher_astnode_t *clone(const cypher_astnode_t *self,
 }
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size) {
-    return snprintf(str, size, "path pattern edge");
+    struct path_pattern_edge *node = container_of(self, struct path_pattern_edge, _astnode);
+    return snprintf(str, size, "edge label = @%u", node->reltype->ordinal);
 }

@@ -36,7 +36,7 @@ cypher_astnode_t *cypher_ast_path_pattern_reference( const cypher_astnode_t *ide
     return &(node->_astnode);
 
     int errsv;
-    cleanup:
+cleanup:
     errsv = errno;
     free(node);
     errno = errsv;
@@ -64,11 +64,10 @@ cypher_astnode_t *clone(const cypher_astnode_t *self,
     cypher_astnode_t *clone = cypher_ast_path_pattern_reference(identifier,
             children, self->nchildren, self->range);
 
-    int errsv = errno;
-    errno = errsv;
     return clone;
 }
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size) {
-    return snprintf(str, size, "~");
+    struct path_pattern_reference *node = container_of(self, struct path_pattern_reference, _astnode);
+    return snprintf(str, size, "~@%u", node->identifier->ordinal);
 }

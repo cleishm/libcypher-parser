@@ -338,6 +338,8 @@ extern const cypher_astnode_type_t CYPHER_AST_NODE_PATTERN;
 extern const cypher_astnode_type_t CYPHER_AST_REL_PATTERN;
 /** Type for an AST path pattern node. */
 extern const cypher_astnode_type_t CYPHER_AST_PATH_PATTERN;
+/** Type for an AST path pattern any node */
+extern const cypher_astnode_type_t CYPHER_AST_PATH_PATTERN_ANY;
 /** Type for an AST path pattern expression node. */
 extern const cypher_astnode_type_t CYPHER_AST_PATH_PATTERN_EXPRESSION;
 /** Type for an AST path pattern alternative node. */
@@ -5213,9 +5215,12 @@ cypher_astnode_t *cypher_ast_path_pattern(const cypher_astnode_t *expression,
         enum cypher_rel_direction direction, cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
 
-cypher_astnode_t *cypher_ast_path_pattern_expression(cypher_astnode_t * const *elements,
-        unsigned int nelements, cypher_astnode_t **children, unsigned int nchildren,
+cypher_astnode_t *cypher_ast_path_pattern_any(cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
+
+cypher_astnode_t *cypher_ast_path_pattern_expression(const cypher_astnode_t *properties, 
+        cypher_astnode_t * const *elements, unsigned int nelements, cypher_astnode_t **children,
+        unsigned int nchildren, struct cypher_input_range range);
 
 cypher_astnode_t *cypher_ast_path_pattern_alternative(cypher_astnode_t * const *elements,
         unsigned int nelements, cypher_astnode_t **children, unsigned int nchildren,
@@ -5263,6 +5268,9 @@ unsigned int cypher_ast_path_pattern_expression_get_nelements(
 
 const cypher_astnode_t *cypher_ast_path_pattern_expression_get_element(
         const cypher_astnode_t *astnode, unsigned int index);
+
+const cypher_astnode_t *cypher_ast_path_pattern_get_properties(
+        const cypher_astnode_t *astnode);
 
 unsigned int cypher_ast_path_pattern_alternative_get_nelements(
         const cypher_astnode_t *astnode);
