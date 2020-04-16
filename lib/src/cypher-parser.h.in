@@ -5208,47 +5208,13 @@ const cypher_astnode_t *cypher_ast_rel_pattern_get_properties(
  * @param [direction] The direction of the pattern.
  * @param [children] The children of the node.
  * @param [nchildren] The number of children.
+ * @param [range] The input range.
  * @return An AST node, or NULL if an error occurs (errno will be set).
  */
 __cypherlang_must_check
 cypher_astnode_t *cypher_ast_path_pattern(const cypher_astnode_t *expression,
         enum cypher_rel_direction direction, cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range);
-
-cypher_astnode_t *cypher_ast_path_pattern_any(cypher_astnode_t **children, unsigned int nchildren,
-        struct cypher_input_range range);
-
-cypher_astnode_t *cypher_ast_path_pattern_expression(const cypher_astnode_t *properties, 
-        cypher_astnode_t * const *elements, unsigned int nelements, cypher_astnode_t **children,
-        unsigned int nchildren, struct cypher_input_range range);
-
-cypher_astnode_t *cypher_ast_path_pattern_alternative(cypher_astnode_t * const *elements,
-        unsigned int nelements, cypher_astnode_t **children, unsigned int nchildren,
-        struct cypher_input_range range);
-
-cypher_astnode_t *cypher_ast_path_pattern_base(enum cypher_rel_direction direction, const cypher_astnode_t *varlength,
-        const cypher_astnode_t *path_base, cypher_astnode_t **children,
-        unsigned int nchildren, struct cypher_input_range range);
-
-cypher_astnode_t *cypher_ast_path_pattern_edge(const cypher_astnode_t *reltype,
-        cypher_astnode_t **children, unsigned int nchildren,
-        struct cypher_input_range range);
-
-cypher_astnode_t *cypher_ast_path_pattern_reference(const cypher_astnode_t *identifier,
-        cypher_astnode_t **children, unsigned int nchildren,
-        struct cypher_input_range range);
-/**
- * Get the expression of a `CYPHER_AST_PATH_PATTERN` node.
- *
- * If the node is not an instance of `CYPHER_AST_PATH_PATTERN` then the result
- * will be undefined.
- *
- * @param [node] The AST node.
- * @return A `CYPHER_AST_PATH_PATTERN_EXPRESSION` node, or null.
- */
-__cypherlang_pure
-const cypher_astnode_t *cypher_ast_path_pattern_get_expression(
-        const cypher_astnode_t *node);
 
 /**
  * Get the direction of a `CYPHER_AST_PATH_PATTERN` node.
@@ -5263,32 +5229,175 @@ __cypherlang_pure
 enum cypher_rel_direction cypher_ast_path_pattern_get_direction(
         const cypher_astnode_t *node);
 
-unsigned int cypher_ast_path_pattern_expression_get_nelements(
-        const cypher_astnode_t *astnode);
+/**
+ * Get the expression of a `CYPHER_AST_PATH_PATTERN` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_PATH_PATTERN` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_PATH_PATTERN_EXPRESSION` node, or null.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_path_pattern_get_expression(
+        const cypher_astnode_t *node);
 
-const cypher_astnode_t *cypher_ast_path_pattern_expression_get_element(
-        const cypher_astnode_t *astnode, unsigned int index);
-
+/**
+ * Get the properties of a `CYPHER_AST_PATH_PATTERN` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_PATH_PATTERN` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_MAP` node, a `CYPHER_AST_PARAMETER` node, or null.
+ */
 const cypher_astnode_t *cypher_ast_path_pattern_get_properties(
-        const cypher_astnode_t *astnode);
+        const cypher_astnode_t *node);
 
+/**
+ * Construct a 'CYPHER_AST_PATH_PATTERN_ANY' node.
+ *
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+cypher_astnode_t *cypher_ast_path_pattern_any(cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range);
+
+/**
+ * Construct a 'CYPHER_AST_PATH_PATTERN_EXPRESISON' node.
+ * @param [properties] Pattern expression properties.
+ * @param [elements] 'CYPHER_AST_PATH_PATTERN_ALTERNATIVE' nodes.
+ * @param [nelements] The number of elements.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+cypher_astnode_t *cypher_ast_path_pattern_expression(const cypher_astnode_t *properties, 
+        cypher_astnode_t * const *elements, unsigned int nelements, cypher_astnode_t **children,
+        unsigned int nchildren, struct cypher_input_range range);
+
+/**
+ * Get the amount of elements of a 'CYPHER_AST_PATH_PATTERN_EXPRESSION' node.
+ * @param [node] The AST node.
+ * @return The amount of elements in the node.
+ */
+unsigned int cypher_ast_path_pattern_expression_get_nelements(
+        const cypher_astnode_t *node);
+
+/**
+ * Get an element of 'CYPHER_AST_PATH_PATTERN_EXPRESSION' node.
+ * @param [node] The AST node.
+ * @param [index] The index of desired element.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+const cypher_astnode_t *cypher_ast_path_pattern_expression_get_element(
+        const cypher_astnode_t *node, unsigned int index);
+
+/**
+ * Construct a 'CYPHER_AST_PATH_PATTERN_ALTERNATIVE' node.
+ * @param [elements] 'CYPHER_AST_PATH_PATTERN_BASE' nodes.
+ * @param [nelements] The number of elements.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+cypher_astnode_t *cypher_ast_path_pattern_alternative(cypher_astnode_t * const *elements,
+        unsigned int nelements, cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range);
+
+/**
+ * Get the amount of elemets of a 'CYPHER_AST_PATH_PATTERN_ALTERNATIVE' node.
+ * @param [node] The AST node.
+ * @return The amount of elements in the node.
+ */
 unsigned int cypher_ast_path_pattern_alternative_get_nelements(
-        const cypher_astnode_t *astnode);
+        const cypher_astnode_t *node);
 
+/**
+ * Get an element of a 'CYPHER_AST_PATH_PATTERN_ALTERNATIVE' node.
+ * @param [node] The AST node.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 const cypher_astnode_t *cypher_ast_path_pattern_alternative_get_element(
         const cypher_astnode_t *astnode, unsigned int index);
 
+/**
+ * Construct a `CYPHER_AST_PATH_PATTERN_BASE` node.
+ *
+ * @param [direction] The direction of the element.
+ * @param [varlength] A `CYPHER_AST_RANGE` node, or null.
+ * @param [path_base] A 'CYPHER_AST_PATH_PATTERN_BASE' node.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+cypher_astnode_t *cypher_ast_path_pattern_base(enum cypher_rel_direction direction, const cypher_astnode_t *varlength,
+        const cypher_astnode_t *path_base, cypher_astnode_t **children,
+        unsigned int nchildren, struct cypher_input_range range);
+
+/**
+ * Get the direction of a 'CYPHER_AST_PATH_PATTERN_BASE' node.
+ * @param [node] The AST node.
+ * @return The direction of the path base.
+ */
 enum cypher_rel_direction cypher_ast_path_pattern_base_get_direction(
-        const cypher_astnode_t *astnode);
+        const cypher_astnode_t *node);
 
+/**
+ * Get the child of a 'CYPHER_AST_PATH_PATTERN_BASE' node.
+ * @param [node] The AST node.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 const cypher_astnode_t *cypher_ast_path_pattern_base_get_child(
-        const cypher_astnode_t *astnode);
+        const cypher_astnode_t *node);
 
+/**
+ * Construct a 'CYPHER_AST_PATH_PATTERN_EDGE' node.
+ * @param [reltype] The relationship type of the edge.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+cypher_astnode_t *cypher_ast_path_pattern_edge(const cypher_astnode_t *reltype,
+        cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range);
+
+/**
+ * Get the relationship type of a 'CYPHER_AST_PATH_PATTERN_EDGE' node.
+ * @param [node] The AST node.
+ * @return The 'CYPHER_AST_RELTYPE' node, or NULL.
+ */
 const cypher_astnode_t *cypher_ast_path_pattern_edge_get_reltype(
-        const cypher_astnode_t *astnode);
+        const cypher_astnode_t *node);
 
+/**
+ * Cpnstruct a 'CYPHER_AST_PATH_PATTERN_REFERENCE' node.
+ * @param [identifier] A 'CYPHER_AST_IDENTIFIER' node.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+cypher_astnode_t *cypher_ast_path_pattern_reference(const cypher_astnode_t *identifier,
+        cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range);
+
+/**
+ * Get the identifier of a 'CYPHER_AST_PATH_PATTERN_REFERENCE' node.
+ * @param [node] The AST node.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
 const cypher_astnode_t *cypher_ast_path_pattern_reference_get_identifier(
-        const cypher_astnode_t *astnode);
+        const cypher_astnode_t *node);
+
+
+
 /**
  * Construct a `CYPHER_AST_RANGE` node.
  *

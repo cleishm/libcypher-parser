@@ -1,4 +1,7 @@
+#include "../../config.h"
 #include "astnode.h"
+#include "util.h"
+#include <assert.h> 
 
 struct path_pattern_reference
 {
