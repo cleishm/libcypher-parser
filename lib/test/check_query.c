@@ -214,7 +214,7 @@ START_TEST (parse_named_path_predicate_query)
 " @8  21..23  > > > > > > alternative       @9\n"
 " @9  21..23  > > > > > > > path base       @10\n"
 "@10  21..23  > > > > > > > > node pattern  ()\n"
-"@11  25..27  > > > > node pattern          ()\n"
+"@11  25..27  > > > > node pattern          ()\n";
     ck_assert_str_eq(memstream_buffer, expected);
 
     ck_assert_int_eq(cypher_parse_result_ndirectives(result), 1);

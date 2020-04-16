@@ -1281,8 +1281,7 @@ START_TEST (parse_path_pattern_multiple_alternatives)
 "@12  15..17  > > > > > > > > path base            @13\n"
 "@13  15..17  > > > > > > > > > path pattern edge  edge label = @14\n"
 "@14  15..17  > > > > > > > > > > rel type         :`B`\n"
-"@15  19..21  > > > > > node pattern               ()\n"
-
+"@15  19..21  > > > > > node pattern               ()\n";
     ck_assert_str_eq(memstream_buffer, expected);
 
     const cypher_astnode_t *ast = cypher_parse_result_get_directive(result, 0);
