@@ -1,4 +1,4 @@
-Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: libcypher-parser
 Upstream-Contact: Chris Leishman <chris@leishman.org>
 Source: https://github.com/cleishm/libcypher-parser.git
