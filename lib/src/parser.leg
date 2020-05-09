@@ -855,6 +855,7 @@ rel-varlength =
     | STAR - < (s:integer-literal | s:_null_) >
                                        { $$ = range(s, s); }
     | < STAR - >                       { $$ = range(NULL, NULL); }
+    )
 
 rel-plus =
     < PLUS >                         { $$ = range_plus(); }
