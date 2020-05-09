@@ -58,9 +58,10 @@ cypher_astnode_t *cypher_ast_rel_pattern(enum cypher_rel_direction direction,
             cypher_astnode_instanceof(properties, CYPHER_AST_MAP) ||
             cypher_astnode_instanceof(properties, CYPHER_AST_PARAMETER), NULL);
     REQUIRE_CONTAINS_OPTIONAL(children, nchildren, properties, NULL);
-    REQUIRE_CHILD_OPTIONAL(children, nchildren, varlength,
-            CYPHER_AST_RANGE, NULL);
-
+    REQUIRE(varlength == NULL ||
+            cypher_astnode_instanceof(varlength, CYPHER_AST_RANGE) ||
+            cypher_astnode_instanceof(varlength, CYPHER_AST_RANGE_PLUS) ||
+            cypher_astnode_instanceof(varlength, CYPHER_AST_RANGE_OPTIONAL), NULL);
     struct rel_pattern *node = calloc(1, sizeof(struct rel_pattern) +
             nreltypes * sizeof(cypher_astnode_t *));
     if (node == NULL)

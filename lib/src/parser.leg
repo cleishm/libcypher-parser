@@ -776,15 +776,15 @@ path-alternative =
 path-repetition =
    < ( LEFT-ARROW-HEAD - p:path-base
        ( - RIGHT-ARROW-HEAD
-         - (l:rel-varlength | l:_null_) >  { $$ = path_pattern_base(BIDIRECTIONAL, l, p); }
+         - (l:rel-varlength | l:rel-plus | l:rel-optional | l:_null_) >  { $$ = path_pattern_base(BIDIRECTIONAL, l, p); }
        | _empty_
-         - (l:rel-varlength | l:_null_) >  { $$ = path_pattern_base(INBOUND, l, p); }
+         - (l:rel-varlength | l:rel-plus | l:rel-optional | l:_null_) >  { $$ = path_pattern_base(INBOUND, l, p); }
        )
      | p:path-base
        ( - RIGHT-ARROW-HEAD
-         - (l:rel-varlength | l:_null_) >  { $$ = path_pattern_base(OUTBOUND, l, p); }
+         - (l:rel-varlength | l:rel-plus | l:rel-optional | l:_null_) >  { $$ = path_pattern_base(OUTBOUND, l, p); }
        | _empty_
-         - (l:rel-varlength | l:_null_) >  { $$ = path_pattern_base(BIDIRECTIONAL, l, p); }
+         - (l:rel-varlength | l:rel-plus | l:rel-optional | l:_null_) >  { $$ = path_pattern_base(BIDIRECTIONAL, l, p); }
        )
      )
 
@@ -822,7 +822,7 @@ relationship-pattern =
             | _empty_ >                { $$ = simple_rel_pattern(INBOUND); }
             )
           | LEFT-SQ-PAREN - (i:identifier | i:_null_)
-            rel-types? (l:rel-varlength | l:_null_)
+            rel-types? (l:rel-varlength | l:rel-plus | l:rel-optional | l:_null_)
             (p:pattern-properties | p:_null_) RIGHT-SQ-PAREN - DASH 
             ( - RIGHT-ARROW-HEAD >     { $$ = rel_pattern(BIDIRECTIONAL, i, l, p); }
             | _empty_ >                { $$ = rel_pattern(INBOUND, i, l, p); }
@@ -834,7 +834,7 @@ relationship-pattern =
             | _empty_ >                { $$ = simple_rel_pattern(BIDIRECTIONAL); }
             )
           | LEFT-SQ-PAREN - (i:identifier | i:_null_)
-            rel-types? (l:rel-varlength | l:_null_)
+            rel-types? (l:rel-varlength | l:rel-plus | l:rel-optional | l:_null_)
             (p:pattern-properties | p:_null_) RIGHT-SQ-PAREN - DASH 
             ( - RIGHT-ARROW-HEAD >     { $$ = rel_pattern(OUTBOUND, i, l, p); }
             | _empty_ >                { $$ = rel_pattern(BIDIRECTIONAL, i, l, p); }
@@ -855,9 +855,12 @@ rel-varlength =
     | STAR - < (s:integer-literal | s:_null_) >
                                        { $$ = range(s, s); }
     | < STAR - >                       { $$ = range(NULL, NULL); }
-#    | < PLUS - >                       { $$ = range(1, NULL); }
-#    | < QUESTIONMARK - >               { $$ = range(NULL, 1); }
-    )
+
+rel-plus =
+    < PLUS >                         { $$ = range_plus(); }
+
+rel-optional =
+    < QUESTIONMARK >                 { $$ = range_optional(); }
 
 pattern-properties = map-literal | parameter
 

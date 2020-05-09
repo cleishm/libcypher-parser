@@ -57,6 +57,15 @@ enum cypher_rel_direction cypher_ast_path_pattern_base_get_direction(
     return node->direction;
 }
 
+const cypher_astnode_t *cypher_ast_path_pattern_base_get_varlength(
+        const cypher_astnode_t *astnode)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_PATH_PATTERN_BASE, NULL);
+    struct path_pattern_base *node =
+            container_of(astnode, struct path_pattern_base, _astnode);
+    return node->varlength;
+}
+
 const cypher_astnode_t *cypher_ast_path_pattern_base_get_child(
         const cypher_astnode_t *astnode)
 {

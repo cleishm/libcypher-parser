@@ -246,6 +246,8 @@ extern const struct cypher_astnode_vt cypher_path_pattern_base_astnode_vt;
 extern const struct cypher_astnode_vt cypher_path_pattern_edge_astnode_vt;
 extern const struct cypher_astnode_vt cypher_path_pattern_reference_astnode_vt;
 extern const struct cypher_astnode_vt cypher_range_astnode_vt;
+extern const struct cypher_astnode_vt cypher_range_plus_astnode_vt;
+extern const struct cypher_astnode_vt cypher_range_optional_astnode_vt;
 extern const struct cypher_astnode_vt cypher_command_astnode_vt;
 extern const struct cypher_astnode_vt cypher_comment_astnode_vt;
 extern const struct cypher_astnode_vt cypher_line_comment_astnode_vt;

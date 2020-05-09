@@ -85,6 +85,8 @@ libcypher_parser_la_SOURCES = \
 	ast_query_clause.c \
 	ast_query_option.c \
 	ast_range.c \
+    ast_range_plus.c \
+    ast_range_optional.c \
 	ast_reduce.c \
 	ast_rel_id_lookup.c \
 	ast_rel_index_lookup.c \

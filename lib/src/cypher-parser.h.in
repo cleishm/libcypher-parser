@@ -352,6 +352,10 @@ extern const cypher_astnode_type_t CYPHER_AST_PATH_PATTERN_EDGE;
 extern const cypher_astnode_type_t CYPHER_AST_PATH_PATTERN_REFERENCE;
 /** Type for an AST range node. */
 extern const cypher_astnode_type_t CYPHER_AST_RANGE;
+/** Type for an AST range plus node. */
+extern const cypher_astnode_type_t CYPHER_AST_RANGE_PLUS;
+/** Type for an AST optional node. */
+extern const cypher_astnode_type_t CYPHER_AST_RANGE_OPTIONAL;
 /** Type for an AST command node. */
 extern const cypher_astnode_type_t CYPHER_AST_COMMAND;
 /** Type for an AST comment node. */
@@ -5349,6 +5353,15 @@ enum cypher_rel_direction cypher_ast_path_pattern_base_get_direction(
         const cypher_astnode_t *node);
 
 /**
+ * Get the varlength of a 'CYPHER_AST_PATH_PATTERN_BASE' node.
+ * @param [node] The AST node.
+ * @return The direction of the path base.
+ */
+const cypher_astnode_t *cypher_ast_path_pattern_base_get_varlength(
+        const cypher_astnode_t *node);
+
+
+/**
  * Get the child of a 'CYPHER_AST_PATH_PATTERN_BASE' node.
  * @param [node] The AST node.
  * @return An AST node, or NULL if an error occurs (errno will be set).
@@ -5439,6 +5452,27 @@ __cypherlang_pure
 const cypher_astnode_t *cypher_ast_range_get_end(
         const cypher_astnode_t *node);
 
+/**
+ * Construct a `CYPHER_AST_RANGE_PLUS` node.
+ *
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+cypher_astnode_t *cypher_ast_range_plus(cypher_astnode_t **children,
+        unsigned int nchildren, struct cypher_input_range range);
+
+/**
+ * Construct a `CYPHER_AST_RANGE_OPTIONAL` node.
+ *
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+cypher_astnode_t *cypher_ast_range_optional(cypher_astnode_t **children,
+        unsigned int nchildren, struct cypher_input_range range);
 
 /**
  * Construct a `CYPHER_AST_COMMAND` node.
