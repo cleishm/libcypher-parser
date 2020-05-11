@@ -2,7 +2,7 @@ Source: libcypher-parser
 Section: devel
 Priority: optional
 Maintainer: Chris Leishman <chris@leishman.org>
-Build-Depends: debhelper (>= 9), dh-autoreconf, pkg-config
+Build-Depends: debhelper (>= 10~), pkg-config
 Build-Depends-Indep: doxygen
 Standards-Version: 3.9.8
 Homepage: https://cleishm.github.io/libcypher-parser/

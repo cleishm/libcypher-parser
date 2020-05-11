@@ -1,6 +1,17 @@
+libcypher-parser (0.6.2-2) UNRELEASED; urgency=medium
+
+  * Trim trailing whitespace.
+  * Use secure copyright file specification URI.
+  * Bump debhelper from deprecated 9 to 10.
+  * Set upstream metadata fields: Bug-Database, Bug-Submit, Repository,
+    Repository-Browse.
+  * Drop unnecessary dependency on dh-autoreconf.
+
+ -- Debian Janitor <janitor@jelmer.uk>  Tue, 28 Apr 2020 19:21:25 +0000
+
 libcypher-parser (0.6.2-1) unstable; urgency=medium
 
-  * New upstream release 
+  * New upstream release
     - Fix issue in configure.ac that was requiring peg for distribution
       builds.
     - Adjust precedence of IS NULL
@@ -12,7 +23,7 @@ libcypher-parser (0.6.2-1) unstable; urgency=medium
 libcypher-parser (0.6.0-1) unstable; urgency=medium
 
   * New upstream release.
-    - Adds #define's for compile time version inspection. 
+    - Adds #define's for compile time version inspection.
 
  -- Chris Leishman <chris@leishman.org>  Wed, 20 Sep 2017 06:53:51 +0000
 
@@ -43,7 +54,7 @@ libcypher-parser (0.5.2-1) unstable; urgency=medium
 
 libcypher-parser (0.5.1-1) unstable; urgency=medium
 
-  * New upstream release. 
+  * New upstream release.
 
  -- Chris Leishman <chris@leishman.org>  Mon, 15 Aug 2016 15:22:16 +0000
 
