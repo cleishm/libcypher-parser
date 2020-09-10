@@ -150,65 +150,57 @@ END_TEST
 
 START_TEST (parse_statement_params_types)
 {
-    result = cypher_parse("CYPHER pos_int_val=1 strong_pos_int=+1 neg_int_val=-1 pos_float_val=2.3 strong_pos_float=+2.3 neg_float_val=-2.3 true_val=true false_val=false null_val=NULL string_val='str' arr_val=[1,2,3] map_val={ int_val:1, float_val:2.3} RETURN 1", NULL, NULL, 0);
+    result = cypher_parse("CYPHER pos_int_val=1 neg_int_val=-1 pos_float_val=2.3 neg_float_val=-2.3 true_val=true false_val=false null_val=NULL string_val='str' arr_val=[1,2,3] map_val={ int_val:1, float_val:2.3} RETURN 1", NULL, NULL, 0);
 
     ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
-" @0    0..234  statement             options=[@1], body=@49\n"
-" @1    0..226  > CYPHER              params=[@2, @5, @9, @13, @16, @20, @24, @27, @30, @33, @36, @42]\n"
+" @0    0..194  statement             options=[@1], body=@41\n"
+" @1    0..186  > CYPHER              params=[@2, @5, @9, @12, @16, @19, @22, @25, @28, @34]\n"
 " @2    7..21   > > cypher parameter  @3 = @4\n"
 " @3    7..18   > > > string          \"pos_int_val\"\n"
 " @4   19..20   > > > integer         1\n"
-" @5   21..39   > > cypher parameter  @6 = @7\n"
-" @6   21..35   > > > string          \"strong_pos_int\"\n"
-" @7   36..39   > > > unary operator  + @8\n"
-" @8   37..38   > > > > integer       1\n"
-" @9   39..54   > > cypher parameter  @10 = @11\n"
-"@10   39..50   > > > string          \"neg_int_val\"\n"
-"@11   51..54   > > > unary operator  - @12\n"
-"@12   52..53   > > > > integer       1\n"
-"@13   54..72   > > cypher parameter  @14 = @15\n"
-"@14   54..67   > > > string          \"pos_float_val\"\n"
-"@15   68..71   > > > float           2.3\n"
-"@16   72..94   > > cypher parameter  @17 = @18\n"
-"@17   72..88   > > > string          \"strong_pos_float\"\n"
-"@18   89..94   > > > unary operator  + @19\n"
-"@19   90..93   > > > > float         2.3\n"
-"@20   94..113  > > cypher parameter  @21 = @22\n"
-"@21   94..107  > > > string          \"neg_float_val\"\n"
-"@22  108..113  > > > unary operator  - @23\n"
-"@23  109..112  > > > > float         2.3\n"
-"@24  113..127  > > cypher parameter  @25 = @26\n"
-"@25  113..121  > > > string          \"true_val\"\n"
-"@26  122..126  > > > TRUE\n"
-"@27  127..143  > > cypher parameter  @28 = @29\n"
-"@28  127..136  > > > string          \"false_val\"\n"
-"@29  137..142  > > > FALSE\n"
-"@30  143..157  > > cypher parameter  @31 = @32\n"
-"@31  143..151  > > > string          \"null_val\"\n"
-"@32  152..156  > > > NULL\n"
-"@33  157..174  > > cypher parameter  @34 = @35\n"
-"@34  157..167  > > > string          \"string_val\"\n"
-"@35  168..173  > > > string          \"str\"\n"
-"@36  174..190  > > cypher parameter  @37 = @38\n"
-"@37  174..181  > > > string          \"arr_val\"\n"
-"@38  182..189  > > > collection      [@39, @40, @41]\n"
-"@39  183..184  > > > > integer       1\n"
-"@40  185..186  > > > > integer       2\n"
-"@41  187..188  > > > > integer       3\n"
-"@42  190..226  > > cypher parameter  @43 = @44\n"
-"@43  190..197  > > > string          \"map_val\"\n"
-"@44  198..225  > > > map             {@45:@46, @47:@48}\n"
-"@45  200..207  > > > > prop name     `int_val`\n"
-"@46  208..209  > > > > integer       1\n"
-"@47  211..220  > > > > prop name     `float_val`\n"
-"@48  221..224  > > > > float         2.3\n"
-"@49  226..234  > query               clauses=[@50]\n"
-"@50  226..234  > > RETURN            projections=[@51]\n"
-"@51  233..234  > > > projection      expression=@52, alias=@53\n"
-"@52  233..234  > > > > integer       1\n"
-"@53  233..234  > > > > identifier    `1`\n";
+" @5   21..36   > > cypher parameter  @6 = @7\n"
+" @6   21..32   > > > string          \"neg_int_val\"\n"
+" @7   33..36   > > > unary operator  - @8\n"
+" @8   34..35   > > > > integer       1\n"
+" @9   36..54   > > cypher parameter  @10 = @11\n"
+"@10   36..49   > > > string          \"pos_float_val\"\n"
+"@11   50..53   > > > float           2.3\n"
+"@12   54..73   > > cypher parameter  @13 = @14\n"
+"@13   54..67   > > > string          \"neg_float_val\"\n"
+"@14   68..73   > > > unary operator  - @15\n"
+"@15   69..72   > > > > float         2.3\n"
+"@16   73..87   > > cypher parameter  @17 = @18\n"
+"@17   73..81   > > > string          \"true_val\"\n"
+"@18   82..86   > > > TRUE\n"
+"@19   87..103  > > cypher parameter  @20 = @21\n"
+"@20   87..96   > > > string          \"false_val\"\n"
+"@21   97..102  > > > FALSE\n"
+"@22  103..117  > > cypher parameter  @23 = @24\n"
+"@23  103..111  > > > string          \"null_val\"\n"
+"@24  112..116  > > > NULL\n"
+"@25  117..134  > > cypher parameter  @26 = @27\n"
+"@26  117..127  > > > string          \"string_val\"\n"
+"@27  128..133  > > > string          \"str\"\n"
+"@28  134..150  > > cypher parameter  @29 = @30\n"
+"@29  134..141  > > > string          \"arr_val\"\n"
+"@30  142..149  > > > collection      [@31, @32, @33]\n"
+"@31  143..144  > > > > integer       1\n"
+"@32  145..146  > > > > integer       2\n"
+"@33  147..148  > > > > integer       3\n"
+"@34  150..186  > > cypher parameter  @35 = @36\n"
+"@35  150..157  > > > string          \"map_val\"\n"
+"@36  158..185  > > > map             {@37:@38, @39:@40}\n"
+"@37  160..167  > > > > prop name     `int_val`\n"
+"@38  168..169  > > > > integer       1\n"
+"@39  171..180  > > > > prop name     `float_val`\n"
+"@40  181..184  > > > > float         2.3\n"
+"@41  186..194  > query               clauses=[@42]\n"
+"@42  186..194  > > RETURN            projections=[@43]\n"
+"@43  193..194  > > > projection      expression=@44, alias=@45\n"
+"@44  193..194  > > > > integer       1\n"
+"@45  193..194  > > > > identifier    `1`\n";
     ck_assert_str_eq(memstream_buffer, expected);
     ck_assert_int_eq(cypher_parse_result_ndirectives(result), 1);
     const cypher_astnode_t *ast = cypher_parse_result_get_directive(result, 0);
@@ -219,7 +211,7 @@ START_TEST (parse_statement_params_types)
     ck_assert(cypher_astnode_instanceof(option, CYPHER_AST_STATEMENT_OPTION));
     ck_assert_int_eq(cypher_astnode_type(option), CYPHER_AST_CYPHER_OPTION);
 
-    ck_assert_int_eq(cypher_ast_cypher_option_nparams(option), 12);
+    ck_assert_int_eq(cypher_ast_cypher_option_nparams(option), 10);
 
     const cypher_astnode_t *param =
             cypher_ast_cypher_option_get_param(option, 0);
@@ -234,16 +226,8 @@ START_TEST (parse_statement_params_types)
     ck_assert_int_eq(cypher_astnode_type(value), CYPHER_AST_INTEGER);
     ck_assert_str_eq(cypher_ast_string_get_value(name), "pos_int_val");
     ck_assert_str_eq(cypher_ast_integer_get_valuestr(value), "1");
-
-    param = cypher_ast_cypher_option_get_param(option, 1);
-    ck_assert_int_eq(cypher_astnode_type(param),CYPHER_AST_CYPHER_OPTION_PARAM);
-    name = cypher_ast_cypher_option_param_get_name(param);
-    ck_assert_int_eq(cypher_astnode_type(name), CYPHER_AST_STRING);
-    value = cypher_ast_cypher_option_param_get_value(param);
-    ck_assert_int_eq(cypher_astnode_type(value), CYPHER_AST_UNARY_OPERATOR);
-    ck_assert_str_eq(cypher_ast_string_get_value(name), "strong_pos_int");
      
-    param = cypher_ast_cypher_option_get_param(option, 2);
+    param = cypher_ast_cypher_option_get_param(option, 1);
     ck_assert_int_eq(cypher_astnode_type(param),CYPHER_AST_CYPHER_OPTION_PARAM);
     name = cypher_ast_cypher_option_param_get_name(param);
     ck_assert_int_eq(cypher_astnode_type(name), CYPHER_AST_STRING);
@@ -251,7 +235,7 @@ START_TEST (parse_statement_params_types)
     ck_assert_int_eq(cypher_astnode_type(value), CYPHER_AST_UNARY_OPERATOR);
     ck_assert_str_eq(cypher_ast_string_get_value(name), "neg_int_val");
 
-    param = cypher_ast_cypher_option_get_param(option, 3);
+    param = cypher_ast_cypher_option_get_param(option, 2);
     ck_assert_int_eq(cypher_astnode_type(param),CYPHER_AST_CYPHER_OPTION_PARAM);
     name = cypher_ast_cypher_option_param_get_name(param);
     ck_assert_int_eq(cypher_astnode_type(name), CYPHER_AST_STRING);
@@ -260,15 +244,7 @@ START_TEST (parse_statement_params_types)
     ck_assert_str_eq(cypher_ast_string_get_value(name), "pos_float_val");
     ck_assert_str_eq(cypher_ast_float_get_valuestr(value), "2.3");
 
-    param = cypher_ast_cypher_option_get_param(option, 4);
-    ck_assert_int_eq(cypher_astnode_type(param),CYPHER_AST_CYPHER_OPTION_PARAM);
-    name = cypher_ast_cypher_option_param_get_name(param);
-    ck_assert_int_eq(cypher_astnode_type(name), CYPHER_AST_STRING);
-    value = cypher_ast_cypher_option_param_get_value(param);
-    ck_assert_int_eq(cypher_astnode_type(value), CYPHER_AST_UNARY_OPERATOR);
-    ck_assert_str_eq(cypher_ast_string_get_value(name), "strong_pos_float");
-
-    param = cypher_ast_cypher_option_get_param(option, 5);
+    param = cypher_ast_cypher_option_get_param(option, 3);
     ck_assert_int_eq(cypher_astnode_type(param),CYPHER_AST_CYPHER_OPTION_PARAM);
     name = cypher_ast_cypher_option_param_get_name(param);
     ck_assert_int_eq(cypher_astnode_type(name), CYPHER_AST_STRING);
@@ -276,7 +252,7 @@ START_TEST (parse_statement_params_types)
     ck_assert_int_eq(cypher_astnode_type(value), CYPHER_AST_UNARY_OPERATOR);
     ck_assert_str_eq(cypher_ast_string_get_value(name), "neg_float_val");
 
-    param = cypher_ast_cypher_option_get_param(option, 6);
+    param = cypher_ast_cypher_option_get_param(option, 4);
     ck_assert_int_eq(cypher_astnode_type(param),
             CYPHER_AST_CYPHER_OPTION_PARAM);
     name = cypher_ast_cypher_option_param_get_name(param);
@@ -285,7 +261,7 @@ START_TEST (parse_statement_params_types)
     ck_assert_int_eq(cypher_astnode_type(value), CYPHER_AST_TRUE);
     ck_assert_str_eq(cypher_ast_string_get_value(name), "true_val");
 
-    param = cypher_ast_cypher_option_get_param(option, 7);
+    param = cypher_ast_cypher_option_get_param(option, 5);
     ck_assert_int_eq(cypher_astnode_type(param),
             CYPHER_AST_CYPHER_OPTION_PARAM);
     name = cypher_ast_cypher_option_param_get_name(param);
@@ -294,7 +270,7 @@ START_TEST (parse_statement_params_types)
     ck_assert_int_eq(cypher_astnode_type(value), CYPHER_AST_FALSE);
     ck_assert_str_eq(cypher_ast_string_get_value(name), "false_val");
 
-    param = cypher_ast_cypher_option_get_param(option, 8);
+    param = cypher_ast_cypher_option_get_param(option, 6);
     ck_assert_int_eq(cypher_astnode_type(param),
             CYPHER_AST_CYPHER_OPTION_PARAM);
     name = cypher_ast_cypher_option_param_get_name(param);
@@ -303,7 +279,7 @@ START_TEST (parse_statement_params_types)
     ck_assert_int_eq(cypher_astnode_type(value), CYPHER_AST_NULL);
     ck_assert_str_eq(cypher_ast_string_get_value(name), "null_val");
 
-    param = cypher_ast_cypher_option_get_param(option, 9);
+    param = cypher_ast_cypher_option_get_param(option, 7);
     ck_assert_int_eq(cypher_astnode_type(param),
             CYPHER_AST_CYPHER_OPTION_PARAM);
     name = cypher_ast_cypher_option_param_get_name(param);
@@ -313,7 +289,7 @@ START_TEST (parse_statement_params_types)
     ck_assert_str_eq(cypher_ast_string_get_value(name), "string_val");
     ck_assert_str_eq(cypher_ast_string_get_value(value), "str");
 
-    param = cypher_ast_cypher_option_get_param(option, 10);
+    param = cypher_ast_cypher_option_get_param(option, 8);
     ck_assert_int_eq(cypher_astnode_type(param),
             CYPHER_AST_CYPHER_OPTION_PARAM);
     name = cypher_ast_cypher_option_param_get_name(param);
@@ -322,7 +298,7 @@ START_TEST (parse_statement_params_types)
     ck_assert_int_eq(cypher_astnode_type(value), CYPHER_AST_COLLECTION);
     ck_assert_str_eq(cypher_ast_string_get_value(name), "arr_val");
 
-    param = cypher_ast_cypher_option_get_param(option, 11);
+    param = cypher_ast_cypher_option_get_param(option, 9);
     ck_assert_int_eq(cypher_astnode_type(param),
             CYPHER_AST_CYPHER_OPTION_PARAM);
     name = cypher_ast_cypher_option_param_get_name(param);
