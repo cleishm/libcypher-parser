@@ -98,6 +98,7 @@ cypher-param-value =
     | integer-literal
     | collection-literal
     | map-literal
+    | _atom
 
 profile-option = < PROFILE >           { $$ = profile_option(); }
 explain-option = < EXPLAIN >           { $$ = explain_option(); }
