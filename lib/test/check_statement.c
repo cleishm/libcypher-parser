@@ -223,34 +223,43 @@ START_TEST (parse_statement_params_types)
     ck_assert_int_eq(cypher_astnode_type(name), CYPHER_AST_STRING);
     const cypher_astnode_t *value = 
             cypher_ast_cypher_option_param_get_value(param);
-    ck_assert_int_eq(cypher_astnode_type(value), CYPHER_AST_INTEGER);
     ck_assert_str_eq(cypher_ast_string_get_value(name), "pos_int_val");
+    ck_assert_int_eq(cypher_astnode_type(value), CYPHER_AST_INTEGER);
     ck_assert_str_eq(cypher_ast_integer_get_valuestr(value), "1");
      
     param = cypher_ast_cypher_option_get_param(option, 1);
     ck_assert_int_eq(cypher_astnode_type(param),CYPHER_AST_CYPHER_OPTION_PARAM);
     name = cypher_ast_cypher_option_param_get_name(param);
     ck_assert_int_eq(cypher_astnode_type(name), CYPHER_AST_STRING);
-    value = cypher_ast_cypher_option_param_get_value(param);
-    ck_assert_int_eq(cypher_astnode_type(value), CYPHER_AST_UNARY_OPERATOR);
+    const cypher_astnode_t * op = cypher_ast_cypher_option_param_get_value(param);
     ck_assert_str_eq(cypher_ast_string_get_value(name), "neg_int_val");
+    ck_assert_int_eq(cypher_astnode_type(op), CYPHER_AST_UNARY_OPERATOR);
+    ck_assert(cypher_ast_unary_operator_get_operator(op) == CYPHER_OP_UNARY_MINUS);
+    value = cypher_ast_unary_operator_get_argument(op);
+    ck_assert_int_eq(cypher_astnode_type(value), CYPHER_AST_INTEGER);
+    ck_assert_str_eq(cypher_ast_integer_get_valuestr(value), "1");
+
 
     param = cypher_ast_cypher_option_get_param(option, 2);
     ck_assert_int_eq(cypher_astnode_type(param),CYPHER_AST_CYPHER_OPTION_PARAM);
     name = cypher_ast_cypher_option_param_get_name(param);
     ck_assert_int_eq(cypher_astnode_type(name), CYPHER_AST_STRING);
     value = cypher_ast_cypher_option_param_get_value(param);
-    ck_assert_int_eq(cypher_astnode_type(value), CYPHER_AST_FLOAT);
     ck_assert_str_eq(cypher_ast_string_get_value(name), "pos_float_val");
+    ck_assert_int_eq(cypher_astnode_type(value), CYPHER_AST_FLOAT);
     ck_assert_str_eq(cypher_ast_float_get_valuestr(value), "2.3");
 
     param = cypher_ast_cypher_option_get_param(option, 3);
     ck_assert_int_eq(cypher_astnode_type(param),CYPHER_AST_CYPHER_OPTION_PARAM);
     name = cypher_ast_cypher_option_param_get_name(param);
     ck_assert_int_eq(cypher_astnode_type(name), CYPHER_AST_STRING);
-    value = cypher_ast_cypher_option_param_get_value(param);
-    ck_assert_int_eq(cypher_astnode_type(value), CYPHER_AST_UNARY_OPERATOR);
+    op = cypher_ast_cypher_option_param_get_value(param);
     ck_assert_str_eq(cypher_ast_string_get_value(name), "neg_float_val");
+    ck_assert_int_eq(cypher_astnode_type(op), CYPHER_AST_UNARY_OPERATOR);
+    ck_assert(cypher_ast_unary_operator_get_operator(op) == CYPHER_OP_UNARY_MINUS);
+    value = cypher_ast_unary_operator_get_argument(op);
+    ck_assert_int_eq(cypher_astnode_type(value), CYPHER_AST_FLOAT);
+    ck_assert_str_eq(cypher_ast_float_get_valuestr(value), "2.3");
 
     param = cypher_ast_cypher_option_get_param(option, 4);
     ck_assert_int_eq(cypher_astnode_type(param),
