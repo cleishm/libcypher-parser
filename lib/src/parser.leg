@@ -94,10 +94,18 @@ cypher-param-value =
     | false-literal
     | null-literal
     | string-literal
-    | float-literal
-    | integer-literal
     | collection-literal
     | map-literal
+    | number
+
+number = 
+      float-literal
+    | integer-literal
+    | negative_number
+
+negative-number = 
+      < MINUS &{OP(UNARY_MINUS)} - n:number >     { op_push(UNARY_MINUS);
+                                                    $$ = unary_operator(op_pop(), n); }
 
 profile-option = < PROFILE >           { $$ = profile_option(); }
 explain-option = < EXPLAIN >           { $$ = explain_option(); }
