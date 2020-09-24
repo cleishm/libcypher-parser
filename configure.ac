@@ -14,7 +14,7 @@
 #
 dnl Process this file with autoconf to produce a configure script
 AC_PREREQ([2.69])
-AC_INIT([libcypher-parser],[0.6.3~devel])
+AC_INIT([libcypher-parser],[0.6.3])
 AC_CONFIG_SRCDIR([lib/src/cypher-parser.h.in])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
