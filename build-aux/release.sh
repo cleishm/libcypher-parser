@@ -8,8 +8,8 @@ if ! [ -d .git ]; then
   exit 1
 fi
 
-if [ `git symbolic-ref HEAD` != 'refs/heads/master' ]; then
-  echo "Must be run on the master branch" >&2
+if [ `git symbolic-ref HEAD` != 'refs/heads/main' ]; then
+  echo "Must be run on the main branch" >&2
   exit 1
 fi
 
@@ -128,7 +128,7 @@ EOF
 echo
 echo "Distribution created and debian branch updated"
 
-git checkout master
+git checkout main
 VERSION_PATCH=`echo $VERSION | awk -F. '{ print $3 }'`
 NEXT_VERSION=`echo $VERSION | awk -F. '{ print $1 "." $2 "." }'``expr $VERSION_PATCH + 1`
 
