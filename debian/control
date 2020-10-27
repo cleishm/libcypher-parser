@@ -58,6 +58,7 @@ Section: doc
 Architecture: all
 Depends: libjs-jquery, ${misc:Depends}
 Recommends: libcypher-parser-dev
+Multi-Arch: foreign
 Description: Documentation for libcypher-parser
  Cypher is a graph query language that allows for expressive and efficient
  querying of graph data.

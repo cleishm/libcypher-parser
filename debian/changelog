@@ -6,6 +6,8 @@ libcypher-parser (0.6.2-2) UNRELEASED; urgency=medium
   * Set upstream metadata fields: Bug-Database, Bug-Submit, Repository,
     Repository-Browse.
   * Drop unnecessary dependency on dh-autoreconf.
+  * Apply multi-arch hints.
+    + libcypher-parser-doc: Add Multi-Arch: foreign.
 
  -- Debian Janitor <janitor@jelmer.uk>  Tue, 28 Apr 2020 19:21:25 +0000
 
