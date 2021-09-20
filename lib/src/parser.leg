@@ -111,14 +111,15 @@ profile-option = < PROFILE >           { $$ = profile_option(); }
 explain-option = < EXPLAIN >           { $$ = explain_option(); }
 
 schema-command =
-    ( create-index
+    ( create-index-on
+    | create-index-for
     | create-constraint
     | drop-index
     | drop-constraint
     ) ~{ERR("a schema command")}
     (SEMICOLON | EOF)
 
-create-index =
+create-index-on =
     < CREATE-INDEX-ON l:label LEFT-PAREN - p:prop-name
                                        { sequence_add(p); }
       ( COMMA - p:prop-name
@@ -126,6 +127,26 @@ create-index =
       )* RIGHT-PAREN >
                                        { $$ = create_index(l); }
     -
+
+create-index-for =
+    < CREATE-INDEX-FOR
+      ( LEFT-PAREN - i:identifier l:label RIGHT-PAREN -
+        ON - LEFT-PAREN i:identifier DOT p:prop-name
+                                       { sequence_add(p); }
+        ( COMMA - i:identifier DOT p:prop-name
+                                       { sequence_add(p); }
+        )* RIGHT-PAREN >
+                                       { $$ = create_index(l); }
+      | LEFT-PAREN - RIGHT-PAREN - (LEFT-ARROW-HEAD -)? DASH -
+        LEFT-SQ-PAREN - i:identifier t:rel-type RIGHT-SQ-PAREN -
+        DASH - (RIGHT-ARROW-HEAD -)? LEFT-PAREN - RIGHT-PAREN -
+        ON - LEFT-PAREN i:identifier DOT p:prop-name
+                                       { sequence_add(p); }
+        ( COMMA - i:identifier DOT p:prop-name
+                                       { sequence_add(p); }
+        )* RIGHT-PAREN >
+                                       { $$ = create_rel_index(t); }
+    ) -
 
 create-constraint =
     < CREATE-CONSTRAINT-ON
@@ -995,6 +1016,10 @@ CREATE-CONSTRAINT-ON = [Cc]([Rr][Ee][Aa][Tt][Ee] WB -
 CREATE-INDEX-ON = [Cc]([Rr][Ee][Aa][Tt][Ee] WB -
     [Ii][Nn][Dd][Ee][Xx] WB - [Oo][Nn] WB -)
     ~{ERR("CREATE INDEX ON")}
+CREATE-INDEX-FOR = [Cc]([Rr][Ee][Aa][Tt][Ee] WB -
+    [Ii][Nn][Dd][Ee][Xx] WB - [Ff][Oo][Rr] WB -)
+    ~{ERR("CREATE INDEX FOR")}
+ON = [Oo][Nn] WB ~{ERR("ON")}
 DROP-CONSTRAINT-ON = [Dd]([Rr][Oo][Pp] WB -
     [Cc][Oo][Nn][Ss][Tt][Rr][Aa][Ii][Nn][Tt] WB - [Oo][Nn] WB -)
     ~{ERR("DROP CONSTRAINT ON")}

@@ -20,10 +20,10 @@
 #include <assert.h>
 
 
-struct drop_index
+struct create_rel_index
 {
     cypher_astnode_t _astnode;
-    const cypher_astnode_t *label;
+    const cypher_astnode_t *reltype;
     unsigned int nprops;
     const cypher_astnode_t *prop_names[];
 };
@@ -37,37 +37,37 @@ static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 static const struct cypher_astnode_vt *parents[] =
     { &cypher_schema_command_astnode_vt };
 
-const struct cypher_astnode_vt cypher_drop_node_props_index_astnode_vt =
+const struct cypher_astnode_vt cypher_create_rel_props_index_astnode_vt =
     { .parents = parents,
       .nparents = 1,
-      .name = "DROP INDEX",
+      .name = "CREATE RELATIONSHIP INDEX",
       .detailstr = detailstr,
       .release = cypher_astnode_release,
       .clone = clone };
 
 
-cypher_astnode_t *cypher_ast_drop_node_props_index(
-        const cypher_astnode_t *label, cypher_astnode_t * const *prop_names,
+cypher_astnode_t *cypher_ast_create_rel_props_index(
+        const cypher_astnode_t *reltype, cypher_astnode_t *const *prop_names,
         unsigned int nprops, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
 {
-    REQUIRE_CHILD(children, nchildren, label, CYPHER_AST_LABEL, NULL);
+    REQUIRE_CHILD(children, nchildren, reltype, CYPHER_AST_RELTYPE, NULL);
     REQUIRE(nprops > 0, NULL);
     REQUIRE_CHILD_ALL(children, nchildren, prop_names, nprops,
             CYPHER_AST_PROP_NAME, NULL);
 
-    struct drop_index *node = calloc(1, sizeof(struct drop_index) +
+    struct create_rel_index *node = calloc(1, sizeof(struct create_rel_index) +
             nprops * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
     }
-    if (cypher_astnode_init(&(node->_astnode), CYPHER_AST_DROP_NODE_PROPS_INDEX,
-            children, nchildren, range))
+    if (cypher_astnode_init(&(node->_astnode),
+                CYPHER_AST_CREATE_REL_PROPS_INDEX, children, nchildren, range))
     {
         goto cleanup;
     }
-    node->label = label;
+    node->reltype = reltype;
     memcpy(node->prop_names, prop_names, nprops * sizeof(cypher_astnode_t *));
     node->nprops = nprops;
     return &(node->_astnode);
@@ -84,11 +84,11 @@ cleanup:
 cypher_astnode_t *clone(const cypher_astnode_t *self,
         cypher_astnode_t **children)
 {
-    REQUIRE_TYPE(self, CYPHER_AST_DROP_NODE_PROPS_INDEX, NULL);
-    struct drop_index *node =
-            container_of(self, struct drop_index, _astnode);
+    REQUIRE_TYPE(self, CYPHER_AST_CREATE_REL_PROPS_INDEX, NULL);
+    struct create_rel_index *node =
+        container_of(self, struct create_rel_index, _astnode);
 
-    cypher_astnode_t *label = children[child_index(self, node->label)];
+    cypher_astnode_t *reltype = children[child_index(self, node->reltype)];
     cypher_astnode_t **prop_names = calloc(node->nprops,
             sizeof(cypher_astnode_t *));
     if (prop_names == NULL)
@@ -100,8 +100,9 @@ cypher_astnode_t *clone(const cypher_astnode_t *self,
         prop_names[i] = children[child_index(self, node->prop_names[i])];
     }
 
-    cypher_astnode_t *clone = cypher_ast_drop_node_props_index(label,
-            prop_names, node->nprops, children, self->nchildren, self->range);
+    cypher_astnode_t *clone = cypher_ast_create_rel_props_index(reltype,
+            prop_names, node->nprops, children, self->nchildren,
+            self->range);
     int errsv = errno;
     free(prop_names);
     errno = errsv;
@@ -109,32 +110,32 @@ cypher_astnode_t *clone(const cypher_astnode_t *self,
 }
 
 
-const cypher_astnode_t *cypher_ast_drop_node_props_index_get_label(
-                const cypher_astnode_t *astnode)
+const cypher_astnode_t *cypher_ast_create_rel_props_index_get_reltype(
+        const cypher_astnode_t *astnode)
 {
-    REQUIRE_TYPE(astnode, CYPHER_AST_DROP_NODE_PROPS_INDEX, NULL);
-    struct drop_index *node =
-            container_of(astnode, struct drop_index, _astnode);
-    return node->label;
+    REQUIRE_TYPE(astnode, CYPHER_AST_CREATE_REL_PROPS_INDEX, NULL);
+    struct create_rel_index *node =
+        container_of(astnode, struct create_rel_index, _astnode);
+    return node->reltype;
 }
 
 
-unsigned int cypher_ast_drop_node_props_index_nprops(
+unsigned int cypher_ast_create_rel_props_index_nprops(
         const cypher_astnode_t *astnode)
 {
-    REQUIRE_TYPE(astnode, CYPHER_AST_DROP_NODE_PROPS_INDEX, -1);
-    struct drop_index *node =
-            container_of(astnode, struct drop_index, _astnode);
+    REQUIRE_TYPE(astnode, CYPHER_AST_CREATE_REL_PROPS_INDEX, -1);
+    struct create_rel_index *node =
+        container_of(astnode, struct create_rel_index, _astnode);
     return node->nprops;
 }
 
 
-const cypher_astnode_t *cypher_ast_drop_node_props_index_get_prop_name(
-                const cypher_astnode_t *astnode, unsigned int index)
+const cypher_astnode_t *cypher_ast_create_rel_props_index_get_prop_name(
+        const cypher_astnode_t *astnode, unsigned int index)
 {
-    REQUIRE_TYPE(astnode, CYPHER_AST_DROP_NODE_PROPS_INDEX, NULL);
-    struct drop_index *node =
-            container_of(astnode, struct drop_index, _astnode);
+    REQUIRE_TYPE(astnode, CYPHER_AST_CREATE_REL_PROPS_INDEX, NULL);
+    struct create_rel_index *node =
+        container_of(astnode, struct create_rel_index, _astnode);
     if (index >= node->nprops)
     {
         return NULL;
@@ -145,11 +146,12 @@ const cypher_astnode_t *cypher_ast_drop_node_props_index_get_prop_name(
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE_TYPE(self, CYPHER_AST_DROP_NODE_PROPS_INDEX, -1);
-    struct drop_index *node = container_of(self, struct drop_index, _astnode);
+    REQUIRE_TYPE(self, CYPHER_AST_CREATE_REL_PROPS_INDEX, -1);
+    struct create_rel_index *node =
+        container_of(self, struct create_rel_index, _astnode);
 
     size_t n = 0;
-    ssize_t r = snprintf(str, size, "ON=:@%u(", node->label->ordinal);
+    ssize_t r = snprintf(str, size, "ON=:@%u(", node->reltype->ordinal);
     if (r < 0)
     {
         return -1;

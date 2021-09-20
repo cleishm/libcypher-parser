@@ -20,7 +20,7 @@
 #include <assert.h>
 
 
-struct create_index
+struct drop_index
 {
     cypher_astnode_t _astnode;
     const cypher_astnode_t *label;
@@ -37,16 +37,16 @@ static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
 static const struct cypher_astnode_vt *parents[] =
     { &cypher_schema_command_astnode_vt };
 
-const struct cypher_astnode_vt cypher_create_node_props_index_astnode_vt =
+const struct cypher_astnode_vt cypher_drop_props_index_astnode_vt =
     { .parents = parents,
       .nparents = 1,
-      .name = "CREATE NODE INDEX",
+      .name = "DROP INDEX",
       .detailstr = detailstr,
       .release = cypher_astnode_release,
       .clone = clone };
 
 
-cypher_astnode_t *cypher_ast_create_node_props_index(
+cypher_astnode_t *cypher_ast_drop_props_index(
         const cypher_astnode_t *label, cypher_astnode_t * const *prop_names,
         unsigned int nprops, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range)
@@ -56,14 +56,14 @@ cypher_astnode_t *cypher_ast_create_node_props_index(
     REQUIRE_CHILD_ALL(children, nchildren, prop_names, nprops,
             CYPHER_AST_PROP_NAME, NULL);
 
-    struct create_index *node = calloc(1, sizeof(struct create_index) +
+    struct drop_index *node = calloc(1, sizeof(struct drop_index) +
             nprops * sizeof(cypher_astnode_t *));
     if (node == NULL)
     {
         return NULL;
     }
-    if (cypher_astnode_init(&(node->_astnode),
-            CYPHER_AST_CREATE_NODE_PROPS_INDEX, children, nchildren, range))
+    if (cypher_astnode_init(&(node->_astnode), CYPHER_AST_DROP_PROPS_INDEX,
+            children, nchildren, range))
     {
         goto cleanup;
     }
@@ -84,9 +84,9 @@ cleanup:
 cypher_astnode_t *clone(const cypher_astnode_t *self,
         cypher_astnode_t **children)
 {
-    REQUIRE_TYPE(self, CYPHER_AST_CREATE_NODE_PROPS_INDEX, NULL);
-    struct create_index *node =
-            container_of(self, struct create_index, _astnode);
+    REQUIRE_TYPE(self, CYPHER_AST_DROP_PROPS_INDEX, NULL);
+    struct drop_index *node =
+            container_of(self, struct drop_index, _astnode);
 
     cypher_astnode_t *label = children[child_index(self, node->label)];
     cypher_astnode_t **prop_names = calloc(node->nprops,
@@ -100,9 +100,8 @@ cypher_astnode_t *clone(const cypher_astnode_t *self,
         prop_names[i] = children[child_index(self, node->prop_names[i])];
     }
 
-    cypher_astnode_t *clone = cypher_ast_create_node_props_index(label,
-            prop_names, node->nprops, children, self->nchildren,
-            self->range);
+    cypher_astnode_t *clone = cypher_ast_drop_props_index(label,
+            prop_names, node->nprops, children, self->nchildren, self->range);
     int errsv = errno;
     free(prop_names);
     errno = errsv;
@@ -110,32 +109,32 @@ cypher_astnode_t *clone(const cypher_astnode_t *self,
 }
 
 
-const cypher_astnode_t *cypher_ast_create_node_props_index_get_label(
+const cypher_astnode_t *cypher_ast_drop_props_index_get_label(
                 const cypher_astnode_t *astnode)
 {
-    REQUIRE_TYPE(astnode, CYPHER_AST_CREATE_NODE_PROPS_INDEX, NULL);
-    struct create_index *node =
-            container_of(astnode, struct create_index, _astnode);
+    REQUIRE_TYPE(astnode, CYPHER_AST_DROP_PROPS_INDEX, NULL);
+    struct drop_index *node =
+            container_of(astnode, struct drop_index, _astnode);
     return node->label;
 }
 
 
-unsigned int cypher_ast_create_node_props_index_nprops(
+unsigned int cypher_ast_drop_props_index_nprops(
         const cypher_astnode_t *astnode)
 {
-    REQUIRE_TYPE(astnode, CYPHER_AST_CREATE_NODE_PROPS_INDEX, -1);
-    struct create_index *node =
-            container_of(astnode, struct create_index, _astnode);
+    REQUIRE_TYPE(astnode, CYPHER_AST_DROP_PROPS_INDEX, -1);
+    struct drop_index *node =
+            container_of(astnode, struct drop_index, _astnode);
     return node->nprops;
 }
 
 
-const cypher_astnode_t *cypher_ast_create_node_props_index_get_prop_name(
+const cypher_astnode_t *cypher_ast_drop_props_index_get_prop_name(
                 const cypher_astnode_t *astnode, unsigned int index)
 {
-    REQUIRE_TYPE(astnode, CYPHER_AST_CREATE_NODE_PROPS_INDEX, NULL);
-    struct create_index *node =
-            container_of(astnode, struct create_index, _astnode);
+    REQUIRE_TYPE(astnode, CYPHER_AST_DROP_PROPS_INDEX, NULL);
+    struct drop_index *node =
+            container_of(astnode, struct drop_index, _astnode);
     if (index >= node->nprops)
     {
         return NULL;
@@ -146,9 +145,8 @@ const cypher_astnode_t *cypher_ast_create_node_props_index_get_prop_name(
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
-    REQUIRE_TYPE(self, CYPHER_AST_CREATE_NODE_PROPS_INDEX, -1);
-    struct create_index *node =
-            container_of(self, struct create_index, _astnode);
+    REQUIRE_TYPE(self, CYPHER_AST_DROP_PROPS_INDEX, -1);
+    struct drop_index *node = container_of(self, struct drop_index, _astnode);
 
     size_t n = 0;
     ssize_t r = snprintf(str, size, "ON=:@%u(", node->label->ordinal);
