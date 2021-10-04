@@ -23,9 +23,9 @@ libcypher_parser_la_SOURCES = \
 	ast_comment.c \
 	ast_comparison.c \
 	ast_create.c \
+	ast_create_pattern_props_index.c \
 	ast_create_node_props_index.c \
 	ast_create_node_prop_constraint.c \
-	ast_create_rel_props_index.c \
 	ast_create_rel_prop_constraint.c \
 	ast_cypher_option.c \
 	ast_cypher_option_param.c \

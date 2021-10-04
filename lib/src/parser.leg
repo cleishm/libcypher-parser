@@ -131,21 +131,23 @@ create-index-on =
 create-index-for =
     < CREATE-INDEX-FOR
       ( LEFT-PAREN - i:identifier l:label RIGHT-PAREN -
-        ON - LEFT-PAREN i:identifier DOT p:prop-name
+        ON - LEFT-PAREN p:property-expression
                                        { sequence_add(p); }
-        ( COMMA - i:identifier DOT p:prop-name
+        ( COMMA - p:property-expression
                                        { sequence_add(p); }
         )* RIGHT-PAREN >
-                                       { $$ = create_index(l); }
+                                       { $$ = create_pattern_index(i, l, false);
+									   }
       | LEFT-PAREN - RIGHT-PAREN - (LEFT-ARROW-HEAD -)? DASH -
-        LEFT-SQ-PAREN - i:identifier t:rel-type RIGHT-SQ-PAREN -
+        LEFT-SQ-PAREN - i:identifier l:label RIGHT-SQ-PAREN -
         DASH - (RIGHT-ARROW-HEAD -)? LEFT-PAREN - RIGHT-PAREN -
-        ON - LEFT-PAREN i:identifier DOT p:prop-name
+        ON - LEFT-PAREN p:property-expression
                                        { sequence_add(p); }
-        ( COMMA - i:identifier DOT p:prop-name
+        ( COMMA - p:property-expression
                                        { sequence_add(p); }
         )* RIGHT-PAREN >
-                                       { $$ = create_rel_index(t); }
+                                       { $$ = create_pattern_index(i, l, true);
+									   }
     ) -
 
 create-constraint =
