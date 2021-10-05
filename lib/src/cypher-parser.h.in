@@ -138,8 +138,10 @@ extern const cypher_astnode_type_t CYPHER_AST_PROFILE_OPTION;
 extern const cypher_astnode_type_t CYPHER_AST_SCHEMA_COMMAND;
 /** Type for an AST `CREATE INDEX` node. */
 extern const cypher_astnode_type_t CYPHER_AST_CREATE_NODE_PROPS_INDEX;
+/** Type for an AST `CREATE PATTERN INDEX` node. */
+extern const cypher_astnode_type_t CYPHER_AST_CREATE_PATTERN_PROPS_INDEX;
 /** Type for an AST `DROP INDEX` node. */
-extern const cypher_astnode_type_t CYPHER_AST_DROP_NODE_PROPS_INDEX;
+extern const cypher_astnode_type_t CYPHER_AST_DROP_PROPS_INDEX;
 /** Type for an AST create node property constraint node. */
 extern const cypher_astnode_type_t CYPHER_AST_CREATE_NODE_PROP_CONSTRAINT;
 /** Type for an AST drop node property constraint node. */
@@ -752,11 +754,12 @@ const cypher_astnode_t *cypher_ast_create_node_props_index_get_prop_name(
 
 
 /**
- * Construct a `CYPHER_AST_DROP_NODE_PROPS_INDEX` node.
+ * Construct a `CYPHER_AST_DROP_PROPS_INDEX` node.
  *
  * The node will also be an instance of `CYPHER_AST_SCHEMA_COMMAND`.
  *
  * @param [label] A label node, of type `CYPHER_AST_LABEL`.
+ * (This may actually refer to a relationship type.)
  * @param [prop_name] A property name node, of type `CYPHER_AST_PROP_NAME`.
  * @param [children] The children of the node.
  * @param [nchildren] The number of children.
@@ -764,41 +767,41 @@ const cypher_astnode_t *cypher_ast_create_node_props_index_get_prop_name(
  * @return An AST node, or NULL if an error occurs (errno will be set).
  */
 __cypherlang_must_check
-cypher_astnode_t *cypher_ast_drop_node_props_index(
+cypher_astnode_t *cypher_ast_drop_props_index(
         const cypher_astnode_t *label, cypher_astnode_t * const *prop_names,
         unsigned int nprop_names, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range);
 
 /**
- * Get the label of a `CYPHER_AST_DROP_NODE_PROPS_INDEX` node.
+ * Get the label of a `CYPHER_AST_DROP_PROPS_INDEX` node.
  *
- * If the node is not an instance of `CYPHER_AST_DROP_NODE_PROPS_INDEX` then the
+ * If the node is not an instance of `CYPHER_AST_DROP_PROPS_INDEX` then the
  * result will be undefined.
  *
  * @param [node] The AST node.
  * @return A `CYPHER_AST_LABEL` node.
  */
 __cypherlang_pure
-const cypher_astnode_t *cypher_ast_drop_node_props_index_get_label(
+const cypher_astnode_t *cypher_ast_drop_props_index_get_label(
         const cypher_astnode_t *node);
 
 /**
- * Get the number of properties in a `CYPHER_AST_DROP_NODE_PROPS_INDEX` node.
+ * Get the number of properties in a `CYPHER_AST_DROP_PROPS_INDEX` node.
  *
- * If the node is not an instance of `CYPHER_AST_DROP_NODE_PROPS_INDEX` then
+ * If the node is not an instance of `CYPHER_AST_DROP_PROPS_INDEX` then
  * the result will be undefined.
  *
  * @param [node] The AST node.
  * @return The number of properties.
  */
 __cypherlang_pure
-unsigned int cypher_ast_drop_node_props_index_nprops(
+unsigned int cypher_ast_drop_props_index_nprops(
         const cypher_astnode_t *node);
 
 /**
- * Get the property name of a `CYPHER_AST_DROP_NODE_PROPS_INDEX` node.
+ * Get the property name of a `CYPHER_AST_DROP_PROPS_INDEX` node.
  *
- * If the node is not an instance of `CYPHER_AST_DROP_NODE_PROPS_INDEX` then the
+ * If the node is not an instance of `CYPHER_AST_DROP_PROPS_INDEX` then the
  * result will be undefined.
  *
  * @param [node] The AST node.
@@ -806,8 +809,99 @@ unsigned int cypher_ast_drop_node_props_index_nprops(
  * @return A `CYPHER_AST_PROP_NAME` node.
  */
 __cypherlang_pure
-const cypher_astnode_t *cypher_ast_drop_node_props_index_get_prop_name(
+const cypher_astnode_t *cypher_ast_drop_props_index_get_prop_name(
         const cypher_astnode_t *node, unsigned int index);
+
+
+/**
+ * Construct a `CYPHER_AST_CREATE_PATTERN_PROPS_INDEX` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_SCHEMA_COMMAND`.
+ *
+ * @param [identifier] An identifier node, of type `CYPHER_AST_IDENTIFIER`.
+ * @param [label] A label node, of type `CYPHER_AST_LABEL`.
+ * @param [is_relation] A boolean indicating whether the pattern is a relation.
+ * @param [prop_expressions] Property nodes, all of type
+ * `CYPHER_AST_PROPERTY_OPERATOR`.
+ * @param [nprop_names] The number of properties
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+__cypherlang_must_check
+cypher_astnode_t *cypher_ast_create_pattern_props_index(
+        const cypher_astnode_t *identifier, const cypher_astnode_t *label,
+		bool is_relation, cypher_astnode_t *const *prop_expressions,
+	   	unsigned int nprops, cypher_astnode_t **children, unsigned int nchildren,
+	   	struct cypher_input_range range);
+
+/**
+ * Get the reltype of a `CYPHER_AST_CREATE_PATTERN_PROPS_INDEX` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CREATE_PATTERN_PROPS_INDEX` then
+ * the result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_IDENTIFIER` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_create_pattern_props_index_get_identifier(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the label of a `CYPHER_AST_CREATE_PATTERN_PROPS_INDEX` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CREATE_PATTERN_PROPS_INDEX` then
+ * the result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A `CYPHER_AST_LABEL` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_create_pattern_props_index_get_label(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the number of properties in a `CYPHER_AST_CREATE_PATTERN_PROPS_INDEX` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CREATE_PATTERN_PROPS_INDEX` then
+ * the result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return The number of properties.
+ */
+__cypherlang_pure
+unsigned int cypher_ast_create_pattern_props_index_nprops(
+        const cypher_astnode_t *node);
+
+/**
+ * Get the property operator of a `CYPHER_AST_CREATE_PATTERN_PROPS_INDEX` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CREATE_PATTERN_PROPS_INDEX` then
+ * the result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @param [index] The index of the property.
+ * @return A `CYPHER_AST_PROPERTY_OPERATOR` node.
+ */
+__cypherlang_pure
+const cypher_astnode_t *cypher_ast_create_pattern_props_index_get_property_operator(
+        const cypher_astnode_t *node, unsigned int index);
+
+/**
+ * Get a boolean indicating whether a `CYPHER_AST_CREATE_PATTERN_PROPS_INDEX`
+ * node represents a relation.
+ *
+ * If the node is not an instance of `CYPHER_AST_CREATE_PATTERN_PROPS_INDEX` then
+ * the result will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return A boolean.
+ */
+__cypherlang_pure
+bool cypher_ast_create_pattern_props_index_pattern_is_relation(
+        const cypher_astnode_t *node);
 
 
 /**

@@ -202,6 +202,9 @@ static cypher_astnode_t *_explain_option(yycontext *yy);
 static cypher_astnode_t *_profile_option(yycontext *yy);
 #define create_index(l) _create_index(yy, l)
 static cypher_astnode_t *_create_index(yycontext *yy, cypher_astnode_t *label);
+#define create_pattern_index(i, t, r) _create_pattern_index(yy, i, t, r)
+static cypher_astnode_t *_create_pattern_index(yycontext *yy,
+         cypher_astnode_t *identifier, cypher_astnode_t *label, bool is_relation);
 #define drop_index(l) _drop_index(yy, l)
 static cypher_astnode_t *_drop_index(yycontext *yy, cypher_astnode_t *label);
 #define create_node_prop_constraint(i, l, e, u) \
@@ -1210,11 +1213,34 @@ cypher_astnode_t *_create_index(yycontext *yy, cypher_astnode_t *label)
 }
 
 
+cypher_astnode_t *_create_pattern_index(yycontext *yy,
+      cypher_astnode_t *identifier, cypher_astnode_t *label, bool is_relation)
+{
+    assert(yy->prev_block != NULL &&
+            "An AST node can only be created immediately after a `>` in the grammar");
+    cypher_astnode_t *node = cypher_ast_create_pattern_props_index(identifier,
+            label, is_relation, astnodes_elements(&(yy->prev_block->sequence)),
+            astnodes_size(&(yy->prev_block->sequence)),
+            astnodes_elements(&(yy->prev_block->children)),
+            astnodes_size(&(yy->prev_block->children)),
+            yy->prev_block->range);
+    if (node == NULL)
+    {
+        abort_parse(yy);
+    }
+    astnodes_clear(&(yy->prev_block->sequence));
+    astnodes_clear(&(yy->prev_block->children));
+    block_free(yy->prev_block);
+    yy->prev_block = NULL;
+    return add_child(yy, node);
+}
+
+
 cypher_astnode_t *_drop_index(yycontext *yy, cypher_astnode_t *label)
 {
     assert(yy->prev_block != NULL &&
             "An AST node can only be created immediately after a `>` in the grammar");
-    cypher_astnode_t *node = cypher_ast_drop_node_props_index(label,
+    cypher_astnode_t *node = cypher_ast_drop_props_index(label,
             astnodes_elements(&(yy->prev_block->sequence)),
             astnodes_size(&(yy->prev_block->sequence)),
             astnodes_elements(&(yy->prev_block->children)),
