@@ -25,7 +25,7 @@ struct create_pattern_index
     cypher_astnode_t _astnode;
     const cypher_astnode_t *identifier;
     const cypher_astnode_t *label;
-	bool is_relation;
+    bool is_relation;
     unsigned int nprops;
     const cypher_astnode_t *prop_expressions[];
 };
@@ -72,7 +72,7 @@ cypher_astnode_t *cypher_ast_create_pattern_props_index(
     {
         goto cleanup;
     }
-	node->identifier = identifier;
+    node->identifier = identifier;
     node->label = label;
     node->is_relation = is_relation;
     memcpy(node->prop_expressions, prop_expressions, nprops * sizeof(cypher_astnode_t *));
@@ -178,7 +178,7 @@ ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
         container_of(self, struct create_pattern_index, _astnode);
 
     size_t n = 0;
-    ssize_t r = snprintf(str, size, "ON=:@%u(", node->label->ordinal);
+    ssize_t r = snprintf(str, size, "FOR=:@%u(", node->label->ordinal);
     if (r < 0)
     {
         return -1;

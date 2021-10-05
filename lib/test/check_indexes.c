@@ -135,7 +135,7 @@ START_TEST (parse_create_node_prop_index_for_label)
     fflush(memstream);
     const char *expected = "\n"
 "@0   0..36  statement         body=@1\n"
-"@1   0..35  > CREATE INDEX    ON=:@3(@4)\n"
+"@1   0..35  > CREATE INDEX    FOR=:@3(@4)\n"
 "@2  18..19  > > identifier    `f`\n"
 "@3  19..23  > > label         :`Foo`\n"
 "@4  29..34  > > property      @5.@6\n"
@@ -198,7 +198,7 @@ START_TEST (parse_create_rel_prop_index)
     fflush(memstream);
     const char *expected = "\n"
 "@0   0..42  statement         body=@1\n"
-"@1   0..41  > CREATE INDEX    ON=:@3(@4)\n"
+"@1   0..41  > CREATE INDEX    FOR=:@3(@4)\n"
 "@2  21..22  > > identifier    `f`\n"
 "@3  22..26  > > label         :`Foo`\n"
 "@4  35..40  > > property      @5.@6\n"
@@ -262,7 +262,7 @@ START_TEST (parse_create_pattern_props_index)
     fflush(memstream);
     const char *expected = "\n"
 "@0   0..49  statement         body=@1\n"
-"@1   0..48  > CREATE INDEX    ON=:@3(@4, @7)\n"
+"@1   0..48  > CREATE INDEX    FOR=:@3(@4, @7)\n"
 "@2  21..22  > > identifier    `f`\n"
 "@3  22..26  > > label         :`Foo`\n"
 "@4  35..40  > > property      @5.@6\n"
