@@ -1,6 +1,6 @@
 AC_DEFUN([WITH_LIBS],
 [AC_ARG_WITH([libs],
-  [AC_HELP_STRING(
+  [AS_HELP_STRING(
     [[--with-libs=DIR[:DIR]]],
     [look for libraries installed in DIR/{bin,lib,include}])],
   [neo4j_save_ifs=$IFS

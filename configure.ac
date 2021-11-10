@@ -13,13 +13,13 @@
 # limitations under the License.
 #
 dnl Process this file with autoconf to produce a configure script
-AC_PREREQ([2.69])
+AC_PREREQ([2.71])
 AC_INIT([libcypher-parser],[0.6.4~devel])
 AC_CONFIG_SRCDIR([lib/src/cypher-parser.h.in])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
 AM_INIT_AUTOMAKE([foreign])
-AC_CONFIG_HEADER([config.h])
+AC_CONFIG_HEADERS([config.h])
 AM_MAINTAINER_MODE([enable])
 
 DECLARE_VERSIONS
@@ -59,7 +59,6 @@ AS_IF([test "X$ac_cv_c_vararrays" != "Xyes"],
   [AC_MSG_ERROR([compiler support for variable-length arrays is required])])
 
 AC_HEADER_ASSERT
-AC_HEADER_STDC
 AC_HEADER_STDBOOL
 AC_CHECK_HEADERS([endian.h sys/endian.h libkern/OSByteOrder.h])
 AC_TYPE_SIZE_T
@@ -75,7 +74,7 @@ AC_CHECK_FUNCS([open_memstream],[],[],
   ])
 
 
-AX_THREAD_LOCAL()
+AX_TLS()
 AX_PTHREAD([has_pthreads=yes])
 AS_IF([test "X$has_pthreads" = "Xyes"],
   [AC_DEFINE([HAVE_PTHREADS], [1], [Define to 1 if you have pthreads.])])
