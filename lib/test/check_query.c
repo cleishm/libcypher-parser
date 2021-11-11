@@ -192,6 +192,51 @@ START_TEST (parse_query_with_periodic_commit_option_with_no_limit)
 }
 END_TEST
 
+START_TEST (parse_named_path_predicate_query)
+{
+    struct cypher_input_position last = cypher_input_position_zero;
+    result = cypher_parse("PATH PATTERN p = ()-/()/-();",
+            &last, NULL, 0);
+    ck_assert_ptr_ne(result, NULL);
+    ck_assert_int_eq(last.offset, 28);
+    
+    ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
+    fflush(memstream);
+    const char *expected = "\n"
+" @0   0..28  statement                     body=@1\n"
+" @1   0..28  > query                       clauses=[@2]\n"
+" @2   0..27  > > named path                @3 = @4\n"
+" @3  13..14  > > > identifier              `p`\n"
+" @4  17..27  > > > pattern path            (@5)-/@6/-(@11)\n"
+" @5  17..19  > > > > node pattern          ()\n"
+" @6  19..25  > > > > path pattern          -/@7/-\n"
+" @7  21..23  > > > > > path expression     @8\n"
+" @8  21..23  > > > > > > alternative       @9\n"
+" @9  21..23  > > > > > > > path base       @10\n"
+"@10  21..23  > > > > > > > > node pattern  ()\n"
+"@11  25..27  > > > > node pattern          ()\n";
+    ck_assert_str_eq(memstream_buffer, expected);
+
+    ck_assert_int_eq(cypher_parse_result_ndirectives(result), 1);
+    const cypher_astnode_t *ast = cypher_parse_result_get_directive(result, 0);
+    ck_assert_int_eq(cypher_astnode_type(ast), CYPHER_AST_STATEMENT);
+    ck_assert_int_eq(cypher_astnode_range(ast).start.offset, 0);
+    ck_assert_int_eq(cypher_astnode_range(ast).end.offset, 28);
+    
+    const cypher_astnode_t *query = cypher_ast_statement_get_body(ast);
+    ck_assert_int_eq(cypher_astnode_type(query), CYPHER_AST_QUERY);
+    ck_assert_int_eq(cypher_astnode_range(query).start.offset, 0);
+    ck_assert_int_eq(cypher_astnode_range(query).end.offset, 28);
+    
+    ck_assert_int_eq(cypher_ast_query_noptions(query), 0);
+    ck_assert_ptr_eq(cypher_ast_query_get_option(query, 0), NULL);
+
+    ck_assert_int_eq(cypher_ast_query_nclauses(query), 1);
+    
+    const cypher_astnode_t *clause = cypher_ast_query_get_clause(query, 0);
+    ck_assert_int_eq(cypher_astnode_type(clause), CYPHER_AST_NAMED_PATH);
+}
+END_TEST
 
 TCase* query_tcase(void)
 {
@@ -200,5 +245,6 @@ TCase* query_tcase(void)
     tcase_add_test(tc, parse_query_with_no_options);
     tcase_add_test(tc, parse_query_with_periodic_commit_option);
     tcase_add_test(tc, parse_query_with_periodic_commit_option_with_no_limit);
+    tcase_add_test(tc, parse_named_path_predicate_query);
     return tc;
 }

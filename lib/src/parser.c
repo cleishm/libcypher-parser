@@ -440,9 +440,11 @@ static cypher_astnode_t *_strbuf_index_name(yycontext *yy);
 static cypher_astnode_t *_strbuf_proc_name(yycontext *yy);
 #define pattern() _pattern(yy)
 static cypher_astnode_t *_pattern(yycontext *yy);
-#define named_path(s, p) _named_path(yy, s, p)
+#define named_path(s, p) _named_path(yy, s, p, NULL)
+#define named_path_predicate(s, p, e) _named_path(yy, s, p, e)
 static cypher_astnode_t *_named_path(yycontext *yy,
-        cypher_astnode_t *identifier, cypher_astnode_t *path);
+        cypher_astnode_t *identifier, cypher_astnode_t *path,
+        cypher_astnode_t *condition);
 #define shortest_path(s, p) _shortest_path(yy, s, p)
 static cypher_astnode_t *_shortest_path(yycontext *yy, bool single,
         cypher_astnode_t *path);
@@ -457,9 +459,32 @@ static cypher_astnode_t *_node_pattern(yycontext *yy,
 static cypher_astnode_t *_rel_pattern(yycontext *yy,
         enum cypher_rel_direction direction, cypher_astnode_t *identifier,
         cypher_astnode_t *varlength, cypher_astnode_t *properties);
+#define path_pattern(e, d) _path_pattern(yy, e, CYPHER_REL_##d)
+static cypher_astnode_t *_path_pattern(yycontext *yy,
+        cypher_astnode_t *expression, enum cypher_rel_direction direction);
+#define path_pattern_any() _path_pattern_any(yy)
+static cypher_astnode_t *_path_pattern_any(yycontext *yy);
+#define path_pattern_expression(e) _path_pattern_expression(yy, e)
+static cypher_astnode_t *_path_pattern_expression(yycontext *yy, cypher_astnode_t *properties);
+#define path_pattern_alternative() _path_pattern_alternative(yy)
+static cypher_astnode_t *_path_pattern_alternative(yycontext *yy);
+#define path_pattern_base(d, r, b) _path_pattern_base(yy, CYPHER_REL_##d, r, b)
+static cypher_astnode_t *_path_pattern_base(yycontext *yy,
+        enum cypher_rel_direction direction, cypher_astnode_t *varlength,
+        cypher_astnode_t *path_base);
+#define path_pattern_edge(r) _path_pattern_edge(yy, r)
+static cypher_astnode_t *_path_pattern_edge(yycontext *yy,
+        cypher_astnode_t *reltype);
+#define  path_pattern_reference(i) _path_pattern_reference(yy, i)
+static cypher_astnode_t *_path_pattern_reference(yycontext *yy,
+        cypher_astnode_t *identifier);
 #define range(s, e) _range(yy, s, e)
 static cypher_astnode_t *_range(yycontext *yy, cypher_astnode_t *start,
         cypher_astnode_t *end);
+#define range_plus() _range_plus(yy)
+static cypher_astnode_t *_range_plus(yycontext *yy);
+#define range_optional() _range_optional(yy)
+static cypher_astnode_t *_range_optional(yycontext *yy);
 #define command(name) _command(yy, name)
 static cypher_astnode_t *_command(yycontext *yy, cypher_astnode_t *name);
 #define string(s, n) _string(yy, s, n)
@@ -2863,11 +2888,12 @@ cypher_astnode_t *_pattern(yycontext *yy)
 
 
 cypher_astnode_t *_named_path(yycontext *yy,
-        cypher_astnode_t *identifier, cypher_astnode_t *path)
+        cypher_astnode_t *identifier, cypher_astnode_t *path,
+        cypher_astnode_t *condition)
 {
     assert(yy->prev_block != NULL &&
             "An AST node can only be created immediately after a `>` in the grammar");
-    cypher_astnode_t *node = cypher_ast_named_path(identifier, path,
+    cypher_astnode_t *node = cypher_ast_named_path(identifier, path, condition,
             astnodes_elements(&(yy->prev_block->children)),
             astnodes_size(&(yy->prev_block->children)),
             yy->prev_block->range);
@@ -2970,6 +2996,139 @@ cypher_astnode_t *_rel_pattern(yycontext *yy,
     return add_child(yy, node);
 }
 
+cypher_astnode_t *_path_pattern(yycontext *yy,
+        cypher_astnode_t *expression, enum cypher_rel_direction direction)
+{
+    assert(yy->prev_block != NULL &&
+            "An AST node can only be created immediately after a `>` in the grammar");
+    cypher_astnode_t *node = cypher_ast_path_pattern(expression, direction, 
+            astnodes_elements(&(yy->prev_block->children)),
+            astnodes_size(&(yy->prev_block->children)),
+            yy->prev_block->range);
+    if (node == NULL)
+    {
+        abort_parse(yy);
+    }
+    astnodes_clear(&(yy->prev_block->children));
+    block_free(yy->prev_block);
+    yy->prev_block = NULL;
+    return add_child(yy, node);
+}
+
+static cypher_astnode_t *_path_pattern_any(yycontext *yy) {
+    assert(yy->prev_block != NULL &&
+           "An AST node can only be created immediately after a `>` in the grammar");
+    cypher_astnode_t *node = cypher_ast_path_pattern_any(
+            astnodes_elements(&(yy->prev_block->children)),
+            astnodes_size(&(yy->prev_block->children)),
+            yy->prev_block->range);
+    if (node == NULL)
+    {
+        abort_parse(yy);
+    }
+    astnodes_clear(&(yy->prev_block->children));
+    block_free(yy->prev_block);
+    yy->prev_block = NULL;
+    return add_child(yy, node);
+}
+
+static cypher_astnode_t *_path_pattern_expression(yycontext *yy, cypher_astnode_t *properties) {
+    assert(yy->prev_block != NULL &&
+           "An AST node can only be created immediately after a `>` in the grammar");
+    cypher_astnode_t *node = cypher_ast_path_pattern_expression(properties,
+            astnodes_elements(&(yy->prev_block->sequence)),
+            astnodes_size(&(yy->prev_block->sequence)),
+            astnodes_elements(&(yy->prev_block->children)),
+            astnodes_size(&(yy->prev_block->children)),
+            yy->prev_block->range);
+    if (node == NULL)
+    {
+        abort_parse(yy);
+    }
+    astnodes_clear(&(yy->prev_block->sequence));
+    astnodes_clear(&(yy->prev_block->children));
+    block_free(yy->prev_block);
+    yy->prev_block = NULL;
+    return add_child(yy, node);
+}
+
+static cypher_astnode_t *_path_pattern_alternative(yycontext *yy) {
+    assert(yy->prev_block != NULL &&
+           "An AST node can only be created immediately after a `>` in the grammar");
+    cypher_astnode_t *node = cypher_ast_path_pattern_alternative(
+            astnodes_elements(&(yy->prev_block->sequence)),
+            astnodes_size(&(yy->prev_block->sequence)),
+            astnodes_elements(&(yy->prev_block->children)),
+            astnodes_size(&(yy->prev_block->children)),
+            yy->prev_block->range);
+    if (node == NULL)
+    {
+        abort_parse(yy);
+    }
+    astnodes_clear(&(yy->prev_block->sequence));
+    astnodes_clear(&(yy->prev_block->children));
+    block_free(yy->prev_block);
+    yy->prev_block = NULL;
+    return add_child(yy, node);
+}
+
+static cypher_astnode_t *_path_pattern_base(yycontext *yy,
+        enum cypher_rel_direction direction, cypher_astnode_t *varlength,
+        cypher_astnode_t *path_base)
+{
+    assert(yy->prev_block != NULL &&
+           "An AST node can only be created immediately after a `>` in the grammar");
+    cypher_astnode_t *node = cypher_ast_path_pattern_base(direction,
+            varlength,
+            path_base,
+            astnodes_elements(&(yy->prev_block->children)),
+            astnodes_size(&(yy->prev_block->children)),
+            yy->prev_block->range);
+    if (node == NULL)
+    {
+        abort_parse(yy);
+    }
+    astnodes_clear(&(yy->prev_block->sequence));
+    astnodes_clear(&(yy->prev_block->children));
+    block_free(yy->prev_block);
+    yy->prev_block = NULL;
+    return add_child(yy, node);
+}
+
+static cypher_astnode_t *_path_pattern_edge(yycontext *yy, cypher_astnode_t *reltype) {
+    assert(yy->prev_block != NULL &&
+           "An AST node can only be created immediately after a `>` in the grammar");
+    cypher_astnode_t *node = cypher_ast_path_pattern_edge(reltype,
+            astnodes_elements(&(yy->prev_block->children)),
+            astnodes_size(&(yy->prev_block->children)),
+            yy->prev_block->range);
+    if (node == NULL)
+    {
+        abort_parse(yy);
+    }
+    astnodes_clear(&(yy->prev_block->sequence));
+    astnodes_clear(&(yy->prev_block->children));
+    block_free(yy->prev_block);
+    yy->prev_block = NULL;
+    return add_child(yy, node);
+}
+
+static cypher_astnode_t *_path_pattern_reference(yycontext *yy, cypher_astnode_t *identifier) {
+    assert(yy->prev_block != NULL &&
+           "An AST node can only be created immediately after a `>` in the grammar");
+    cypher_astnode_t *node = cypher_ast_path_pattern_reference(identifier,
+            astnodes_elements(&(yy->prev_block->children)),
+            astnodes_size(&(yy->prev_block->children)),
+            yy->prev_block->range);
+    if (node == NULL)
+    {
+        abort_parse(yy);
+    }
+    astnodes_clear(&(yy->prev_block->children));
+    block_free(yy->prev_block);
+    yy->prev_block = NULL;
+    return add_child(yy, node);
+}
 
 cypher_astnode_t *_range(yycontext *yy, cypher_astnode_t *start,
         cypher_astnode_t *end)
@@ -2990,6 +3149,41 @@ cypher_astnode_t *_range(yycontext *yy, cypher_astnode_t *start,
     return add_child(yy, node);
 }
 
+cypher_astnode_t *_range_plus(yycontext *yy)
+{
+    assert(yy->prev_block != NULL &&
+            "An AST node can only be created immediately after a `>` in the grammar");
+    cypher_astnode_t *node = cypher_ast_range_plus(
+            astnodes_elements(&(yy->prev_block->children)),
+            astnodes_size(&(yy->prev_block->children)),
+            yy->prev_block->range);
+    if (node == NULL)
+    {
+        abort_parse(yy);
+    }
+    astnodes_clear(&(yy->prev_block->children));
+    block_free(yy->prev_block);
+    yy->prev_block = NULL;
+    return add_child(yy, node);
+}
+
+cypher_astnode_t *_range_optional(yycontext *yy)
+{
+    assert(yy->prev_block != NULL &&
+            "An AST node can only be created immediately after a `>` in the grammar");
+    cypher_astnode_t *node = cypher_ast_range_optional(
+            astnodes_elements(&(yy->prev_block->children)),
+            astnodes_size(&(yy->prev_block->children)),
+            yy->prev_block->range);
+    if (node == NULL)
+    {
+        abort_parse(yy);
+    }
+    astnodes_clear(&(yy->prev_block->children));
+    block_free(yy->prev_block);
+    yy->prev_block = NULL;
+    return add_child(yy, node);
+}
 
 cypher_astnode_t *_command(yycontext *yy, cypher_astnode_t *name)
 {

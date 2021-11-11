@@ -84,6 +84,11 @@ schema-command =
     ) ~{ERR("a schema command")}
     (SEMICOLON | EOF)
 
+named-path-clause =
+    < PATHPATTERN i:identifier EQUAL - p:pattern-path -
+    (WHERE e:expression | e:_null_) 
+    >                                   { $$ = named_path_predicate(i, p, e); }
+
 create-index =
     < CREATE-INDEX-ON l:label LEFT-PAREN - p:prop-name
                                        { sequence_add(p); }
@@ -166,6 +171,7 @@ clause =
     | loadcsv-clause
     | start-clause
     | union-clause
+    | named-path-clause
     ) ~{ERR("a clause")}
 
 loadcsv-clause =
@@ -726,7 +732,7 @@ shortest-path-pattern =
 
 pattern-path =
     < n:node-pattern                   { sequence_add(n); }
-    ( - r:relationship-pattern - n:node-pattern
+    ( -( r:relationship-pattern | r:path-pattern ) - n:node-pattern
                                        { sequence_add(r); sequence_add(n); }
     )* >                               { $$ = pattern_path(); }
 
@@ -736,7 +742,7 @@ pattern-expression =
 
 pattern-expression-path =
     < n:node-pattern                   { sequence_add(n); }
-    ( - r:relationship-pattern - n:node-pattern
+    ( - ( r:relationship-pattern | r:path-pattern ) - n:node-pattern
                                        { sequence_add(r); sequence_add(n); }
     )+ >                               { $$ = pattern_path(); }
 
@@ -746,6 +752,69 @@ node-pattern = < LEFT-PAREN -
     )* (p:pattern-properties | p:_null_)
     RIGHT-PAREN >                      { $$ = node_pattern(i, p); }
 
+path-pattern =
+    < ( LEFT-ARROW-HEAD - DASH - DIV - e:path-expression - DIV - DASH
+          ( - RIGHT-ARROW-HEAD >       { $$ = path_pattern(e, BIDIRECTIONAL); }
+          | _empty_ >                  { $$ = path_pattern(e, INBOUND); }
+          )
+      | DASH - DIV - e:path-expression - DIV - DASH 
+          ( - RIGHT-ARROW-HEAD >       { $$ = path_pattern(e, OUTBOUND); }
+          | _empty_ >                  { $$ = path_pattern(e, BIDIRECTIONAL); }
+          )
+      )
+
+path-expression =
+    < p:path-alternative                { sequence_add(p); }
+    (- p:path-alternative               { sequence_add(p); }
+    )* - ( e:pattern-properties | e:_null_ ) >                                { $$ = path_pattern_expression(e); }
+
+path-alternative =
+    < p:path-repetition                 { sequence_add(p); }
+    (- PIPE - p:path-repetition         { sequence_add(p); }
+    )* >                                { $$ = path_pattern_alternative(); }
+
+path-repetition =
+   < ( LEFT-ARROW-HEAD - p:path-base
+       ( - RIGHT-ARROW-HEAD
+         - (l:rel-varlength | l:rel-plus | l:rel-optional | l:_null_) >  { $$ = path_pattern_base(BIDIRECTIONAL, l, p); }
+       | _empty_
+         - (l:rel-varlength | l:rel-plus | l:rel-optional | l:_null_) >  { $$ = path_pattern_base(INBOUND, l, p); }
+       )
+     | p:path-base
+       ( - RIGHT-ARROW-HEAD
+         - (l:rel-varlength | l:rel-plus | l:rel-optional | l:_null_) >  { $$ = path_pattern_base(OUTBOUND, l, p); }
+       | _empty_
+         - (l:rel-varlength | l:rel-plus | l:rel-optional | l:_null_) >  { $$ = path_pattern_base(BIDIRECTIONAL, l, p); }
+       )
+     )
+
+path-base =
+    p:path-edge                          { $$ = p; }
+    | p:path-group                       { $$ = p; }
+    | p:path-reference                   { $$ = p; }
+    | path-any                           { $$ = p; }
+    | p:path-node                        { $$ = p; }
+    -
+
+path-edge =
+    < r:rel-type >                       { $$ = path_pattern_edge(r); }
+
+path-group =
+    LEFT-SQ-PAREN - p:path-expression
+    - RIGHT-SQ-PAREN                     { $$ = p; }
+
+path-any =
+    < DASH >                             { $$ = path_pattern_any(); }
+
+path-node =
+    < LEFT-PAREN -
+    ( n:label                          { sequence_add(n); }
+    )* ( p:pattern-properties | p:_null_ )
+    RIGHT-PAREN >                      { $$ = node_pattern(NULL, p); }
+
+path-reference =
+    < '~' - i:identifier >               { $$ = path_pattern_reference(i); }
+
 relationship-pattern =
       < ( LEFT-ARROW-HEAD - DASH -
           ( DASH
@@ -753,7 +822,7 @@ relationship-pattern =
             | _empty_ >                { $$ = simple_rel_pattern(INBOUND); }
             )
           | LEFT-SQ-PAREN - (i:identifier | i:_null_)
-            rel-types? (l:rel-varlength | l:_null_)
+            rel-types? (l:rel-varlength | l:rel-plus | l:rel-optional | l:_null_)
             (p:pattern-properties | p:_null_) RIGHT-SQ-PAREN - DASH 
             ( - RIGHT-ARROW-HEAD >     { $$ = rel_pattern(BIDIRECTIONAL, i, l, p); }
             | _empty_ >                { $$ = rel_pattern(INBOUND, i, l, p); }
@@ -765,7 +834,7 @@ relationship-pattern =
             | _empty_ >                { $$ = simple_rel_pattern(BIDIRECTIONAL); }
             )
           | LEFT-SQ-PAREN - (i:identifier | i:_null_)
-            rel-types? (l:rel-varlength | l:_null_)
+            rel-types? (l:rel-varlength | l:rel-plus | l:rel-optional | l:_null_)
             (p:pattern-properties | p:_null_) RIGHT-SQ-PAREN - DASH 
             ( - RIGHT-ARROW-HEAD >     { $$ = rel_pattern(OUTBOUND, i, l, p); }
             | _empty_ >                { $$ = rel_pattern(BIDIRECTIONAL, i, l, p); }
@@ -787,6 +856,12 @@ rel-varlength =
                                        { $$ = range(s, s); }
     | < STAR - >                       { $$ = range(NULL, NULL); }
     )
+
+rel-plus =
+    < PLUS >                         { $$ = range_plus(); }
+
+rel-optional =
+    < QUESTIONMARK >                 { $$ = range_optional(); }
 
 pattern-properties = map-literal | parameter
 
@@ -937,6 +1012,7 @@ IS-NULL = ([Ii][Ss] WB - [Nn][Uu][Ll][Ll] WB) ~{ERR("IS NULL")}
 IS-NOT-NULL = ([Ii][Ss] WB - [Nn][Oo][Tt] WB - [Nn][Uu][Ll][Ll] WB) ~{ERR("IS NOT NULL")}
 DOT = '.' ~{ERR("'.'")}
 DOT-STAR = ('.' - '*') ~{ERR("'.*'")}
+QUESTIONMARK = '?' ~{ERR("'?'")}
 
 COLON = ':' ~{ERR("':'")}
 SEMICOLON = ';' ~{ERR("';'")}
@@ -995,6 +1071,7 @@ WITH = [Ww]([Ii][Tt][Hh] WB -) ~{ERR("WITH")}
 CALL = [Cc]([Aa][Ll][Ll] WB -) ~{ERR("CALL")}
 RETURN = [Rr]([Ee][Tt][Uu][Rr][Nn] WB -) ~{ERR("RETURN")}
 UNION = [Uu]([Nn][Ii][Oo][Nn] WB -) ~{ERR("UNION")}
+PATHPATTERN = [Pp]([Aa][Tt][Hh] WB - [Pp][Aa][Tt][Tt][Ee][Rr][Nn] WB -) ~{ERR("PATH PATTERN")}
 
 node = ([Nn][Oo][Dd][Ee] WB -) ~{ERR("node")}
 relationship = ([Rr][Ee][Ll][Aa][Tt][Ii][Oo][Nn][Ss][Hh][Ii][Pp] WB -)
