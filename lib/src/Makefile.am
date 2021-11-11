@@ -66,6 +66,13 @@ libcypher_parser_la_SOURCES = \
 	ast_on_match.c \
 	ast_order_by.c \
 	ast_parameter.c \
+    ast_path_pattern.c \
+    ast_path_pattern_any.c \
+    ast_path_pattern_expression.c \
+    ast_path_pattern_alternative.c \
+    ast_path_pattern_base.c \
+    ast_path_pattern_edge.c \
+    ast_path_pattern_reference.c \
 	ast_pattern.c \
 	ast_pattern_comprehension.c \
 	ast_pattern_path.c \
@@ -78,6 +85,8 @@ libcypher_parser_la_SOURCES = \
 	ast_query_clause.c \
 	ast_query_option.c \
 	ast_range.c \
+    ast_range_plus.c \
+    ast_range_optional.c \
 	ast_reduce.c \
 	ast_rel_id_lookup.c \
 	ast_rel_index_lookup.c \

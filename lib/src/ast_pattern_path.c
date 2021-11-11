@@ -74,12 +74,14 @@ cypher_astnode_t *cypher_ast_pattern_path(cypher_astnode_t * const *elements,
 {
     REQUIRE(nelements % 2 == 1, NULL);
     REQUIRE(elements != NULL, NULL);
+/*
     for (unsigned int i = 0; i < nelements; ++i)
     {
         REQUIRE_CHILD(children, nchildren, elements[i],
-                (i%2 == 0)? CYPHER_AST_NODE_PATTERN : CYPHER_AST_REL_PATTERN,
+                (i%2 == 0)? CYPHER_AST_NODE_PATTERN : (CYPHER_AST_REL_PATTERN || CYPHER_AST_PATH_PATTERN) ,
                 NULL);
     }
+*/
 
     struct pattern_path *node = calloc(1, sizeof(struct pattern_path) +
             nelements * sizeof(cypher_astnode_t *));
@@ -196,8 +198,17 @@ ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
         }
         else
         {
-            r = snprintf(str+n, (n < size)? size-n : 0, "-[@%u]-",
+            if (node->elements[i]->type == CYPHER_AST_REL_PATTERN)
+            {
+                r = snprintf(str+n, (n < size)? size-n : 0, "-[@%u]-",
                     node->elements[i]->ordinal);
+            }
+            else
+            {
+                r = snprintf(str+n, (n < size)? size-n : 0, "-/@%u/-",
+                    node->elements[i]->ordinal);
+            }
+            
         }
         if (r < 0)
         {
