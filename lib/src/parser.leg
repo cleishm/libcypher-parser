@@ -86,7 +86,7 @@ schema-command =
 
 named-path-clause =
     < PATHPATTERN i:identifier EQUAL - p:pattern-path -
-    (WHERE e:expression | e:_null_) 
+    (WHERE e:expression | e:_null_)
     >                                   { $$ = named_path_predicate(i, p, e); }
 
 create-index =
@@ -757,7 +757,7 @@ path-pattern =
           ( - RIGHT-ARROW-HEAD >       { $$ = path_pattern(e, BIDIRECTIONAL); }
           | _empty_ >                  { $$ = path_pattern(e, INBOUND); }
           )
-      | DASH - DIV - e:path-expression - DIV - DASH 
+      | DASH - DIV - e:path-expression - DIV - DASH
           ( - RIGHT-ARROW-HEAD >       { $$ = path_pattern(e, OUTBOUND); }
           | _empty_ >                  { $$ = path_pattern(e, BIDIRECTIONAL); }
           )
@@ -823,7 +823,7 @@ relationship-pattern =
             )
           | LEFT-SQ-PAREN - (i:identifier | i:_null_)
             rel-types? (l:rel-varlength | l:rel-plus | l:rel-optional | l:_null_)
-            (p:pattern-properties | p:_null_) RIGHT-SQ-PAREN - DASH 
+            (p:pattern-properties | p:_null_) RIGHT-SQ-PAREN - DASH
             ( - RIGHT-ARROW-HEAD >     { $$ = rel_pattern(BIDIRECTIONAL, i, l, p); }
             | _empty_ >                { $$ = rel_pattern(INBOUND, i, l, p); }
             )
@@ -835,7 +835,7 @@ relationship-pattern =
             )
           | LEFT-SQ-PAREN - (i:identifier | i:_null_)
             rel-types? (l:rel-varlength | l:rel-plus | l:rel-optional | l:_null_)
-            (p:pattern-properties | p:_null_) RIGHT-SQ-PAREN - DASH 
+            (p:pattern-properties | p:_null_) RIGHT-SQ-PAREN - DASH
             ( - RIGHT-ARROW-HEAD >     { $$ = rel_pattern(OUTBOUND, i, l, p); }
             | _empty_ >                { $$ = rel_pattern(BIDIRECTIONAL, i, l, p); }
             )

@@ -1,7 +1,7 @@
 #include "../../config.h"
 #include "astnode.h"
 #include "util.h"
-#include <assert.h> 
+#include <assert.h>
 
 struct path_pattern_base {
     cypher_astnode_t _astnode;
@@ -95,9 +95,11 @@ cypher_astnode_t *clone(const cypher_astnode_t *self,
     return clone;
 }
 
-ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size) {
-    struct path_pattern_base *node = container_of(self, struct path_pattern_base, _astnode);
-    
+ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
+{
+    struct path_pattern_base *node = container_of(self,
+            struct path_pattern_base, _astnode);
+
     size_t n = 0;
     ssize_t r = snprintf(str, size, "%s",
             (node->direction == CYPHER_REL_INBOUND)? "<" : "");

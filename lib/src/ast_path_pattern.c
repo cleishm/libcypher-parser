@@ -1,7 +1,7 @@
 #include "../../config.h"
 #include "astnode.h"
 #include "util.h"
-#include <assert.h> 
+#include <assert.h>
 
 struct path_pattern
 {
@@ -19,7 +19,7 @@ const struct cypher_astnode_vt cypher_path_pattern_astnode_vt =
       .detailstr = detailstr,
       .release = cypher_astnode_release,
       .clone = clone };
-      
+
 cypher_astnode_t *cypher_ast_path_pattern(const cypher_astnode_t *expression,
         enum cypher_rel_direction direction, cypher_astnode_t **children, unsigned int nchildren,
         struct cypher_input_range range)
@@ -77,7 +77,7 @@ enum cypher_rel_direction cypher_ast_path_pattern_get_direction(
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     struct path_pattern *node = container_of(self, struct path_pattern, _astnode);
-    
+
     size_t n = 0;
     ssize_t r = snprintf(str, size, "%s-/",
             (node->direction == CYPHER_REL_INBOUND)? "<" : "");

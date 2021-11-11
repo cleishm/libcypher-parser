@@ -54,8 +54,9 @@ static const struct cypher_pattern_path_astnode_vt pp_vt =
 
 
 cypher_astnode_t *cypher_ast_named_path(const cypher_astnode_t *identifier,
-        const cypher_astnode_t *path, const cypher_astnode_t *condition, cypher_astnode_t **children,
-        unsigned int nchildren, struct cypher_input_range range)
+        const cypher_astnode_t *path, const cypher_astnode_t *condition,
+        cypher_astnode_t **children, unsigned int nchildren,
+        struct cypher_input_range range)
 {
     REQUIRE_CHILD(children, nchildren, identifier, CYPHER_AST_IDENTIFIER, NULL);
     REQUIRE_CHILD(children, nchildren, path, CYPHER_AST_PATTERN_PATH, NULL);
@@ -91,8 +92,8 @@ cypher_astnode_t *clone(const cypher_astnode_t *self,
     cypher_astnode_t *path = children[child_index(self, node->path)];
     cypher_astnode_t *condition = children[child_index(self, node->condition)];
 
-    return cypher_ast_named_path(identifier, path, condition, children, self->nchildren,
-            self->range);
+    return cypher_ast_named_path(identifier, path, condition, children,
+            self->nchildren, self->range);
 }
 
 
@@ -156,10 +157,10 @@ ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
             container_of(ppnode, struct named_path, _pattern_path_astnode);
     if (node->condition != NULL)
     {
-        return snprintf(str, size, "@%d = @%d WHERE @%d", node->identifier->ordinal,
-            node->path->ordinal, node->condition->ordinal);
+        return snprintf(str, size, "@%d = @%d WHERE @%d",
+            node->identifier->ordinal, node->path->ordinal,
+            node->condition->ordinal);
     }
-
     else
     {
         return snprintf(str, size, "@%d = @%d", node->identifier->ordinal,

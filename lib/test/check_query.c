@@ -199,7 +199,7 @@ START_TEST (parse_named_path_predicate_query)
             &last, NULL, 0);
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(last.offset, 28);
-    
+
     ck_assert(cypher_parse_result_fprint_ast(result, memstream, 0, NULL, 0) == 0);
     fflush(memstream);
     const char *expected = "\n"
@@ -222,17 +222,17 @@ START_TEST (parse_named_path_predicate_query)
     ck_assert_int_eq(cypher_astnode_type(ast), CYPHER_AST_STATEMENT);
     ck_assert_int_eq(cypher_astnode_range(ast).start.offset, 0);
     ck_assert_int_eq(cypher_astnode_range(ast).end.offset, 28);
-    
+
     const cypher_astnode_t *query = cypher_ast_statement_get_body(ast);
     ck_assert_int_eq(cypher_astnode_type(query), CYPHER_AST_QUERY);
     ck_assert_int_eq(cypher_astnode_range(query).start.offset, 0);
     ck_assert_int_eq(cypher_astnode_range(query).end.offset, 28);
-    
+
     ck_assert_int_eq(cypher_ast_query_noptions(query), 0);
     ck_assert_ptr_eq(cypher_ast_query_get_option(query, 0), NULL);
 
     ck_assert_int_eq(cypher_ast_query_nclauses(query), 1);
-    
+
     const cypher_astnode_t *clause = cypher_ast_query_get_clause(query, 0);
     ck_assert_int_eq(cypher_astnode_type(clause), CYPHER_AST_NAMED_PATH);
 }
