@@ -627,7 +627,7 @@ extract-expression =
 reduce-expression =
     < REDUCE LEFT-PAREN -
       a:identifier EQUAL - n:expression COMMA - i:identifier IN - e:expression
-      (PIPE - v:expression | v:_null_)
+      PIPE - v:expression
       RIGHT-PAREN >                    { $$ = reduce(a, n, i, e, v); }
     -
 all-predicate =
