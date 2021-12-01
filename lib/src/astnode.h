@@ -151,6 +151,7 @@ extern const struct cypher_astnode_vt
         cypher_create_rel_prop_constraint_astnode_vt;
 extern const struct cypher_astnode_vt
         cypher_drop_rel_prop_constraint_astnode_vt;
+extern const struct cypher_astnode_vt cypher_show_fulltext_indexes_astnode_vt;
 extern const struct cypher_astnode_vt cypher_query_astnode_vt;
 extern const struct cypher_astnode_vt cypher_query_option_astnode_vt;
 extern const struct cypher_astnode_vt cypher_using_periodic_commit_astnode_vt;

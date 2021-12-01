@@ -116,6 +116,7 @@ schema-command =
     | create-constraint
     | drop-index
     | drop-constraint
+	| show-fulltext-indexes
     ) ~{ERR("a schema command")}
     (SEMICOLON | EOF)
 
@@ -188,6 +189,11 @@ drop-constraint =
         ASSERT e:expression >
                                        { $$ = drop_rel_prop_constraint(i,t,e,false); }
       ) -
+
+show-fulltext-indexes =
+    < SHOW-FULLTEXT-INDEXES >
+                                       { $$ = show_fulltext_indexes(); }
+    -
 
 
 query = < query-hints* clauses >       { $$ = query(); }
@@ -1027,6 +1033,8 @@ DROP-CONSTRAINT-ON = [Dd]([Rr][Oo][Pp] WB -
     ~{ERR("DROP CONSTRAINT ON")}
 DROP-INDEX-ON = [Dd]([Rr][Oo][Pp] WB - [Ii][Nn][Dd][Ee][Xx] WB - [Oo][Nn] WB -)
     ~{ERR("DROP INDEX ON")}
+SHOW-FULLTEXT-INDEXES = [Ss]([Hh][Oo][Ww] WB - [Ff][Uu][Ll][Ll][Tt][Ee][Xx][Tt] WB - [Ii][Nn][Dd][Ee][Xx][Ee][Ss] WB -)
+    ~{ERR("SHOW FULLTEXT INDEXES")}
 
 ASSERT = ([Aa][Ss][Ss][Ee][Rr][Tt] WB -) ~{ERR("ASSERT")}
 IS-UNIQUE = ([Ii][Ss] WB - [Uu][Nn][Ii][Qq][Uu][Ee] WB -) ~{ERR("IS UNIQUE")}

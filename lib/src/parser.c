@@ -227,6 +227,8 @@ static cypher_astnode_t *_create_rel_prop_constraint(yycontext *yy,
 static cypher_astnode_t *_drop_rel_prop_constraint(yycontext *yy,
         cypher_astnode_t *identifier, cypher_astnode_t *label,
         cypher_astnode_t *expression, bool unique);
+#define show_fulltext_indexes() _show_fulltext_indexes(yy)
+static cypher_astnode_t *_show_fulltext_indexes(yycontext *yy);
 #define query() _query(yy)
 static cypher_astnode_t *_query(yycontext *yy);
 #define using_periodic_commit(l) _using_periodic_commit(yy, l)
@@ -1332,6 +1334,25 @@ cypher_astnode_t *_drop_rel_prop_constraint(yycontext *yy,
             "An AST node can only be created immediately after a `>` in the grammar");
     cypher_astnode_t *node = cypher_ast_drop_rel_prop_constraint(
             identifier, label, expression, unique,
+            astnodes_elements(&(yy->prev_block->children)),
+            astnodes_size(&(yy->prev_block->children)),
+            yy->prev_block->range);
+    if (node == NULL)
+    {
+        abort_parse(yy);
+    }
+    astnodes_clear(&(yy->prev_block->children));
+    block_free(yy->prev_block);
+    yy->prev_block = NULL;
+    return add_child(yy, node);
+}
+
+
+cypher_astnode_t *_show_fulltext_indexes(yycontext *yy)
+{
+    assert(yy->prev_block != NULL &&
+            "An AST node can only be created immediately after a `>` in the grammar");
+    cypher_astnode_t *node = cypher_ast_show_fulltext_indexes(
             astnodes_elements(&(yy->prev_block->children)),
             astnodes_size(&(yy->prev_block->children)),
             yy->prev_block->range);

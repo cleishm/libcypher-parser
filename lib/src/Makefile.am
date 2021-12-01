@@ -33,6 +33,7 @@ libcypher_parser_la_SOURCES = \
 	ast_drop_props_index.c \
 	ast_drop_node_prop_constraint.c \
 	ast_drop_rel_prop_constraint.c \
+	ast_show_fulltext_indexes.c \
 	ast_error.c \
 	ast_explain_option.c \
 	ast_expression.c \
