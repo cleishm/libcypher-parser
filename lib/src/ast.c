@@ -38,7 +38,6 @@ struct cypher_astnode_vts
     const struct cypher_astnode_vt *drop_node_prop_constraint;
     const struct cypher_astnode_vt *create_rel_prop_constraint;
     const struct cypher_astnode_vt *drop_rel_prop_constraint;
-    const struct cypher_astnode_vt *show_fulltext_indexes;
     const struct cypher_astnode_vt *query;
     const struct cypher_astnode_vt *query_option;
     const struct cypher_astnode_vt *using_periodic_commit;
@@ -157,7 +156,6 @@ static const struct cypher_astnode_vts cypher_astnode_vts =
     .drop_node_prop_constraint = &cypher_drop_node_prop_constraint_astnode_vt,
     .create_rel_prop_constraint = &cypher_create_rel_prop_constraint_astnode_vt,
     .drop_rel_prop_constraint = &cypher_drop_rel_prop_constraint_astnode_vt,
-    .show_fulltext_indexes = &cypher_show_fulltext_indexes_astnode_vt,
     .query = &cypher_query_astnode_vt,
     .query_option = &cypher_query_option_astnode_vt,
     .using_periodic_commit = &cypher_using_periodic_commit_astnode_vt,
@@ -287,8 +285,6 @@ const uint8_t CYPHER_AST_CREATE_REL_PROP_CONSTRAINT =
         VT_OFFSET(create_rel_prop_constraint);
 const uint8_t CYPHER_AST_DROP_REL_PROP_CONSTRAINT =
         VT_OFFSET(drop_rel_prop_constraint);
-const uint8_t CYPHER_AST_SHOW_FULLTEXT_INDEXES =
-        VT_OFFSET(show_fulltext_indexes);
 const uint8_t CYPHER_AST_QUERY = VT_OFFSET(query);
 const uint8_t CYPHER_AST_QUERY_OPTION = VT_OFFSET(query_option);
 const uint8_t CYPHER_AST_USING_PERIODIC_COMMIT = VT_OFFSET(using_periodic_commit);
