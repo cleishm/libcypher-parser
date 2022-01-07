@@ -86,7 +86,8 @@ cypher-version = <
     >                                  { $$ = block_string(); }
 cypher-param = < n:cypher-param-name - EQUAL - v:cypher-param-val >
                                        { $$ = cypher_option_param(n, v); }
-cypher-param-name = < [a-zA-Z0-9_]+ >  { $$ = block_string(); }
+cypher-param-name =                    { strbuf_reset(); }
+    < symbolic-name >                  { $$ = strbuf_string(); }
 cypher-param-val = p:cypher-param-value        { $$ = p; }
 
 cypher-param-value =  
