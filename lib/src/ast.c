@@ -948,6 +948,13 @@ const cypher_astnode_t *cypher_astnode_get_child(const cypher_astnode_t *node,
 }
 
 
+void cypher_astnode_set_child(cypher_astnode_t *parent,
+        cypher_astnode_t *child, unsigned int index)
+{
+    parent->children[index] = child;
+}
+
+
 ssize_t snprint_sequence(char *str, size_t size,
         const cypher_astnode_t * const *elements, unsigned int nelements)
 {

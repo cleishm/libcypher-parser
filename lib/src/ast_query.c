@@ -174,6 +174,16 @@ const cypher_astnode_t *cypher_ast_query_get_clause(
 }
 
 
+void cypher_ast_query_set_clause(
+        cypher_astnode_t *astnode, cypher_astnode_t *clause, unsigned int index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_QUERY, NULL);
+    REQUIRE_TYPE(clause, CYPHER_AST_QUERY_CLAUSE, NULL);
+    struct query *node = container_of(astnode, struct query, _astnode);
+    node->clauses[index] = clause;
+}
+
+
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 {
     REQUIRE_TYPE(self, CYPHER_AST_QUERY, -1);

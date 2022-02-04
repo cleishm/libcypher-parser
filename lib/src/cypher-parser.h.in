@@ -454,6 +454,16 @@ __cypherlang_pure
 unsigned int cypher_astnode_nchildren(const cypher_astnode_t *node);
 
 /**
+ * Set the child of an AST node at the given index.
+ *
+ * @param [parent] The AST node to update.
+ * @param [child] The AST node to be inserted.
+ * @param [index] The index of the child.
+ */
+void cypher_astnode_set_child(cypher_astnode_t *parent,
+        cypher_astnode_t *child, unsigned int index);
+
+/**
  * Get a child from an AST node.
  *
  * @param [node] The AST node.
@@ -1267,6 +1277,25 @@ unsigned int cypher_ast_query_nclauses(const cypher_astnode_t *node);
 __cypherlang_pure
 const cypher_astnode_t *cypher_ast_query_get_clause(
         const cypher_astnode_t *node, unsigned int index);
+
+
+
+/**
+ * Set the clause of a `CYPHER_AST_QUERY` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_QUERY` then the result will
+ * be undefined.
+ *
+ * If the clause is not an instance of `CYPHER_AST_QUERY_CLAUSE` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @param [clause] The AST clause node.
+ * @param [index] The index of the clause.
+ */
+void cypher_ast_query_set_clause(
+        cypher_astnode_t *astnode, cypher_astnode_t *clause,
+        unsigned int index);
 
 
 /**

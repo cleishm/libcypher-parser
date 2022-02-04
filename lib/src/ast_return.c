@@ -115,9 +115,9 @@ cypher_astnode_t *clone(const cypher_astnode_t *self,
     }
     cypher_astnode_t *order_by = (node->order_by == NULL) ? NULL :
             children[child_index(self, node->order_by)];
-    cypher_astnode_t *skip = (node->skip != NULL) ? NULL :
+    cypher_astnode_t *skip = (node->skip == NULL) ? NULL :
             children[child_index(self, node->skip)];
-    cypher_astnode_t *limit = (node->limit != NULL) ? NULL :
+    cypher_astnode_t *limit = (node->limit == NULL) ? NULL :
             children[child_index(self, node->limit)];
 
     cypher_astnode_t *clone = cypher_ast_return(node->distinct,
