@@ -181,6 +181,7 @@ void cypher_ast_query_set_clause(
     REQUIRE_TYPE(clause, CYPHER_AST_QUERY_CLAUSE, NULL);
     struct query *node = container_of(astnode, struct query, _astnode);
     node->clauses[index] = clause;
+    cypher_astnode_set_child(astnode, clause, index);
 }
 
 
