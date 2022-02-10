@@ -563,6 +563,7 @@ cypher_astnode_t *cypher_ast_clone(const cypher_astnode_t *ast)
     {
         goto failure;
     }
+    free(children);
     return clone;
 
     int errsv;
@@ -945,6 +946,14 @@ const cypher_astnode_t *cypher_astnode_get_child(const cypher_astnode_t *node,
         return NULL;
     }
     return node->children[index];
+}
+
+
+void cypher_astnode_set_child(cypher_astnode_t *parent,
+        cypher_astnode_t *child, unsigned int index)
+{
+    assert(index < parent->nchildren);
+    parent->children[index] = child;
 }
 
 

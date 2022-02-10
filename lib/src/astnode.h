@@ -127,7 +127,7 @@ static inline int child_index(const cypher_astnode_t *node,
 {
     unsigned int i = 0;
     while (i < node->nchildren && node->children[i] != child)
-        ;
+        i ++;
     assert(i < node->nchildren);
     return i;
 }
