@@ -99,7 +99,7 @@ cypher_astnode_t *clone(const cypher_astnode_t *self,
 
     cypher_astnode_t *identifier = children[child_index(self, node->identifier)];
     cypher_astnode_t *expression = children[child_index(self, node->expression)];
-    cypher_astnode_t *predicate = (node->predicate != NULL) ? NULL :
+    cypher_astnode_t *predicate = (node->predicate == NULL) ? NULL :
             children[child_index(self, node->predicate)];
 
     return cypher_ast_none(identifier, expression, predicate, children,
