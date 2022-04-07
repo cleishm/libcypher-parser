@@ -98,7 +98,7 @@ cypher_astnode_t *clone(const cypher_astnode_t *self,
     {
         points[i] = children[child_index(self, node->points[i])];
     }
-    cypher_astnode_t *predicate = (node->predicate != NULL) ? NULL :
+    cypher_astnode_t *predicate = (node->predicate == NULL) ? NULL :
             children[child_index(self, node->predicate)];
 
     cypher_astnode_t *clone = cypher_ast_start(points, node->npoints,
