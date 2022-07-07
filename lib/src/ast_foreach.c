@@ -162,9 +162,11 @@ void cypher_ast_foreach_replace_clauses(
     REQUIRE_TYPE(clause, CYPHER_AST_QUERY_CLAUSE, NULL);
     struct foreach_clause *node = container_of(astnode, struct foreach_clause, _astnode);
     node->clauses[start_index] = clause;
-    cypher_astnode_set_child(astnode, clause, start_index);
+    cypher_astnode_set_child(astnode, clause, 2 + start_index);
     memcpy(node->clauses + start_index + 1, node->clauses + end_index + 1, sizeof(cypher_astnode_t *) * (node->nclauses - end_index - 1));
     node->nclauses -= end_index - start_index;
+    memcpy(astnode->children + 2 + start_index + 1, astnode->children + 2 + end_index + 1, sizeof(cypher_astnode_t *) * (astnode->nchildren - 2 - end_index - 1));
+    astnode->nchildren -= end_index - start_index;
 }
 
 

@@ -194,6 +194,8 @@ void cypher_ast_query_replace_clauses(
     cypher_astnode_set_child(astnode, clause, start_index);
     memcpy(node->clauses + start_index + 1, node->clauses + end_index + 1, sizeof(cypher_astnode_t *) * (node->nclauses - end_index - 1));
     node->nclauses -= end_index - start_index;
+    memcpy(astnode->children + start_index + 1, astnode->children + end_index + 1, sizeof(cypher_astnode_t *) * (astnode->nchildren - end_index - 1));
+    astnode->nchildren -= end_index - start_index;
 }
 
 
