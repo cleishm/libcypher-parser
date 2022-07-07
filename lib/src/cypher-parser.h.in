@@ -1297,6 +1297,37 @@ void cypher_ast_query_set_clause(
         cypher_astnode_t *astnode, cypher_astnode_t *clause,
         unsigned int index);
 
+/**
+ * Replace the clauses of a `CYPHER_AST_QUERY` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_QUERY` then the result will
+ * be undefined.
+ *
+ * If the clause is not an instance of `CYPHER_AST_QUERY_CLAUSE` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @param [clause] The AST clause node.
+ * @param [index] The index of the clause.
+ */
+void cypher_ast_query_replace_clauses(
+        cypher_astnode_t *astnode, cypher_astnode_t *clause, unsigned int start_index, unsigned int end_index);
+
+/**
+ * Replace the clauses of a `CYPHER_AST_FOREACH` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_FOREACH` then the result will
+ * be undefined.
+ *
+ * If the clause is not an instance of `CYPHER_AST_FOREACH` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @param [clause] The AST clause node.
+ * @param [index] The index of the clause.
+ */
+void cypher_ast_foreach_replace_clauses(
+        cypher_astnode_t *astnode, cypher_astnode_t *clause, unsigned int start_index, unsigned int end_index);
 
 /**
  * Construct a `CYPHER_AST_USING_PERIODIC_COMMIT` node.
