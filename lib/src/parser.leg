@@ -763,7 +763,7 @@ proc-name = <                          { strbuf_reset(); }
 
 pattern =
     < p:pattern-part                   { sequence_add(p); }
-    ( COMMA - p:pattern-part           { sequence_add(p); }
+    ( - COMMA - p:pattern-part         { sequence_add(p); }
     )* >                               { $$ = pattern(); }
     -
 
