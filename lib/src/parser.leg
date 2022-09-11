@@ -544,10 +544,10 @@ atom =
     | function-application
     | identifier
 
-property-expression = _block_start_ p:atom
+property-expression = _block_start_ p:identifier
     ( DOT - n:prop-name _block_replace_
                                        { p = property_operator(p, n); }
-    )+ _block_merge_                   { $$ = p; }
+    ) _block_merge_                   { $$ = p; }
 
 # operator rules set yy->op during evaluation, for use in PREC_CHK() and
 # in PREC_PUSH(), and also push the operator to a stack after matching,
