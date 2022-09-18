@@ -132,9 +132,9 @@ create-index-on =
 create-index-for =
     < CREATE-INDEX-FOR
       ( LEFT-PAREN - i:identifier l:label RIGHT-PAREN -
-        ON - LEFT-PAREN p:property-expression
+        ON - LEFT-PAREN p:property-key-name
                                        { sequence_add(p); }
-        ( COMMA - p:property-expression
+        ( COMMA - p:property-key-name
                                        { sequence_add(p); }
         )* RIGHT-PAREN >
                                        { $$ = create_pattern_index(i, l, false);
@@ -142,9 +142,9 @@ create-index-for =
       | LEFT-PAREN - RIGHT-PAREN - (LEFT-ARROW-HEAD -)? DASH -
         LEFT-SQ-PAREN - i:identifier l:label RIGHT-SQ-PAREN -
         DASH - (RIGHT-ARROW-HEAD -)? LEFT-PAREN - RIGHT-PAREN -
-        ON - LEFT-PAREN p:property-expression
+        ON - LEFT-PAREN p:property-key-name
                                        { sequence_add(p); }
-        ( COMMA - p:property-expression
+        ( COMMA - p:property-key-name
                                        { sequence_add(p); }
         )* RIGHT-PAREN >
                                        { $$ = create_pattern_index(i, l, true);
@@ -544,10 +544,15 @@ atom =
     | function-application
     | identifier
 
-property-expression = _block_start_ p:identifier
+property-expression = _block_start_ p:atom
     ( DOT - n:prop-name _block_replace_
                                        { p = property_operator(p, n); }
-    ) _block_merge_                   { $$ = p; }
+    )+ _block_merge_                   { $$ = p; }
+
+property-key-name = _block_start_ p:identifier
+    ( DOT - n:prop-name _block_replace_
+                                       { p = property_operator(p, n); }
+    ) _block_merge_                    { $$ = p; }
 
 # operator rules set yy->op during evaluation, for use in PREC_CHK() and
 # in PREC_PUSH(), and also push the operator to a stack after matching,
