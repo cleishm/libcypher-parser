@@ -718,7 +718,6 @@ null-literal =
 
 parameter = _block_start_              { strbuf_reset(); }
     ( ( '$' - parameter-name ) ~{ERR("a parameter")}
-    | ( '{' - parameter-name ) ~{ERR("a parameter")} - RIGHT-CURLY
     ) _block_merge_                    { $$ = strbuf_parameter(); }
     -
 
@@ -924,8 +923,7 @@ escaped-symbolic-name = '`' < (!'`' .)* > '`' ~{ERR("`")}
                                        { strbuf_append_block(); }
 
 parameter-name =
-      symbolic-name
-    | < [1-9] [0-9]* >                 { strbuf_append_block(); }
+      symbolic-name                    { strbuf_append_block(); }
 
 # NOTE: accepts char sequences that are not valid floats, allowing
 # the validity checking to be done during semantic checking.
