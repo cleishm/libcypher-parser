@@ -96,13 +96,13 @@ cypher_astnode_t *clone(const cypher_astnode_t *self,
 
     cypher_astnode_t *expression = (node->expression == NULL) ? NULL :
             children[child_index(self, node->expression)];
-    cypher_astnode_t **alternatives = calloc(node->nalternatives,
+    cypher_astnode_t **alternatives = calloc(node->nalternatives * 2,
             sizeof(cypher_astnode_t *));
     if (alternatives == NULL)
     {
         return NULL;
     }
-    for (unsigned int i = 0; i < node->nalternatives; ++i)
+    for (unsigned int i = 0; i < node->nalternatives * 2; ++i)
     {
         alternatives[i] = children[child_index(self, node->alternatives[i])];
     }
