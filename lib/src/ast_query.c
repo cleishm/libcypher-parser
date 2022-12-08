@@ -184,12 +184,19 @@ void cypher_ast_query_set_clause(
     cypher_astnode_set_child(astnode, clause, index);
 }
 
+
 void cypher_ast_query_replace_clauses(
         cypher_astnode_t *astnode, cypher_astnode_t *clause, unsigned int start_index, unsigned int end_index)
 {
     REQUIRE_TYPE(astnode, CYPHER_AST_QUERY, NULL);
     REQUIRE_TYPE(clause, CYPHER_AST_QUERY_CLAUSE, NULL);
     struct query *node = container_of(astnode, struct query, _astnode);
+
+    // free the children (clauses) we are about to write over
+    for(uint i = start_index; i < end_index + 1; i++) {
+        cypher_ast_free(node->clauses[i]);
+    }
+
     node->clauses[start_index] = clause;
     cypher_astnode_set_child(astnode, clause, start_index);
     memcpy(node->clauses + start_index + 1, node->clauses + end_index + 1, sizeof(cypher_astnode_t *) * (node->nclauses - end_index - 1));
