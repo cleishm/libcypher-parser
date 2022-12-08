@@ -155,6 +155,7 @@ const cypher_astnode_t *cypher_ast_foreach_get_clause(
     return node->clauses[index];
 }
 
+
 void cypher_ast_foreach_replace_clauses(
         cypher_astnode_t *astnode, cypher_astnode_t *clause, unsigned int start_index, unsigned int end_index)
 {
