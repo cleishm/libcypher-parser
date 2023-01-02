@@ -170,9 +170,9 @@ void cypher_ast_foreach_replace_clauses(
 
     node->clauses[start_index] = clause;
     cypher_astnode_set_child(astnode, clause, 2 + start_index);
-    memcpy(node->clauses + start_index + 1, node->clauses + end_index + 1, sizeof(cypher_astnode_t *) * (node->nclauses - end_index - 1));
+    memmove(node->clauses + start_index + 1, node->clauses + end_index + 1, sizeof(cypher_astnode_t *) * (node->nclauses - end_index - 1));
     node->nclauses -= end_index - start_index;
-    memcpy(astnode->children + 2 + start_index + 1, astnode->children + 2 + end_index + 1, sizeof(cypher_astnode_t *) * (astnode->nchildren - 2 - end_index - 1));
+    memmove(astnode->children + 2 + start_index + 1, astnode->children + 2 + end_index + 1, sizeof(cypher_astnode_t *) * (astnode->nchildren - 2 - end_index - 1));
     astnode->nchildren -= end_index - start_index;
 }
 
