@@ -191,6 +191,7 @@ extern const struct cypher_astnode_vt cypher_foreach_astnode_vt;
 extern const struct cypher_astnode_vt cypher_with_astnode_vt;
 extern const struct cypher_astnode_vt cypher_unwind_astnode_vt;
 extern const struct cypher_astnode_vt cypher_call_astnode_vt;
+extern const struct cypher_astnode_vt cypher_call_subquery_astnode_vt;
 extern const struct cypher_astnode_vt cypher_return_astnode_vt;
 extern const struct cypher_astnode_vt cypher_projection_astnode_vt;
 extern const struct cypher_astnode_vt cypher_order_by_astnode_vt;

@@ -78,6 +78,7 @@ struct cypher_astnode_vts
     const struct cypher_astnode_vt *with;
     const struct cypher_astnode_vt *unwind;
     const struct cypher_astnode_vt *call;
+    const struct cypher_astnode_vt *call_subquery;
     const struct cypher_astnode_vt *return_clause;
     const struct cypher_astnode_vt *projection;
     const struct cypher_astnode_vt *order_by;
@@ -196,6 +197,7 @@ static const struct cypher_astnode_vts cypher_astnode_vts =
     .with = &cypher_with_astnode_vt,
     .unwind = &cypher_unwind_astnode_vt,
     .call = &cypher_call_astnode_vt,
+    .call_subquery = &cypher_call_subquery_astnode_vt,
     .return_clause = &cypher_return_astnode_vt,
     .projection = &cypher_projection_astnode_vt,
     .order_by = &cypher_order_by_astnode_vt,
@@ -325,6 +327,7 @@ const uint8_t CYPHER_AST_FOREACH = VT_OFFSET(foreach);
 const uint8_t CYPHER_AST_WITH = VT_OFFSET(with);
 const uint8_t CYPHER_AST_UNWIND = VT_OFFSET(unwind);
 const uint8_t CYPHER_AST_CALL = VT_OFFSET(call);
+const uint8_t CYPHER_AST_CALL_SUBQUERY = VT_OFFSET(call_subquery);
 const uint8_t CYPHER_AST_RETURN = VT_OFFSET(return_clause);
 const uint8_t CYPHER_AST_PROJECTION = VT_OFFSET(projection);
 const uint8_t CYPHER_AST_ORDER_BY = VT_OFFSET(order_by);

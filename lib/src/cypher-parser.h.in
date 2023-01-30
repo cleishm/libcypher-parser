@@ -230,6 +230,8 @@ extern const cypher_astnode_type_t CYPHER_AST_WITH;
 extern const cypher_astnode_type_t CYPHER_AST_UNWIND;
 /** Type for an AST `CALL` clause node. */
 extern const cypher_astnode_type_t CYPHER_AST_CALL;
+/** Type for an AST `CALL SUBQUERY` clause node. */
+extern const cypher_astnode_type_t CYPHER_AST_CALL_SUBQUERY;
 /** Type for an AST `RETURN` clause node. */
 extern const cypher_astnode_type_t CYPHER_AST_RETURN;
 /** Type for an AST projection node. */
@@ -3067,6 +3069,23 @@ cypher_astnode_t *cypher_ast_call(const cypher_astnode_t *proc_name,
         cypher_astnode_t * const *args, unsigned int nargs,
         cypher_astnode_t * const *projections, unsigned int nprojections,
         const cypher_astnode_t *predicate, cypher_astnode_t **children,
+        unsigned int nchildren, struct cypher_input_range range);
+
+/**
+ * Construct a `CYPHER_AST_CALL_SUBQUEY` node.
+ *
+ * The node will also be an instance of `CYPHER_AST_CLAUSE`.
+ *
+ * @param [clauses] An array of `CYPHER_AST_CLAUSE` nodes.
+ * @param [nclauses] The number of clauses.
+ * @param [children] The children of the node.
+ * @param [nchildren] The number of children.
+ * @param [range] The input range.
+ * @return An AST node, or NULL if an error occurs (errno will be set).
+ */
+__cypherlang_must_check
+cypher_astnode_t *cypher_ast_call_subquery(cypher_astnode_t * const *clauses,
+        unsigned int nclauses, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range);
 
 /**

@@ -327,6 +327,8 @@ static cypher_astnode_t *_unwind_clause(yycontext *yy,
 #define call_clause(p, w) _call_clause(yy, p, w)
 static cypher_astnode_t *_call_clause(yycontext *yy,
         cypher_astnode_t *proc_name, cypher_astnode_t *predicate);
+#define call_subquery() _call_subquery(yy)
+static cypher_astnode_t *_call_subquery(yycontext *yy);
 #define return_clause(d, a, o, s, l) _return_clause(yy, d, a, o, s, l)
 static cypher_astnode_t *_return_clause(yycontext *yy, bool distinct,
         bool include_existing, cypher_astnode_t *order_by,
@@ -2056,6 +2058,30 @@ cypher_astnode_t *_call_clause(yycontext *yy, cypher_astnode_t *proc_name,
             seq, nargs, seq + nargs, nseq - nargs, predicate,
             astnodes_elements(&(yy->prev_block->children)),
             astnodes_size(&(yy->prev_block->children)),
+            yy->prev_block->range);
+    if (node == NULL)
+    {
+        abort_parse(yy);
+    }
+    astnodes_clear(&(yy->prev_block->sequence));
+    astnodes_clear(&(yy->prev_block->children));
+    block_free(yy->prev_block);
+    yy->prev_block = NULL;
+    return add_child(yy, node);
+}
+
+
+cypher_astnode_t *_call_subquery(yycontext *yy)
+{
+    assert(yy->prev_block != NULL &&
+            "An AST node can only be created immediately after a `>` in the grammar");
+
+    cypher_astnode_t **seq = astnodes_elements(&(yy->prev_block->sequence));
+    unsigned int nseq = astnodes_size(&(yy->prev_block->sequence));
+
+    cypher_astnode_t *node = cypher_ast_call_subquery(seq, nseq,
+            seq,
+            nseq,
             yy->prev_block->range);
     if (node == NULL)
     {

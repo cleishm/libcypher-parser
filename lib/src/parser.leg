@@ -390,6 +390,11 @@ unwind-clause = < UNWIND e:expression AS i:identifier >
 # clean: it would be better to introduce a way to accumulate independent
 # sequences whilst parsing.
 call-clause =
+    ( call-proc
+    | call-subquery
+    ) ~{ERR("call clause")}
+
+call-proc =
     < CALL p:proc-name
       ( LEFT-PAREN -
         ( e:expression                 { sequence_add(e); }
@@ -407,6 +412,12 @@ call-clause =
       )?
       (WHERE w:expression | w:_null_) >
                                        { $$ = call_clause(p, w); }
+
+call-subquery =
+    < CALL LEFT-CURLY -
+    ( c:clause                         { sequence_add(c); }
+    )+ RIGHT-CURLY >                   { $$ = call_subquery(); }
+    -
 
 proc-projection = < r:identifier (
       AS i:identifier >                { $$ = projection(r, i); }
