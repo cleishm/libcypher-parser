@@ -42,7 +42,7 @@ const struct cypher_astnode_vt cypher_call_subquery_astnode_vt =
       .nparents = 1,
       .name = "CALL SUBQUERY",
       .detailstr = detailstr,
-      .release = call_release,
+      .release = cypher_astnode_release,
       .clone = clone };
 
 
@@ -78,12 +78,6 @@ cleanup:
 }
 
 
-void call_release(cypher_astnode_t *self)
-{
-    cypher_astnode_release(self);
-}
-
-
 cypher_astnode_t *clone(const cypher_astnode_t *self,
         cypher_astnode_t **children)
 {
@@ -108,6 +102,14 @@ cypher_astnode_t *clone(const cypher_astnode_t *self,
     free(clauses);
     errno = errsv;
     return clone;
+}
+
+const cypher_astnode_t *cypher_ast_call_subquery_get_nclauses(
+        const cypher_astnode_t *astnode, uint ind)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_CALL_SUBQUERY, NULL);
+    struct call_subquery *node = container_of(astnode, struct call_subquery, _astnode);
+    return node->nclauses;
 }
 
 
