@@ -104,7 +104,7 @@ cypher_astnode_t *clone(const cypher_astnode_t *self,
     return clone;
 }
 
-const cypher_astnode_t *cypher_ast_call_subquery_get_nclauses(
+unsigned int cypher_ast_call_subquery_get_nclauses(
         const cypher_astnode_t *astnode, uint ind)
 {
     REQUIRE_TYPE(astnode, CYPHER_AST_CALL_SUBQUERY, NULL);
