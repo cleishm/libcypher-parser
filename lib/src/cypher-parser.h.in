@@ -3072,7 +3072,7 @@ cypher_astnode_t *cypher_ast_call(const cypher_astnode_t *proc_name,
         unsigned int nchildren, struct cypher_input_range range);
 
 /**
- * Construct a `CYPHER_AST_CALL_SUBQUEY` node.
+ * Construct a `CYPHER_AST_CALL_SUBQUERY` node.
  *
  * The node will also be an instance of `CYPHER_AST_CLAUSE`.
  *
@@ -3087,6 +3087,30 @@ __cypherlang_must_check
 cypher_astnode_t *cypher_ast_call_subquery(cypher_astnode_t * const *clauses,
         unsigned int nclauses, cypher_astnode_t **children,
         unsigned int nchildren, struct cypher_input_range range);
+
+/**
+ * Get the number of clauses from a `CYPHER_AST_CALL_SUBQUERY` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CALL_SUBQUERY` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @return The number of clauses.
+ */
+unsigned int cypher_ast_call_subquery_nclauses(const cypher_astnode_t *astnode);
+
+/**
+ * Get a clause from a `CYPHER_AST_CALL_SUBQUERY` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CALL_SUBQUERY` then the result
+ * will be undefined.
+ *
+ * @param [node] The AST node.
+ * @param [index] The index of the alternative.
+ * @return A `CYPHER_AST_CLAUSE` node, or null.
+ */
+const cypher_astnode_t *cypher_ast_call_subquery_get_clause(
+        const cypher_astnode_t *astnode, uint ind);
 
 /**
  * Get the proc name of a `CYPHER_AST_CALL` node.

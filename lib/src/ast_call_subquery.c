@@ -31,7 +31,6 @@ struct call_subquery
 static cypher_astnode_t *clone(const cypher_astnode_t *self,
         cypher_astnode_t **children);
 static ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size);
-static void call_release(cypher_astnode_t *self);
 
 
 static const struct cypher_astnode_vt *parents[] =
@@ -104,8 +103,8 @@ cypher_astnode_t *clone(const cypher_astnode_t *self,
     return clone;
 }
 
-unsigned int cypher_ast_call_subquery_get_nclauses(
-        const cypher_astnode_t *astnode, uint ind)
+unsigned int cypher_ast_call_subquery_nclauses(
+        const cypher_astnode_t *astnode)
 {
     REQUIRE_TYPE(astnode, CYPHER_AST_CALL_SUBQUERY, NULL);
     struct call_subquery *node = container_of(astnode, struct call_subquery, _astnode);
