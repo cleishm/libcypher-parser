@@ -131,7 +131,7 @@ ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
     {
         n = snprint_sequence(str, size,
                 node->clauses, node->nclauses);
-        if (n < 0)
+        if (n <= 0)
         {
             return -1;
         }
