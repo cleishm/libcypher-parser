@@ -117,7 +117,31 @@ const cypher_astnode_t *cypher_ast_call_subquery_get_clause(
 {
     REQUIRE_TYPE(astnode, CYPHER_AST_CALL_SUBQUERY, NULL);
     struct call_subquery *node = container_of(astnode, struct call_subquery, _astnode);
+    if (ind >= node->nclauses)
+    {
+        return NULL;
+    }
     return node->clauses[ind];
+}
+
+void cypher_ast_call_subquery_replace_clauses(
+        cypher_astnode_t *astnode, cypher_astnode_t *clause, unsigned int start_index, unsigned int end_index)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_CALL_SUBQUERY, NULL);
+    REQUIRE_TYPE(clause, CYPHER_AST_QUERY_CLAUSE, NULL);
+    struct call_subquery *node = container_of(astnode, struct call_subquery, _astnode);
+
+    // free the children (clauses) we are about to write over
+    for(uint i = start_index; i < end_index + 1; i++) {
+        cypher_ast_free(node->clauses[i]);
+    }
+
+    node->clauses[start_index] = clause;
+    cypher_astnode_set_child(astnode, clause, start_index);
+    memmove(node->clauses + start_index + 1, node->clauses + end_index + 1, sizeof(cypher_astnode_t *) * (node->nclauses - end_index - 1));
+    node->nclauses -= end_index - start_index;
+    memmove(astnode->children + start_index + 1, astnode->children + end_index + 1, sizeof(cypher_astnode_t *) * (astnode->nchildren - end_index - 1));
+    astnode->nchildren -= end_index - start_index;
 }
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
