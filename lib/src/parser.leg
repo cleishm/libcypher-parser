@@ -192,6 +192,7 @@ drop-constraint =
 
 
 query = < query-hints* clauses >       { $$ = query(); }
+# TODO: Remove query-hints, we don't use them.
 query-hints =
     ( c:periodic-commit                { sequence_add(c); }
     ) ~{ERR("a query hint")}

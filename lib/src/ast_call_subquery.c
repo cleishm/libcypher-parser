@@ -23,8 +23,7 @@
 struct call_subquery
 {
     cypher_astnode_t _astnode;
-    unsigned int nclauses;
-    const cypher_astnode_t *clauses[];
+    cypher_astnode_t *query;
 };
 
 
@@ -45,27 +44,24 @@ const struct cypher_astnode_vt cypher_call_subquery_astnode_vt =
       .clone = clone };
 
 
-cypher_astnode_t *cypher_ast_call_subquery(cypher_astnode_t * const *clauses,
-        unsigned int nclauses, cypher_astnode_t **children,
-        unsigned int nchildren, struct cypher_input_range range)
+cypher_astnode_t *cypher_ast_call_subquery
+(
+    cypher_astnode_t *query,
+    struct cypher_input_range range
+)
 {
-    REQUIRE_CHILD_ALL(children, nchildren, clauses, nclauses,
-            CYPHER_AST_QUERY_CLAUSE, NULL);
-
-    struct call_subquery *node = calloc(1, sizeof(struct call_subquery) +
-            nclauses * sizeof(cypher_astnode_t *));
+    struct call_subquery *node = calloc(1, sizeof(struct call_subquery));
     if (node == NULL)
     {
         return NULL;
     }
+
     if (cypher_astnode_init(&(node->_astnode), CYPHER_AST_CALL_SUBQUERY,
-            children, nchildren, range))
+            &query, 1, range))
     {
         goto cleanup;
     }
-    memcpy(node->clauses, clauses,
-            nclauses * sizeof(cypher_astnode_t *));
-    node->nclauses = nclauses;
+    node->query = query;
     return &(node->_astnode);
 
     int errsv;
@@ -76,72 +72,27 @@ cleanup:
     return NULL;
 }
 
+cypher_astnode_t *cypher_ast_call_subquery_get_query
+(
+    const cypher_astnode_t *astnode
+)
+{
+    REQUIRE_TYPE(astnode, CYPHER_AST_CALL_SUBQUERY, NULL);
+    struct call_subquery *node =
+            container_of(astnode, struct call_subquery, _astnode);
+    return node->query;
+}
 
 cypher_astnode_t *clone(const cypher_astnode_t *self,
         cypher_astnode_t **children)
 {
     REQUIRE_TYPE(self, CYPHER_AST_CALL_SUBQUERY, NULL);
-    struct call_subquery *node = container_of(self, struct call_subquery, _astnode);
-
-    cypher_astnode_t **clauses =
-            calloc(node->nclauses, sizeof(cypher_astnode_t *));
-    if (clauses == NULL)
-    {
-        return NULL;
-    }
-    for (unsigned int i = 0; i < node->nclauses; ++i)
-    {
-        clauses[i] = children[child_index(self, node->clauses[i])];
-    }
 
     cypher_astnode_t *clone = cypher_ast_call_subquery(
-            clauses, node->nclauses,
-            children, self->nchildren, self->range);
+            cypher_ast_clone(children[0]), self->range);
     int errsv = errno;
-    free(clauses);
     errno = errsv;
     return clone;
-}
-
-unsigned int cypher_ast_call_subquery_nclauses(
-        const cypher_astnode_t *astnode)
-{
-    REQUIRE_TYPE(astnode, CYPHER_AST_CALL_SUBQUERY, NULL);
-    struct call_subquery *node = container_of(astnode, struct call_subquery, _astnode);
-    return node->nclauses;
-}
-
-
-const cypher_astnode_t *cypher_ast_call_subquery_get_clause(
-        const cypher_astnode_t *astnode, uint ind)
-{
-    REQUIRE_TYPE(astnode, CYPHER_AST_CALL_SUBQUERY, NULL);
-    struct call_subquery *node = container_of(astnode, struct call_subquery, _astnode);
-    if (ind >= node->nclauses)
-    {
-        return NULL;
-    }
-    return node->clauses[ind];
-}
-
-void cypher_ast_call_subquery_replace_clauses(
-        cypher_astnode_t *astnode, cypher_astnode_t *clause, unsigned int start_index, unsigned int end_index)
-{
-    REQUIRE_TYPE(astnode, CYPHER_AST_CALL_SUBQUERY, NULL);
-    REQUIRE_TYPE(clause, CYPHER_AST_QUERY_CLAUSE, NULL);
-    struct call_subquery *node = container_of(astnode, struct call_subquery, _astnode);
-
-    // free the children (clauses) we are about to write over
-    for(uint i = start_index; i < end_index + 1; i++) {
-        cypher_ast_free(node->clauses[i]);
-    }
-
-    node->clauses[start_index] = clause;
-    cypher_astnode_set_child(astnode, clause, start_index);
-    memmove(node->clauses + start_index + 1, node->clauses + end_index + 1, sizeof(cypher_astnode_t *) * (node->nclauses - end_index - 1));
-    node->nclauses -= end_index - start_index;
-    memmove(astnode->children + start_index + 1, astnode->children + end_index + 1, sizeof(cypher_astnode_t *) * (astnode->nchildren - end_index - 1));
-    astnode->nchildren -= end_index - start_index;
 }
 
 ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
@@ -151,14 +102,11 @@ ssize_t detailstr(const cypher_astnode_t *self, char *str, size_t size)
 
     size_t n = 0;
 
-    if (node->nclauses > 0)
+    n = snprint_sequence(str, size,
+            (const cypher_astnode_t *const *)&node->query, 1);
+    if (n <= 0)
     {
-        n = snprint_sequence(str, size,
-                node->clauses, node->nclauses);
-        if (n <= 0)
-        {
-            return -1;
-        }
+        return -1;
     }
 
     return n;

@@ -2079,10 +2079,13 @@ cypher_astnode_t *_call_subquery(yycontext *yy)
     cypher_astnode_t **seq = astnodes_elements(&(yy->prev_block->sequence));
     unsigned int nseq = astnodes_size(&(yy->prev_block->sequence));
 
-    cypher_astnode_t *node = cypher_ast_call_subquery(seq, nseq,
-            seq,
-            nseq,
-            yy->prev_block->range);
+    cypher_astnode_t *query = cypher_ast_query(
+        NULL, 0, seq, nseq, astnodes_elements(&(yy->prev_block->children)),
+        astnodes_size(&(yy->prev_block->children)), yy->prev_block->range);
+
+    cypher_astnode_t *node = cypher_ast_call_subquery(
+        query,
+        cypher_astnode_range(query));
     if (node == NULL)
     {
         abort_parse(yy);
