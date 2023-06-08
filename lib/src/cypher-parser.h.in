@@ -3102,6 +3102,22 @@ cypher_astnode_t *cypher_ast_call_subquery_get_query
 );
 
 /**
+ * Replace the query of a `CYPHER_AST_CALL_SUBQUERY` node.
+ *
+ * If the node is not an instance of `CYPHER_AST_CALL_SUBQUERY` then the
+ * result will be undefined.
+ *
+ * @param [astnode] The AST node.
+ * @param [query] The query to replace the existing query with.
+ * @return The query, or NULL if an error occurs (errno will be set).
+ */
+void cypher_ast_call_subquery_replace_query
+(
+    cypher_astnode_t *astnode,
+    cypher_astnode_t *query
+);
+
+/**
  * Get the proc name of a `CYPHER_AST_CALL` node.
  *
  * If the node is not an instance of `CYPHER_AST_CALL` then the result will
